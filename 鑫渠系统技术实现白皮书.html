@@ -1,0 +1,2610 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鑫渠系统技术实现白皮书</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a' },
+                        slate: { 850: '#1e293b', 950: '#0f172a' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-sub: #475569;
+            --border: #e2e8f0;
+            --primary: #2563eb;
+        }
+        .dark {
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --border: #334155;
+            --primary: #60a5fa;
+        }
+        body { background-color: var(--bg-body); color: var(--text-main); }
+        .card { background-color: var(--bg-card); border: 1px solid var(--border); }
+        .text-sub { color: var(--text-sub); }
+        .border-theme { border-color: var(--border); }
+        html { scroll-behavior: smooth; }
+        .toc-item.active { border-left-color: var(--primary); color: var(--primary); background: rgba(37, 99, 235, 0.08); }
+        .section-number { font-variant-numeric: tabular-nums; }
+        .architecture-box {
+            background: linear-gradient(135deg, rgba(37,99,235,0.08) 0%, rgba(37,99,235,0.02) 100%);
+            border: 1px solid rgba(37,99,235,0.2);
+        }
+        @media print {
+            .no-print { display: none !important; }
+            .content-area { margin-left: 0 !important; }
+            body { background: white; color: black; }
+            .card { border: 1px solid #ddd; break-inside: avoid; }
+        }
+        .kpi-card { border-left: 4px solid var(--primary); }
+        code { background: rgba(37,99,235,0.1); padding: 2px 6px; border-radius: 4px; font-size: 0.875em; }
+        .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--primary); border: 2px solid var(--bg-card); }
+        .scroll-hint { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    </style>
+</head>
+<body class="font-sans antialiased">
+    <!-- 顶部工具栏 -->
+    <header class="fixed top-0 left-0 right-0 h-14 bg-white/90 dark:bg-slate-900/90 backdrop-blur border-b border-theme z-40 flex items-center justify-between px-4 no-print">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center text-white font-bold text-sm">鑫</div>
+            <span class="font-semibold text-sm hidden sm:inline">鑫渠系统技术实现白皮书</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="切换主题">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+            <button onclick="window.print()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="打印">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- 左侧目录 -->
+    <aside class="fixed left-0 top-14 bottom-0 w-64 border-r border-theme bg-white/80 dark:bg-slate-900/80 backdrop-blur overflow-y-auto z-30 no-print hidden md:block">
+        <nav class="p-4 space-y-1 text-sm" id="toc">
+            <a href="#cover" class="toc-item block py-2 px-3 rounded border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition">封面</a>
+            <a href="#overview" class="toc-item block py-2 px-3 rounded border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition">1. 方案概述</a>
+            <a href="#principles" class="toc-item block py-2 px-3 rounded border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition">2. 设计原则与理念</a>
+            <a href="#design-system" class="toc-item block py-2 px-3 rounded border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition">3. 全局设计系统</a>
+            <a href="#interaction" class="toc-item block py-2 px-3 rounded border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition">4. 交互规范</a>
+            <a href="#business" class="toc-item block py-2 px-3 rounded border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition">5. 应用模块矩阵</a>
+            <a href="#architecture" class="toc-item block py-2 px-3 rounded border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition">6. 技术架构</a>
+            <a href="#data" class="toc-item block py-2 px-3 rounded border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition">7. 数据与智能</a>
+            <a href="#tags-search" class="toc-item block py-2 px-3 rounded border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition">8. 标签与搜索体系</a>
+            <a href="#quality" class="toc-item block py-2 px-3 rounded border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition">9. 质量保障与验收</a>
+            <a href="#roadmap" class="toc-item block py-2 px-3 rounded border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition">10. 架构演进路线</a>
+            <a href="#security" class="toc-item block py-2 px-3 rounded border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition">11. 账户与数据安全</a>
+            <a href="#ai-executable" class="toc-item block py-2 px-3 rounded border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition">12. AI 可执行开发指南</a>
+            <a href="#appendix" class="toc-item block py-2 px-3 rounded border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition">附录</a>
+        </nav>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="content-area md:ml-64 pt-14 min-h-screen">
+        <!-- 封面 -->
+        <section id="cover" class="min-h-screen flex flex-col items-center justify-center px-8 py-20 text-center">
+            <div class="w-20 h-20 rounded-2xl bg-primary-600 flex items-center justify-center text-white text-3xl font-bold mb-8 shadow-lg">鑫</div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">鑫渠系统技术实现白皮书</h1>
+            <p class="text-xl text-sub mb-2">IVD 行业 CRM 设计与开发技术白皮书</p>
+            <p class="text-sub mb-12">整合设计规范 · 交互规范 · 前端规范 · 技术架构 · 演进路线</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl w-full mb-12">
+                <div class="card rounded-xl p-6 text-left">
+                    <div class="text-sm text-sub mb-1">文档版本</div>
+                    <div class="text-2xl font-bold">v1.6</div>
+                </div>
+                <div class="card rounded-xl p-6 text-left">
+                    <div class="text-sm text-sub mb-1">对应原型</div>
+                    <div class="text-2xl font-bold">v1.8.0</div>
+                </div>
+                <div class="card rounded-xl p-6 text-left">
+                    <div class="text-sm text-sub mb-1">更新日期</div>
+                    <div class="text-2xl font-bold">2026-07-29</div>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-3 text-sm text-sub max-w-3xl">
+                <span class="px-3 py-1 rounded-full border border-theme">双中台架构</span>
+                <span class="px-3 py-1 rounded-full border border-theme">领域驱动设计</span>
+                <span class="px-3 py-1 rounded-full border border-theme">AI 中台演进</span>
+                <span class="px-3 py-1 rounded-full border border-theme">可组合架构</span>
+                <span class="px-3 py-1 rounded-full border border-theme">事件驱动</span>
+            </div>
+
+            <div class="mt-16 text-sm text-sub">
+                <p>广州华鑫 · IVD 行业渠道营销数字化平台</p>
+            </div>
+        </section>
+
+        <!-- 第一章：方案概述 -->
+        <section id="overview" class="px-8 py-16 max-w-5xl mx-auto">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="text-4xl font-bold text-primary-600 section-number">01</div>
+                <h2 class="text-3xl font-bold">方案概述</h2>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-4">文档定位</h3>
+                <p class="text-sub leading-relaxed mb-4">
+                    本方案是鑫渠 CRM 系统的技术实现总纲。它将分散在产品设计、交互设计、前端开发、后端架构、数据治理和 AI 演进等多个维度的规范与决策，整合为一份可阅读、可执行、可演进的技术白皮书。
+                </p>
+                <p class="text-sub leading-relaxed">
+                    目标读者包括产品经理、交互设计师、前端工程师、后端架构师、数据工程师和项目经理。通过统一语言、统一结构、统一标准，降低跨角色沟通成本，确保系统建设不偏离既定方向。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-3 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        核心目标
+                    </h3>
+                    <ul class="space-y-2 text-sub text-sm">
+                        <li>• 建立统一的设计与开发语言</li>
+                        <li>• 沉淀 IVD 渠道业务核心能力</li>
+                        <li>• 支撑 1000 人同时在线使用</li>
+                        <li>• 为 AI 数据服务打好基础</li>
+                        <li>• 保持架构灵活可演进</li>
+                    </ul>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-3 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        整合范围
+                    </h3>
+                    <ul class="space-y-2 text-sub text-sm">
+                        <li>• 12 份设计规范与功能文档</li>
+                        <li>• 鑫渠高保真原型 v1.8.0</li>
+                        <li>• 双中台到 AI 中台的演进规划</li>
+                        <li>• 6 大核心业务模块交互设计</li>
+                        <li>• 前端、后端、数据、搜索、标签全栈规范</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8">
+                <h3 class="text-xl font-semibold mb-6">内容结构</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">设计原则</div>
+                        <div class="text-sm text-sub">五层架构、双态结构、卡片公式</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">全局设计系统</div>
+                        <div class="text-sm text-sub">字体、颜色、图标、间距、主题</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">交互规范</div>
+                        <div class="text-sm text-sub">搜索、筛选、表单、审批、反馈</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">业务模块</div>
+                        <div class="text-sm text-sub">客户360°、意向、线索、日历</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">技术架构</div>
+                        <div class="text-sm text-sub">DDD、双中台、工作流、性能</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">演进路线</div>
+                        <div class="text-sm text-sub">三阶段架构演进规划</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第二章：设计原则与理念 -->
+        <section id="principles" class="px-8 py-16 max-w-5xl mx-auto">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="text-4xl font-bold text-primary-600 section-number">02</div>
+                <h2 class="text-3xl font-bold">设计原则与理念</h2>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-4">总体设计哲学：从「看数据」到「做决策」</h3>
+                <p class="text-sub leading-relaxed">
+                    鑫渠的每一个页面、每一张卡片、每一个按钮，都应该让用户在最短时间内完成「认知 → 定位 → 行动」的闭环。系统不是数据的堆砌，而是决策的辅助。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="card rounded-xl p-6">
+                    <div class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    </div>
+                    <h4 class="font-semibold mb-2">认知</h4>
+                    <p class="text-sm text-sub">用户进入页面后，第一眼就能了解当前业务状态。</p>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <div class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <h4 class="font-semibold mb-2">定位</h4>
+                    <p class="text-sm text-sub">通过导航、筛选快速找到目标数据。</p>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <div class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h4 class="font-semibold mb-2">行动</h4>
+                    <p class="text-sm text-sub">在目标数据上执行最合理的下一步操作。</p>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-6">统一五层信息架构</h3>
+                <p class="text-sub mb-6">所有列表型页面必须遵循以下五层结构，从上到下依次排列：</p>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-4 p-4 rounded-lg border border-theme">
+                        <div class="w-8 h-8 rounded-full bg-primary-600 text-white flex items-center justify-center text-sm font-bold">1</div>
+                        <div>
+                            <div class="font-semibold">全局指标 / 统计卡片</div>
+                            <div class="text-sm text-sub">3-5 个 KPI，关键指标用颜色区分</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 rounded-lg border border-theme">
+                        <div class="w-8 h-8 rounded-full bg-primary-600 text-white flex items-center justify-center text-sm font-bold">2</div>
+                        <div>
+                            <div class="font-semibold">导航 / 分类 Tab / 视图切换 / 主操作</div>
+                            <div class="text-sm text-sub">左侧导航，右侧操作；Tab 不超过 7 个</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 rounded-lg border border-theme">
+                        <div class="w-8 h-8 rounded-full bg-primary-600 text-white flex items-center justify-center text-sm font-bold">3</div>
+                        <div>
+                            <div class="font-semibold">搜索 / 筛选</div>
+                            <div class="text-sm text-sub">搜索框最左，筛选条件横向排列不超过 5 个</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 rounded-lg border border-theme">
+                        <div class="w-8 h-8 rounded-full bg-primary-600 text-white flex items-center justify-center text-sm font-bold">4</div>
+                        <div>
+                            <div class="font-semibold">明细内容（卡片网格 / 表格）</div>
+                            <div class="text-sm text-sub">≤20 条默认卡片视图，>20 条默认列表视图</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 rounded-lg border border-theme">
+                        <div class="w-8 h-8 rounded-full bg-primary-600 text-white flex items-center justify-center text-sm font-bold">5</div>
+                        <div>
+                            <div class="font-semibold">分页 / 加载更多</div>
+                            <div class="text-sm text-sub">底部分页，显示页码信息和翻页按钮</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">双态结构</h3>
+                    <p class="text-sub text-sm mb-4">具有「数据列表 + 详情查看」的模块，统一采用双态结构。</p>
+                    <div class="space-y-3">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-medium">列表态</div>
+                            <div class="text-sm text-sub">用于扫描、筛选、定位，占据整个内容区。</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-medium">详情态</div>
+                            <div class="text-sm text-sub">用于深度查看和操作，可通过新页面、右侧抽屉、弹窗呈现。</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">卡片即决策单元</h3>
+                    <p class="text-sub text-sm mb-4">卡片的设计公式统一为：</p>
+                    <div class="p-4 rounded-lg architecture-box text-center font-mono text-sm mb-3">
+                        卡片 = 对象标识 + 状态信息 + 下一步动作
+                    </div>
+                    <ul class="text-sm text-sub space-y-1">
+                        <li>• 客户卡片：要不要深入看？</li>
+                        <li>• 线索卡片：分给谁？</li>
+                        <li>• 意向卡片：流程走到哪？</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8">
+                <h3 class="text-xl font-semibold mb-6">应用划分原则</h3>
+                <p class="text-sub mb-6">应用是面向特定角色、有独立业务闭环、能独立产生业务价值的入口。中台能力是底层复用能力，不应直接成为应用。</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-theme">
+                                <th class="text-left py-3 font-semibold">判断标准</th>
+                                <th class="text-left py-3 font-semibold">适合做应用</th>
+                                <th class="text-left py-3 font-semibold">不适合做应用</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sub">
+                            <tr class="border-b border-theme">
+                                <td class="py-3">业务对象</td>
+                                <td class="py-3">客户、线索、意向、设备、试剂</td>
+                                <td class="py-3">审批记录、联系人、维修记录</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">角色场景</td>
+                                <td class="py-3">销售每天使用线索/意向/客户 360</td>
+                                <td class="py-3">某个配置项偶尔使用</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">跨业务复用</td>
+                                <td class="py-3">品牌库、审批中心、客户 360</td>
+                                <td class="py-3">仅一个模块内部使用的功能</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">独立价值</td>
+                                <td class="py-3">能回答完成什么业务目标</td>
+                                <td class="py-3">只是查看或配置</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第三章：全局设计系统 -->
+        <section id="design-system" class="px-8 py-16 max-w-5xl mx-auto">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="text-4xl font-bold text-primary-600 section-number">03</div>
+                <h2 class="text-3xl font-bold">全局设计系统</h2>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-4">设计目标</h3>
+                <p class="text-sub leading-relaxed">
+                    统一全系统视觉语言，确保所有页面在字体、颜色、图标、间距、圆角、响应式和主题适配上保持一致。所有规范均使用工程化可落地的方式定义，支持浅色/深色主题切换和字号缩放。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">字体规范</h3>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• 字体栈：<code>Inter / PingFang SC / Microsoft YaHei / Noto Sans SC</code></li>
+                        <li>• 根字体 14px，大屏 15px（≥1920px），超大屏 16px（≥2560px）</li>
+                        <li>• 字号体系使用 rem：<code>text-2xs</code> 到 <code>text-4xl</code></li>
+                        <li>• 所有字号支持系统字体放大而不破坏布局</li>
+                    </ul>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">图标规范</h3>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• 全部使用 SVG 矢量图标，禁止 emoji/PNG/JPG</li>
+                        <li>• 图标尺寸：xs(12px) / sm(16px) / md(20px) / lg(24px) / xl(28px) / 2xl(32px)</li>
+                        <li>• 默认继承 <code>currentColor</code>，选中用 <code>--primary</code></li>
+                        <li>• 图标与文字同时放大不失真</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-6">颜色体系</h3>
+                <p class="text-sub mb-6">所有颜色使用 CSS Variables，禁止写死色值。支持浅色/深色主题切换，监听系统主题并支持手动覆盖。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                        <div class="w-full h-8 rounded bg-blue-600 mb-2"></div>
+                        <div class="text-sm font-medium">品牌色</div>
+                        <div class="text-xs text-sub">primary / 操作 / 链接</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+                        <div class="w-full h-8 rounded bg-green-600 mb-2"></div>
+                        <div class="text-sm font-medium">成功</div>
+                        <div class="text-xs text-sub">success / 通过 / 完成</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800">
+                        <div class="w-full h-8 rounded bg-orange-500 mb-2"></div>
+                        <div class="text-sm font-medium">警告</div>
+                        <div class="text-xs text-sub">warning / 待处理 / 关注</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                        <div class="w-full h-8 rounded bg-red-600 mb-2"></div>
+                        <div class="text-sm font-medium">危险</div>
+                        <div class="text-xs text-sub">danger / 驳回 / 高风险</div>
+                    </div>
+                </div>
+                <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub font-mono">
+                    :root { --bg-body: #f8fafc; --bg-card: #ffffff; --text-main: #0f172a; --text-sub: #475569; --border: #e2e8f0; --primary: #2563eb; }
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">间距体系</h3>
+                    <div class="space-y-2 text-sm text-sub">
+                        <div class="flex items-center gap-2"><div class="w-1 h-1 bg-primary-600 rounded-full"></div>space-1: 4px</div>
+                        <div class="flex items-center gap-2"><div class="w-2 h-2 bg-primary-600 rounded-full"></div>space-2: 8px</div>
+                        <div class="flex items-center gap-2"><div class="w-3 h-3 bg-primary-600 rounded-full"></div>space-3: 12px</div>
+                        <div class="flex items-center gap-2"><div class="w-4 h-4 bg-primary-600 rounded-full"></div>space-4: 16px</div>
+                        <div class="flex items-center gap-2"><div class="w-5 h-5 bg-primary-600 rounded-full"></div>space-5: 20px</div>
+                        <div class="text-xs text-sub mt-2">最大到 space-10: 40px</div>
+                    </div>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">圆角体系</h3>
+                    <div class="space-y-2 text-sm text-sub">
+                        <div class="flex items-center gap-2"><div class="w-6 h-4 border border-primary-600 rounded-sm"></div>radius-sm: 4px</div>
+                        <div class="flex items-center gap-2"><div class="w-6 h-4 border border-primary-600 rounded"></div>radius-md: 6px</div>
+                        <div class="flex items-center gap-2"><div class="w-6 h-4 border border-primary-600 rounded-lg"></div>radius-lg: 8px</div>
+                        <div class="flex items-center gap-2"><div class="w-6 h-4 border border-primary-600 rounded-xl"></div>radius-xl: 12px</div>
+                        <div class="flex items-center gap-2"><div class="w-6 h-4 border border-primary-600 rounded-full"></div>radius-full: 999px</div>
+                    </div>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">响应式断点</h3>
+                    <div class="space-y-2 text-sm text-sub">
+                        <div class="flex justify-between"><span>移动端</span><span class="font-mono">&lt;768px</span></div>
+                        <div class="flex justify-between"><span>小屏</span><span class="font-mono">768-1023px</span></div>
+                        <div class="flex justify-between"><span>中屏</span><span class="font-mono">1024-1439px</span></div>
+                        <div class="flex justify-between"><span>大屏</span><span class="font-mono">≥1440px</span></div>
+                        <div class="flex justify-between"><span>超大屏</span><span class="font-mono">≥1920px</span></div>
+                        <div class="text-xs text-sub mt-2">桌面端最小宽度 1280px</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8">
+                <h3 class="text-xl font-semibold mb-4">字号放大适配</h3>
+                <p class="text-sub mb-4">系统需支持 100%/125%/150%/200% 字号放大，确保按钮不换行、布局不破坏、文本可读。</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-2">按钮与操作</div>
+                        <ul class="text-sm text-sub space-y-1">
+                            <li>• <code>white-space: nowrap</code></li>
+                            <li>• <code>flex-shrink: 0</code></li>
+                            <li>• 图标与文字保持同行</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-2">文本溢出</div>
+                        <ul class="text-sm text-sub space-y-1">
+                            <li>• 优先使用 <code>text-overflow: ellipsis</code></li>
+                            <li>• 关键信息悬停 0.8s 后自动滚动</li>
+                            <li>• 滚动 2-3 次后停止</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第四章：交互规范 -->
+        <section id="interaction" class="px-8 py-16 max-w-5xl mx-auto">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="text-4xl font-bold text-primary-600 section-number">04</div>
+                <h2 class="text-3xl font-bold">交互规范</h2>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-6">导航规范</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold mb-3">一级入口</h4>
+                        <p class="text-sm text-sub mb-3">侧边栏一级入口统一为：</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full border border-theme text-sm">消息</span>
+                            <span class="px-3 py-1 rounded-full border border-theme text-sm">日历</span>
+                            <span class="px-3 py-1 rounded-full border border-theme text-sm">工作台</span>
+                            <span class="px-3 py-1 rounded-full border border-theme text-sm">通讯录</span>
+                            <span class="px-3 py-1 rounded-full border border-theme text-sm">任务</span>
+                            <span class="px-3 py-1 rounded-full border border-theme text-sm">应用中心</span>
+                            <span class="px-3 py-1 rounded-full border border-theme text-sm">收藏</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-3">业务应用分组</h4>
+                        <p class="text-sm text-sub mb-3">业务应用统一归入应用中心，按业务域分组：</p>
+                        <div class="space-y-2 text-sm text-sub">
+                            <div>• 业务管理：线索、意向、客户 360°、设备、试剂、工单等</div>
+                            <div>• 渠道协同：经销商协同</div>
+                            <div>• 合规审计：合规风控</div>
+                            <div>• 数据决策：目标绩效、经营驾驶舱</div>
+                            <div>• 系统管理：后台设置、流程设计器、应用配置</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-6">搜索与筛选规范</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold mb-3">全局搜索</h4>
+                        <ul class="space-y-2 text-sm text-sub">
+                            <li>• 快捷键 <code>⌘K</code> / <code>Ctrl+K</code> 唤起</li>
+                            <li>• 跨应用搜索客户、线索、意向、设备、工单等</li>
+                            <li>• 支持拼音全拼、首字母、模糊查询</li>
+                            <li>• 搜索结果按权限过滤</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-3">应用内搜索</h4>
+                        <ul class="space-y-2 text-sm text-sub">
+                            <li>• 搜索框位于列表页最左侧</li>
+                            <li>• 实时搜索 debounce 300ms</li>
+                            <li>• 筛选条件横向排列，不超过 5 个</li>
+                            <li>• 搜索 + 筛选可同时生效，切换视图保留条件</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">弹窗使用规范</h3>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• 用于表单、确认、轻量操作</li>
+                        <li>• 宽度不超过屏幕 80%</li>
+                        <li>• 支持 ESC 关闭、点击遮罩关闭</li>
+                        <li>• 表单弹窗必须有取消和确认按钮</li>
+                    </ul>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">抽屉使用规范</h3>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• 用于详情查看、分步流程</li>
+                        <li>• 从右侧滑出，宽度 480-640px</li>
+                        <li>• 适合线索详情、联系人详情、审批详情</li>
+                        <li>• 复杂详情可嵌套页签</li>
+                    </ul>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">按钮层级</h3>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• 主按钮：页面最高频操作</li>
+                        <li>• 次按钮：辅助操作</li>
+                        <li>• 文本按钮：低频或危险操作</li>
+                        <li>• 危险按钮：删除、驳回等不可逆操作</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-6">表单与审批交互</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-theme">
+                                <th class="text-left py-3 font-semibold">场景</th>
+                                <th class="text-left py-3 font-semibold">推荐组件</th>
+                                <th class="text-left py-3 font-semibold">交互要求</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sub">
+                            <tr class="border-b border-theme">
+                                <td class="py-3">新建/编辑报备</td>
+                                <td class="py-3">弹窗 + 分步表单</td>
+                                <td class="py-3">必填校验、失焦查重、暂存草稿</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">审批/裁决</td>
+                                <td class="py-3">弹窗</td>
+                                <td class="py-3">意见必填、驳回强制详细理由、二次确认</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">详情查看</td>
+                                <td class="py-3">抽屉 / 新页面</td>
+                                <td class="py-3">顶部返回、关键信息固定、时间线可折叠</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">冲突处理</td>
+                                <td class="py-3">弹窗</td>
+                                <td class="py-3">展示冲突信息、提供查看原意向入口</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">跟进记录</td>
+                                <td class="py-3">抽屉内嵌表单</td>
+                                <td class="py-3">快捷标签、附件上传、自动关联对象</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8">
+                <h3 class="text-xl font-semibold mb-4">反馈与空态</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold mb-3">操作反馈</h4>
+                        <ul class="space-y-2 text-sm text-sub">
+                            <li>• 保存成功：Toast 提示</li>
+                            <li>• 提交审批：跳转待办或刷新列表</li>
+                            <li>• 操作失败：明确错误原因</li>
+                            <li>• 加载中：骨架屏或 Loading 动画</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-3">空态设计</h4>
+                        <ul class="space-y-2 text-sm text-sub">
+                            <li>• 无数据时显示空态插画和引导文案</li>
+                            <li>• 提供新建入口按钮</li>
+                            <li>• 筛选无结果时提示调整条件</li>
+                            <li>• 权限不足时提示联系管理员</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第五章：核心业务模块 -->
+        <section id="business" class="px-8 py-16 max-w-5xl mx-auto">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="text-4xl font-bold text-primary-600 section-number">05</div>
+                <h2 class="text-3xl font-bold">应用模块矩阵</h2>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-4">模块划分说明</h3>
+                <p class="text-sub leading-relaxed">
+                    鑫渠 CRM 将所有功能划分为平台级入口、业务管理域、渠道协同域、合规审计域、数据决策域和系统管理域六大类。每个模块都是面向特定角色、有独立业务闭环的应用入口，底层通过业务中台和技术中台提供共享能力支撑。
+                </p>
+            </div>
+
+            <!-- 5.1 平台级入口 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">5.1</div>
+                    平台级入口
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <h4 class="text-lg font-semibold">消息中心</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-3">系统级消息聚合入口，接收审批通知、任务提醒、预警通知、系统公告、@提及等。</p>
+                        <ul class="space-y-1 text-sm text-sub">
+                            <li>• 消息分类：待办、通知、预警、公告</li>
+                            <li>• 已读/未读状态，支持一键已读</li>
+                            <li>• 点击消息直达对应业务对象</li>
+                            <li>• 支持 WebSocket 实时推送</li>
+                        </ul>
+                    </div>
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                            </div>
+                            <h4 class="text-lg font-semibold">工作台</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-3">一站式每日工作入口，聚合待办、日程、KPI、常用应用和快捷操作，减少跳转成本。</p>
+                        <ul class="space-y-1 text-sm text-sub">
+                            <li>• 待办中心：审批待办、任务待办、预警待办、系统待办</li>
+                            <li>• 今日日程：按时间轴展示拜访、会议、任务</li>
+                            <li>• 我的 KPI：本月意向、成交率、拜访数等</li>
+                            <li>• 快捷入口：最近访问、收藏应用</li>
+                        </ul>
+                    </div>
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            </div>
+                            <h4 class="text-lg font-semibold">通讯录</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-3">企业级联系人管理，覆盖内部员工、经销商、客户决策链联系人。</p>
+                        <ul class="space-y-1 text-sm text-sub">
+                            <li>• 组织架构树：按部门/区域/经销商层级展示</li>
+                            <li>• 客户联系人：关联客户 360° 决策链</li>
+                            <li>• 权限隔离：按数据范围控制可见联系人</li>
+                            <li>• 快速拨号、发送消息、预约拜访</li>
+                        </ul>
+                    </div>
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                            </div>
+                            <h4 class="text-lg font-semibold">任务</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-3">个人与团队任务管理，支持任务分配、跟踪、提醒和完成闭环。</p>
+                        <ul class="space-y-1 text-sm text-sub">
+                            <li>• 任务分类：拜访任务、跟进任务、审批任务、自定义任务</li>
+                            <li>• 负责人/协同人/截止时间</li>
+                            <li>• 任务状态：待办 / 进行中 / 已完成 / 已逾期</li>
+                            <li>• 自动同步到日历和待办</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                            </div>
+                            <h4 class="text-lg font-semibold">应用中心</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-3">全部业务应用和系统应用的统一入口，按业务域分组展示。</p>
+                        <ul class="space-y-1 text-sm text-sub">
+                            <li>• 业务管理、渠道协同、合规审计、数据决策、系统管理分组</li>
+                            <li>• 支持应用搜索和收藏</li>
+                            <li>• 按角色权限动态显示可用应用</li>
+                            <li>• 常用应用置顶</li>
+                        </ul>
+                    </div>
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center text-pink-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                            </div>
+                            <h4 class="text-lg font-semibold">收藏夹</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-3">用户自定义的快捷入口，收藏常用页面、客户、意向、报表。</p>
+                        <ul class="space-y-1 text-sm text-sub">
+                            <li>• 支持收藏页面、业务对象、筛选视图</li>
+                            <li>• 跨设备同步收藏数据</li>
+                            <li>• 工作台显示最近收藏</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5.2 业务管理域 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">5.2</div>
+                    业务管理域
+                </h3>
+
+                <!-- 线索管理 -->
+                <div class="card rounded-xl p-8 mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold">线索管理</h4>
+                    </div>
+                    <p class="text-sub mb-4">渠道秩序域前置入口。负责收集、查重、分配、跟进销售线索，为意向报备提供经过初筛的商机来源。线索是登记层（低门槛、不审批、公海池），意向是授权层（高门槛、需审批、保护期）。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>核心流程：</strong>录入 → 查重 → 分配 → 跟进 → 转意向
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>页面布局：</strong>4 个 KPI + Tab 分组 + 列表/卡片视图
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>关键规则：</strong>7 天未跟进自动回收公海池
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 意向管理 -->
+                <div class="card rounded-xl p-8 mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold">意向管理</h4>
+                    </div>
+                    <p class="text-sub mb-4">IVD 行业销售过程管控域核心模块。管理从意向提交到项目结束的全生命周期，防止撞单、规范审批、区分业务模式。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>业务类型：</strong>招标项目、非招标常规、TP/捐赠
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>核心状态：</strong>草稿、审批中、生效中、冲突无效、驳回、已结束
+                        </div>
+                    </div>
+                    <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                        <strong>关键规则：</strong>唯一生效原则、冲突审批规则、招标送货规则、TP/未装机规则、保护期规则
+                    </div>
+                </div>
+
+                <!-- 审批中心 -->
+                <div class="card rounded-xl p-8 mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold">审批中心</h4>
+                    </div>
+                    <p class="text-sub mb-4">跨业务的通用审批入口，面向审批人角色统一处理待办。虽然审批是技术中台能力，但面向审批人的工作入口具有独立的业务价值，因此作为应用存在。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>覆盖业务：</strong>意向报备、冲突裁决、设备投放、合规活动、费用报销
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>待办分类：</strong>待我审批、我已审批、抄送我的、我发起的
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>操作能力：</strong>通过、驳回、转交、加签、批量审批
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 客户 360° -->
+                <div class="card rounded-xl p-8 mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold">客户 360°</h4>
+                    </div>
+                    <p class="text-sub mb-4">客户资产中心和数据枢纽，聚合 HCO/科室/决策链/设备/试剂/时间线数据，解决客户信息分散、健康度不可见、交叉销售机会难发现的问题。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>详情页 6 个页签：</strong>概览、科室、决策链、设备地图、试剂账本、时间线
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>健康度评分：</strong>设备活跃 25% + 试剂消耗 25% + 关系维护 20% + 商业贡献 20% + 服务体验 10%
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 设备管理 -->
+                <div class="card rounded-xl p-8 mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center text-cyan-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold">设备管理</h4>
+                    </div>
+                    <p class="text-sub mb-4">设备是 IVD 的"阵地"，确保每台设备从售前到报废全程可控、可追踪、可运营。覆盖招标跟踪、装机管理、设备台账、运行监控、维保工单、保修到期提醒。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>使用角色：</strong>销售代表、FAE、售后服务工程师、售后主管
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>核心场景：</strong>故障智能派单、维保计划、保修预警、利用率监控
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>价值：</strong>故障响应时间缩短 50%，设备利用率提升 15-25%
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 试剂运营 -->
+                <div class="card rounded-xl p-8 mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold">试剂运营</h4>
+                    </div>
+                    <p class="text-sub mb-4">把试剂从"被动销售品"变成"可预测、可运营、可增值的资产"。覆盖试剂绑定、消耗记录、库存监控、AI 补货预测、复购预警、流失预警。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>使用角色：</strong>销售代表、经销商、供应链经理、财务
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>核心场景：</strong>断货预警、客户流失预警、多级库存监控
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>价值：</strong>试剂复购率提升 15-30%，断货率降低 60%
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 售后工单 -->
+                <div class="card rounded-xl p-8 mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold">售后工单</h4>
+                    </div>
+                    <p class="text-sub mb-4">设备故障和服务请求的处理中心，支持报修、派单、处理、回访、满意度评价全流程。与设备管理、日历、客户 360° 深度联动。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>工单类型：</strong>故障维修、保养维护、培训支持、配件更换
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>派单规则：</strong>区域优先、技能匹配、负荷均衡、客户偏好
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong> SLA 监控：</strong>响应时效、解决时效、满意度评分
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 工单看板 -->
+                <div class="card rounded-xl p-8 mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold">工单看板</h4>
+                    </div>
+                    <p class="text-sub mb-4">售后工单的流程可视化视图，按工单状态（待处理 / 处理中 / 待回访 / 已完成）展示为看板列，支持拖拽变更状态、快速分配、SLA 预警。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>视图形态：</strong>看板视图 / 列表视图 / 日历视图
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>核心能力：</strong>拖拽流转、快速分配、状态筛选
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>适用角色：</strong>售后主管、工程师、调度员
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 品牌库管理 -->
+                <div class="card rounded-xl p-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center text-violet-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold">品牌库管理</h4>
+                    </div>
+                    <p class="text-sub mb-4">产品/品牌主数据管理中心，跨业务复用。管理品牌信息、产品型号、规格参数、适用设备、资质文件、Logo 等。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>数据范围：</strong>品牌、产品线、型号、规格、资质、Logo
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>应用场景：</strong>意向报备选品、设备台账、试剂绑定
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>管理权限：</strong>产品经理维护，业务端只读引用
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5.3 渠道协同域 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">5.3</div>
+                    渠道协同域
+                </h3>
+
+                <div class="card rounded-xl p-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold">经销商协同</h4>
+                    </div>
+                    <p class="text-sub mb-4">把经销商从"被管理的渠道"变成"协同服务的伙伴"，实现厂家与经销商的信息共享和业务协同。覆盖经销商档案、经销商门户、库存共享、返利引擎、任务协同、业绩看板。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>使用角色：</strong>渠道经理、经销商老板/业务、销售代表、财务
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>核心场景：</strong>窜货冲突预警、返利自动核算、库存共享
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>价值：</strong>渠道冲突减少 50%，返利核算效率提升 80%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5.4 合规审计域 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">5.4</div>
+                    合规审计域
+                </h3>
+
+                <div class="card rounded-xl p-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center text-rose-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-semibold">合规风控</h4>
+                    </div>
+                    <p class="text-sub mb-4">在强监管环境下，确保销售、推广、服务全过程合规可追溯，降低企业法律风险。覆盖代表备案、拜访合规、学术活动管理、样品/赠品管理、飞检抽查、敏感词审计。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>使用角色：</strong>合规经理、销售代表、地区经理、法务/内审
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>核心场景：</strong>反商业贿赂审计、学术活动合规、设备投放合规
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                            <strong>价值：</strong>合规审计准备时间缩短 70%，违规事件降低 70%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5.5 数据决策域 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">5.5</div>
+                    数据决策域
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center text-sky-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                            </div>
+                            <h4 class="text-lg font-semibold">目标绩效</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-3">目标拆解与达成跟踪，支持年度/季度/月度目标层层分解到区域、团队、个人。</p>
+                        <ul class="space-y-1 text-sm text-sub">
+                            <li>• 指标类型：销售额、装机量、试剂消耗、客户覆盖、拜访数</li>
+                            <li>• 目标拆解：公司 → 大区 → 团队 → 个人</li>
+                            <li>• 达成率实时计算，支持同比环比</li>
+                            <li>• 未达标预警和下钻分析</li>
+                        </ul>
+                    </div>
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-fuchsia-100 dark:bg-fuchsia-900/30 flex items-center justify-center text-fuchsia-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+                            </div>
+                            <h4 class="text-lg font-semibold">经营驾驶舱</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-3">高管全局决策入口，汇总设备装机量、试剂销售额、客户健康度、经销商绩效等核心指标。</p>
+                        <ul class="space-y-1 text-sm text-sub">
+                            <li>• 多维度下钻：按区域 / 产品线 / 时间</li>
+                            <li>• AI 智能问答入口（预留）</li>
+                            <li>• 实时刷新与异常预警</li>
+                            <li>• 支持导出和订阅报表</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5.6 系统管理域 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">5.6</div>
+                    系统管理域
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            </div>
+                            <h4 class="text-lg font-semibold">后台设置</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-3">系统级配置中心，面向管理员。覆盖组织用户、角色权限、数据字典、系统参数、日志审计、集成配置。</p>
+                        <ul class="space-y-1 text-sm text-sub">
+                            <li>• 组织架构与用户管理</li>
+                            <li>• 角色权限与数据范围</li>
+                            <li>• 数据字典与系统参数</li>
+                            <li>• 操作日志与安全审计</li>
+                        </ul>
+                    </div>
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path></svg>
+                            </div>
+                            <h4 class="text-lg font-semibold">流程设计器</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-3">可视化工作流设计工具，支持拖拽配置审批流程、条件分支、节点审批人。</p>
+                        <ul class="space-y-1 text-sm text-sub">
+                            <li>• 拖拽式流程画布</li>
+                            <li>• 节点类型：审批、会签、或签、条件、自动</li>
+                            <li>• 支持版本管理和发布</li>
+                            <li>• 与审批中心、业务应用联动</li>
+                        </ul>
+                    </div>
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                            </div>
+                            <h4 class="text-lg font-semibold">应用配置</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-3">应用级配置工具，支持按应用配置字段、视图、表单、列表、流程、权限。</p>
+                        <ul class="space-y-1 text-sm text-sub">
+                            <li>• 自定义字段与字段权限</li>
+                            <li>• 列表/卡片视图配置</li>
+                            <li>• 表单布局与校验规则</li>
+                            <li>• 应用专属流程与权限</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 模块协同关系 -->
+            <div class="card rounded-xl p-8">
+                <h3 class="text-xl font-semibold mb-6">模块协同关系</h3>
+                <div class="architecture-box rounded-xl p-6 text-center">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold text-sm">线索管理</div>
+                            <div class="text-xs text-sub">商机入口</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold text-sm">意向管理</div>
+                            <div class="text-xs text-sub">流程核心</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold text-sm">客户 360°</div>
+                            <div class="text-xs text-sub">数据枢纽</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold text-sm">设备管理</div>
+                            <div class="text-xs text-sub">阵地运营</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold text-sm">试剂运营</div>
+                            <div class="text-xs text-sub">持续收入</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold text-sm">售后工单</div>
+                            <div class="text-xs text-sub">服务保障</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold text-sm">经销商协同</div>
+                            <div class="text-xs text-sub">渠道连接</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold text-sm">合规风控</div>
+                            <div class="text-xs text-sub">风险保障</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold text-sm">经营驾驶舱</div>
+                            <div class="text-xs text-sub">决策大脑</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5.7 系统设置分类配置 -->
+            <div class="card rounded-xl p-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">5.7</div>
+                    系统设置分类配置
+                </h3>
+                <p class="text-sub mb-6">系统设置采用四级配置分层，从平台默认值到用户个人偏好逐级细化和覆盖。当前单租户场景下，平台级和租户级可合并管理；未来多租户扩展时，四级分层可直接复用。</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="p-5 rounded-xl border border-theme">
+                        <h4 class="font-semibold mb-4 flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-full bg-primary-600 text-white flex items-center justify-center text-xs">1</div>
+                            平台级默认配置
+                        </h4>
+                        <p class="text-sm text-sub mb-3">SaaS 平台全局默认，影响所有租户。只有平台运维/超级管理员可修改。</p>
+                        <div class="space-y-3 text-sm text-sub">
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">平台基础参数</div>
+                                <div>默认套餐限制、全局开关、平台级枚举值</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">默认安全策略</div>
+                                <div>默认密码策略、登录失败阈值、会话超时基准</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">平台默认主题</div>
+                                <div>默认品牌色、默认字体、默认主题模式</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-5 rounded-xl border border-theme">
+                        <h4 class="font-semibold mb-4 flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-full bg-primary-600 text-white flex items-center justify-center text-xs">2</div>
+                            租户级配置
+                        </h4>
+                        <p class="text-sm text-sub mb-3">单租户场景下即当前的企业级配置。未来多租户时，每个租户独立维护自己的租户级配置。</p>
+                        <div class="space-y-3 text-sm text-sub">
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">组织与用户</div>
+                                <div>组织架构、用户账号、角色体系、岗位定义</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">权限与安全</div>
+                                <div>功能权限、数据权限、字段权限、登录策略、密码策略、MFA</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">数据字典</div>
+                                <div>通用字典（地区、医院等级、科室）、枚举值、编码规则</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">系统参数</div>
+                                <div>回收周期、保护期时长、预警阈值、通知模板</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">集成配置</div>
+                                <div>ERP 对接、OA 对接、邮件/短信网关、企业微信/钉钉</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">租户级显示主题</div>
+                                <div>租户品牌色、字体家族、默认主题模式、默认字号、界面密度</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="p-5 rounded-xl border border-theme">
+                        <h4 class="font-semibold mb-4 flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-full bg-primary-600 text-white flex items-center justify-center text-xs">3</div>
+                            应用级配置
+                        </h4>
+                        <p class="text-sm text-sub mb-3">只作用于特定应用，不同应用可独立配置，互不影响。</p>
+                        <div class="space-y-3 text-sm text-sub">
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">字段配置</div>
+                                <div>自定义字段、字段权限、必填规则、显示规则</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">视图与显示配置</div>
+                                <div>列表/卡片默认视图、每页条数、默认显示字段、默认筛选、视图布局</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">流程配置</div>
+                                <div>审批流程、状态流转、自动规则、节点权限</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">标签配置</div>
+                                <div>应用固定标签、自定义标签、色板、分类</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">应用内权限</div>
+                                <div>应用内功能权限、数据范围、操作权限</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">业务规则</div>
+                                <div>回收规则、保护期、冲突规则、SLA 规则、通知规则</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-5 rounded-xl border border-theme">
+                        <h4 class="font-semibold mb-4 flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-full bg-primary-600 text-white flex items-center justify-center text-xs">4</div>
+                            用户级偏好
+                        </h4>
+                        <p class="text-sm text-sub mb-3">个人使用习惯，只影响当前用户自己的视图和操作体验。</p>
+                        <div class="space-y-3 text-sm text-sub">
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">主题与显示</div>
+                                <div>主题模式（浅/深/跟随系统）、字号缩放、界面密度</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">视图偏好</div>
+                                <div>个人保存的筛选、排序、列宽、视图模式</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">快捷入口</div>
+                                <div>收藏夹、最近访问、自定义工作台卡片</div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <div class="font-medium">通知偏好</div>
+                                <div>消息提醒方式、免打扰设置、订阅报表</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-lg architecture-box">
+                    <h4 class="font-semibold mb-3">配置层级关系</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-sm">
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme text-center">
+                            <div class="font-semibold">平台级</div>
+                            <div class="text-sub text-xs">平台运维 · 默认值</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme text-center">
+                            <div class="font-semibold">租户级</div>
+                            <div class="text-sub text-xs">租户管理员 · 企业配置</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme text-center">
+                            <div class="font-semibold">应用级</div>
+                            <div class="text-sub text-xs">应用管理员 · 业务配置</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme text-center">
+                            <div class="font-semibold">用户级</div>
+                            <div class="text-sub text-xs">个人 · 使用偏好</div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-sub mt-4 text-center">下级配置可覆盖上级默认值，但不能违反平台级和租户级的安全底线。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第六章：技术架构 -->
+        <section id="architecture" class="px-8 py-16 max-w-5xl mx-auto">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="text-4xl font-bold text-primary-600 section-number">06</div>
+                <h2 class="text-3xl font-bold">技术架构</h2>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-4">架构目标</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">领域驱动</div>
+                        <div class="text-sm text-sub">以业务领域为核心建模</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">双中台支撑</div>
+                        <div class="text-sm text-sub">业务能力复用 + 技术能力复用</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">灵活可配置</div>
+                        <div class="text-sm text-sub">流程、字段、标签、权限可配置</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">高性能</div>
+                        <div class="text-sm text-sub">支持 1000 人同时在线</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">数据驱动</div>
+                        <div class="text-sm text-sub">支持实时与离线分析</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">实用可落地</div>
+                        <div class="text-sm text-sub">单体起步，按需拆分</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-4">双中台命名说明</h3>
+                <p class="text-sub leading-relaxed mb-4">
+                    鑫渠当前阶段采用<strong>业务中台 + 数据中台</strong>的双中台架构。工作流、权限、搜索、消息等通用技术能力属于<strong>技术基础设施层</strong>（也可称为技术平台），它们支撑业务中台和数据中台运行，但本身不属于数据中台。
+                </p>
+                <p class="text-sub leading-relaxed">
+                    在后续演进中，当 AI 能力独立、技术能力进一步服务化后，可自然扩展为<strong>业务中台 + 数据中台 + AI 中台 + 技术中台</strong>的四中台架构。当前命名为双中台，既符合主流认知，也避免第一阶段过度拆分。
+                </p>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-6">双中台 + 技术基础设施架构</h3>
+
+                <!-- 应用层 -->
+                <div class="mb-4 p-4 rounded-xl border-2 border-dashed border-theme text-center">
+                    <div class="font-semibold mb-2">应用层</div>
+                    <div class="flex flex-wrap justify-center gap-2 text-sm text-sub">
+                        <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">线索</span>
+                        <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">意向</span>
+                        <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">客户 360°</span>
+                        <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">设备</span>
+                        <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">试剂</span>
+                        <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">工单</span>
+                            <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">审批</span>
+                        <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">经销商</span>
+                        <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">驾驶舱</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-center mb-4">
+                    <svg class="w-6 h-6 text-sub" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </div>
+
+                <!-- 业务中台 -->
+                <div class="architecture-box rounded-xl p-6 mb-4">
+                    <div class="font-semibold mb-3 text-primary-600 text-center">业务中台</div>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-sm text-sub text-center">
+                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">客户中心</div>
+                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">线索中心</div>
+                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">意向中心</div>
+                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">订单中心</div>
+                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">设备中心</div>
+                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">试剂中心</div>
+                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">经销商中心</div>
+                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">营销中心</div>
+                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">合规中心</div>
+                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">产品中心</div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center mb-4">
+                    <svg class="w-6 h-6 text-sub" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                </div>
+
+                <!-- 技术基础设施 + 数据中台 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="p-4 rounded-xl border border-theme">
+                        <div class="font-semibold mb-3 text-center">技术基础设施</div>
+                        <div class="flex flex-wrap gap-2 text-sm text-sub justify-center">
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">工作流</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">权限</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">消息</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">搜索</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">文件</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">标签</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">报表</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">日志</span>
+                        </div>
+                    </div>
+                    <div class="architecture-box rounded-xl p-4">
+                        <div class="font-semibold mb-3 text-primary-600 text-center">数据中台</div>
+                        <div class="flex flex-wrap gap-2 text-sm text-sub justify-center">
+                            <span class="px-2 py-1 rounded bg-white dark:bg-slate-800 border border-theme">数据采集</span>
+                            <span class="px-2 py-1 rounded bg-white dark:bg-slate-800 border border-theme">数据治理</span>
+                            <span class="px-2 py-1 rounded bg-white dark:bg-slate-800 border border-theme">数据仓库</span>
+                            <span class="px-2 py-1 rounded bg-white dark:bg-slate-800 border border-theme">数据服务</span>
+                            <span class="px-2 py-1 rounded bg-white dark:bg-slate-800 border border-theme">实时计算</span>
+                            <span class="px-2 py-1 rounded bg-white dark:bg-slate-800 border border-theme">特征平台</span>
+                            <span class="px-2 py-1 rounded bg-white dark:bg-slate-800 border border-theme">AI 数据基础</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center mb-4">
+                    <svg class="w-6 h-6 text-sub" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </div>
+
+                <!-- 基础设施层 -->
+                <div class="p-4 rounded-xl border border-theme text-center">
+                    <div class="font-semibold mb-2">基础设施层</div>
+                    <div class="flex flex-wrap justify-center gap-2 text-sm text-sub">
+                        <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">PostgreSQL</span>
+                        <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">Redis</span>
+                        <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">Elasticsearch</span>
+                        <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">ClickHouse</span>
+                        <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">Kafka</span>
+                        <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">MinIO</span>
+                    </div>
+                </div>
+
+                <p class="text-sub mt-6">业务中台沉淀 IVD 渠道业务核心能力；数据中台负责数据汇聚、治理、分析和 AI 数据基础；技术基础设施提供通用技术能力。前端应用通过统一 API 网关调用业务中台，数据中台通过领域事件和 ETL 从业务中台沉淀数据。</p>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-6">性能目标</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-theme">
+                                <th class="text-left py-3 font-semibold">指标</th>
+                                <th class="text-left py-3 font-semibold">数值</th>
+                                <th class="text-left py-3 font-semibold">说明</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sub">
+                            <tr class="border-b border-theme">
+                                <td class="py-3">同时在线用户数</td>
+                                <td class="py-3 font-mono">1000 人</td>
+                                <td class="py-3">日常峰值</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">峰值 QPS</td>
+                                <td class="py-3 font-mono">300-500</td>
+                                <td class="py-3">按 10 倍峰值估算</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">页面首屏</td>
+                                <td class="py-3 font-mono">&lt; 2s</td>
+                                <td class="py-3">首次加载</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">列表查询</td>
+                                <td class="py-3 font-mono">&lt; 500ms</td>
+                                <td class="py-3">普通列表页</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">搜索查询</td>
+                                <td class="py-3 font-mono">&lt; 800ms</td>
+                                <td class="py-3">Elasticsearch 查询</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">审批提交</td>
+                                <td class="py-3 font-mono">&lt; 300ms</td>
+                                <td class="py-3">工作流推进</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">数据分析大屏</td>
+                                <td class="py-3 font-mono">&lt; 5s</td>
+                                <td class="py-3">经营驾驶舱</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-6">领域驱动设计（DDD）</h3>
+                <p class="text-sub mb-6">鑫渠业务适合 DDD，因为客户、线索、意向、设备、试剂等对象边界清晰，业务流程中事件丰富。</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h4 class="font-semibold mb-3">14 个限界上下文</h4>
+                        <div class="flex flex-wrap gap-2 text-sm text-sub">
+                            <span class="px-2 py-1 rounded border border-theme">客户</span>
+                            <span class="px-2 py-1 rounded border border-theme">线索</span>
+                            <span class="px-2 py-1 rounded border border-theme">意向</span>
+                            <span class="px-2 py-1 rounded border border-theme">订单</span>
+                            <span class="px-2 py-1 rounded border border-theme">设备</span>
+                            <span class="px-2 py-1 rounded border border-theme">工单</span>
+                            <span class="px-2 py-1 rounded border border-theme">试剂</span>
+                            <span class="px-2 py-1 rounded border border-theme">经销商</span>
+                            <span class="px-2 py-1 rounded border border-theme">营销</span>
+                            <span class="px-2 py-1 rounded border border-theme">合规</span>
+                            <span class="px-2 py-1 rounded border border-theme">用户权限</span>
+                            <span class="px-2 py-1 rounded border border-theme">工作流</span>
+                            <span class="px-2 py-1 rounded border border-theme">标签</span>
+                            <span class="px-2 py-1 rounded border border-theme">通知</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-3">分层架构</h4>
+                        <div class="space-y-2 text-sm text-sub">
+                            <div class="p-2 rounded bg-slate-50 dark:bg-slate-800/50">用户接口层：REST API / 事件订阅 / 前端适配</div>
+                            <div class="p-2 rounded bg-slate-50 dark:bg-slate-800/50">应用层：编排领域服务，完成业务流程</div>
+                            <div class="p-2 rounded bg-slate-50 dark:bg-slate-800/50">领域层：Entity / VO / Aggregate / DomainService / DomainEvent</div>
+                            <div class="p-2 rounded bg-slate-50 dark:bg-slate-800/50">基础设施层：数据库 / 缓存 / 消息队列 / 外部接口</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                    <h4 class="font-semibold mb-2">领域事件示例</h4>
+                    <p class="text-sm text-sub"><code>IntentSubmitted</code> → <code>IntentApproved</code> → <code>EquipmentInstalled</code> → <code>ReagentConsumptionTracked</code></p>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8">
+                <h3 class="text-xl font-semibold mb-6">工作流引擎</h3>
+                <p class="text-sub mb-6">工作流引擎支撑所有业务流程，模板可配置，支持自由流，审批与业务解耦。</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold mb-3">节点类型</h4>
+                        <div class="flex flex-wrap gap-2 text-sm text-sub">
+                            <span class="px-2 py-1 rounded border border-theme">start</span>
+                            <span class="px-2 py-1 rounded border border-theme">approval</span>
+                            <span class="px-2 py-1 rounded border border-theme">countersign</span>
+                            <span class="px-2 py-1 rounded border border-theme">anysign</span>
+                            <span class="px-2 py-1 rounded border border-theme">auto</span>
+                            <span class="px-2 py-1 rounded border border-theme">condition</span>
+                            <span class="px-2 py-1 rounded border border-theme">end</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-3">扩展能力</h4>
+                        <ul class="space-y-2 text-sm text-sub">
+                            <li>• 转交、加签、动态指定下一步</li>
+                            <li>• 驳回到任意节点</li>
+                            <li>• 条件分支与动态审批人</li>
+                            <li>• 通过事件回调驱动业务状态变更</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第七章：数据与智能 -->
+        <section id="data" class="px-8 py-16 max-w-5xl mx-auto">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="text-4xl font-bold text-primary-600 section-number">07</div>
+                <h2 class="text-3xl font-bold">数据与智能</h2>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-6">数据架构</h3>
+                <div class="architecture-box rounded-xl p-6 mb-6">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold mb-1">OLTP</div>
+                            <div class="text-sub">PostgreSQL</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold mb-1">缓存</div>
+                            <div class="text-sub">Redis Cluster</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold mb-1">搜索</div>
+                            <div class="text-sub">Elasticsearch</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold mb-1">文件</div>
+                            <div class="text-sub">MinIO / OSS</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold mb-1">日志审计</div>
+                            <div class="text-sub">ClickHouse</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold mb-1">时序数据</div>
+                            <div class="text-sub">InfluxDB / TDengine</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold mb-1">数据仓库</div>
+                            <div class="text-sub">ClickHouse / StarRocks</div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
+                            <div class="font-semibold mb-1">向量数据库</div>
+                            <div class="text-sub">Milvus</div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sub">业务数据走 PostgreSQL，缓存用 Redis Cluster，搜索用 Elasticsearch，日志和数仓用 ClickHouse，时序数据用 InfluxDB，向量化数据用 Milvus。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">缓存策略</h3>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• 本地缓存 Caffeine + Redis 集群</li>
+                        <li>• Cache Aside + 消息通知失效</li>
+                        <li>• 热点数据：用户权限、字典、今日 KPI、待办数</li>
+                        <li>• 分布式锁防止缓存击穿</li>
+                    </ul>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">事件溯源与 CQRS</h3>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• 审批历史、工单流转、客户状态变更使用事件溯源</li>
+                        <li>• 命令走业务库，复杂查询走 ES/数据仓库</li>
+                        <li>• 事件版本化，便于审计和回溯</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-6">分库分表策略</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-theme">
+                                <th class="text-left py-3 font-semibold">数据类型</th>
+                                <th class="text-left py-3 font-semibold">分片策略</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sub">
+                            <tr class="border-b border-theme">
+                                <td class="py-3">客户数据</td>
+                                <td class="py-3">按地区 hash 分片</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">意向/审批历史</td>
+                                <td class="py-3">按时间分片</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">操作日志</td>
+                                <td class="py-3">按日期分片</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8">
+                <h3 class="text-xl font-semibold mb-6">AI 数据基础</h3>
+                <p class="text-sub mb-6">数据分层：OLTP → 数据仓库 → 数据湖 → 特征平台 → 向量数据库。</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">客户流失预测</div>
+                        <div class="text-sm text-sub">基于健康度评分和历史行为</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">试剂复购预测</div>
+                        <div class="text-sm text-sub">基于消耗趋势和库存阈值</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">意向成交预测</div>
+                        <div class="text-sm text-sub">基于跟进频率和招标节点</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">设备故障预测</div>
+                        <div class="text-sm text-sub">基于设备运行数据和维修历史</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">智能推荐</div>
+                        <div class="text-sm text-sub">相似客户、产品、商机推荐</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">智能客服</div>
+                        <div class="text-sm text-sub">基于知识库和对话历史</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第八章：标签与搜索体系 -->
+        <section id="tags-search" class="px-8 py-16 max-w-5xl mx-auto">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="text-4xl font-bold text-primary-600 section-number">08</div>
+                <h2 class="text-3xl font-bold">标签与搜索体系</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">标签体系</h3>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• <strong>作用域</strong>：全局标签（跨应用）、应用标签（特定应用）、对象标签（绑定实例）</li>
+                        <li>• <strong>类型</strong>：固定标签（系统内置）、自定义标签（用户创建）</li>
+                        <li>• <strong>色板</strong>：16 色标准色板，固定标签绑定固定颜色</li>
+                        <li>• <strong>权限</strong>：固定标签仅系统管理员修改，普通用户可创建应用内标签</li>
+                        <li>• <strong>限制</strong>：一个对象最多显示 3 个标签，最多绑定 5 个标签</li>
+                    </ul>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">搜索体系</h3>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• <strong>分层</strong>：全局搜索（⌘K 跨应用）+ 应用内搜索</li>
+                        <li>• <strong>引擎</strong>：Elasticsearch 8.x，3 Master + 3 Data + 2 Coordinator</li>
+                        <li>• <strong>能力</strong>：全文检索、精确匹配、前缀匹配、模糊查询、拼音全拼/首字母</li>
+                        <li>• <strong>权限</strong>：按用户数据范围过滤，字段级权限脱敏</li>
+                        <li>• <strong>同步</strong>：CDC &lt;1s、领域事件 &lt;1s、定时全量同步</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8">
+                <h3 class="text-xl font-semibold mb-6">各应用固定标签示例</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-theme">
+                                <th class="text-left py-3 font-semibold">应用</th>
+                                <th class="text-left py-3 font-semibold">固定标签</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sub">
+                            <tr class="border-b border-theme">
+                                <td class="py-3">日历</td>
+                                <td class="py-3">客户拜访、意向跟进、会议、任务截止、关键节点</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">意向</td>
+                                <td class="py-3">招标、非招标、TP/投放、捐赠、高价值、紧急</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">线索</td>
+                                <td class="py-3">官网注册、展会、转介绍、电话陌拜、第三方平台</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">客户</td>
+                                <td class="py-3">三甲、二甲、健康、关注、风险</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3">工单</td>
+                                <td class="py-3">高/中/低优先级、保修内/外</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第九章：质量保障与验收 -->
+        <section id="quality" class="px-8 py-16 max-w-5xl mx-auto">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="text-4xl font-bold text-primary-600 section-number">09</div>
+                <h2 class="text-3xl font-bold">质量保障与验收</h2>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-4">验收原则</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">先自检后交付</div>
+                        <div class="text-sm text-sub">开发者完成修改后须先按验收清单自检</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">问题闭环</div>
+                        <div class="text-sm text-sub">发现的问题必须修复后再进入下一阶段</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">版本对应</div>
+                        <div class="text-sm text-sub">原型、规范、独立文档版本号保持同步</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">中间汇报</div>
+                        <div class="text-sm text-sub">复杂任务中途须向项目负责人汇报进度</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8">
+                <h3 class="text-xl font-semibold mb-6">六维验收体系</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4 p-4 rounded-lg border border-theme">
+                        <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 font-bold text-sm">20%</div>
+                        <div>
+                            <div class="font-semibold">结构正确性</div>
+                            <div class="text-sm text-sub">HTML/JS 语法、ID 唯一性、引用正确、无真实 emoji</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-lg border border-theme">
+                        <div class="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 font-bold text-sm">25%</div>
+                        <div>
+                            <div class="font-semibold">功能完整性</div>
+                            <div class="text-sm text-sub">页面可访问、视图切换、筛选搜索、分页、弹窗、表单、角色切换、空态、错误处理</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-lg border border-theme">
+                        <div class="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 font-bold text-sm">20%</div>
+                        <div>
+                            <div class="font-semibold">视觉一致性</div>
+                            <div class="text-sm text-sub">CSS 变量、rem 字号、按钮不换行、文本不溢出、SVG 图标、圆角间距一致</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-lg border border-theme">
+                        <div class="w-10 h-10 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 font-bold text-sm">15%</div>
+                        <div>
+                            <div class="font-semibold">交互体验</div>
+                            <div class="text-sm text-sub">操作反馈、返回路径短、面板使用合理、搜索联想、加载状态、表单校验、二次确认、快捷键</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-lg border border-theme">
+                        <div class="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 font-bold text-sm">10%</div>
+                        <div>
+                            <div class="font-semibold">性能与兼容性</div>
+                            <div class="text-sm text-sub">加载 &lt;3s、列表 &lt;500ms、主题切换、字号放大、移动端适配</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-lg border border-theme">
+                        <div class="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 font-bold text-sm">10%</div>
+                        <div>
+                            <div class="font-semibold">文档同步</div>
+                            <div class="text-sm text-sub">HTML/规范/独立文档版本号同步、新增应用/模板/组件同步</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第十章：架构演进路线 -->
+        <section id="roadmap" class="px-8 py-16 max-w-5xl mx-auto">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="text-4xl font-bold text-primary-600 section-number">10</div>
+                <h2 class="text-3xl font-bold">架构演进路线</h2>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-4">演进必要性</h3>
+                <p class="text-sub leading-relaxed">
+                    双中台能解决当前阶段的业务能力复用和数据汇聚问题，但随着 AI 能力深化、实时性要求提升、组织规模扩大，需要向智能驱动、事件驱动、可组合架构演进。
+                </p>
+            </div>
+
+            <div class="space-y-8 mb-8">
+                <!-- 第一阶段 -->
+                <div class="card rounded-xl p-8 relative">
+                    <div class="absolute -left-3 top-8 w-6 h-6 rounded-full bg-blue-600 border-4 border-white dark:border-slate-900"></div>
+                    <div class="pl-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 text-sm font-semibold">第一阶段</span>
+                            <span class="text-sub text-sm">0-12 个月</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">双中台 + DDD</h3>
+                        <p class="text-sub mb-4">夯实基础，支撑 1000 人并发，沉淀核心业务能力。</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                                <strong>业务中台：</strong>客户、线索、意向、设备、试剂、工单、审批等核心领域能力
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                                <strong>数据中台：</strong>统一数据采集、治理、报表、指标体系
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                                <strong>DDD 建模：</strong>明确聚合根、限界上下文、领域事件
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                                <strong>后台配置化：</strong>字段、视图、流程、标签、权限可配置
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 第二阶段 -->
+                <div class="card rounded-xl p-8 relative">
+                    <div class="absolute -left-3 top-8 w-6 h-6 rounded-full bg-purple-600 border-4 border-white dark:border-slate-900"></div>
+                    <div class="pl-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 text-sm font-semibold">第二阶段</span>
+                            <span class="text-sub text-sm">12-24 个月</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">AI 中台 + 事件驱动</h3>
+                        <p class="text-sub mb-4">引入智能化能力和实时业务流程联动。</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                                <strong>AI 中台：</strong>线索评分、客户流失预警、试剂消耗预测、智能助手
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                                <strong>事件驱动：</strong>意向成交→设备装机→试剂跟踪自动串联
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                                <strong>实时计算：</strong>库存预警、待办提醒、经营指标实时刷新
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                                <strong>数据中台升级：</strong>实时数仓、指标平台
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 第三阶段 -->
+                <div class="card rounded-xl p-8 relative">
+                    <div class="absolute -left-3 top-8 w-6 h-6 rounded-full bg-green-600 border-4 border-white dark:border-slate-900"></div>
+                    <div class="pl-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 text-sm font-semibold">第三阶段</span>
+                            <span class="text-sub text-sm">24-36 个月</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">可组合架构 + 数据网格/湖仓一体</h3>
+                        <p class="text-sub mb-4">让系统具备高度灵活性，支持多组织、多产品线、多业务模式。</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                                <strong>PBC 化：</strong>每个领域能力封装为可复用的打包业务能力
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                                <strong>低代码平台：</strong>业务人员可配置页面、流程、报表
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                                <strong>数据网格：</strong>各领域团队负责自己的数据产品
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                                <strong>AI 原生交互：</strong>自然语言查询经营数据
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8">
+                <h3 class="text-xl font-semibold mb-6">关键设计原则</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">单体起步，按需拆分</div>
+                        <div class="text-sm text-sub">业务边界稳定、团队规模扩大后再拆分微服务</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">中台能力先于组织拆分</div>
+                        <div class="text-sm text-sub">先沉淀可复用能力，再考虑独立团队</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">事件是领域之间的胶水</div>
+                        <div class="text-sm text-sub">不同领域优先通过事件解耦</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">AI 能力服务化</div>
+                        <div class="text-sm text-sub">统一输入输出规范，便于复用和替换</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">数据产品化</div>
+                        <div class="text-sm text-sub">每个领域的数据作为产品对外服务</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">配置优先于定制</div>
+                        <div class="text-sm text-sub">优先通过配置满足 IVD 行业多样化需求</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第十一章：账户与数据安全 -->
+        <section id="security" class="px-8 py-16 max-w-5xl mx-auto">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="text-4xl font-bold text-primary-600 section-number">11</div>
+                <h2 class="text-3xl font-bold">账户与数据安全</h2>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-4">设计原则</h3>
+                <p class="text-sub leading-relaxed">
+                    账户管理和数据安全是鑫渠从单租户向多租户、从工具向平台演进的基础。当前阶段虽然为单租户使用，但设计时须预留多租户扩展能力，确保账户隔离、数据隔离、权限隔离、审计可追溯从第一天就具备可落地性。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">账户管理</h3>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• 账户生命周期：创建 → 启用 → 冻结/锁定 → 禁用 → 注销</li>
+                        <li>• 账户类型：平台超管、租户管理员、应用管理员、部门管理员、普通用户、外部用户</li>
+                        <li>• 密码策略、登录失败锁定、会话管理、MFA</li>
+                        <li>• RBAC：功能权限 + 数据权限 + 字段权限 + 操作权限</li>
+                    </ul>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">账户移交</h3>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• 适用场景：离职、调岗、休假、组织调整</li>
+                        <li>• 移交对象：客户、线索、意向、任务、日程、设备、工单、待办</li>
+                        <li>• 历史记录保留，时间线记录移交动作</li>
+                        <li>• 重要移交需审批，支持批量移交</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">数据备份与恢复</h3>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• 全量备份每日、增量备份每小时、事务日志实时备份</li>
+                        <li>• 支持按时间点恢复（PITR）、按租户恢复、按对象恢复</li>
+                        <li>• 每月恢复演练，RTO < 4 小时，RPO < 15 分钟</li>
+                        <li>• 历史数据自动归档，归档后仍可审计查询</li>
+                    </ul>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">数据分批导入</h3>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• 支持 Excel/CSV 模板导入、API 批量导入、数据库同步</li>
+                        <li>• 异步任务队列，每批 500-1000 条独立事务</li>
+                        <li>• 格式校验、重复校验、权限校验、关联校验、冲突校验</li>
+                        <li>• 导入报告 + 错误文件下载 + 进度通知</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-6">数据安全与防泄漏</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">加密</div>
+                        <div class="text-sm text-sub">HTTPS/TLS、AES-256、TDE、备份加密、KMS 密钥管理</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">脱敏</div>
+                        <div class="text-sm text-sub">前端展示、导出、测试环境、外部用户多重脱敏</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">审计</div>
+                        <div class="text-sm text-sub">操作日志、访问日志、导出日志、权限变更日志、数据变更日志</div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-1">防泄漏</div>
+                        <div class="text-sm text-sub">屏幕水印、导出审批、API 限流、DLP 集成、敏感数据识别</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8">
+                <h3 class="text-xl font-semibold mb-6">多租户扩展准备</h3>
+                <p class="text-sub mb-6">当前单租户设计已为多租户预留扩展空间。未来可采用共享数据库 + 租户字段起步，逐步为头部客户提供独立 Schema/数据库。</p>
+                <div class="architecture-box rounded-xl p-6">
+                    <div class="text-center font-semibold mb-4">配置分层（多租户）</div>
+                    <div class="space-y-3">
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme text-center">
+                            <div class="font-medium">平台级默认配置</div>
+                            <div class="text-sm text-sub">SaaS 基础参数、默认套餐限制</div>
+                        </div>
+                        <div class="flex justify-center">
+                            <svg class="w-6 h-6 text-sub" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme text-center">
+                            <div class="font-medium">租户级配置</div>
+                            <div class="text-sm text-sub">品牌色、组织架构、角色权限、数据字典、系统参数</div>
+                        </div>
+                        <div class="flex justify-center">
+                            <svg class="w-6 h-6 text-sub" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme text-center">
+                            <div class="font-medium">应用级配置</div>
+                            <div class="text-sm text-sub">字段、视图、流程、标签、业务规则</div>
+                        </div>
+                        <div class="flex justify-center">
+                            <svg class="w-6 h-6 text-sub" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                        </div>
+                        <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme text-center">
+                            <div class="font-medium">用户级偏好</div>
+                            <div class="text-sm text-sub">主题模式、字号、界面密度、视图偏好</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第十二章：AI 可执行开发指南 -->
+        <section id="ai-executable" class="px-8 py-16 max-w-5xl mx-auto">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="text-4xl font-bold text-primary-600 section-number">12</div>
+                <h2 class="text-3xl font-bold">AI 可执行开发指南</h2>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
+                <p class="text-sub">本章节定义鑫渠 CRM 面向 AI 编程 agent 的开发执行标准。核心目标是：任何 AI 编程 agent 在阅读对应模块设计文档后，能够直接输出符合设计、交互、视觉与数据模型要求的前后端代码，减少理解偏差与返工。</p>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">12.1</div>
+                    为什么需要 AI 可执行文档
+                </h3>
+                <div class="card rounded-xl p-6">
+                    <p class="text-sub mb-4">传统设计文档面向人类阅读，常存在描述模糊、缺省字段、组件不统一等问题。AI 编程 agent 无法像人类一样依赖经验补全信息，因此设计文档必须达到「可执行」精度。</p>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 mb-4">
+                        <div class="font-semibold mb-2">最高使命</div>
+                        <p class="text-sm text-sub">让任何 AI 编程 agent 拿到文档后能 100% 按设计开发，无需二次询问、无需依赖个人经验、无需猜测业务规则。</p>
+                    </div>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• 无歧义：同一句话只能有一种理解方式。</li>
+                        <li>• 可量化：所有尺寸、颜色、间距、状态、权限都有明确数值或枚举值。</li>
+                        <li>• 可映射：每一处 UI 都能对应到具体组件名、字段名、接口名。</li>
+                        <li>• 可验证：每个功能都有至少一条可自动化验证的断言。</li>
+                        <li>• 双端一致：PC 端与移动端必须分别描述，不能混为一谈。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">12.2</div>
+                    AI 开发三层 agent 协作架构
+                </h3>
+                <div class="card rounded-xl p-6">
+                    <p class="text-sub mb-6">为提高 AI 开发的可控性与质量，采用三层 agent 分工协作模式：架构层把控全局、实现层输出代码、验收层独立验证。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-semibold mb-2 text-primary-600">架构层</div>
+                            <div class="text-sm text-sub mb-2">Claude / 同等强推理模型</div>
+                            <p class="text-sm text-sub">负责理解业务、拆解模块、制定技术方案、定义接口与数据模型、识别边界条件。</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-semibold mb-2 text-primary-600">实现层</div>
+                            <div class="text-sm text-sub mb-2">DeepSeek-V4 1M / Claude 4 / 同等长上下文编码模型</div>
+                            <p class="text-sm text-sub">在架构层方案约束下，按设计文档输出页面、组件、接口、状态机、测试代码。</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-semibold mb-2 text-primary-600">验收层</div>
+                            <div class="text-sm text-sub mb-2">专用测试 agent</div>
+                            <p class="text-sm text-sub">对照验收断言清单逐项验证，输出测试报告，标记不通过项并给出修复建议。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">12.3</div>
+                    文档结构标准
+                </h3>
+                <div class="card rounded-xl p-6">
+                    <p class="text-sub mb-4">每份应用模块文档必须按以下 12 个必填章节顺序编写，缺失任一章节视为不合格。详见《AI可执行设计文档编写规范.md》。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-sub">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">1. 文档基础信息</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">2. 机器指令块</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">3. 模块定位与目标</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">4. 使用角色与权限</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">5. 核心业务流程</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">6. 页面清单与路由</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">7. 页面结构与布局</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">8. 核心字段规范</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">9. 交互设计要点</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">10. 接口契约（前端视角）</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">11. 验收断言清单</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">12. 关联与扩展</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">12.4</div>
+                    字段规范
+                </h3>
+                <div class="card rounded-xl p-6">
+                    <p class="text-sub mb-4">每个业务字段必须给出完整定义，禁止只有中文名称的模糊写法。详见《鑫渠字段规范模板.md》。</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-theme">
+                                    <th class="text-left py-2 px-3 font-semibold">属性</th>
+                                    <th class="text-left py-2 px-3 font-semibold">说明</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sub">
+                                <tr class="border-b border-theme"><td class="py-2 px-3">字段编码</td><td class="py-2 px-3">英文/拼音驼峰或下划线编码，全局唯一</td></tr>
+                                <tr class="border-b border-theme"><td class="py-2 px-3">数据类型</td><td class="py-2 px-3">String / Number / Integer / Boolean / Date / DateTime / Enum / Array / Object / Money</td></tr>
+                                <tr class="border-b border-theme"><td class="py-2 px-3">长度/精度</td><td class="py-2 px-3">字符串长度、数字精度、日期格式</td></tr>
+                                <tr class="border-b border-theme"><td class="py-2 px-3">是否必填</td><td class="py-2 px-3">是 / 否 / 条件必填</td></tr>
+                                <tr class="border-b border-theme"><td class="py-2 px-3">读写权限</td><td class="py-2 px-3">角色可见/可编辑规则，是否脱敏</td></tr>
+                                <tr><td class="py-2 px-3">渲染方式</td><td class="py-2 px-3">列表/详情/表单中如何展示，映射到具体组件</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">12.5</div>
+                    组件映射
+                </h3>
+                <div class="card rounded-xl p-6">
+                    <p class="text-sub mb-4">所有 UI 必须映射到《鑫渠组件库清单与命名规范.md》中注册的 Xq* 组件，禁止自行发明组件名。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-sub">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50"><strong>布局：</strong>XqPageLayout / XqTwoColumnLayout / XqDrawer</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50"><strong>数据展示：</strong>XqKpiCard / XqDataTable / XqCardGrid / XqStatusBadge</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50"><strong>表单：</strong>XqSearchBar / XqFilterBar / XqFormDrawer</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50"><strong>导航：</strong>XqNavTabs / XqViewSwitch / XqBackButton</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50"><strong>反馈：</strong>XqToast / XqConfirmDialog / XqEmptyState</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50"><strong>业务：</strong>XqIntentionCard / XqLeadCard / XqCustomerCard / XqTimeline</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">12.6</div>
+                    接口契约
+                </h3>
+                <div class="card rounded-xl p-6">
+                    <p class="text-sub mb-4">每个模块必须给出前端视角的接口契约，确保实现层 agent 与后端对接有据可依。</p>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• 接口名：统一英文驼峰命名，如 getIntentionList、createIntention。</li>
+                        <li>• 请求方式：GET / POST / PUT / DELETE，按 REST 语义选择。</li>
+                        <li>• 请求路径：/api/v1/模块/动作，版本与模块清晰。</li>
+                        <li>• 入参：字段编码、类型、必填、默认值、说明。</li>
+                        <li>• 出参：字段编码、类型、说明，列表需包含分页信息。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">12.7</div>
+                    验收断言
+                </h3>
+                <div class="card rounded-xl p-6">
+                    <p class="text-sub mb-4">每个核心功能至少编写 3 条可自动化验证的断言，覆盖正常流、异常流与边界条件。详见《鑫渠验收断言编写规范.md》。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-sub">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50"><strong>功能断言</strong><br>验证业务功能是否按预期工作</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50"><strong>表单校验断言</strong><br>验证必填、格式、长度等校验规则</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50"><strong>权限断言</strong><br>验证不同角色可见范围与操作权限</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50"><strong>搜索筛选断言</strong><br>验证关键词、拼音首字母、筛选条件</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50"><strong>响应式断言</strong><br>验证 PC 端与移动端布局一致性</div>
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50"><strong>性能断言</strong><br>验证首屏渲染、接口响应、翻页速度</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">12.8</div>
+                    响应式双端设计
+                </h3>
+                <div class="card rounded-xl p-6">
+                    <p class="text-sub mb-4">每个页面必须分别描述 PC 端和移动端布局，禁止只写 PC 端或一句话「移动端适配」。详见《鑫渠响应式设计规范.md》。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-sub">
+                        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-semibold mb-2">PC 端（>=1024px）</div>
+                            <ul class="space-y-1">
+                                <li>• 多列布局，统计卡片横向排列</li>
+                                <li>• 表格完整列展示，支持固定列</li>
+                                <li>• 筛选条件横向平铺或抽屉</li>
+                                <li>• 详情使用右侧抽屉</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-semibold mb-2">移动端（<768px）</div>
+                            <ul class="space-y-1">
+                                <li>• 单列卡片列表，底部固定操作</li>
+                                <li>• 表格切换为卡片或横向滚动</li>
+                                <li>• 筛选收起为底部抽屉</li>
+                                <li>• 详情为全屏页面，顶部返回</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">12.9</div>
+                    开发执行建议
+                </h3>
+                <div class="card rounded-xl p-6">
+                    <p class="text-sub mb-4">基于 AI 开发实践，总结以下执行建议，降低返工率并提升代码质量。</p>
+                    <div class="space-y-4 text-sm text-sub">
+                        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-semibold mb-1">分而治之</div>
+                            <p>将复杂模块拆分为独立页面、组件、接口、状态机，分别生成 prompt 与验收断言，避免单次 prompt 过长导致信息丢失。</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-semibold mb-1">先接口后页面</div>
+                            <p>先由架构层 agent 定义并评审接口契约，再由实现层 agent 基于契约开发页面，减少前后端字段不一致。</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-semibold mb-1">先骨架后细节</div>
+                            <p>先实现页面骨架、路由、状态管理，再填充字段校验、权限判断、异常处理等细节。</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-semibold mb-1">视觉回归</div>
+                            <p>对关键页面执行截图对比，确保实现与原型在布局、间距、颜色、字体上保持一致。</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-semibold mb-1">代码审查 agent</div>
+                            <p>引入独立审查 agent 检查命名规范、组件复用、字段一致性、接口契约符合度、是否引入真实 emoji 或 PNG/JPG 图标。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm">12.10</div>
+                    Claude-DeepSeek 协同开发规则
+                </h3>
+                <div class="card rounded-xl p-6">
+                    <p class="text-sub mb-4">当使用 Claude 作为主控 agent、DeepSeek 作为实现 agent 时，必须遵守《Claude-DeepSeek协同开发规则.md》中的约束。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-sub">
+                        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-semibold mb-1">角色分工</div>
+                            <p>Claude 负责任务拆解、准备上下文、验收结果；DeepSeek 负责在精确上下文内生成代码。</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-semibold mb-1">调用前提</div>
+                            <p>设计文档已通过验收、接口契约已确认、任务边界已划定、验收标准已准备。</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-semibold mb-1">Prompt 模板</div>
+                            <p>Claude 必须按规则中的模板构造 Prompt，包含禁止事项、必读文档、任务边界、字段接口、验收断言。</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                            <div class="font-semibold mb-1">验收 checklist</div>
+                            <p>Claude 必须对 DeepSeek 输出做基础合规、设计还原、交互逻辑、响应式、接口数据五层验收。</p>
+                        </div>
+                    </div>
+                    <p class="text-sub mt-4 text-sm">详见《Claude-DeepSeek协同开发规则.md》。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 附录 -->
+        <section id="appendix" class="px-8 py-16 max-w-5xl mx-auto">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="text-4xl font-bold text-primary-600 section-number">附</div>
+                <h2 class="text-3xl font-bold">附录：相关文档索引</h2>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-6">
+                <h3 class="text-lg font-semibold mb-4">本地文档原文</h3>
+                <p class="text-sm text-sub mb-6">以下链接使用本地文件路径，点击可直接打开原文档进行详细阅读。</p>
+
+                <div class="mb-6">
+                    <h4 class="text-base font-semibold mb-3 text-primary-600">全局规范与标准</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <a href="file:///Users/mac/xinqu/鑫渠设计与开发规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠设计与开发规范.md</div>
+                            <div class="text-sm text-sub">v1.5 · 前端页面与交互设计指导</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/鑫渠全局设计系统规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠全局设计系统规范.md</div>
+                            <div class="text-sm text-sub">v1.0 · 字体、颜色、图标、主题</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/鑫渠页面布局设计理念.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠页面布局设计理念.md</div>
+                            <div class="text-sm text-sub">v1.0 · 布局哲学与组件模式</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/搜索引擎设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">搜索引擎设计规范.md</div>
+                            <div class="text-sm text-sub">v1.0 · 全局与应用内搜索设计</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/鑫渠标签体系设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠标签体系设计规范.md</div>
+                            <div class="text-sm text-sub">v1.0 · 标签作用域、色板、权限</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/鑫渠账户与数据安全设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠账户与数据安全设计规范.md</div>
+                            <div class="text-sm text-sub">v1.0 · 账户管理、数据备份、分批导入、数据安全</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/鑫渠应用文档验收标准.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠应用文档验收标准.md</div>
+                            <div class="text-sm text-sub">v1.1 · 应用文档自检与验收依据</div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="text-base font-semibold mb-3 text-primary-600">AI 可执行开发规范</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <a href="file:///Users/mac/xinqu/AI可执行设计文档编写规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">AI可执行设计文档编写规范.md</div>
+                            <div class="text-sm text-sub">v1.0 · AI 可执行文档章节结构</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/鑫渠组件库清单与命名规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠组件库清单与命名规范.md</div>
+                            <div class="text-sm text-sub">v1.0 · 前端组件字典与命名规则</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/鑫渠响应式设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠响应式设计规范.md</div>
+                            <div class="text-sm text-sub">v1.0 · 断点、布局、组件适配规则</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/鑫渠字段规范模板.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠字段规范模板.md</div>
+                            <div class="text-sm text-sub">v1.0 · 字段命名、类型、约束、权限</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/鑫渠验收断言编写规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠验收断言编写规范.md</div>
+                            <div class="text-sm text-sub">v1.0 · 断言格式、分类、编写标准</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/Claude-DeepSeek协同开发规则.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">Claude-DeepSeek协同开发规则.md</div>
+                            <div class="text-sm text-sub">v1.0 · Claude 调用 DeepSeek 的分工、Prompt、验收、红线</div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="text-base font-semibold mb-3 text-primary-600">平台级入口应用</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <a href="file:///Users/mac/xinqu/工作台功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">工作台功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 个人待办与数据聚合入口</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/消息中心功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">消息中心功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 系统通知与协同消息</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/应用中心功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">应用中心功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 业务应用统一入口</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/通讯录功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">通讯录功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 客户联系人与组织架构</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/任务功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">任务功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 任务分配、跟踪与提醒</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/收藏夹功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">收藏夹功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 重点对象快速访问</div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="text-base font-semibold mb-3 text-primary-600">业务管理域应用</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <a href="file:///Users/mac/xinqu/线索管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">线索管理功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.4 · 线索收集分配转化</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/意向管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">意向管理功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.4 · 意向报备全流程</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/客户360°功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">客户360°功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.3 · 客户资产中心设计</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/日历模块功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">日历模块功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.2 · 日程时间管理</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/设备管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">设备管理功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 设备档案与生命周期</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/试剂运营功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">试剂运营功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 试剂账本与消耗跟踪</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/售后工单功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">售后工单功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 工单创建、分派、处理</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/工单看板功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">工单看板功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 工单状态流转看板</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/品牌库管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">品牌库管理功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 品牌与产品基础配置</div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="text-base font-semibold mb-3 text-primary-600">渠道协同与合规域应用</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <a href="file:///Users/mac/xinqu/经销商协同功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">经销商协同功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 经销商授权与协同</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/审批中心功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">审批中心功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 审批任务统一入口</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/合规风控功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">合规风控功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 合规审计与风险预警</div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="text-base font-semibold mb-3 text-primary-600">数据决策与系统管理域应用</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <a href="file:///Users/mac/xinqu/经营驾驶舱功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">经营驾驶舱功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 业绩监控与下钻分析</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/目标绩效功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">目标绩效功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 目标拆解与绩效跟踪</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/后台设置功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">后台设置功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 系统级配置与管理</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/应用配置功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">应用配置功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 应用字段、视图、流程配置</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/流程设计器功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">流程设计器功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 可视化流程模板设计</div>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-base font-semibold mb-3 text-primary-600">相关原型</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <a href="file:///Users/mac/xinqu/鑫渠高保真原型.html" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠高保真原型.html</div>
+                            <div class="text-sm text-sub">v1.8.0 · 交互原型</div>
+                        </a>
+                        <a href="file:///Users/mac/xinqu/鑫渠系统技术实现白皮书.html" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠系统技术实现白皮书.html</div>
+                            <div class="text-sm text-sub">本白皮书 v1.6</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 text-center text-sm text-sub">
+                <p>鑫渠 CRM 系统技术实现白皮书 · 版本 v1.6 · 2026-07-29</p>
+                <p class="mt-1">广州华鑫 · IVD 行业渠道营销数字化平台</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 主题切换
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // 初始化主题
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
+        // 目录高亮
+        const sections = document.querySelectorAll('section[id]');
+        const tocItems = document.querySelectorAll('.toc-item');
+
+        function updateActiveToc() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop <= 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === '#' + current) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveToc);
+        updateActiveToc();
+    </script>
+</body>
+</html>
