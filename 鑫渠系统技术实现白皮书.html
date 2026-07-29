@@ -110,7 +110,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl w-full mb-12">
                 <div class="card rounded-xl p-6 text-left">
                     <div class="text-sm text-sub mb-1">文档版本</div>
-                    <div class="text-2xl font-bold">v1.6</div>
+                    <div class="text-2xl font-bold">v1.7</div>
                 </div>
                 <div class="card rounded-xl p-6 text-left">
                     <div class="text-sm text-sub mb-1">对应原型</div>
@@ -512,7 +512,7 @@
                         <p class="text-sm text-sub mb-3">业务应用统一归入应用中心，按业务域分组：</p>
                         <div class="space-y-2 text-sm text-sub">
                             <div>• 业务管理：线索、意向、客户 360°、设备、试剂、工单等</div>
-                            <div>• 渠道协同：经销商协同</div>
+                            <div>• 渠道管理：代理商管理</div>
                             <div>• 合规审计：合规风控</div>
                             <div>• 数据决策：目标绩效、经营驾驶舱</div>
                             <div>• 系统管理：后台设置、流程设计器、应用配置</div>
@@ -810,28 +810,6 @@
                     </div>
                 </div>
 
-                <!-- 审批中心 -->
-                <div class="card rounded-xl p-8 mb-6">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <h4 class="text-xl font-semibold">审批中心</h4>
-                    </div>
-                    <p class="text-sub mb-4">跨业务的通用审批入口，面向审批人角色统一处理待办。虽然审批是技术中台能力，但面向审批人的工作入口具有独立的业务价值，因此作为应用存在。</p>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                            <strong>覆盖业务：</strong>意向报备、冲突裁决、设备投放、合规活动、费用报销
-                        </div>
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                            <strong>待办分类：</strong>待我审批、我已审批、抄送我的、我发起的
-                        </div>
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                            <strong>操作能力：</strong>通过、驳回、转交、加签、批量审批
-                        </div>
-                    </div>
-                </div>
-
                 <!-- 客户 360° -->
                 <div class="card rounded-xl p-8 mb-6">
                     <div class="flex items-center gap-3 mb-4">
@@ -895,15 +873,15 @@
                     </div>
                 </div>
 
-                <!-- 售后工单 -->
+                <!-- 工单管理 -->
                 <div class="card rounded-xl p-8 mb-6">
                     <div class="flex items-center gap-3 mb-4">
                         <div class="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                         </div>
-                        <h4 class="text-xl font-semibold">售后工单</h4>
+                        <h4 class="text-xl font-semibold">工单管理</h4>
                     </div>
-                    <p class="text-sub mb-4">设备故障和服务请求的处理中心，支持报修、派单、处理、回访、满意度评价全流程。与设备管理、日历、客户 360° 深度联动。</p>
+                    <p class="text-sub mb-4">设备故障和服务请求的统一处理中心，支持报修、派单、处理、回访、满意度评价全流程。看板视图、列表视图、日历视图只是同一业务对象的不同展示形态。与设备管理、日历、客户 360° 深度联动。</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
                             <strong>工单类型：</strong>故障维修、保养维护、培训支持、配件更换
@@ -912,29 +890,7 @@
                             <strong>派单规则：</strong>区域优先、技能匹配、负荷均衡、客户偏好
                         </div>
                         <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                            <strong> SLA 监控：</strong>响应时效、解决时效、满意度评分
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 工单看板 -->
-                <div class="card rounded-xl p-8 mb-6">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
-                        </div>
-                        <h4 class="text-xl font-semibold">工单看板</h4>
-                    </div>
-                    <p class="text-sub mb-4">售后工单的流程可视化视图，按工单状态（待处理 / 处理中 / 待回访 / 已完成）展示为看板列，支持拖拽变更状态、快速分配、SLA 预警。</p>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                            <strong>视图形态：</strong>看板视图 / 列表视图 / 日历视图
-                        </div>
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                            <strong>核心能力：</strong>拖拽流转、快速分配、状态筛选
-                        </div>
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                            <strong>适用角色：</strong>售后主管、工程师、调度员
+                            <strong>SLA 监控：</strong>响应时效、解决时效、满意度评分
                         </div>
                     </div>
                 </div>
@@ -974,12 +930,12 @@
                         <div class="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         </div>
-                        <h4 class="text-xl font-semibold">经销商协同</h4>
+                        <h4 class="text-xl font-semibold">代理商管理</h4>
                     </div>
-                    <p class="text-sub mb-4">把经销商从"被管理的渠道"变成"协同服务的伙伴"，实现厂家与经销商的信息共享和业务协同。覆盖经销商档案、经销商门户、库存共享、返利引擎、任务协同、业绩看板。</p>
+                    <p class="text-sub mb-4">把代理商从"被管理的渠道"变成"协同服务的伙伴"，实现厂家与代理商的信息共享和业务协同。覆盖代理商档案、代理商门户、库存共享、返利引擎、任务协同、业绩看板。</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                            <strong>使用角色：</strong>渠道经理、经销商老板/业务、销售代表、财务
+                            <strong>使用角色：</strong>渠道经理、代理商老板/业务、销售代表、财务
                         </div>
                         <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
                             <strong>核心场景：</strong>窜货冲突预警、返利自动核算、库存共享
@@ -1113,6 +1069,21 @@
                             <li>• 表单布局与校验规则</li>
                             <li>• 应用专属流程与权限</li>
                         </ul>
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <h4 class="text-lg font-semibold">审批中心</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-3">工作流平台的运行时待办入口，统一聚合跨业务审批事项，提供通过、驳回、转交、加签等操作。</p>
+                        <ul class="space-y-1 text-sm text-sub">
+                            <li>• 待我审批 / 我已审批 / 抄送我的 / 我发起的</li>
+                            <li>• 流程进度可视化</li>
+                            <li>• 批量审批与异常干预</li>
+                            <li>• 流程模板/节点配置在流程设计器维护</li>
+                        </ul>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -1145,13 +1116,13 @@
                             <div class="text-xs text-sub">持续收入</div>
                         </div>
                         <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
-                            <div class="font-semibold text-sm">售后工单</div>
+                            <div class="font-semibold text-sm">工单管理</div>
                             <div class="text-xs text-sub">服务保障</div>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
-                            <div class="font-semibold text-sm">经销商协同</div>
+                            <div class="font-semibold text-sm">代理商管理</div>
                             <div class="text-xs text-sub">渠道连接</div>
                         </div>
                         <div class="p-3 rounded-lg bg-white dark:bg-slate-800 border border-theme">
@@ -1394,15 +1365,12 @@
                     <div class="font-semibold mb-3 text-primary-600 text-center">业务中台</div>
                     <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-sm text-sub text-center">
                         <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">客户中心</div>
-                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">线索中心</div>
-                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">意向中心</div>
+                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">产品中心</div>
                         <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">订单中心</div>
-                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">设备中心</div>
-                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">试剂中心</div>
                         <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">经销商中心</div>
                         <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">营销中心</div>
                         <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">合规中心</div>
-                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">产品中心</div>
+                        <div class="p-2 rounded bg-white dark:bg-slate-800 border border-theme">绩效中心</div>
                     </div>
                 </div>
 
@@ -1413,16 +1381,17 @@
                 <!-- 技术基础设施 + 数据中台 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div class="p-4 rounded-xl border border-theme">
-                        <div class="font-semibold mb-3 text-center">技术基础设施</div>
+                        <div class="font-semibold mb-3 text-center">基础平台层</div>
                         <div class="flex flex-wrap gap-2 text-sm text-sub justify-center">
-                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">工作流</span>
-                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">权限</span>
-                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">消息</span>
-                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">搜索</span>
-                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">文件</span>
-                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">标签</span>
-                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">报表</span>
-                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">日志</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">组织权限平台</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">工作流平台</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">通知中心</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">搜索服务</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">标签服务</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">文件服务</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">日志审计</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">应用配置平台</span>
+                            <span class="px-2 py-1 rounded bg-slate-50 dark:bg-slate-800">日历视图组件</span>
                         </div>
                     </div>
                     <div class="architecture-box rounded-xl p-4">
@@ -1879,7 +1848,7 @@
                         <p class="text-sub mb-4">夯实基础，支撑 1000 人并发，沉淀核心业务能力。</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                                <strong>业务中台：</strong>客户、线索、意向、设备、试剂、工单、审批等核心领域能力
+                                <strong>业务中台：</strong>客户中心、产品中心、订单中心、经销商中心、营销中心、合规中心、绩效中心等共享领域能力
                             </div>
                             <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
                                 <strong>数据中台：</strong>统一数据采集、治理、报表、指标体系
@@ -2364,31 +2333,51 @@
                 <div class="mb-6">
                     <h4 class="text-base font-semibold mb-3 text-primary-600">全局规范与标准</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="file:///Users/mac/xinqu/鑫渠设计与开发规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/鑫渠设计与开发规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠设计与开发规范.md</div>
                             <div class="text-sm text-sub">v1.5 · 前端页面与交互设计指导</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/鑫渠全局设计系统规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/鑫渠全局设计系统规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠全局设计系统规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 字体、颜色、图标、主题</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/鑫渠页面布局设计理念.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/鑫渠页面布局设计理念.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠页面布局设计理念.md</div>
                             <div class="text-sm text-sub">v1.0 · 布局哲学与组件模式</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/搜索引擎设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/搜索引擎设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">搜索引擎设计规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 全局与应用内搜索设计</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/鑫渠标签体系设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/鑫渠标签体系设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠标签体系设计规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 标签作用域、色板、权限</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/鑫渠账户与数据安全设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/鑫渠账户与数据安全设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠账户与数据安全设计规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 账户管理、数据备份、分批导入、数据安全</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/鑫渠应用文档验收标准.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/鑫渠模块划分与基础能力说明书.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠模块划分与基础能力说明书.md</div>
+                            <div class="text-sm text-sub">v1.0 · 三层架构、模块边界、基础能力下沉</div>
+                        </a>
+                        <a href="file:///Users/mac/qucheng/鑫渠领域模型与主数据规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠领域模型与主数据规范.md</div>
+                            <div class="text-sm text-sub">v1.0 · 限界上下文、主数据、领域事件</div>
+                        </a>
+                        <a href="file:///Users/mac/qucheng/鑫渠统一状态机规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠统一状态机规范.md</div>
+                            <div class="text-sm text-sub">v1.0 · 通用状态基线、业务对象状态机</div>
+                        </a>
+                        <a href="file:///Users/mac/qucheng/鑫渠非功能性需求规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠非功能性需求规范.md</div>
+                            <div class="text-sm text-sub">v1.0 · 性能、安全、可用性、合规基线</div>
+                        </a>
+                        <a href="file:///Users/mac/qucheng/鑫渠数据迁移与上线方案.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">鑫渠数据迁移与上线方案.md</div>
+                            <div class="text-sm text-sub">v1.0 · 迁移范围、阶段规划、回滚预案</div>
+                        </a>
+                        <a href="file:///Users/mac/qucheng/鑫渠应用文档验收标准.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠应用文档验收标准.md</div>
                             <div class="text-sm text-sub">v1.1 · 应用文档自检与验收依据</div>
                         </a>
@@ -2398,27 +2387,27 @@
                 <div class="mb-6">
                     <h4 class="text-base font-semibold mb-3 text-primary-600">AI 可执行开发规范</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="file:///Users/mac/xinqu/AI可执行设计文档编写规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/AI可执行设计文档编写规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">AI可执行设计文档编写规范.md</div>
                             <div class="text-sm text-sub">v1.0 · AI 可执行文档章节结构</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/鑫渠组件库清单与命名规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/鑫渠组件库清单与命名规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠组件库清单与命名规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 前端组件字典与命名规则</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/鑫渠响应式设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/鑫渠响应式设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠响应式设计规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 断点、布局、组件适配规则</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/鑫渠字段规范模板.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/鑫渠字段规范模板.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠字段规范模板.md</div>
                             <div class="text-sm text-sub">v1.0 · 字段命名、类型、约束、权限</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/鑫渠验收断言编写规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/鑫渠验收断言编写规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠验收断言编写规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 断言格式、分类、编写标准</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/Claude-DeepSeek协同开发规则.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/Claude-DeepSeek协同开发规则.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">Claude-DeepSeek协同开发规则.md</div>
                             <div class="text-sm text-sub">v1.0 · Claude 调用 DeepSeek 的分工、Prompt、验收、红线</div>
                         </a>
@@ -2428,27 +2417,27 @@
                 <div class="mb-6">
                     <h4 class="text-base font-semibold mb-3 text-primary-600">平台级入口应用</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="file:///Users/mac/xinqu/工作台功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/工作台功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">工作台功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 个人待办与数据聚合入口</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/消息中心功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/消息中心功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">消息中心功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 系统通知与协同消息</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/应用中心功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/应用中心功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">应用中心功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 业务应用统一入口</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/通讯录功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/通讯录功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">通讯录功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 客户联系人与组织架构</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/任务功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/任务功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">任务功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 任务分配、跟踪与提醒</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/收藏夹功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/收藏夹功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">收藏夹功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 重点对象快速访问</div>
                         </a>
@@ -2458,39 +2447,35 @@
                 <div class="mb-6">
                     <h4 class="text-base font-semibold mb-3 text-primary-600">业务管理域应用</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="file:///Users/mac/xinqu/线索管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/线索管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">线索管理功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.4 · 线索收集分配转化</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/意向管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/意向管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">意向管理功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.4 · 意向报备全流程</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/客户360°功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/客户360°功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">客户360°功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.3 · 客户资产中心设计</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/日历模块功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/日历模块功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">日历模块功能与交互说明.md</div>
-                            <div class="text-sm text-sub">v1.2 · 日程时间管理</div>
+                            <div class="text-sm text-sub">v1.3 · 共享日历视图组件</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/设备管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/设备管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">设备管理功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 设备档案与生命周期</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/试剂运营功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/试剂运营功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">试剂运营功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 试剂账本与消耗跟踪</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/售后工单功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
-                            <div class="font-semibold group-hover:text-primary-600">售后工单功能与交互说明.md</div>
-                            <div class="text-sm text-sub">v1.0 · 工单创建、分派、处理</div>
+                        <a href="file:///Users/mac/qucheng/工单管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">工单管理功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 售后工单处理与看板视图</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/工单看板功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
-                            <div class="font-semibold group-hover:text-primary-600">工单看板功能与交互说明.md</div>
-                            <div class="text-sm text-sub">v1.0 · 工单状态流转看板</div>
-                        </a>
-                        <a href="file:///Users/mac/xinqu/品牌库管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/品牌库管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">品牌库管理功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 品牌与产品基础配置</div>
                         </a>
@@ -2498,17 +2483,14 @@
                 </div>
 
                 <div class="mb-6">
-                    <h4 class="text-base font-semibold mb-3 text-primary-600">渠道协同与合规域应用</h4>
+                    <h4 class="text-base font-semibold mb-3 text-primary-600">渠道管理与合规域应用</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="file:///Users/mac/xinqu/经销商协同功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
-                            <div class="font-semibold group-hover:text-primary-600">经销商协同功能与交互说明.md</div>
-                            <div class="text-sm text-sub">v1.0 · 经销商授权与协同</div>
+                        <a href="file:///Users/mac/qucheng/代理商管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">代理商管理功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.0 · 代理商授权与协同</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/审批中心功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
-                            <div class="font-semibold group-hover:text-primary-600">审批中心功能与交互说明.md</div>
-                            <div class="text-sm text-sub">v1.0 · 审批任务统一入口</div>
-                        </a>
-                        <a href="file:///Users/mac/xinqu/合规风控功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+
+                        <a href="file:///Users/mac/qucheng/合规风控功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">合规风控功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 合规审计与风险预警</div>
                         </a>
@@ -2518,25 +2500,29 @@
                 <div class="mb-6">
                     <h4 class="text-base font-semibold mb-3 text-primary-600">数据决策与系统管理域应用</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="file:///Users/mac/xinqu/经营驾驶舱功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/经营驾驶舱功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">经营驾驶舱功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 业绩监控与下钻分析</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/目标绩效功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/目标绩效功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">目标绩效功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 目标拆解与绩效跟踪</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/后台设置功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/后台设置功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">后台设置功能与交互说明.md</div>
-                            <div class="text-sm text-sub">v1.0 · 系统级配置与管理</div>
+                            <div class="text-sm text-sub">v1.2 · 租户级基础配置入口</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/应用配置功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/应用配置功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">应用配置功能与交互说明.md</div>
-                            <div class="text-sm text-sub">v1.0 · 应用字段、视图、流程配置</div>
+                            <div class="text-sm text-sub">v1.1 · 应用级元数据与流程绑定</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/流程设计器功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/流程设计器功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">流程设计器功能与交互说明.md</div>
-                            <div class="text-sm text-sub">v1.0 · 可视化流程模板设计</div>
+                            <div class="text-sm text-sub">v1.1 · 工作流平台建模工具</div>
+                        </a>
+                        <a href="file:///Users/mac/qucheng/审批中心功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                            <div class="font-semibold group-hover:text-primary-600">审批中心功能与交互说明.md</div>
+                            <div class="text-sm text-sub">v1.1 · 工作流平台运行时待办入口</div>
                         </a>
                     </div>
                 </div>
@@ -2544,20 +2530,20 @@
                 <div>
                     <h4 class="text-base font-semibold mb-3 text-primary-600">相关原型</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="file:///Users/mac/xinqu/鑫渠高保真原型.html" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/鑫渠高保真原型.html" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠高保真原型.html</div>
                             <div class="text-sm text-sub">v1.8.0 · 交互原型</div>
                         </a>
-                        <a href="file:///Users/mac/xinqu/鑫渠系统技术实现白皮书.html" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="file:///Users/mac/qucheng/鑫渠系统技术实现白皮书.html" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠系统技术实现白皮书.html</div>
-                            <div class="text-sm text-sub">本白皮书 v1.6</div>
+                            <div class="text-sm text-sub">本白皮书 v1.7</div>
                         </a>
                     </div>
                 </div>
             </div>
 
             <div class="mt-12 text-center text-sm text-sub">
-                <p>鑫渠 CRM 系统技术实现白皮书 · 版本 v1.6 · 2026-07-29</p>
+                <p>鑫渠 CRM 系统技术实现白皮书 · 版本 v1.7 · 2026-07-29</p>
                 <p class="mt-1">广州华鑫 · IVD 行业渠道营销数字化平台</p>
             </div>
         </section>

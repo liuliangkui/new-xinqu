@@ -1,0 +1,40 @@
+@import 'tailwindcss';
+
+/* Tailwind CSS v4 主题配置，映射鑫渠 CSS Variables */
+@theme {
+  /* 品牌色 */
+  --color-primary: #3370FF;
+  --color-primary-hover: #2E63E8;
+  --color-primary-light: #E9EFFF;
+
+  /* 功能色 */
+  --color-success: #34C724;
+  --color-success-bg: #E9F7E8;
+  --color-warning: #FF8800;
+  --color-warning-bg: #FFF3E5;
+  --color-danger: #F54A45;
+  --color-danger-bg: #FDECEA;
+
+  /* 中性色 */
+  --color-bg: #F5F6F7;
+  --color-card: #FFFFFF;
+  --color-ink: #1A1D21;
+  --color-sub: #6B7280;
+  --color-placeholder: #9CA3AF;
+  --color-line: #E5E7EB;
+  --color-disabled: #C4C4C4;
+
+  /* 间距 */
+  --spacing-card: 16px;
+  --spacing-page: 20px;
+  --spacing-section: 24px;
+  --spacing-block: 32px;
+
+  /* 圆角 */
+  --radius-card: 12px;
+  --radius-dialog: 16px;
+
+  /* 阴影 */
+  --shadow-card: 0 1px 2px rgba(31,35,41,.04), 0 4px 16px rgba(31,35,41,.06);
+  --shadow-hover: 0 2px 4px rgba(31,35,41,.05), 0 8px 24px rgba(31,35,41,.07);
+}
