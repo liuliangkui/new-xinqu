@@ -2081,13 +2081,7 @@
                 <div class="text-xs text-sub">11.3%</div>
               </div>
             </div>
-            <div class="p-3 rounded-lg bg-panel">
-              <div class="text-sm font-medium text-ink mb-2">瓶颈识别</div>
-              <div class="text-sm text-sub">「方案 → 投标/临评」阶段转化率最低（60.5%），建议加强方案确认与临评推动力度。</div>
-            </div>
-          </div>
-
-          <!-- Grid view -->
+            
           <div id="intention-grid" class="card-grid mb-4">
             <div class="card card-hover p-4 cursor-pointer intention-card" onclick="openIntentionModal(this)" data-code="INT-2026072501" data-status="生效中" data-status-class="badge-primary" data-project="云南省肿瘤医院血球项目" data-customer="云南省肿瘤医院 · 检验科" data-customer-id="1" data-amount="¥ 320万" data-prob="75%" data-progress="80" data-progress-color="bg-primary" data-date="2026-08-05" data-current-stage="FOLLOW_UP" data-business-type="招标" data-tp-type="否" data-purchase-time="2026-08" data-decision-makers="检验科主任,设备科" data-owner-name="张伟" data-reporter-name="厂家" data-submit-time="2026-07-20 09:30" data-report-date="2026-07-20" data-report-cycle="7" data-last-follow-time="2026-07-28 10:00" data-protect-deadline="2026-08-11" data-customer-level="三级甲等" data-province="云南省" data-region="昆明市" data-product-model="XN-9000 血液分析流水线" data-quantity="1" data-region-manager="刘大区" data-following-company="云南华鑫医疗器械有限公司" data-is-new-dealer="true" data-remark="预算充足，意向明确，需关注竞品报价。" data-attachments="招标文件.pdf,授权申请书.pdf" data-approval-history="销售提交意向|2026-07-20 09:30|通过|提交审批;上级领导初审|2026-07-21 10:15|通过|同意，进入跟进阶段" data-life-stage="装机" data-life-stage-index="5" data-life-dwell="3" data-life-overdue="false" data-life-health-score="85" data-life-risk="低" data-protection-end="2026-08-11" data-protection-days="12" data-protection-status="normal" data-last-report="2026-07-28 10:00" data-next-report="2026-08-04" data-conflict-status="none" data-conflict-with="" data-conflict-reason="" data-conflict-opponent-project="" data-conflict-opponent-owner="" data-conflict-opponent-region="" data-conflict-opponent-time="" data-conflict-opponent-protect="" data-manager-approval="" data-director-approval="" data-arbitrate-result="">
               <div class="intention-protect" data-protect-deadline="2026-08-11" data-protection-status="normal" data-last-report="2026-07-28 10:00" data-report-cycle="7" data-next-report="2026-08-04"></div>
@@ -2710,7 +2704,34 @@
               </div>
             </div>
           </div>
-        </section>
+        
+
+          <!-- AI 分析结论：转化瓶颈 -->
+          <div class="card p-4 mb-5">
+            <div class="flex items-center gap-2 mb-4">
+              <svg class="icon icon-md text-primary"><use href="#icon-ai"/></svg>
+              <h3 class="font-semibold text-ink">AI 分析结论</h3>
+            </div>
+            <div class="p-4 rounded-lg bg-danger-bg mb-4">
+              <div class="text-sm font-medium text-danger mb-2">主要瓶颈：方案 → 投标/临评</div>
+              <div class="text-sm text-sub">该阶段转化率仅 60.5%，低于健康水平（≥75%）。主要原因：临评资料准备周期长、客户内部审批节点多、竞品同期送样干扰。</div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="p-3 rounded-lg bg-panel">
+                <div class="text-sm font-medium text-ink mb-1">行动建议 1</div>
+                <div class="text-xs text-sub">建立临评资料模板库，将准备周期从 14 天缩短至 7 天</div>
+              </div>
+              <div class="p-3 rounded-lg bg-panel">
+                <div class="text-sm font-medium text-ink mb-1">行动建议 2</div>
+                <div class="text-xs text-sub">提前识别客户采购委员会成员，分阶段推进内部审批</div>
+              </div>
+              <div class="p-3 rounded-lg bg-panel">
+                <div class="text-sm font-medium text-ink mb-1">行动建议 3</div>
+                <div class="text-xs text-sub">监控竞品试用动态，针对性准备性能对比数据</div>
+              </div>
+            </div>
+          </div>
+</section>
 
         <!-- 7. 客户 360° Customer 360 -->
         <section class="view" id="view-customer360">
@@ -5009,23 +5030,7 @@
                   <div class="text-xs text-sub mt-1">3 个停滞重点意向</div>
                 </div>
               </div>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="p-3 rounded-lg bg-panel">
-                  <div class="flex items-center justify-between text-sm mb-1"><span class="text-sub">意向转化率低于预期</span><span class="font-medium text-danger">-¥620万</span></div>
-                  <div class="w-full bg-line rounded-full h-2"><div class="bg-danger h-2 rounded-full" style="width: 42%"></div></div>
-                </div>
-                <div class="p-3 rounded-lg bg-panel">
-                  <div class="flex items-center justify-between text-sm mb-1"><span class="text-sub">签约周期延长</span><span class="font-medium text-warning">-¥480万</span></div>
-                  <div class="w-full bg-line rounded-full h-2"><div class="bg-warning h-2 rounded-full" style="width: 33%"></div></div>
-                </div>
-                <div class="p-3 rounded-lg bg-panel">
-                  <div class="flex items-center justify-between text-sm mb-1"><span class="text-sub">重点项目停滞</span><span class="font-medium text-info">-¥360万</span></div>
-                  <div class="w-full bg-line rounded-full h-2"><div class="bg-info h-2 rounded-full" style="width: 25%"></div></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 核心指标卡片：4 列布局 -->
+              ：4 列布局 -->
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-5">
               <!-- 收入趋势 -->
               <div class="card p-4">
@@ -5812,7 +5817,37 @@
               </div>
             </div>
           </div>
-        </section>
+        
+
+            <!-- AI 分析结论：缺口归因 -->
+            <div class="card p-4 mb-5">
+              <div class="flex items-center gap-2 mb-4">
+                <svg class="icon icon-md text-primary"><use href="#icon-ai"/></svg>
+                <h3 class="font-semibold text-ink">AI 分析结论</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="p-4 rounded-lg bg-danger-bg">
+                  <div class="text-sm font-medium text-danger mb-1">意向转化率低于预期</div>
+                  <div class="text-2xl font-bold text-danger">-¥620万</div>
+                  <div class="text-xs text-sub mt-1">占比 42%，最大缺口来源。建议加强方案确认阶段的客户引导与销售培训。</div>
+                </div>
+                <div class="p-4 rounded-lg bg-warning-bg">
+                  <div class="text-sm font-medium text-warning mb-1">签约周期延长</div>
+                  <div class="text-2xl font-bold text-warning">-¥480万</div>
+                  <div class="text-xs text-sub mt-1">占比 33%。重点医院招标流程放缓，需提前介入招标办与采购科。</div>
+                </div>
+                <div class="p-4 rounded-lg bg-info-bg">
+                  <div class="text-sm font-medium text-info mb-1">重点项目停滞</div>
+                  <div class="text-2xl font-bold text-info">-¥360万</div>
+                  <div class="text-xs text-sub mt-1">占比 25%。3 个重点意向超过 30 天无跟进更新，建议管理层介入督办。</div>
+                </div>
+              </div>
+              <div class="p-3 rounded-lg bg-panel">
+                <div class="text-sm font-medium text-ink mb-2">行动建议</div>
+                <div class="text-sm text-sub">1. 下周召开重点项目复盘会，对 3 个停滞项目进行逐一诊断；2. 针对西南区销售开展方案呈现与异议处理培训；3. 提前启动 Q4 重点项目招标关系建设。</div>
+              </div>
+            </div>
+</section>
 
       
         <!-- 13. 设备管理 Equipment Management -->
@@ -6665,32 +6700,7 @@
             </div>
           </div>
 
-          <!-- 补充：流失预警 -->
-          <div class="card mb-5 p-4">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="font-semibold text-ink">流失预警与挽回跟进</h3>
-              <button class="btn btn-outline btn-sm" onclick="showToast('查看流失分析')">查看分析</button>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div class="p-4 rounded-xl border border-line">
-                <div class="text-sm font-medium text-ink">消耗环比下降</div>
-                <div class="text-2xl font-bold text-danger mt-1">15 <span class="text-sm font-normal text-sub">台设备</span></div>
-                <div class="text-xs text-sub mt-1">近 30 天消耗环比下降 &gt; 20%</div>
-              </div>
-              <div class="p-4 rounded-xl border border-line">
-                <div class="text-sm font-medium text-ink">竞品替换风险</div>
-                <div class="text-2xl font-bold text-warning mt-1">6 <span class="text-sm font-normal text-sub">个项目</span></div>
-                <div class="text-xs text-sub mt-1">检测到竞品报价或试用记录</div>
-              </div>
-              <div class="p-4 rounded-xl border border-line">
-                <div class="text-sm font-medium text-ink">已挽回项目</div>
-                <div class="text-2xl font-bold text-success mt-1">3 <span class="text-sm font-normal text-sub">个项目</span></div>
-                <div class="text-xs text-sub mt-1">本月通过主动跟进挽回</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- New reagent modal -->
+          
           <div id="reagent-create-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeReagentCreate()">
             <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
               <div class="intention-modal-header">
@@ -6718,7 +6728,37 @@
               </div>
             </div>
           </div>
-        </section>
+        
+
+          <!-- AI 分析结论：流失预警与挽回建议 -->
+          <div class="card p-4 mb-5">
+            <div class="flex items-center gap-2 mb-4">
+              <svg class="icon icon-md text-primary"><use href="#icon-ai"/></svg>
+              <h3 class="font-semibold text-ink">AI 分析结论</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div class="p-4 rounded-lg bg-danger-bg">
+                <div class="text-sm font-medium text-danger mb-1">消耗环比下降</div>
+                <div class="text-2xl font-bold text-danger">15 台设备</div>
+                <div class="text-xs text-sub mt-1">近 30 天消耗环比下降 &gt; 20%，可能存在设备故障或竞品替换</div>
+              </div>
+              <div class="p-4 rounded-lg bg-warning-bg">
+                <div class="text-sm font-medium text-warning mb-1">竞品替换风险</div>
+                <div class="text-2xl font-bold text-warning">6 个项目</div>
+                <div class="text-xs text-sub mt-1">检测到竞品报价或试用记录，需主动介入</div>
+              </div>
+              <div class="p-4 rounded-lg bg-success-bg">
+                <div class="text-sm font-medium text-success mb-1">已挽回项目</div>
+                <div class="text-2xl font-bold text-success">3 个项目</div>
+                <div class="text-xs text-sub mt-1">本月通过主动跟进挽回，建议总结成功经验</div>
+              </div>
+            </div>
+            <div class="p-3 rounded-lg bg-panel">
+              <div class="text-sm font-medium text-ink mb-2">挽回策略</div>
+              <div class="text-sm text-sub">1. 对 15 台消耗下降设备安排工程师上门巡检；2. 针对 6 个竞品风险项目启动价格/服务专项方案；3. 对重点客户推送试剂库存预警，避免断货被竞品替代。</div>
+            </div>
+          </div>
+</section>
 
         <!-- 15. 合规风控 Compliance Management -->
         <section class="view" id="view-compliance">
@@ -7474,17 +7514,7 @@
                 <div class="text-xs text-sub mt-1">3 个停滞重点意向</div>
               </div>
             </div>
-            <div class="p-3 rounded-lg bg-panel">
-              <div class="text-sm font-medium text-ink mb-2">缺口下钻</div>
-              <div class="space-y-2">
-                <div class="flex items-center justify-between text-sm"><span class="text-sub">西南区缺口最大</span><span class="text-danger font-medium">-¥320万</span></div>
-                <div class="flex items-center justify-between text-sm"><span class="text-sub">血液分析产品线落后</span><span class="text-danger font-medium">-¥280万</span></div>
-                <div class="flex items-center justify-between text-sm"><span class="text-sub">新客户数不足</span><span class="text-warning font-medium">-¥120万</span></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Tabs + search -->
+            
           <div class="card mb-4">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4">
               <div class="flex flex-wrap gap-2" id="performance-tabs">
@@ -7869,7 +7899,37 @@
               </div>
             </div>
           </div>
-        </section>
+        
+
+          <!-- AI 分析结论：绩效缺口归因 -->
+          <div class="card p-4 mb-5">
+            <div class="flex items-center gap-2 mb-4">
+              <svg class="icon icon-md text-primary"><use href="#icon-ai"/></svg>
+              <h3 class="font-semibold text-ink">AI 分析结论</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div class="p-4 rounded-lg bg-danger-bg">
+                <div class="text-sm font-medium text-danger mb-1">西南区缺口最大</div>
+                <div class="text-2xl font-bold text-danger">-¥320万</div>
+                <div class="text-xs text-sub mt-1">受重点项目延期与人员变动影响，需区域总监重点跟进</div>
+              </div>
+              <div class="p-4 rounded-lg bg-warning-bg">
+                <div class="text-sm font-medium text-warning mb-1">血液分析产品线落后</div>
+                <div class="text-2xl font-bold text-warning">-¥280万</div>
+                <div class="text-xs text-sub mt-1">竞品价格战激烈，建议调整促销策略与捆绑方案</div>
+              </div>
+              <div class="p-4 rounded-lg bg-info-bg">
+                <div class="text-sm font-medium text-info mb-1">新客户数不足</div>
+                <div class="text-2xl font-bold text-info">-¥120万</div>
+                <div class="text-xs text-sub mt-1">新客转化率低于预期，需加强市场活动与代理商协同</div>
+              </div>
+            </div>
+            <div class="p-3 rounded-lg bg-panel">
+              <div class="text-sm font-medium text-ink mb-2">达成路径</div>
+              <div class="text-sm text-sub">若要补足 ¥720 万缺口，需：1. 确保 3 个停滞重点意向在 8 月签约；2. 新增 2-3 个血球流水线项目进入投标阶段；3. 西南区每周召开缺口追赶会议。</div>
+            </div>
+          </div>
+</section>
 
         <!-- 17. 品牌库管理 Brand Management -->
         <section class="view" id="view-brand">
@@ -10661,7 +10721,33 @@ Content-Type: application/json
             </div>
           </div>
         </div>
-      </section>
+      
+          <!-- AI 分析结论 -->
+          <div class="card p-4 mb-5">
+            <div class="flex items-center gap-2 mb-4">
+              <svg class="icon icon-md text-primary"><use href="#icon-ai"/></svg>
+              <h3 class="font-semibold text-ink">AI 分析结论</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div class="p-4 rounded-lg bg-warning-bg">
+                <div class="text-sm font-medium text-warning mb-1">回款率需关注</div>
+                <div class="text-xs text-sub">回款率 73.7%，低于健康水平 80%，逾期应收 ¥380 万需重点催收</div>
+              </div>
+              <div class="p-4 rounded-lg bg-success-bg">
+                <div class="text-sm font-medium text-success mb-1">毛利结构健康</div>
+                <div class="text-xs text-sub">毛利率 26.2%，血球分析流水线贡献最大（¥620 万）</div>
+              </div>
+              <div class="p-4 rounded-lg bg-info-bg">
+                <div class="text-sm font-medium text-info mb-1">区域贡献集中</div>
+                <div class="text-xs text-sub">西南区贡献 35% 营收，需防范单一区域依赖风险</div>
+              </div>
+            </div>
+            <div class="p-3 rounded-lg bg-panel">
+              <div class="text-sm font-medium text-ink mb-2">经营建议</div>
+              <div class="text-sm text-sub">1. 建立逾期应收分级催收机制，重点跟进西南区 3 个大额逾期客户；2. 血球产品线保持优势的同时，推动生化免疫一体机向华东、华南复制；3. 监控销售费用率，确保学术活动 ROI 不低于 3:1。</div>
+            </div>
+          </div>
+</section>
 
       <!-- 18. 数据洞察中心 Insight Center -->
       <section class="view" id="view-insight">
@@ -10740,7 +10826,33 @@ Content-Type: application/json
             </div>
           </div>
         </div>
-      </section>
+      
+          <!-- AI 分析结论 -->
+          <div class="card p-4 mb-5">
+            <div class="flex items-center gap-2 mb-4">
+              <svg class="icon icon-md text-primary"><use href="#icon-ai"/></svg>
+              <h3 class="font-semibold text-ink">AI 分析结论</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div class="p-4 rounded-lg bg-success-bg">
+                <div class="text-sm font-medium text-success mb-1">线索转意向表现优异</div>
+                <div class="text-xs text-sub">28.6% 高于行业均值 22%，有效线索占比 63.0% 说明前端获客质量较好</div>
+              </div>
+              <div class="p-4 rounded-lg bg-warning-bg">
+                <div class="text-sm font-medium text-warning mb-1">意向 → 成交仍有空间</div>
+                <div class="text-xs text-sub">意向成交率 19.2%，丢单主因价格/竞品 32%、决策链变动 24%，需强化价值传递与高层覆盖</div>
+              </div>
+              <div class="p-4 rounded-lg bg-danger-bg">
+                <div class="text-sm font-medium text-danger mb-1">华北区转化明显偏低</div>
+                <div class="text-xs text-sub">华北区综合转化率 7.7%，仅为西南区的 35%，建议复盘区域打法与资源投放</div>
+              </div>
+            </div>
+            <div class="p-3 rounded-lg bg-panel">
+              <div class="text-sm font-medium text-ink mb-2">转化优化建议</div>
+              <div class="text-sm text-sub">1. 针对价格敏感丢单，建立“临床价值+TCO”话术与竞品对比包；2. 华北区试点“区域打法诊断”，增加样机投放与临床培训；3. 将成交周期已缩短至 86 天的经验复制到华东、华南。</div>
+            </div>
+          </div>
+</section>
 
       <!-- 19. 大单作战室 Deal Room -->
       <section class="view" id="view-dealroom">
@@ -10833,7 +10945,7 @@ Content-Type: application/json
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
           <div class="card p-4 lg:col-span-2">
             <div class="font-semibold text-ink mb-4">区域保护地图（云南示例）</div>
-            <div class="h-64 bg-panel rounded-xl flex items-center justify-center text-sub text-sm">云南大区区域保护示意图：昆明、玉溪、曲靖、大理、红河等授权经销边界</div>
+            <div class="h-40 bg-panel rounded-xl flex items-center justify-center text-sub text-sm">云南大区区域保护示意图：昆明、玉溪、曲靖、大理、红河等授权经销边界</div>
           </div>
           <div class="card p-4">
             <div class="font-semibold text-ink mb-4">近期待裁决冲突</div>
@@ -10906,7 +11018,33 @@ Content-Type: application/json
             </div>
           </div>
         </div>
-      </section>
+      
+          <!-- AI 分析结论 -->
+          <div class="card p-4 mb-5">
+            <div class="flex items-center gap-2 mb-4">
+              <svg class="icon icon-md text-primary"><use href="#icon-ai"/></svg>
+              <h3 class="font-semibold text-ink">AI 分析结论</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div class="p-4 rounded-lg bg-warning-bg">
+                <div class="text-sm font-medium text-warning mb-1">结算进度偏慢</div>
+                <div class="text-xs text-sub">Q2 应付返利 ¥186 万，已结算 76.3%，剩余 ¥44 万待结，建议加快对账与付款 SLA</div>
+              </div>
+              <div class="p-4 rounded-lg bg-info-bg">
+                <div class="text-sm font-medium text-info mb-1">阶梯差额可撬动</div>
+                <div class="text-xs text-sub">未达阶梯差额 ¥10 万，头部经销商再增量即可解锁更高返利档，提升粘性</div>
+              </div>
+              <div class="p-4 rounded-lg bg-success-bg">
+                <div class="text-sm font-medium text-success mb-1">新客奖励政策有效</div>
+                <div class="text-xs text-sub">新客开发奖励覆盖三级医院与二甲，建议向凝血/生化新品线倾斜</div>
+              </div>
+            </div>
+            <div class="p-3 rounded-lg bg-panel">
+              <div class="text-sm font-medium text-ink mb-2">返利策略建议</div>
+              <div class="text-sm text-sub">1. 对 12 笔待审核佣金建立 T+3 审核 SLA；2. 对接近下一阶梯的经销商推送“再加量 X% 可提升返利比例”提醒；3. 将返利与新品上量挂钩，避免老品过度依赖价格折扣。</div>
+            </div>
+          </div>
+</section>
 
       <!-- 22. 资质管理 Qualification -->
       <section class="view" id="view-qualification">
@@ -10946,7 +11084,69 @@ Content-Type: application/json
             </table>
           </div>
         </div>
-      </section>
+      
+          <div class="card mb-5 p-4">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-semibold text-ink">资质证照总览</h3>
+              <button class="btn btn-primary btn-sm">上传资质</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+              <div class="p-4 rounded-xl bg-primary-light text-center">
+                <div class="text-xs text-sub mb-1">证照总数</div>
+                <div class="text-2xl font-bold text-primary">642</div>
+                <div class="text-xs text-sub mt-1">覆盖 86 个品牌</div>
+              </div>
+              <div class="p-4 rounded-xl bg-success-bg text-center">
+                <div class="text-xs text-sub mb-1">有效期内</div>
+                <div class="text-2xl font-bold text-success">598</div>
+                <div class="text-xs text-sub mt-1">93.1%</div>
+              </div>
+              <div class="p-4 rounded-xl bg-warning-bg text-center">
+                <div class="text-xs text-sub mb-1">30 天内到期</div>
+                <div class="text-2xl font-bold text-warning">18</div>
+                <div class="text-xs text-sub mt-1">需提醒更新</div>
+              </div>
+              <div class="p-4 rounded-xl bg-danger-bg text-center">
+                <div class="text-xs text-sub mb-1">已过期</div>
+                <div class="text-2xl font-bold text-danger">4</div>
+                <div class="text-xs text-sub mt-1">暂停合作</div>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead class="text-sub border-b border-line"><tr><th class="text-left py-2">资质名称</th><th class="text-left py-2">持有方</th><th class="text-left py-2">类型</th><th class="text-right py-2">有效期至</th><th class="text-left py-2">状态</th></tr></thead>
+                <tbody>
+                  <tr class="border-b border-line-light"><td class="py-2">全自动血液分析仪注册证</td><td class="py-2">希森美康</td><td class="py-2">产品注册证</td><td class="text-right py-2">2027-05-18</td><td class="py-2"><span class="badge badge-success">有效</span></td></tr>
+                  <tr class="border-b border-line-light"><td class="py-2">医疗器械经营许可证</td><td class="py-2">昆明博奥</td><td class="py-2">经营许可证</td><td class="text-right py-2">2026-08-22</td><td class="py-2"><span class="badge badge-warning">即将到期</span></td></tr>
+                  <tr><td class="py-2">二类医疗器械备案凭证</td><td class="py-2">大理康盛</td><td class="py-2">经营备案</td><td class="text-right py-2 text-danger">2026-06-30</td><td class="py-2"><span class="badge badge-danger">已过期</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card p-4 mb-5">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-semibold text-ink">年审提醒</h3>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between text-sm"><span class="text-sub">昆明博奥医疗器械经营许可证</span><span class="font-medium text-warning">30 天内到期</span></div>
+              <div class="flex items-center justify-between text-sm"><span class="text-sub">西双版纳医院采购资质</span><span class="font-medium text-warning">60 天内到期</span></div>
+              <div class="flex items-center justify-between text-sm"><span class="text-sub">滴宝品牌授权书</span><span class="font-medium text-success">已年审</span></div>
+            </div>
+          </div>
+
+          <!-- AI 分析结论 -->
+          <div class="card p-4 mb-5">
+            <div class="flex items-center gap-2 mb-4">
+              <svg class="icon icon-md text-primary"><use href="#icon-ai"/></svg>
+              <h3 class="font-semibold text-ink">AI 分析结论</h3>
+            </div>
+            <div class="p-3 rounded-lg bg-panel">
+              <div class="text-sm font-medium text-ink mb-2">资质风险预警</div>
+              <div class="text-sm text-sub">4 张过期证照已触发合作暂停，18 张临期证照需在 30 天内完成更新。建议将年审提醒提前至 90 天，并建立资质到期自动冻结交易机制。</div>
+            </div>
+          </div>
+</section>
 
       <!-- 23. 定制项目 Custom Project -->
       <section class="view" id="view-custom-project">
