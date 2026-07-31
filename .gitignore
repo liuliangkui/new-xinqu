@@ -28,6 +28,17 @@ coverage
 
 .eslintcache
 
+# Local backups and generated artifacts
+backup-local/
+*.bak
+*_backup
+*_screenshot*.png
+screenshots/verify/
+screenshots/白皮书_*.png
+screenshots/蓝皮书_*.png
+screenshots_modified/
+*.pdf
+
 # Cypress
 /cypress/videos/
 /cypress/screenshots/

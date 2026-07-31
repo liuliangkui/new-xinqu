@@ -1,0 +1,74 @@
+[
+  {
+    "view": "workbench",
+    "label": "工作台",
+    "path": "/Users/mac/qucheng/screenshots/workbench.png",
+    "status": "ok"
+  },
+  {
+    "view": "apps",
+    "label": "应用中心",
+    "path": "/Users/mac/qucheng/screenshots/apps.png",
+    "status": "ok"
+  },
+  {
+    "view": "messages",
+    "label": "消息中心",
+    "path": "/Users/mac/qucheng/screenshots/messages.png",
+    "status": "ok"
+  },
+  {
+    "view": "calendar",
+    "label": "日历与日程",
+    "path": "/Users/mac/qucheng/screenshots/calendar.png",
+    "status": "ok"
+  },
+  {
+    "view": "leads",
+    "label": "线索管理",
+    "path": "/Users/mac/qucheng/screenshots/leads.png",
+    "status": "ok"
+  },
+  {
+    "view": "intentions",
+    "label": "意向管理",
+    "path": "/Users/mac/qucheng/screenshots/intentions.png",
+    "status": "ok"
+  },
+  {
+    "view": "customer360",
+    "label": "客户360°",
+    "path": "/Users/mac/qucheng/screenshots/customer360.png",
+    "status": "ok"
+  },
+  {
+    "view": "dealers",
+    "label": "代理商管理",
+    "path": "/Users/mac/qucheng/screenshots/dealers.png",
+    "status": "ok"
+  },
+  {
+    "view": "workorders",
+    "label": "工单管理",
+    "path": "/Users/mac/qucheng/screenshots/workorders.png",
+    "status": "ok"
+  },
+  {
+    "view": "approvals",
+    "label": "审批中心",
+    "path": "/Users/mac/qucheng/screenshots/approvals.png",
+    "status": "ok"
+  },
+  {
+    "view": "dashboard",
+    "label": "经营驾驶舱",
+    "path": "/Users/mac/qucheng/screenshots/dashboard.png",
+    "status": "ok"
+  },
+  {
+    "view": "settings",
+    "label": "后台设置",
+    "path": "/Users/mac/qucheng/screenshots/settings.png",
+    "status": "ok"
+  }
+]

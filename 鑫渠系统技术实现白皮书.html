@@ -4,24 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>鑫渠系统技术实现白皮书</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a' },
-                        slate: { 850: '#1e293b', 950: '#0f172a' }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
     <style>
+/* Tailwind CSS generated inline */
+*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.19 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:Inter,PingFang SC,Microsoft YaHei,Noto Sans SC,sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.-left-3{left:-.75rem}.bottom-0{bottom:0}.left-0{left:0}.right-0{right:0}.top-0{top:0}.top-14{top:3.5rem}.top-8{top:2rem}.z-30{z-index:30}.z-40{z-index:40}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:.25rem}.mb-12{margin-bottom:3rem}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mt-1{margin-top:.25rem}.mt-12{margin-top:3rem}.mt-16{margin-top:4rem}.mt-2{margin-top:.5rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.block{display:block}.flex{display:flex}.table{display:table}.grid{display:grid}.hidden{display:none}.h-1{height:.25rem}.h-10{height:2.5rem}.h-14{height:3.5rem}.h-2{height:.5rem}.h-20{height:5rem}.h-3{height:.75rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-8{height:2rem}.min-h-screen{min-height:100vh}.w-1{width:.25rem}.w-10{width:2.5rem}.w-2{width:.5rem}.w-20{width:5rem}.w-3{width:.75rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-64{width:16rem}.w-8{width:2rem}.w-full{width:100%}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-5xl{max-width:64rem}.flex-shrink{flex-shrink:1}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.25rem*var(--tw-space-y-reverse))}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem*var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem*var(--tw-space-y-reverse))}.space-y-8>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(2rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(2rem*var(--tw-space-y-reverse))}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.rounded{border-radius:.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-sm{border-radius:.125rem}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-4{border-width:4px}.border-b{border-bottom-width:1px}.border-l-4{border-left-width:4px}.border-r{border-right-width:1px}.border-dashed{border-style:dashed}.border-blue-200{--tw-border-opacity:1;border-color:rgb(191 219 254/var(--tw-border-opacity,1))}.border-green-200{--tw-border-opacity:1;border-color:rgb(187 247 208/var(--tw-border-opacity,1))}.border-orange-200{--tw-border-opacity:1;border-color:rgb(254 215 170/var(--tw-border-opacity,1))}.border-primary-600{--tw-border-opacity:1;border-color:rgb(37 99 235/var(--tw-border-opacity,1))}.border-red-200{--tw-border-opacity:1;border-color:rgb(254 202 202/var(--tw-border-opacity,1))}.border-transparent{border-color:transparent}.border-white{--tw-border-opacity:1;border-color:rgb(255 255 255/var(--tw-border-opacity,1))}.bg-blue-100{--tw-bg-opacity:1;background-color:rgb(219 234 254/var(--tw-bg-opacity,1))}.bg-blue-50{--tw-bg-opacity:1;background-color:rgb(239 246 255/var(--tw-bg-opacity,1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235/var(--tw-bg-opacity,1))}.bg-cyan-100{--tw-bg-opacity:1;background-color:rgb(207 250 254/var(--tw-bg-opacity,1))}.bg-emerald-100{--tw-bg-opacity:1;background-color:rgb(209 250 229/var(--tw-bg-opacity,1))}.bg-fuchsia-100{--tw-bg-opacity:1;background-color:rgb(250 232 255/var(--tw-bg-opacity,1))}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246/var(--tw-bg-opacity,1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231/var(--tw-bg-opacity,1))}.bg-green-50{--tw-bg-opacity:1;background-color:rgb(240 253 244/var(--tw-bg-opacity,1))}.bg-green-600{--tw-bg-opacity:1;background-color:rgb(22 163 74/var(--tw-bg-opacity,1))}.bg-indigo-100{--tw-bg-opacity:1;background-color:rgb(224 231 255/var(--tw-bg-opacity,1))}.bg-orange-100{--tw-bg-opacity:1;background-color:rgb(255 237 213/var(--tw-bg-opacity,1))}.bg-orange-50{--tw-bg-opacity:1;background-color:rgb(255 247 237/var(--tw-bg-opacity,1))}.bg-orange-500{--tw-bg-opacity:1;background-color:rgb(249 115 22/var(--tw-bg-opacity,1))}.bg-pink-100{--tw-bg-opacity:1;background-color:rgb(252 231 243/var(--tw-bg-opacity,1))}.bg-primary-100{--tw-bg-opacity:1;background-color:rgb(219 234 254/var(--tw-bg-opacity,1))}.bg-primary-600{--tw-bg-opacity:1;background-color:rgb(37 99 235/var(--tw-bg-opacity,1))}.bg-purple-100{--tw-bg-opacity:1;background-color:rgb(243 232 255/var(--tw-bg-opacity,1))}.bg-purple-600{--tw-bg-opacity:1;background-color:rgb(147 51 234/var(--tw-bg-opacity,1))}.bg-red-100{--tw-bg-opacity:1;background-color:rgb(254 226 226/var(--tw-bg-opacity,1))}.bg-red-50{--tw-bg-opacity:1;background-color:rgb(254 242 242/var(--tw-bg-opacity,1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38/var(--tw-bg-opacity,1))}.bg-rose-100{--tw-bg-opacity:1;background-color:rgb(255 228 230/var(--tw-bg-opacity,1))}.bg-sky-100{--tw-bg-opacity:1;background-color:rgb(224 242 254/var(--tw-bg-opacity,1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.bg-teal-100{--tw-bg-opacity:1;background-color:rgb(204 251 241/var(--tw-bg-opacity,1))}.bg-violet-100{--tw-bg-opacity:1;background-color:rgb(237 233 254/var(--tw-bg-opacity,1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.bg-white\/80{background-color:hsla(0,0%,100%,.8)}.bg-white\/90{background-color:hsla(0,0%,100%,.9)}.p-2{padding:.5rem}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-8{padding-left:2rem;padding-right:2rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-16{padding-top:4rem;padding-bottom:4rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-20{padding-top:5rem;padding-bottom:5rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.pl-6{padding-left:1.5rem}.pt-14{padding-top:3.5rem}.text-left{text-align:left}.text-center{text-align:center}.font-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace}.font-sans{font-family:Inter,PingFang SC,Microsoft YaHei,Noto Sans SC,sans-serif}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.leading-relaxed{line-height:1.625}.tracking-tight{letter-spacing:-.025em}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235/var(--tw-text-opacity,1))}.text-blue-700{--tw-text-opacity:1;color:rgb(29 78 216/var(--tw-text-opacity,1))}.text-cyan-600{--tw-text-opacity:1;color:rgb(8 145 178/var(--tw-text-opacity,1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105/var(--tw-text-opacity,1))}.text-fuchsia-600{--tw-text-opacity:1;color:rgb(192 38 211/var(--tw-text-opacity,1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99/var(--tw-text-opacity,1))}.text-green-600{--tw-text-opacity:1;color:rgb(22 163 74/var(--tw-text-opacity,1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61/var(--tw-text-opacity,1))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229/var(--tw-text-opacity,1))}.text-orange-600{--tw-text-opacity:1;color:rgb(234 88 12/var(--tw-text-opacity,1))}.text-pink-600{--tw-text-opacity:1;color:rgb(219 39 119/var(--tw-text-opacity,1))}.text-primary-600{--tw-text-opacity:1;color:rgb(37 99 235/var(--tw-text-opacity,1))}.text-purple-600{--tw-text-opacity:1;color:rgb(147 51 234/var(--tw-text-opacity,1))}.text-purple-700{--tw-text-opacity:1;color:rgb(126 34 206/var(--tw-text-opacity,1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.text-rose-600{--tw-text-opacity:1;color:rgb(225 29 72/var(--tw-text-opacity,1))}.text-sky-600{--tw-text-opacity:1;color:rgb(2 132 199/var(--tw-text-opacity,1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105/var(--tw-text-opacity,1))}.text-teal-600{--tw-text-opacity:1;color:rgb(13 148 136/var(--tw-text-opacity,1))}.text-violet-600{--tw-text-opacity:1;color:rgb(124 58 237/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.backdrop-blur{--tw-backdrop-blur:blur(8px);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.hover\:border-primary-500:hover{--tw-border-opacity:1;border-color:rgb(59 130 246/var(--tw-border-opacity,1))}.hover\:bg-slate-100:hover{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.hover\:bg-slate-50:hover{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.group:hover .group-hover\:text-primary-600{--tw-text-opacity:1;color:rgb(37 99 235/var(--tw-text-opacity,1))}.dark\:border-blue-800:is(.dark *){--tw-border-opacity:1;border-color:rgb(30 64 175/var(--tw-border-opacity,1))}.dark\:border-green-800:is(.dark *){--tw-border-opacity:1;border-color:rgb(22 101 52/var(--tw-border-opacity,1))}.dark\:border-orange-800:is(.dark *){--tw-border-opacity:1;border-color:rgb(154 52 18/var(--tw-border-opacity,1))}.dark\:border-red-800:is(.dark *){--tw-border-opacity:1;border-color:rgb(153 27 27/var(--tw-border-opacity,1))}.dark\:border-slate-900:is(.dark *){--tw-border-opacity:1;border-color:rgb(15 23 42/var(--tw-border-opacity,1))}.dark\:bg-blue-900\/20:is(.dark *){background-color:rgba(30,58,138,.2)}.dark\:bg-blue-900\/30:is(.dark *){background-color:rgba(30,58,138,.3)}.dark\:bg-cyan-900\/30:is(.dark *){background-color:rgba(22,78,99,.3)}.dark\:bg-emerald-900\/30:is(.dark *){background-color:rgba(6,78,59,.3)}.dark\:bg-fuchsia-900\/30:is(.dark *){background-color:rgba(112,26,117,.3)}.dark\:bg-gray-800:is(.dark *){--tw-bg-opacity:1;background-color:rgb(31 41 55/var(--tw-bg-opacity,1))}.dark\:bg-green-900\/20:is(.dark *){background-color:rgba(20,83,45,.2)}.dark\:bg-green-900\/30:is(.dark *){background-color:rgba(20,83,45,.3)}.dark\:bg-indigo-900\/30:is(.dark *){background-color:rgba(49,46,129,.3)}.dark\:bg-orange-900\/20:is(.dark *){background-color:rgba(124,45,18,.2)}.dark\:bg-orange-900\/30:is(.dark *){background-color:rgba(124,45,18,.3)}.dark\:bg-pink-900\/30:is(.dark *){background-color:rgba(131,24,67,.3)}.dark\:bg-primary-900\/30:is(.dark *){background-color:rgba(30,58,138,.3)}.dark\:bg-purple-900\/30:is(.dark *){background-color:rgba(88,28,135,.3)}.dark\:bg-red-900\/20:is(.dark *){background-color:rgba(127,29,29,.2)}.dark\:bg-red-900\/30:is(.dark *){background-color:rgba(127,29,29,.3)}.dark\:bg-rose-900\/30:is(.dark *){background-color:rgba(136,19,55,.3)}.dark\:bg-sky-900\/30:is(.dark *){background-color:rgba(12,74,110,.3)}.dark\:bg-slate-800:is(.dark *){--tw-bg-opacity:1;background-color:rgb(30 41 59/var(--tw-bg-opacity,1))}.dark\:bg-slate-800\/50:is(.dark *){background-color:rgba(30,41,59,.5)}.dark\:bg-slate-900\/80:is(.dark *){background-color:rgba(15,23,42,.8)}.dark\:bg-slate-900\/90:is(.dark *){background-color:rgba(15,23,42,.9)}.dark\:bg-teal-900\/30:is(.dark *){background-color:rgba(19,78,74,.3)}.dark\:bg-violet-900\/30:is(.dark *){background-color:rgba(76,29,149,.3)}.dark\:hover\:bg-slate-800:hover:is(.dark *){--tw-bg-opacity:1;background-color:rgb(30 41 59/var(--tw-bg-opacity,1))}@media (min-width:640px){.sm\:inline{display:inline}.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (min-width:768px){.md\:ml-64{margin-left:16rem}.md\:block{display:block}.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.md\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.md\:grid-cols-5{grid-template-columns:repeat(5,minmax(0,1fr))}.md\:text-5xl{font-size:3rem;line-height:1}}@media (min-width:1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
         :root {
             --bg-body: #f8fafc;
             --bg-card: #ffffff;
@@ -1338,6 +1324,76 @@
             </div>
 
             <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-6">四层架构：业务架构视图</h3>
+                <p class="text-sub leading-relaxed mb-6">
+                    在双中台 + 技术基础设施之上，鑫渠面向商业化交付采用<strong>四层业务架构</strong>：基础能力中台化、业务能力领域化、高阶能力增值化、AI 能力员工化。每层对应独立的部署与付费策略，支撑插拔式应用与模块化计费。
+                </p>
+                <div class="space-y-4">
+                    <div class="p-4 rounded-xl border border-theme">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="px-2 py-1 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 text-xs font-semibold">第一层</span>
+                            <h4 class="font-semibold">基础底座层（中台公共能力）</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-2">全租户强制必装、不可卸载，为全系统提供统一底层通用能力，保障系统统一性与合规性。</p>
+                        <div class="flex flex-wrap gap-2 text-sm text-sub">
+                            <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">工作台</span>
+                            <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">应用中心</span>
+                            <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">日历与日程</span>
+                            <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">审批中心</span>
+                            <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">合规风控</span>
+                            <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">后台设置</span>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-xl border border-theme">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="px-2 py-1 rounded bg-teal-100 dark:bg-teal-900/30 text-teal-700 text-xs font-semibold">第二层</span>
+                            <h4 class="font-semibold">核心业务层（领域业务能力）</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-2">按需插拔、模块化选配，分为通用销售域与 IVD 专属行业域，承载企业日常全量业务运转。</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-sub">
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <strong>通用销售域：</strong>线索管理、意向管理、客户 360°、代理商管理、目标绩效、提成核算、统一消息中心
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                                <strong>IVD 行业专属域：</strong>产品/品牌库管理、IVD 资质管理、工单管理、定制化项目流程
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-xl border border-theme">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="px-2 py-1 rounded bg-purple-100 dark:bg-purple-900/30 text-purple-700 text-xs font-semibold">第三层</span>
+                            <h4 class="font-semibold">增值能力层（数据赋能能力）</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-2">中大型客户专属付费模块，主打数据统计、复盘、可视化能力，为上层 AI 智能体提供完整数据底座。</p>
+                        <div class="flex flex-wrap gap-2 text-sm text-sub">
+                            <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">效益中心</span>
+                            <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">企业驾驶舱</span>
+                            <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">数据洞察中心</span>
+                            <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">数据建模中心</span>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-xl border border-theme">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="px-2 py-1 rounded bg-orange-100 dark:bg-orange-900/30 text-orange-700 text-xs font-semibold">第四层</span>
+                            <h4 class="font-semibold">AI 智能体层（数字员工能力）</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-2">平台最高阶增值能力，以 AI Agent 数字员工为核心，具备自主感知、自主分析、主动发现问题、自动执行、主动决策、主动预警的全天候在岗虚拟员工能力。</p>
+                        <div class="flex flex-wrap gap-2 text-sm text-sub">
+                            <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">AI Agent 数字员工中心</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                    <h4 class="font-semibold mb-2">分层策略说明</h4>
+                    <ul class="space-y-2 text-sm text-sub">
+                        <li>• <strong>必装/可选策略：</strong>第一层强制必装；第二层按需选配、单独计费；第三层高阶付费、按需增购；第四层顶级核心增值付费。</li>
+                        <li>• <strong>微服务拆分边界：</strong>每层可独立拆分为一个或多个微服务集群，领域边界清晰，支持独立开发、部署、迭代与商业化。</li>
+                        <li>• <strong>视图关系：</strong>四层架构是业务/商业化视角；下文的「双中台 + 技术基础设施架构」是技术实现视角，二者相互补充、并不冲突。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8 mb-8">
                 <h3 class="text-xl font-semibold mb-6">双中台 + 技术基础设施架构</h3>
 
                 <!-- 应用层 -->
@@ -1519,6 +1575,55 @@
                 </div>
             </div>
 
+            <div class="card rounded-xl p-8 mb-8">
+                <h3 class="text-xl font-semibold mb-6">微服务拆分标准（DDD 领域驱动）</h3>
+                <p class="text-sub leading-relaxed mb-6">
+                    鑫渠按照 DDD 领域边界将系统拆分为五大微服务集群，各集群业务边界绝对清晰、完全解耦，支持独立开发、独立部署、独立迭代、独立商业化，完美适配插拔式产品模式。
+                </p>
+                <div class="space-y-4">
+                    <div class="p-4 rounded-xl border border-theme">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 text-xs font-semibold">集群一</span>
+                            <h4 class="font-semibold">基础中台微服务集群</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-2"><strong>业务能力：</strong>承载工作台、应用中心、日历与日程、审批中心、合规风控、后台设置等底座通用能力，统一管控权限、组织、流程、消息、配置、审计。</p>
+                        <p class="text-sm text-sub"><strong>部署与商业化：</strong>全局唯一，全业务共享，随租户基础套餐强制交付，不可单独卸载。</p>
+                    </div>
+                    <div class="p-4 rounded-xl border border-theme">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-2 py-1 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 text-xs font-semibold">集群二</span>
+                            <h4 class="font-semibold">销售领域微服务集群</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-2"><strong>业务能力：</strong>聚焦通用销售域，包括线索管理、意向管理、客户 360°、代理商管理、目标绩效、提成核算、统一消息中心，覆盖销售全链路转化、渠道管理、绩效核算。</p>
+                        <p class="text-sm text-sub"><strong>部署与商业化：</strong>独立业务微服务，领域边界清晰，可单独迭代部署；支持按模块单独售卖、单独启用。</p>
+                    </div>
+                    <div class="p-4 rounded-xl border border-theme">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-2 py-1 rounded bg-teal-100 dark:bg-teal-900/30 text-teal-700 text-xs font-semibold">集群三</span>
+                            <h4 class="font-semibold">IVD 行业微服务集群</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-2"><strong>业务能力：</strong>承载 IVD 行业专属域，包括产品/品牌库管理、IVD 资质管理、工单管理、定制化项目流程，沉淀 IVD 行业独有业务规则、合规要求与售后流程。</p>
+                        <p class="text-sm text-sub"><strong>部署与商业化：</strong>垂直行业专属微服务，与通用销售域解耦；可按需选配，单独计费，替换行业域即可快速适配其他行业。</p>
+                    </div>
+                    <div class="p-4 rounded-xl border border-theme">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-2 py-1 rounded bg-purple-100 dark:bg-purple-900/30 text-purple-700 text-xs font-semibold">集群四</span>
+                            <h4 class="font-semibold">数据增值微服务集群</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-2"><strong>业务能力：</strong>负责业务数据清洗、汇总、统计、可视化与建模，支撑效益中心、企业驾驶舱、数据洞察中心、数据建模中心。</p>
+                        <p class="text-sm text-sub"><strong>部署与商业化：</strong>独立数据服务，为上层 AI Agent 数字员工提供高质量结构化数据底座；高阶付费，按需增购。</p>
+                    </div>
+                    <div class="p-4 rounded-xl border border-theme">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-2 py-1 rounded bg-orange-100 dark:bg-orange-900/30 text-orange-700 text-xs font-semibold">集群五</span>
+                            <h4 class="font-semibold">AI Agent 数字员工微服务集群</h4>
+                        </div>
+                        <p class="text-sm text-sub mb-2"><strong>业务能力：</strong>承载 AI Agent 数字员工中心，基于 DeepSeek 大模型 + 行业 RAG 知识库 + 轻量 LoRA 微调 + Agent 自主调度框架，实现自主感知、分析、决策、执行闭环。</p>
+                        <p class="text-sm text-sub"><strong>部署与商业化：</strong>完全独立高阶微服务，解耦所有业务逻辑，自主调度各业务、数据中台接口；可单独升级、单独运维、单独商业化迭代，是平台最高溢价模块。</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="card rounded-xl p-8">
                 <h3 class="text-xl font-semibold mb-6">工作流引擎</h3>
                 <p class="text-sub mb-6">工作流引擎支撑所有业务流程，模板可配置，支持自由流，审批与业务解耦。</p>
@@ -1672,6 +1777,97 @@
                         <div class="font-semibold mb-1">智能客服</div>
                         <div class="text-sm text-sub">基于知识库和对话历史</div>
                     </div>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-8">
+                <h3 class="text-xl font-semibold mb-6">AI Agent 数字员工技术方案</h3>
+                <p class="text-sub leading-relaxed mb-6">
+                    摒弃传统重训练、高成本开发模式，鑫渠采用 <strong>DeepSeek 大模型 + 业务 RAG 知识库 + 行业 LoRA 轻量微调 + Agent 自主调度框架</strong> 的轻量化落地架构，低成本实现「自主感知—自主分析—自主诊断—主动预警—主动决策—任务闭环」的完整数字员工能力。
+                </p>
+
+                <h4 class="font-semibold mb-4">四层技术架构</h4>
+                <div class="space-y-4 mb-8">
+                    <div class="p-4 rounded-xl border border-theme">
+                        <div class="font-semibold mb-2">基础大模型层</div>
+                        <p class="text-sm text-sub">接入 DeepSeek 通用大模型，承载语义理解、逻辑推理、文案生成、问题拆解、决策推演等基础能力，保证通用智能稳定可靠。</p>
+                    </div>
+                    <div class="p-4 rounded-xl border border-theme">
+                        <div class="font-semibold mb-2">行业 RAG 知识库层</div>
+                        <p class="text-sm text-sub">灌入 IVD 行业合规规则、平台业务流程、转化考核标准、成功/失败项目案例、管理制度、提成绩效规则，让 AI 懂行业、懂业务、懂企业管理规则。</p>
+                    </div>
+                    <div class="p-4 rounded-xl border border-theme">
+                        <div class="font-semibold mb-2">轻量 LoRA 微调层</div>
+                        <p class="text-sm text-sub">基于企业脱敏历史业务数据、真实转化卡点、员工行为数据、经营问题案例做小样本微调，让 AI 适配企业专属业务特征与问题模型。</p>
+                    </div>
+                    <div class="p-4 rounded-xl border border-theme">
+                        <div class="font-semibold mb-2">Agent 自主调度层</div>
+                        <p class="text-sm text-sub">赋予 AI 数字员工自主运行能力，支持定时巡检、主动拉取数据、自动对比指标、自动归因、自动生成报告、自动推送整改任务，实现 7×24 小时无人值守工作。</p>
+                    </div>
+                </div>
+
+                <h4 class="font-semibold mb-4">AI 三阶成长体系</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-2 text-blue-600">AI 学徒</div>
+                        <div class="text-sm text-sub mb-2">被动学习 · 规则适配 · 零基础摸底</div>
+                        <ul class="space-y-1 text-sm text-sub">
+                            <li>• 全域知识库学习与历史数据训练</li>
+                            <li>• 基础规则校验与被动问答</li>
+                            <li>• 无主动操作与决策权限</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-2 text-purple-600">AI 助理</div>
+                        <div class="text-sm text-sub mb-2">辅助协作 · 数据赋能 · 人工主导</div>
+                        <ul class="space-y-1 text-sm text-sub">
+                            <li>• 自动汇总报表、排查疏漏、推送提醒</li>
+                            <li>• 基础分析、异常标注、销售赋能</li>
+                            <li>• 只辅助、不决策、不执行</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <div class="font-semibold mb-2 text-orange-600">AI 正式员工</div>
+                        <div class="text-sm text-sub mb-2">自主分析 · 智能决策 · 独立执行</div>
+                        <ul class="space-y-1 text-sm text-sub">
+                            <li>• 主动挖掘问题、精准归因、输出方案</li>
+                            <li>• 自动下发任务、跟踪进度、复盘效果</li>
+                            <li>• 7×24 小时在岗自治闭环</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-theme">
+                                <th class="text-left py-3 font-semibold">成长阶段</th>
+                                <th class="text-left py-3 font-semibold">核心能力</th>
+                                <th class="text-left py-3 font-semibold">权限边界</th>
+                                <th class="text-left py-3 font-semibold">适用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sub">
+                            <tr class="border-b border-theme">
+                                <td class="py-3 font-semibold text-blue-600">AI 学徒</td>
+                                <td class="py-3">行业与企业规则学习、历史数据训练、基础问答与规则校验</td>
+                                <td class="py-3">只学不做、被动响应；无业务操作权限</td>
+                                <td class="py-3">新租户上线初期、模型冷启动、知识库沉淀</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3 font-semibold text-purple-600">AI 助理</td>
+                                <td class="py-3">数据整理、业务自查、基础分析、销售赋能、提醒推送</td>
+                                <td class="py-3">辅助干活、只给参考；结果需人工确认</td>
+                                <td class="py-3">日报/周报生成、线索初筛、进度汇总、合规自查</td>
+                            </tr>
+                            <tr class="border-b border-theme">
+                                <td class="py-3 font-semibold text-orange-600">AI 正式员工</td>
+                                <td class="py-3">经营复盘、问题挖掘、行为审计、风险预警、决策方案、任务闭环</td>
+                                <td class="py-3">独立在岗、主动决策、自动执行、闭环复盘</td>
+                                <td class="py-3">经营复盘、业务审计、风险预警、销售赋能全场景</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
@@ -1844,20 +2040,20 @@
                             <span class="px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 text-sm font-semibold">第一阶段</span>
                             <span class="text-sub text-sm">0-12 个月</span>
                         </div>
-                        <h3 class="text-xl font-semibold mb-3">双中台 + DDD</h3>
-                        <p class="text-sub mb-4">夯实基础，支撑 1000 人并发，沉淀核心业务能力。</p>
+                        <h3 class="text-xl font-semibold mb-3">基础底座层 + 核心业务层，双中台 + DDD</h3>
+                        <p class="text-sub mb-4">夯实基础底座与核心业务域，支撑 1000 人并发，沉淀共享领域能力。</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                                <strong>业务中台：</strong>客户中心、产品中心、订单中心、经销商中心、营销中心、合规中心、绩效中心等共享领域能力
+                                <strong>基础底座层：</strong>工作台、应用中心、日历与日程、审批中心、合规风控、后台设置等中台公共能力强制落地
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
+                                <strong>核心业务层：</strong>通用销售域（线索、意向、客户 360°、代理商、绩效、提成、消息）与 IVD 行业专属域（产品/品牌库、资质、工单、定制化项目流程）按需启用
                             </div>
                             <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
                                 <strong>数据中台：</strong>统一数据采集、治理、报表、指标体系
                             </div>
                             <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                                <strong>DDD 建模：</strong>明确聚合根、限界上下文、领域事件
-                            </div>
-                            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                                <strong>后台配置化：</strong>字段、视图、流程、标签、权限可配置
+                                <strong>DDD 建模：</strong>明确聚合根、限界上下文、领域事件，按五大微服务集群预留拆分边界
                             </div>
                         </div>
                     </div>
@@ -1871,20 +2067,20 @@
                             <span class="px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 text-sm font-semibold">第二阶段</span>
                             <span class="text-sub text-sm">12-24 个月</span>
                         </div>
-                        <h3 class="text-xl font-semibold mb-3">AI 中台 + 事件驱动</h3>
-                        <p class="text-sub mb-4">引入智能化能力和实时业务流程联动。</p>
+                        <h3 class="text-xl font-semibold mb-3">增值能力层 + AI 助理层，数据中台升级</h3>
+                        <p class="text-sub mb-4">引入数据增值与 AI 助理能力，实现实时业务流程联动与智能辅助。</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                                <strong>AI 中台：</strong>线索评分、客户流失预警、试剂消耗预测、智能助手
+                                <strong>增值能力层：</strong>效益中心、企业驾驶舱、数据洞察中心、数据建模中心全面落地，为 AI 提供高质量数据底座
                             </div>
                             <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                                <strong>事件驱动：</strong>意向成交→设备装机→试剂跟踪自动串联
+                                <strong>AI 助理：</strong>数据整理、业务自查、基础分析、销售赋能、提醒推送；只辅助、不决策、不执行
                             </div>
                             <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                                <strong>实时计算：</strong>库存预警、待办提醒、经营指标实时刷新
+                                <strong>事件驱动：</strong>意向成交→设备装机→试剂跟踪自动串联，AI 助理实时介入关键节点
                             </div>
                             <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                                <strong>数据中台升级：</strong>实时数仓、指标平台
+                                <strong>数据中台升级：</strong>实时数仓、指标平台、特征平台
                             </div>
                         </div>
                     </div>
@@ -1898,20 +2094,20 @@
                             <span class="px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 text-sm font-semibold">第三阶段</span>
                             <span class="text-sub text-sm">24-36 个月</span>
                         </div>
-                        <h3 class="text-xl font-semibold mb-3">可组合架构 + 数据网格/湖仓一体</h3>
-                        <p class="text-sub mb-4">让系统具备高度灵活性，支持多组织、多产品线、多业务模式。</p>
+                        <h3 class="text-xl font-semibold mb-3">AI 正式员工层，可组合架构 + 数据网格 / 湖仓一体</h3>
+                        <p class="text-sub mb-4">AI 正式员工独立自治，系统具备高度灵活性与 AI 原生交互能力。</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                                <strong>PBC 化：</strong>每个领域能力封装为可复用的打包业务能力
+                                <strong>AI 正式员工：</strong>经营复盘、问题挖掘、行为审计、风险预警、决策方案、任务闭环，实现 7×24 小时自治
                             </div>
                             <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                                <strong>低代码平台：</strong>业务人员可配置页面、流程、报表
+                                <strong>PBC 化：</strong>每个领域能力封装为可复用的打包业务能力，支持多组织、多产品线、多业务模式
                             </div>
                             <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                                <strong>数据网格：</strong>各领域团队负责自己的数据产品
+                                <strong>数据网格 / 湖仓一体：</strong>各领域团队负责自己的数据产品，AI 可自由消费全域数据
                             </div>
                             <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-sub">
-                                <strong>AI 原生交互：</strong>自然语言查询经营数据
+                                <strong>AI 原生交互：</strong>自然语言查询经营数据、下达任务、驱动业务闭环
                             </div>
                         </div>
                     </div>
@@ -2333,51 +2529,51 @@
                 <div class="mb-6">
                     <h4 class="text-base font-semibold mb-3 text-primary-600">全局规范与标准</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="file:///Users/mac/qucheng/鑫渠设计与开发规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠设计与开发规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠设计与开发规范.md</div>
                             <div class="text-sm text-sub">v1.5 · 前端页面与交互设计指导</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/鑫渠全局设计系统规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠全局设计系统规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠全局设计系统规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 字体、颜色、图标、主题</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/鑫渠页面布局设计理念.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠页面布局设计理念.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠页面布局设计理念.md</div>
                             <div class="text-sm text-sub">v1.0 · 布局哲学与组件模式</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/搜索引擎设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./搜索引擎设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">搜索引擎设计规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 全局与应用内搜索设计</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/鑫渠标签体系设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠标签体系设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠标签体系设计规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 标签作用域、色板、权限</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/鑫渠账户与数据安全设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠账户与数据安全设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠账户与数据安全设计规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 账户管理、数据备份、分批导入、数据安全</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/鑫渠模块划分与基础能力说明书.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠模块划分与基础能力说明书.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠模块划分与基础能力说明书.md</div>
                             <div class="text-sm text-sub">v1.0 · 三层架构、模块边界、基础能力下沉</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/鑫渠领域模型与主数据规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠领域模型与主数据规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠领域模型与主数据规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 限界上下文、主数据、领域事件</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/鑫渠统一状态机规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠统一状态机规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠统一状态机规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 通用状态基线、业务对象状态机</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/鑫渠非功能性需求规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠非功能性需求规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠非功能性需求规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 性能、安全、可用性、合规基线</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/鑫渠数据迁移与上线方案.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠数据迁移与上线方案.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠数据迁移与上线方案.md</div>
                             <div class="text-sm text-sub">v1.0 · 迁移范围、阶段规划、回滚预案</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/鑫渠应用文档验收标准.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠应用文档验收标准.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠应用文档验收标准.md</div>
                             <div class="text-sm text-sub">v1.1 · 应用文档自检与验收依据</div>
                         </a>
@@ -2387,27 +2583,27 @@
                 <div class="mb-6">
                     <h4 class="text-base font-semibold mb-3 text-primary-600">AI 可执行开发规范</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="file:///Users/mac/qucheng/AI可执行设计文档编写规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./AI可执行设计文档编写规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">AI可执行设计文档编写规范.md</div>
                             <div class="text-sm text-sub">v1.0 · AI 可执行文档章节结构</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/鑫渠组件库清单与命名规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠组件库清单与命名规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠组件库清单与命名规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 前端组件字典与命名规则</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/鑫渠响应式设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠响应式设计规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠响应式设计规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 断点、布局、组件适配规则</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/鑫渠字段规范模板.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠字段规范模板.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠字段规范模板.md</div>
                             <div class="text-sm text-sub">v1.0 · 字段命名、类型、约束、权限</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/鑫渠验收断言编写规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠验收断言编写规范.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠验收断言编写规范.md</div>
                             <div class="text-sm text-sub">v1.0 · 断言格式、分类、编写标准</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/Claude-DeepSeek协同开发规则.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./Claude-DeepSeek协同开发规则.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">Claude-DeepSeek协同开发规则.md</div>
                             <div class="text-sm text-sub">v1.0 · Claude 调用 DeepSeek 的分工、Prompt、验收、红线</div>
                         </a>
@@ -2417,27 +2613,27 @@
                 <div class="mb-6">
                     <h4 class="text-base font-semibold mb-3 text-primary-600">平台级入口应用</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="file:///Users/mac/qucheng/工作台功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./工作台功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">工作台功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 个人待办与数据聚合入口</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/消息中心功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./消息中心功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">消息中心功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 系统通知与协同消息</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/应用中心功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./应用中心功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">应用中心功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 业务应用统一入口</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/通讯录功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./通讯录功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">通讯录功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 客户联系人与组织架构</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/任务功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./任务功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">任务功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 任务分配、跟踪与提醒</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/收藏夹功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./收藏夹功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">收藏夹功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 重点对象快速访问</div>
                         </a>
@@ -2447,35 +2643,35 @@
                 <div class="mb-6">
                     <h4 class="text-base font-semibold mb-3 text-primary-600">业务管理域应用</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="file:///Users/mac/qucheng/线索管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./线索管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">线索管理功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.4 · 线索收集分配转化</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/意向管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./意向管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">意向管理功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.4 · 意向报备全流程</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/客户360°功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./客户360°功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">客户360°功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.3 · 客户资产中心设计</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/日历模块功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./日历模块功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">日历模块功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.3 · 共享日历视图组件</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/设备管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./设备管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">设备管理功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 设备档案与生命周期</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/试剂运营功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./试剂运营功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">试剂运营功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 试剂账本与消耗跟踪</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/工单管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./工单管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">工单管理功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 售后工单处理与看板视图</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/品牌库管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./品牌库管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">品牌库管理功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 品牌与产品基础配置</div>
                         </a>
@@ -2485,12 +2681,12 @@
                 <div class="mb-6">
                     <h4 class="text-base font-semibold mb-3 text-primary-600">渠道管理与合规域应用</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="file:///Users/mac/qucheng/代理商管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./代理商管理功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">代理商管理功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 代理商授权与协同</div>
                         </a>
 
-                        <a href="file:///Users/mac/qucheng/合规风控功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./合规风控功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">合规风控功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 合规审计与风险预警</div>
                         </a>
@@ -2500,27 +2696,27 @@
                 <div class="mb-6">
                     <h4 class="text-base font-semibold mb-3 text-primary-600">数据决策与系统管理域应用</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="file:///Users/mac/qucheng/经营驾驶舱功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./经营驾驶舱功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">经营驾驶舱功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 业绩监控与下钻分析</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/目标绩效功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./目标绩效功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">目标绩效功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.0 · 目标拆解与绩效跟踪</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/后台设置功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./后台设置功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">后台设置功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.2 · 租户级基础配置入口</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/应用配置功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./应用配置功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">应用配置功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.1 · 应用级元数据与流程绑定</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/流程设计器功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./流程设计器功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">流程设计器功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.1 · 工作流平台建模工具</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/审批中心功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./审批中心功能与交互说明.md" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">审批中心功能与交互说明.md</div>
                             <div class="text-sm text-sub">v1.1 · 工作流平台运行时待办入口</div>
                         </a>
@@ -2530,11 +2726,11 @@
                 <div>
                     <h4 class="text-base font-semibold mb-3 text-primary-600">相关原型</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <a href="file:///Users/mac/qucheng/鑫渠高保真原型.html" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠高保真原型.html" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠高保真原型.html</div>
                             <div class="text-sm text-sub">v1.8.0 · 交互原型</div>
                         </a>
-                        <a href="file:///Users/mac/qucheng/鑫渠系统技术实现白皮书.html" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
+                        <a href="./鑫渠系统技术实现白皮书.html" class="p-4 rounded-lg border border-theme hover:border-primary-500 transition group">
                             <div class="font-semibold group-hover:text-primary-600">鑫渠系统技术实现白皮书.html</div>
                             <div class="text-sm text-sub">本白皮书 v1.7</div>
                         </a>

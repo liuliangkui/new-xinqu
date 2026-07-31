@@ -1276,10 +1276,10 @@
 <div class="card">
 <p>应用中心采用「<strong>统一目录 + 权限感知入口 + 个性化工作台</strong>」三位一体的设计：</p>
 <ul>
-<li>按<strong>业务管理、渠道协同、合规审计、数据决策、系统管理</strong>五大域分组渲染应用卡片；</li>
+<li>按<strong>基础底座层、核心业务层、增值能力层、AI 智能体层</strong>四层架构分组渲染应用卡片，商业化边界清晰；</li>
 <li>每个卡片展示 SVG 图标、应用名称、一句话描述及「添加 / 已添加 / 无权限」状态；</li>
 <li>用户可将高频应用添加到工作台「我的应用」区，无权限应用自动置灰禁用；</li>
-<li>支持按应用名称、拼音首字母、业务域关键词实时搜索。</li>
+<li>支持按应用名称、拼音首字母、架构层级与业务域关键词实时搜索。</li>
 </ul>
 </div>
 <h3>基础平台能力</h3>
@@ -1337,7 +1337,11 @@
 <td>工单管理（移动端）、设备管理（移动端）</td>
 </tr>
 </table>
+<p class="small">应用中心按四层架构与角色权限精准展示入口，不同岗位只看到其权限范围内的应用，实现千人千面的应用分发。</p>
 <h3>可选应用一览</h3>
+
+<h3>第一层：基础底座层（强制必装，不可卸载）</h3>
+<p class="small">基础底座层为全租户强制必装、不可卸载的中台公共能力，为上层业务模块与 AI 智能体提供统一入口、流程、合规与权限支撑。</p>
 <div class="grid-2">
 <div class="card">
 <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
@@ -1345,14 +1349,8 @@
 <h4 style="margin:0">工作台</h4>
 </div>
 <p class="small">一站式工作门户，聚合待办、日程、快捷应用、最近访问与消息通知。</p>
-<ul class="small">
-<li>时段问候语与当前日期文案</li>
-<li>最近访问区、KPI 指标卡片</li>
-<li>「我的应用」网格，最多 16 个</li>
-<li>今日待办按全部/今日必做/审批/跟进/售后/合规分类</li>
-<li>本周关注与最近消息</li>
-</ul>
 <p class="small"><strong>价值：</strong>减少关键事项遗漏，管理层通过 KPI 卡片快速掌握团队核心指标。</p>
+<p class="small" style="margin-top:8px"><span class="tag">强制必装，不可卸载</span></p>
 <img alt="工作台界面" src="screenshots/workbench.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
 </div>
 <div class="card">
@@ -1361,142 +1359,28 @@
 <h4 style="margin:0">应用中心</h4>
 </div>
 <p class="small">业务应用的统一目录与权限入口，连接系统能力与用户工作台。</p>
-<ul class="small">
-<li>五大业务域分组展示应用卡片</li>
-<li>卡片状态：添加 / 已添加 / 无权限</li>
-<li>一键添加/移除工作台</li>
-<li>按名称、拼音首字母、业务域搜索</li>
-<li>根据角色推荐默认应用</li>
-</ul>
-<p class="small"><strong>价值：</strong>按角色权限精准展示业务入口，降低多系统入口分散的查找成本。</p>
+<p class="small"><strong>价值：</strong>按角色权限与四层架构精准展示业务入口，降低多系统入口分散的查找成本。</p>
+<p class="small" style="margin-top:8px"><span class="tag">强制必装，不可卸载</span></p>
 <img alt="应用中心界面" src="screenshots/apps.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
 </div>
 <div class="card">
 <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 4-6 8-6s8 2 8 6"></path></svg>
-<h4 style="margin:0">客户 360°</h4>
+<svg class="icon" viewbox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path></svg>
+<h4 style="margin:0">日历与日程</h4>
 </div>
-<p class="small">客户资产中心和数据枢纽，以 HCO 为主数据根节点，聚合科室、决策链、设备、试剂、商机、服务与时间线。</p>
-<ul class="small">
-<li>列表/卡片视图、快捷筛选、多条件搜索</li>
-<li>详情页 6 个页签：概览、科室、决策链、设备地图、试剂账本、时间线</li>
-<li>健康度评分（0–100）与四级预警</li>
-<li>交叉销售机会识别</li>
-<li>HCO 查重与合并</li>
-</ul>
-<p class="small"><strong>价值：</strong>降低销售离职导致的信息断层，提前发现试剂下降、保修到期、长期无拜访等风险。</p>
-<img alt="客户360°界面" src="screenshots/customer360.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
+<p class="small">围绕客户与商机的个人及团队日程管理中心视图，把拜访、跟进、会议、任务截止、关键节点统一到一个视图。</p>
+<p class="small"><strong>价值：</strong>自动汇聚拜访、装机、维保、招标等时间性工作，降低关键节点遗漏率。</p>
+<p class="small" style="margin-top:8px"><span class="tag">强制必装，不可卸载</span></p>
+<img alt="日历与日程界面" src="screenshots/calendar.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
 </div>
 <div class="card">
 <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-2h2zm0-4h-2V7h2z"></path></svg>
-<h4 style="margin:0">线索管理</h4>
-</div>
-<p class="small">渠道秩序域的前置入口，用于收集、查重、分配、跟进销售线索；确认真实商机后一键转为意向报备单。</p>
-<ul class="small">
-<li>线索池：全部/我的线索/公海池/团队线索</li>
-<li>录入自动查重（弱提示/强提示/阻断）</li>
-<li>线索分配：归属人、协同人、跟进时限</li>
-<li>跟进录入与转意向</li>
-<li>废弃/恢复与自动回收</li>
-</ul>
-<p class="small"><strong>价值：</strong>低门槛集中备案，减少重复录入与内部撞单，提升区域团队线索转化效率。</p>
-<img alt="线索管理界面" src="screenshots/leads.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
-</div>
-<div class="card">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M9 11H5v2h4v-2zm6 0h4v2h-4v-2zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path></svg>
-<h4 style="margin:0">意向管理</h4>
-</div>
-<p class="small">销售过程管控域的核心模块，管理 IVD 行业从线索/意向提交到项目结束的全生命周期。</p>
-<ul class="small">
-<li>三步新建意向：客户与项目 → 业务信息 → 确认提交</li>
-<li>冲突检测与撞单裁决</li>
-<li>多级审批流程：上级初审 → 厂家经理招标授权 → 送货审批</li>
-<li>招标/非招标/TP/捐赠跟进记录</li>
-<li>保护期到期前 3 天/1 天/当天提醒</li>
-</ul>
-<p class="small"><strong>价值：</strong>降低撞单率，明确每个生效意向的唯一负责人，沉淀全过程数据。</p>
-<img alt="意向管理界面" src="screenshots/intentions.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
-</div>
-<div class="card">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"></path></svg>
-<h4 style="margin:0">设备管理</h4>
-</div>
-<p class="small">面向「设备即阵地」特点，覆盖设备从采购交付、装机验收、运行维保、调拨退机到报废处置全生命周期。</p>
-<ul class="small">
-<li>以序列号为唯一标识的设备 360° 档案</li>
-<li>9 个状态跟踪与自动时间线</li>
-<li>调拨/退机/报废申请与审批</li>
-<li>保修 90/60/30/7 天预警</li>
-<li>设备维修联动售后工单</li>
-</ul>
-<p class="small"><strong>价值：</strong>统一 IVD 设备资产台账，守住试剂复购的「阵地」。</p>
-<img alt="设备管理界面" src="screenshots/equipment.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
-</div>
-<div class="card">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M12 2l-8 4v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6z"></path></svg>
-<h4 style="margin:0">试剂运营</h4>
-</div>
-<p class="small">承接设备装机后的持续经营，围绕消耗预测、复购预警、库存监控、流失识别，把一次性装机转化为持续性试剂收入。</p>
-<ul class="small">
-<li>试剂档案与设备-试剂绑定</li>
-<li>基于历史消耗的 30/60/90 天预测</li>
-<li>7/15/30 天三级断货预警</li>
-<li>上量率 = 实际采购 / 合同最低月采量</li>
-<li>消耗下降预警与流失风险</li>
-</ul>
-<p class="small"><strong>价值：</strong>将试剂复购从经验驱动转为数据驱动，减少断货停机与竞品替换风险。</p>
-<img alt="试剂运营界面" src="screenshots/reagent.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
-</div>
-<div class="card">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"></path></svg>
-<h4 style="margin:0">工单管理</h4>
-</div>
-<p class="small">覆盖报修、派单、现场处理、客户确认到关闭的全流程服务履约中枢，通过智能派单与 SLA 全程监控保障服务时效。</p>
-<ul class="small">
-<li>多渠道受理：客户小程序、销售代报、客服录入、系统预警</li>
-<li>列表/看板/地图三种视图</li>
-<li>智能派单与改派</li>
-<li>SLA 响应/到场/解决时限与超期预警</li>
-<li>工程师到场打卡、备件管理、客户评价</li>
-</ul>
-<p class="small"><strong>价值：</strong>将电话/微信救火升级为流程化服务闭环，提升医院客户响应速度与满意度。</p>
-<img alt="工单管理界面" src="screenshots/workorders.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
-</div>
-<div class="card">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></svg>
-<h4 style="margin:0">代理商管理</h4>
-</div>
-<p class="small">渠道管理域的核心应用，管理厂家与代理商之间的授权关系、区域边界、利益分配与库存协同。</p>
-<ul class="small">
-<li>渠道授权与资质管理</li>
-<li>区域保护与冲突预警</li>
-<li>撞单裁决：支持/驳回/合并跟进/转交</li>
-<li>返利政策引擎与自动结算</li>
-<li>库存共享与调拨</li>
-</ul>
-<p class="small"><strong>价值：</strong>实现渠道授权、区域保护的在线化与可审计，缩短返利结算周期。</p>
-<img alt="代理商管理界面" src="screenshots/dealers.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
-</div>
-<div class="card">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"></path></svg>
+<svg class="icon" viewbox="0 0 24 24"><path d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"></path></svg>
 <h4 style="margin:0">审批中心</h4>
 </div>
 <p class="small">跨业务通用审批运行时入口，聚合所有业务域的待办、已办、我发起的与抄送事项。</p>
-<ul class="small">
-<li>待我审批 / 我已审批 / 我发起的 / 抄送我的 / 审批管理</li>
-<li>通过、驳回、转交、加签、评论、催办、撤回</li>
-<li>批量处理与流程可视化</li>
-<li>代理人设置与时效报表</li>
-<li>节点耗时分析与驳回率统计</li>
-</ul>
 <p class="small"><strong>价值：</strong>统一收口特价审批、意向报备、设备投放/回收、试剂调价等跨业务审批。</p>
+<p class="small" style="margin-top:8px"><span class="tag">强制必装，不可卸载</span></p>
 <img alt="审批中心界面" src="screenshots/approvals.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
 </div>
 <div class="card">
@@ -1505,142 +1389,9 @@
 <h4 style="margin:0">合规风控</h4>
 </div>
 <p class="small">面向销售、市场、渠道、服务全链路提供风险识别、审批控制、过程留痕与审计追溯能力。</p>
-<ul class="small">
-<li>拜访合规校验：GPS、照片、敏感词、必填附件</li>
-<li>学术活动审批与费用核销</li>
-<li>样品/临评全生命周期管理</li>
-<li>飞检抽查与问题分级整改</li>
-<li>敏感词审计与渠道越权拦截</li>
-</ul>
 <p class="small"><strong>价值：</strong>将拜访、活动、样品、渠道授权纳入系统级合规闭环，降低飞检与监管风险。</p>
+<p class="small" style="margin-top:8px"><span class="tag">强制必装，不可卸载</span></p>
 <img alt="合规风控界面" src="screenshots/compliance.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（合规风控应用界面，具体以实际系统为准）</p>
-</div>
-<div class="card">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"></path></svg>
-<h4 style="margin:0">经营驾驶舱</h4>
-</div>
-<p class="small">面向高管、区域负责人及职能线管理者的数据决策顶层入口，提供全局指标监控、异常预警、目标追踪与多级下钻。</p>
-<ul class="small">
-<li>高管综合看板：≥12 个核心 KPI</li>
-<li>目标绩效追踪与未达标预警</li>
-<li>销售漏斗分析</li>
-<li>集团 → 大区 → 省区 → 城市 → 个人 → 意向六级穿透</li>
-<li>经销商协同视图与合规风控专题</li>
-</ul>
-<p class="small"><strong>价值：</strong>统一监测试剂消耗、设备装机、经销商库存周转与返利结算，降低跨部门数据口径偏差。</p>
-<img alt="经营驾驶舱界面" src="screenshots/dashboard.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
-</div>
-<div class="card">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path></svg>
-<h4 style="margin:0">目标绩效</h4>
-</div>
-<p class="small">销售结果管控域的核心模块，支持多维度目标拆解、达成跟踪与未达标预警。</p>
-<ul class="small">
-<li>绩效周期管理与指标字典</li>
-<li>公司级目标逐级拆分下发</li>
-<li>每日自动回算实际完成值</li>
-<li>我的/团队/区域/产品/渠道绩效看板</li>
-<li>未达标预警闭环与经销商返利结算</li>
-</ul>
-<p class="small"><strong>价值：</strong>将销售额、回款额、装机量、拜访量及经销商返利等绩效数据从 Excel 转为系统联动。</p>
-<img alt="目标绩效界面" src="screenshots/performance.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（目标绩效应用界面，具体以实际系统为准）</p>
-</div>
-<div class="card">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-<h4 style="margin:0">品牌库管理</h4>
-</div>
-<p class="small">业务管理域的产品主数据中心，以 IVD 品牌、厂家、产品线、型号、注册证为核心对象，向各模块提供统一、可复用的产品主数据。</p>
-<ul class="small">
-<li>品牌/产品线/型号三级主数据维护</li>
-<li>注册证合规管理与到期预警</li>
-<li>业务单据级联选择</li>
-<li>主数据全生命周期审批</li>
-<li>数据权限与可见范围控制</li>
-</ul>
-<p class="small"><strong>价值：</strong>消除「希森美康 XN-550」与「Sysmex XN550」等一物多码问题，统一口径。</p>
-<img alt="品牌库管理界面" src="screenshots/brand.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（品牌库管理应用界面，具体以实际系统为准）</p>
-</div>
-<div class="card">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"></path></svg>
-<h4 style="margin:0">日历与日程</h4>
-</div>
-<p class="small">围绕客户与商机的个人及团队日程管理中心视图，把拜访、跟进、会议、任务截止、关键节点统一到一个视图。</p>
-<ul class="small">
-<li>今日/本周日程切换与左侧小月历</li>
-<li>5 色标签分类：客户拜访、意向跟进、会议/学术、任务截止、关键节点</li>
-<li>日程新建/编辑/删除与关联客户、意向</li>
-<li>GPS 签到与标记完成</li>
-<li>自动同步保护期、招标节点、任务截止等业务事件</li>
-</ul>
-<p class="small"><strong>价值：</strong>自动汇聚拜访、装机、维保、招标等时间性工作，降低关键节点遗漏率。</p>
-<img alt="日历与日程界面" src="screenshots/calendar.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
-</div>
-<div class="card">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"></path></svg>
-<h4 style="margin:0">任务</h4>
-</div>
-<p class="small">工作执行与协作跟踪入口，支撑任务的下发、认领、推进、完成、提醒与逾期预警。</p>
-<ul class="small">
-<li>按状态/优先级/类型筛选</li>
-<li>新建任务并关联客户/意向/线索/工单</li>
-<li>状态流转：待处理 → 进行中 → 已完成/已关闭/已逾期</li>
-<li>任务详情评论、附件、进度更新</li>
-<li>逾期预警与消息提醒</li>
-</ul>
-<p class="small"><strong>价值：</strong>将分散在聊天/邮件中的事项集中为可跟踪任务，降低逾期遗漏风险。</p>
-<img alt="任务管理界面" src="screenshots/tasks.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
-</div>
-<div class="card">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></svg>
-<h4 style="margin:0">消息中心</h4>
-</div>
-<p class="small">平台级统一消息入口，聚合系统通知、审批待办、业务提醒、站内信四类消息。</p>
-<ul class="small">
-<li>按全部/未读/审批/提醒/站内信筛选</li>
-<li>WebSocket 实时推送与未读角标</li>
-<li>单条/批量已读与删除</li>
-<li>消息详情抽屉与业务上下文一键跳转</li>
-<li>审批待办类消息支持通过/驳回/转交</li>
-</ul>
-<p class="small"><strong>价值：</strong>将分散在各模块的通知收敛到单一入口，审批待办平均响应时间从 T+1 缩短到 2 小时内。</p>
-<img alt="消息中心界面" src="screenshots/messages.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
-</div>
-<div class="card">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M20 0H4v2h16V0zM4 24h16v-2H4v2zM20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9 10.76 6.75 12 6.75zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"></path></svg>
-<h4 style="margin:0">通讯录</h4>
-</div>
-<p class="small">企业组织与用户通讯录、客户联系人、经销商联系人的统一入口。</p>
-<ul class="small">
-<li>多维度搜索与筛选，支持拼音首字母</li>
-<li>列表/卡片双视图与快捷操作</li>
-<li>联系人查重与合并</li>
-<li>联系人详情展示决策链角色与最近互动</li>
-<li>组织架构通讯录与权限管控</li>
-</ul>
-<p class="small"><strong>价值：</strong>将散落在业务员手机、微信中的医院联系人沉淀为企业资产，新人上手时间从 2 周缩短到 3 天。</p>
-<img alt="通讯录界面" src="screenshots/contacts.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
-</div>
-<div class="card">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>
-<h4 style="margin:0">收藏夹</h4>
-</div>
-<p class="small">平台级用户自定义常用功能与业务对象快捷入口，让每位用户把高频访问的客户、意向、文档、页面聚合到一处。</p>
-<ul class="small">
-<li>添加/取消收藏</li>
-<li>按类型筛选与关键词搜索</li>
-<li>拖拽排序调整</li>
-<li>一键跳转业务详情</li>
-</ul>
-<p class="small"><strong>价值：</strong>将高频对象访问步数从 3–4 步降至 1 步，减少反复切换模块的查找成本。</p>
-<img alt="收藏夹界面" src="screenshots/favorites.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
 </div>
 <div class="card">
 <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
@@ -1648,49 +1399,228 @@
 <h4 style="margin:0">后台设置</h4>
 </div>
 <p class="small">租户级系统治理中枢，为 IVD 客户提供组织用户、角色权限、基础数据、日志审计、系统集成、区域保护与合规安全等底层配置入口。</p>
-<ul class="small">
-<li>组织架构与用户账号管理</li>
-<li>角色与权限管理（功能/数据/字段/操作）</li>
-<li>数据字典与系统参数</li>
-<li>日志审计与集成开放接口配置</li>
-<li>区域保护、敏感词与数据脱敏规则</li>
-</ul>
 <p class="small"><strong>价值：</strong>租户自治降低对研发依赖，操作留痕与审计报告导出满足飞检和合规要求。</p>
+<p class="small" style="margin-top:8px"><span class="tag">强制必装，不可卸载</span></p>
 <img alt="后台设置界面" src="screenshots/settings.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
+</div>
+</div>
+
+<h3>第二层：核心业务层（按需插拔，模块化选配）</h3>
+<p class="small">核心业务层按通用销售域与 IVD 行业专属域划分，支持客户按需开通、单独模块计费，承载企业日常全量业务运转。</p>
+
+<h4>通用销售域</h4>
+<div class="grid-2">
+<div class="card">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-2h2zm0-4h-2V7h2z"></path></svg>
+<h4 style="margin:0">线索管理</h4>
+</div>
+<p class="small">渠道秩序域的前置入口，用于收集、查重、分配、跟进销售线索；确认真实商机后一键转为意向报备单。</p>
+<p class="small"><strong>价值：</strong>低门槛集中备案，减少重复录入与内部撞单，提升区域团队线索转化效率。</p>
+<p class="small" style="margin-top:8px"><span class="tag">按需选配，单独计费</span></p>
+<img alt="线索管理界面" src="screenshots/leads.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
+</div>
+<div class="card">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><path d="M9 11H5v2h4v-2zm6 0h4v2h-4v-2zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path></svg>
+<h4 style="margin:0">意向管理</h4>
+</div>
+<p class="small">销售过程管控域的核心模块，管理 IVD 行业从线索/意向提交到项目结束的全生命周期。</p>
+<p class="small"><strong>价值：</strong>降低撞单率，明确每个生效意向的唯一负责人，沉淀全过程数据。</p>
+<p class="small" style="margin-top:8px"><span class="tag">按需选配，单独计费</span></p>
+<img alt="意向管理界面" src="screenshots/intentions.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
+</div>
+<div class="card">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 4-6 8-6s8 2 8 6"></path></svg>
+<h4 style="margin:0">客户 360°</h4>
+</div>
+<p class="small">客户资产中心和数据枢纽，以 HCO 为主数据根节点，聚合科室、决策链、设备、试剂、商机、服务与时间线。</p>
+<p class="small"><strong>价值：</strong>降低销售离职导致的信息断层，提前发现试剂下降、保修到期、长期无拜访等风险。</p>
+<p class="small" style="margin-top:8px"><span class="tag">按需选配，单独计费</span></p>
+<img alt="客户360°界面" src="screenshots/customer360.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
+</div>
+<div class="card">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></svg>
+<h4 style="margin:0">代理商管理</h4>
+</div>
+<p class="small">渠道管理域的核心应用，管理厂家与代理商之间的授权关系、区域边界、利益分配与库存协同。</p>
+<p class="small"><strong>价值：</strong>实现渠道授权、区域保护的在线化与可审计，缩短返利结算周期。</p>
+<p class="small" style="margin-top:8px"><span class="tag">按需选配，单独计费</span></p>
+<img alt="代理商管理界面" src="screenshots/dealers.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
+</div>
+<div class="card">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path></svg>
+<h4 style="margin:0">目标绩效</h4>
+</div>
+<p class="small">销售结果管控域的核心模块，支持多维度目标拆解、达成跟踪与未达标预警。</p>
+<p class="small"><strong>价值：</strong>将销售额、回款额、装机量、拜访量及经销商返利等绩效数据从 Excel 转为系统联动。</p>
+<p class="small" style="margin-top:8px"><span class="tag">按需选配，单独计费</span></p>
+<img alt="目标绩效界面" src="screenshots/performance.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（目标绩效应用界面，具体以实际系统为准）</p>
+</div>
+<div class="card">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"></path></svg>
+<h4 style="margin:0">提成核算</h4>
+</div>
+<p class="small">基于订单、回款、业绩规则自动核算销售提成与经销商返利，数据真实可溯源，杜绝人工统计误差。</p>
+<p class="small"><strong>价值：</strong>支撑销售薪资合规与效益分析，让提成发放透明、及时、可审计。</p>
+<p class="small" style="margin-top:8px"><span class="tag">按需选配，单独计费</span></p>
+<img alt="返利与佣金界面" src="screenshots/commission.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（返利与佣金应用界面，具体以实际系统为准）</p>
+</div>
+<div class="card">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></svg>
+<h4 style="margin:0">消息中心</h4>
+</div>
+<p class="small">全业务消息统一推送、提醒、归档，整合跟进提醒、审批通知、风险预警、节点提醒，避免业务遗漏。</p>
+<p class="small"><strong>价值：</strong>将分散在各模块的通知收敛到单一入口，审批待办平均响应时间从 T+1 缩短到 2 小时内。</p>
+<p class="small" style="margin-top:8px"><span class="tag">按需选配，单独计费</span></p>
+<img alt="消息中心界面" src="screenshots/messages.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
+</div>
+</div>
+
+<h4>IVD 行业专属域</h4>
+<div class="grid-2">
+<div class="card">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+<h4 style="margin:0">产品/品牌库管理</h4>
+</div>
+<p class="small">业务管理域的产品主数据中心，以 IVD 品牌、厂家、产品线、型号、注册证为核心对象，向各模块提供统一、可复用的产品主数据。</p>
+<p class="small"><strong>价值：</strong>消除「希森美康 XN-550」与「Sysmex XN550」等一物多码问题，统一口径。</p>
+<p class="small" style="margin-top:8px"><span class="tag">按需选配，单独计费</span></p>
+<img alt="品牌库管理界面" src="screenshots/brand.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（品牌库管理应用界面，具体以实际系统为准）</p>
+</div>
+<div class="card">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"></path></svg>
+<h4 style="margin:0">IVD 资质管理</h4>
+</div>
+<p class="small">产品注册证、客户资质、供应商资质归档，证照效期预警，自动联动合规风控完成资质校验。</p>
+<p class="small"><strong>价值：</strong>支撑资质合规巡检与风险预判，避免因证照过期导致的业务停摆与监管风险。</p>
+<p class="small" style="margin-top:8px"><span class="tag">按需选配，单独计费</span></p>
+<img alt="资质管理界面" src="screenshots/qualification.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（资质管理应用界面，具体以实际系统为准）</p>
+</div>
+<div class="card">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><path d="M12 2l-8 4v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6z"></path></svg>
+<h4 style="margin:0">工单管理</h4>
+</div>
+<p class="small">覆盖报修、派单、现场处理、客户确认到关闭的全流程服务履约中枢，通过智能派单与 SLA 全程监控保障服务时效。</p>
+<p class="small"><strong>价值：</strong>将电话/微信救火升级为流程化服务闭环，提升医院客户响应速度与满意度。</p>
+<p class="small" style="margin-top:8px"><span class="tag">按需选配，单独计费</span></p>
+<img alt="工单管理界面" src="screenshots/workorders.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
+</div>
+<div class="card">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"></path></svg>
+<h4 style="margin:0">定制化项目流程</h4>
+</div>
+<p class="small">IVD 定制化试剂、配套服务项目全流程管控，需求对接、方案确认、排期、交付、验收、售后全节点追踪。</p>
+<p class="small"><strong>价值：</strong>支撑项目进度诊断与风险预警，保障定制化项目按期交付与回款。</p>
+<p class="small" style="margin-top:8px"><span class="tag">按需选配，单独计费</span></p>
+<img alt="定制项目界面" src="screenshots/custom-project.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（定制项目应用界面，具体以实际系统为准）</p>
 </div>
 <div class="card">
 <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
 <svg class="icon" viewbox="0 0 24 24"><path d="M4 6h4v2H4zm0 5h4v2H4zm0 5h4v2H4zm6-10h10v2H10zm0 5h10v2H10zm0 5h10v2H10z"></path></svg>
-<h4 style="margin:0">应用配置</h4>
+<h4 style="margin:0">设备管理</h4>
 </div>
-<p class="small">应用级元数据管理中心，通过字段、视图、流程绑定、权限、标签、字典、集成等配置实现「一个平台、多套业务应用、千企千面」。</p>
-<ul class="small">
-<li>应用市场管理</li>
-<li>字段设计器</li>
-<li>视图设计器</li>
-<li>流程绑定与权限模型配置</li>
-<li>版本与发布管理、沙箱预览</li>
-</ul>
-<p class="small"><strong>价值：</strong>在无代码/低代码方式下启用并定制经销商协同、合规风控等应用。</p>
-<img alt="应用配置界面" src="screenshots/appconfig.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（应用配置中心界面：应用市场、字段/视图/流程绑定等配置入口示意图）</p>
+<p class="small">面向「设备即阵地」特点，覆盖设备从采购交付、装机验收、运行维保、调拨退机到报废处置全生命周期。</p>
+<p class="small"><strong>价值：</strong>统一 IVD 设备资产台账，守住试剂复购的「阵地」。</p>
+<p class="small" style="margin-top:8px"><span class="tag">按需选配，单独计费</span></p>
+<img alt="设备管理界面" src="screenshots/equipment.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
 </div>
 <div class="card">
 <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<svg class="icon" viewbox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"></path></svg>
-<h4 style="margin:0">流程设计器</h4>
+<svg class="icon" viewbox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>
+<h4 style="margin:0">试剂运营</h4>
 </div>
-<p class="small">流程编排域的可视化设计时建模工具，通过画布拖拽将业务规则抽象为可执行的审批流、业务流与自动化流。</p>
-<ul class="small">
-<li>可视化流程画布</li>
-<li>审批/抄送/条件分支/并行分支/子流程/自动化任务节点</li>
-<li>会签/或签/顺序签与审批人动态解析</li>
-<li>流程版本管理与灰度发布</li>
-<li>流程测试、模拟与实例监控</li>
-</ul>
-<p class="small"><strong>价值：</strong>将意向报备、样品申请、学术活动、返利结算等差异化审批路径在线配置化。</p>
-<img alt="流程设计器界面" src="screenshots/flow.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（流程设计器界面：流程管理列表与可视化画布示意图）</p>
+<p class="small">承接设备装机后的持续经营，围绕消耗预测、复购预警、库存监控、流失识别，把一次性装机转化为持续性试剂收入。</p>
+<p class="small"><strong>价值：</strong>将试剂复购从经验驱动转为数据驱动，减少断货停机与竞品替换风险。</p>
+<p class="small" style="margin-top:8px"><span class="tag">按需选配，单独计费</span></p>
+<img alt="试剂运营界面" src="screenshots/reagent.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
 </div>
 </div>
+
+<h3>第三层：增值能力层（高阶付费，按需增购）</h3>
+<p class="small">增值能力层面向中大型客户，主打数据统计、复盘、可视化与建模能力，为 AI 智能体提供高质量数据底座。</p>
+<div class="grid-2">
+<div class="card">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path></svg>
+<h4 style="margin:0">效益中心</h4>
+</div>
+<p class="small">企业营收、回款、毛利、业绩效益基础统计汇总，直观展示经营基础数据，为 AI 数字员工经营分析提供底层数据报表。</p>
+<p class="small"><strong>价值：</strong>让管理层快速掌握企业经营基本面，支撑经营复盘与效益诊断。</p>
+<p class="small" style="margin-top:8px"><span class="tag">高阶付费，按需增购</span></p>
+<img alt="效益中心界面" src="screenshots/benefit.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（效益中心应用界面，具体以实际系统为准）</p>
+</div>
+<div class="card">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"></path></svg>
+<h4 style="margin:0">企业驾驶舱</h4>
+</div>
+<p class="small">管理层可视化大屏，全局经营数据、转化指标、团队业绩、风险数据总览，是 AI 数字员工分析结果、问题报告、决策建议的核心展示入口。</p>
+<p class="small"><strong>价值：</strong>统一监测试剂消耗、设备装机、经销商库存周转与返利结算，降低跨部门数据口径偏差。</p>
+<p class="small" style="margin-top:8px"><span class="tag">高阶付费，按需增购</span></p>
+<img alt="经营驾驶舱界面" src="screenshots/dashboard.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
+</div>
+<div class="card">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><path d="M9 11H5v2h4v-2zm6 0h4v2h-4v-2zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path></svg>
+<h4 style="margin:0">数据洞察中心</h4>
+</div>
+<p class="small">多维度业务数据分析，拆解「线索转意向、意向转成交」双核心转化率，复盘业务整体转化效率、卡点分布。</p>
+<p class="small"><strong>价值：</strong>为 AI 深度智能分析提供数据模型支撑，让业务瓶颈可视化、可量化、可闭环。</p>
+<p class="small" style="margin-top:8px"><span class="tag">高阶付费，按需增购</span></p>
+<img alt="数据洞察中心界面" src="screenshots/insight.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（数据洞察中心应用界面，具体以实际系统为准）</p>
+</div>
+<div class="card">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path></svg>
+<h4 style="margin:0">数据建模中心</h4>
+</div>
+<p class="small">统一业务指标建模、转化模型、风险模型、行为模型配置，标准化全平台数据口径，保障 AI 分析结果精准、统一、可溯源。</p>
+<p class="small"><strong>价值：</strong>消除数据口径不一致问题，为效益中心、驾驶舱与 AI 智能体提供统一指标语言。</p>
+<p class="small" style="margin-top:8px"><span class="tag">高阶付费，按需增购</span></p>
+<img alt="数据建模中心界面" src="screenshots/modeling.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（数据建模中心应用界面，具体以实际系统为准）</p>
+</div>
+</div>
+
+<h3>第四层：AI 智能体层（顶级核心增值付费）</h3>
+<p class="small">AI 智能体层是平台最高阶增值能力，以 AI Agent 数字员工为核心，实现从辅助协作到独立自治的完整进阶。</p>
+<div class="grid-2">
+<div class="card" style="grid-column: span 2;">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<svg class="icon" viewbox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"></path></svg>
+<h4 style="margin:0">AI Agent 数字员工中心</h4>
+</div>
+<img alt="AI Agent 数字员工中心界面" src="screenshots/ai-agent.png" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px"/><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;margin-bottom:10px;font-size:12px;">（AI Agent 数字员工中心应用界面，具体以实际系统为准）</p>
+<p class="small">采用 <strong>DeepSeek 大模型 + 行业 RAG 知识库 + 轻量 LoRA 微调 + Agent 自主调度框架</strong>，打造可成长、可迭代、可全权履职的企业虚拟员工团队。</p>
+<div class="grid-3" style="margin-top:14px">
+<div class="card" style="padding:14px">
+<h4 style="margin:0 0 6px;color:var(--primary-dark)">AI 学徒</h4>
+<p class="small" style="margin:0">被动学习、规则适配、零基础摸底。完成行业与企业业务摸底，无主动操作与决策权限。</p>
+</div>
+<div class="card" style="padding:14px">
+<h4 style="margin:0 0 6px;color:var(--primary-dark)">AI 助理</h4>
+<p class="small" style="margin:0">辅助协作、数据赋能、人工主导。自动汇总报表、排查疏漏、推送提醒，只辅助不决策。</p>
+</div>
+<div class="card" style="padding:14px">
+<h4 style="margin:0 0 6px;color:var(--primary-dark)">AI 正式员工</h4>
+<p class="small" style="margin:0">自主分析、智能决策、独立执行。7×24 小时在岗自治，实现「分析—预警—派单—整改—复盘」闭环。</p>
+</div>
+</div>
+<p class="small"><strong>价值：</strong>替代大量人工分析、审计、管理工作，是面向老板、管理层、业务人员的核心溢价能力。</p>
+<p class="small" style="margin-top:8px"><span class="tag">顶级核心增值付费，平台最高溢价模块</span></p>
+<p class="small" style="text-align:center;color:var(--muted);margin-top:10px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p>
+</div>
+</div>
+
 </section>
 <section id="sec8">
 <div class="sec-head">
@@ -1797,6 +1727,16 @@
 <figure><img alt="审批中心" src="screenshots/approvals.png"/><figcaption>审批中心：跨业务审批统一入口</figcaption><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p></figure>
 <figure><img alt="经营驾驶舱" src="screenshots/dashboard.png"/><figcaption>经营驾驶舱：多维指标监控与下钻分析</figcaption><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p></figure>
 <figure><img alt="后台设置" src="screenshots/settings.png"/><figcaption>后台设置：租户级系统治理与权限配置</figcaption><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（产品界面示意图，具体以实际系统为准）</p></figure>
+<figure><img alt="效益中心" src="screenshots/benefit.png"/><figcaption>效益中心：营收、回款、毛利与效益结构分析</figcaption><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（效益中心应用界面，具体以实际系统为准）</p></figure>
+<figure><img alt="数据洞察中心" src="screenshots/insight.png"/><figcaption>数据洞察中心：线索到成交转化漏斗与瓶颈分析</figcaption><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（数据洞察中心应用界面，具体以实际系统为准）</p></figure>
+<figure><img alt="数据建模中心" src="screenshots/modeling.png"/><figcaption>数据建模中心：数据血缘、模型训练与发布</figcaption><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（数据建模中心应用界面，具体以实际系统为准）</p></figure>
+<figure><img alt="AI Agent 数字员工中心" src="screenshots/ai-agent.png"/><figcaption>AI Agent 数字员工中心：Agent 配置、调度与运行看板</figcaption><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（AI Agent 应用界面，具体以实际系统为准）</p></figure>
+<figure><img alt="大单作战室" src="screenshots/dealroom.png"/><figcaption>大单作战室：重大项目跟进、风险预警与资源协同</figcaption><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（大单作战室应用界面，具体以实际系统为准）</p></figure>
+<figure><img alt="渠道秩序" src="screenshots/channel-order.png"/><figcaption>渠道秩序：区域保护、撞单预警与越区出货监控</figcaption><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（渠道秩序应用界面，具体以实际系统为准）</p></figure>
+<figure><img alt="返利与佣金" src="screenshots/commission.png"/><figcaption>返利与佣金：阶梯返利政策与结算对账</figcaption><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（返利与佣金应用界面，具体以实际系统为准）</p></figure>
+<figure><img alt="资质管理" src="screenshots/qualification.png"/><figcaption>资质管理：产品/经销商/客户证照归档与效期预警</figcaption><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（资质管理应用界面，具体以实际系统为准）</p></figure>
+<figure><img alt="定制项目" src="screenshots/custom-project.png"/><figcaption>定制项目：大型医院非标准化项目配置与推进</figcaption><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（定制项目应用界面，具体以实际系统为准）</p></figure>
+<figure><img alt="移动端" src="screenshots/mobile.png"/><figcaption>移动端：企业微信/微信小程序一线工作台</figcaption><p class="small" style="text-align:center;color:var(--muted);margin-top:6px;font-size:12px;">（移动端小程序界面，具体以实际系统为准）</p></figure>
 </div>
 </section>
 <section id="sec11">
