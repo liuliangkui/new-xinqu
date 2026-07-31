@@ -5288,7 +5288,7 @@
               </div>
             </div>
           </div>
-<!-- 专题屏占位（后续可扩展） -->
+<!-- 专题屏：区域目标达成率 -->
           <div id="db-panel-target" class="db-panel hidden">
             <div class="card p-4 mb-5">
               <div class="flex items-center justify-between mb-4">
@@ -5422,7 +5422,53 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
               <div class="card p-4 lg:col-span-2">
                 <div class="font-semibold text-ink mb-3">区域业绩地图</div>
-                <div class="h-48 rounded-xl bg-panel flex flex-col items-center justify-center text-sub text-sm gap-2"><svg class="icon icon-xl text-primary/50"><use href="#icon-map"/></svg><span>可视化组件占位：按大区/省区着色</span></div>
+                <div class="h-48 rounded-xl bg-panel p-3">
+                  <svg viewBox="0 0 400 240" class="w-full h-full">
+                    <text x="8" y="16" font-size="10" fill="var(--sub)">业绩热力：颜色越深代表业绩越高</text>
+                    <!-- 东北 -->
+                    <g class="cursor-pointer" onclick="openDrillDown('region','东北大区')">
+                      <path d="M260,40 L310,35 L320,70 L300,95 L265,85 Z" fill="var(--primary)" opacity="0.45"/>
+                      <text x="285" y="68" text-anchor="middle" font-size="10" fill="var(--ink)">东北</text>
+                      <text x="285" y="80" text-anchor="middle" font-size="9" fill="var(--sub)">¥620万</text>
+                    </g>
+                    <!-- 华北 -->
+                    <g class="cursor-pointer" onclick="openDrillDown('region','华北大区')">
+                      <path d="M220,80 L265,85 L275,115 L245,130 L210,120 Z" fill="var(--primary)" opacity="0.65"/>
+                      <text x="242" y="110" text-anchor="middle" font-size="10" fill="var(--ink)">华北</text>
+                      <text x="242" y="122" text-anchor="middle" font-size="9" fill="var(--sub)">¥1,980万</text>
+                    </g>
+                    <!-- 西北 -->
+                    <g class="cursor-pointer" onclick="openDrillDown('region','西北大区')">
+                      <path d="M110,60 L200,55 L210,120 L160,140 L100,120 Z" fill="var(--primary)" opacity="0.35"/>
+                      <text x="155" y="100" text-anchor="middle" font-size="10" fill="var(--ink)">西北</text>
+                      <text x="155" y="112" text-anchor="middle" font-size="9" fill="var(--sub)">¥480万</text>
+                    </g>
+                    <!-- 华东 -->
+                    <g class="cursor-pointer" onclick="openDrillDown('region','华东大区')">
+                      <path d="M275,115 L310,120 L325,150 L295,170 L255,155 Z" fill="var(--primary)" opacity="0.9"/>
+                      <text x="290" y="145" text-anchor="middle" font-size="10" fill="#fff">华东</text>
+                      <text x="290" y="157" text-anchor="middle" font-size="9" fill="#fff">¥2,860万</text>
+                    </g>
+                    <!-- 华中 -->
+                    <g class="cursor-pointer" onclick="openDrillDown('region','华中大区')">
+                      <path d="M210,120 L255,122 L265,155 L245,180 L205,170 Z" fill="var(--primary)" opacity="0.55"/>
+                      <text x="235" y="152" text-anchor="middle" font-size="10" fill="var(--ink)">华中</text>
+                      <text x="235" y="164" text-anchor="middle" font-size="9" fill="var(--sub)">¥1,120万</text>
+                    </g>
+                    <!-- 西南 -->
+                    <g class="cursor-pointer" onclick="openDrillDown('region','西南大区')">
+                      <path d="M120,140 L205,138 L220,185 L170,210 L115,185 Z" fill="var(--primary)" opacity="0.45"/>
+                      <text x="170" y="172" text-anchor="middle" font-size="10" fill="var(--ink)">西南</text>
+                      <text x="170" y="184" text-anchor="middle" font-size="9" fill="var(--sub)">¥1,360万</text>
+                    </g>
+                    <!-- 华南 -->
+                    <g class="cursor-pointer" onclick="openDrillDown('region','华南大区')">
+                      <path d="M220,175 L265,165 L290,200 L270,225 L230,215 Z" fill="var(--primary)" opacity="0.75"/>
+                      <text x="252" y="198" text-anchor="middle" font-size="10" fill="var(--ink)">华南</text>
+                      <text x="252" y="210" text-anchor="middle" font-size="9" fill="var(--sub)">¥2,120万</text>
+                    </g>
+                  </svg>
+                </div>
                 <div class="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2">
                   <button class="p-2 rounded-lg bg-panel text-left hover:bg-primary-light/30" onclick="openDrillDown('region','华东大区')"><div class="text-xs text-sub">华东大区</div><div class="text-sm font-bold text-ink">¥2,860万</div></button>
                   <button class="p-2 rounded-lg bg-panel text-left hover:bg-primary-light/30" onclick="openDrillDown('region','华南大区')"><div class="text-xs text-sub">华南大区</div><div class="text-sm font-bold text-ink">¥2,120万</div></button>
@@ -9692,7 +9738,37 @@
               <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                 <div class="card p-3">
                   <div class="font-semibold text-ink mb-2">流程实例状态分布</div>
-                  <div class="chart-placeholder"><svg class="icon icon-xl mr-2"><use href="#icon-chart"/></svg> 饼图 / 横向条形图组件占位</div>
+                  <div class="flex items-center gap-4 py-2">
+                    <svg viewBox="0 0 160 160" class="w-36 h-36 flex-shrink-0">
+                      <g transform="translate(80,80)">
+                        <circle r="54" fill="none" stroke="var(--line)" stroke-width="20"/>
+                        <circle r="54" fill="none" stroke="var(--success)" stroke-width="20" stroke-dasharray="300.8 38.5" stroke-linecap="round" transform="rotate(-90)"/>
+                        <circle r="54" fill="none" stroke="var(--primary)" stroke-width="20" stroke-dasharray="20.7 318.6" stroke-linecap="round" transform="rotate(229.1)"/>
+                        <circle r="54" fill="none" stroke="var(--warning)" stroke-width="20" stroke-dasharray="13.9 325.4" stroke-linecap="round" transform="rotate(251.1)"/>
+                        <circle r="54" fill="none" stroke="var(--danger)" stroke-width="20" stroke-dasharray="3.8 335.5" stroke-linecap="round" transform="rotate(265.9)"/>
+                        <text text-anchor="middle" y="5" font-size="20" font-weight="700" fill="var(--ink)">1,408</text>
+                        <text text-anchor="middle" y="20" font-size="9" fill="var(--sub)">实例总数</text>
+                      </g>
+                    </svg>
+                    <div class="flex-1 space-y-2 text-xs min-w-[140px]">
+                      <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:var(--success)"></span>已完成</span>
+                        <span class="font-medium text-ink">1,248 <span class="text-sub">88.6%</span></span>
+                      </div>
+                      <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:var(--primary)"></span>运行中</span>
+                        <span class="font-medium text-ink">86 <span class="text-sub">6.1%</span></span>
+                      </div>
+                      <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:var(--warning)"></span>已终止</span>
+                        <span class="font-medium text-ink">58 <span class="text-sub">4.1%</span></span>
+                      </div>
+                      <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:var(--danger)"></span>异常</span>
+                        <span class="font-medium text-ink">16 <span class="text-sub">1.1%</span></span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="card p-3">
                   <div class="font-semibold text-ink mb-2">各节点平均停留时长</div>
