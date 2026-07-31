@@ -1561,7 +1561,7 @@
               <button class="tab" data-msgtab="announce" onclick="switchMsgTab(this)">企业公告</button>
             </div>
             <div class="space-y-2 mt-3" id="msg-list">
-              <div class="msg-item flex items-start gap-3 p-3 rounded-lg hover:bg-line-light cursor-pointer transition-colors unread" data-type="warning" onclick="openMessageModal(this)" data-type="warning">
+              <div class="msg-item flex items-start gap-3 p-3 rounded-lg hover:bg-line-light cursor-pointer transition-colors unread" data-type="warning" onclick="openMessageDetailOverlay(this)" data-type="warning">
                 <div class="w-10 h-10 rounded-full bg-danger-bg text-danger flex items-center justify-center flex-shrink-0"><svg class="icon icon-md"><use href="#icon-warning"/></svg></div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-2"><span class="font-medium text-ink">保护期到期提醒：昆明市第一人民医院血球项目</span><span class="badge badge-danger">预警</span><span class="w-2 h-2 rounded-full bg-danger flex-shrink-0" title="未读"></span></div>
@@ -1569,7 +1569,7 @@
                   <div class="text-placeholder text-xs mt-2">刚刚</div>
                 </div>
               </div>
-              <div class="msg-item flex items-start gap-3 p-3 rounded-lg hover:bg-line-light cursor-pointer transition-colors" data-type="todo" onclick="openMessageModal(this)" data-type="todo">
+              <div class="msg-item flex items-start gap-3 p-3 rounded-lg hover:bg-line-light cursor-pointer transition-colors" data-type="todo" onclick="openMessageDetailOverlay(this)" data-type="todo">
                 <div class="w-10 h-10 rounded-full bg-danger-bg text-danger flex items-center justify-center flex-shrink-0"><svg class="icon icon-md"><use href="#icon-approval"/></svg></div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-2"><span class="font-medium text-ink">待审批：昆明博奥返利申请</span><span class="badge badge-danger">待办</span><span class="w-2 h-2 rounded-full bg-danger flex-shrink-0 ml-1" title="未读"></span></div>
@@ -1577,7 +1577,7 @@
                   <div class="text-placeholder text-xs mt-2">10 分钟前</div>
                 </div>
               </div>
-              <div class="msg-item flex items-start gap-3 p-3 rounded-lg hover:bg-line-light cursor-pointer transition-colors" data-type="todo" onclick="openMessageModal(this)" data-type="todo">
+              <div class="msg-item flex items-start gap-3 p-3 rounded-lg hover:bg-line-light cursor-pointer transition-colors" data-type="todo" onclick="openMessageDetailOverlay(this)" data-type="todo">
                 <div class="w-10 h-10 rounded-full bg-warning-bg text-warning flex items-center justify-center flex-shrink-0"><svg class="icon icon-md"><use href="#icon-task"/></svg></div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-2"><span class="font-medium text-ink">任务到期提醒：云南省肿瘤医院血球项目意向跟进</span><span class="badge badge-warning">待办</span></div>
@@ -1585,7 +1585,7 @@
                   <div class="text-placeholder text-xs mt-2">30 分钟前</div>
                 </div>
               </div>
-              <div class="msg-item flex items-start gap-3 p-3 rounded-lg hover:bg-line-light cursor-pointer transition-colors" data-type="warning" onclick="openMessageModal(this)" data-type="warning">
+              <div class="msg-item flex items-start gap-3 p-3 rounded-lg hover:bg-line-light cursor-pointer transition-colors" data-type="warning" onclick="openMessageDetailOverlay(this)" data-type="warning">
                 <div class="w-10 h-10 rounded-full bg-warning-bg text-warning flex items-center justify-center flex-shrink-0"><svg class="icon icon-md"><use href="#icon-warning"/></svg></div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-2"><span class="font-medium text-ink">库存预警：大理康盛医疗器械有限公司</span><span class="badge badge-warning">预警</span></div>
@@ -1593,7 +1593,7 @@
                   <div class="text-placeholder text-xs mt-2">1 小时前</div>
                 </div>
               </div>
-              <div class="msg-item flex items-start gap-3 p-3 rounded-lg hover:bg-line-light cursor-pointer transition-colors" data-type="notice" onclick="openMessageModal(this)" data-type="notice">
+              <div class="msg-item flex items-start gap-3 p-3 rounded-lg hover:bg-line-light cursor-pointer transition-colors" data-type="notice" onclick="openMessageDetailOverlay(this)" data-type="notice">
                 <div class="w-10 h-10 rounded-full bg-info-bg text-info flex items-center justify-center flex-shrink-0"><svg class="icon icon-md"><use href="#icon-bell"/></svg></div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-2"><span class="font-medium text-ink">系统通知：客户 360° 详情页升级</span><span class="badge badge-info">通知</span></div>
@@ -1601,7 +1601,7 @@
                   <div class="text-placeholder text-xs mt-2">今天 09:00</div>
                 </div>
               </div>
-              <div class="msg-item flex items-start gap-3 p-3 rounded-lg hover:bg-line-light cursor-pointer transition-colors" data-type="announce" onclick="openMessageModal(this)" data-type="announce">
+              <div class="msg-item flex items-start gap-3 p-3 rounded-lg hover:bg-line-light cursor-pointer transition-colors" data-type="announce" onclick="openMessageDetailOverlay(this)" data-type="announce">
                 <div class="w-10 h-10 rounded-full bg-success-bg text-success flex items-center justify-center flex-shrink-0"><svg class="icon icon-md"><use href="#icon-flag"/></svg></div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-2"><span class="font-medium text-ink">企业公告：下半年销售政策发布</span><span class="badge badge-success">公告</span></div>
@@ -1609,7 +1609,7 @@
                   <div class="text-placeholder text-xs mt-2">昨天 18:00</div>
                 </div>
               </div>
-              <div class="msg-item flex items-start gap-3 p-3 rounded-lg hover:bg-line-light cursor-pointer transition-colors" data-type="warning" onclick="openMessageModal(this)" data-type="warning">
+              <div class="msg-item flex items-start gap-3 p-3 rounded-lg hover:bg-line-light cursor-pointer transition-colors" data-type="warning" onclick="openMessageDetailOverlay(this)" data-type="warning">
                 <div class="w-10 h-10 rounded-full bg-danger-bg text-danger flex items-center justify-center flex-shrink-0"><svg class="icon icon-md"><use href="#icon-compliance"/></svg></div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-2"><span class="font-medium text-ink">合规预警：拜访记录缺少定位信息</span><span class="badge badge-danger">预警</span></div>
@@ -1620,7 +1620,7 @@
             </div>
           </div>
           <div class="flex justify-center">
-            <button class="btn btn-ghost text-sm" onclick="showToast(`加载更多数据...`)">加载更多消息</button>
+            <button class="btn btn-ghost text-sm" onclick="loadMoreMessages()">加载更多消息</button>
           </div>
         </section>
 
@@ -1632,7 +1632,7 @@
               <p class="text-sub text-sm" id="calendar-subtitle">2026年7月29日 · 今日日程</p>
             </div>
             <div class="flex items-center gap-2">
-              <button class="btn btn-primary" onclick="openCalendarEventModal(); showToast(`打开新建日程`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建日程</button>
+              <button class="btn btn-primary" onclick="openCalendarEventOverlay()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建日程</button>
             </div>
           </div>
 
@@ -9091,7 +9091,7 @@
 
           <!-- Favorite cards -->
           <div id="fav-grid" class="card-grid mb-4">
-            <div class="card fav-card p-4 cursor-pointer" onclick="switchView('customer360')">
+            <div class="card fav-card p-4 cursor-pointer" data-fav-type="customer" onclick="openFavoriteDetail(this)">
               <div class="flex items-start gap-3">
                 <div class="w-12 h-12 rounded-xl bg-primary-light text-primary flex items-center justify-center flex-shrink-0"><svg class="icon icon-2xl"><use href="#icon-customer"/></svg></div>
                 <div class="flex-1 min-w-0">
@@ -9102,9 +9102,12 @@
                   <div class="text-sub text-sm mt-1 truncate">血液分析 · 重点客户 · 云南-昆明</div>
                 </div>
               </div>
-              <button class="fav-cancel btn btn-ghost p-1" onclick="event.stopPropagation();showToast('已取消收藏')" title="取消收藏"><svg class="icon icon-md"><use href="#icon-star"/></svg></button>
+              <div class="flex items-center justify-end gap-2 mt-3 pt-3 border-t border-line">
+                <button class="btn btn-outline text-xs" onclick="event.stopPropagation();openFavoriteDetail(this.closest('.fav-card'))">查看</button>
+                <button class="btn btn-ghost text-xs text-danger" onclick="event.stopPropagation();cancelFavorite(this)">取消收藏</button>
+              </div>
             </div>
-            <div class="card fav-card p-4 cursor-pointer" onclick="switchView('intentions')">
+            <div class="card fav-card p-4 cursor-pointer" data-fav-type="intention" data-fav-code="INT-2026072901" onclick="openFavoriteDetail(this)">
               <div class="flex items-start gap-3">
                 <div class="w-12 h-12 rounded-xl bg-warning-bg text-warning flex items-center justify-center flex-shrink-0"><svg class="icon icon-2xl"><use href="#icon-opportunity"/></svg></div>
                 <div class="flex-1 min-w-0">
@@ -9115,9 +9118,12 @@
                   <div class="text-sub text-sm mt-1 truncate">云南省肿瘤医院 · 预算 ¥200万+</div>
                 </div>
               </div>
-              <button class="fav-cancel btn btn-ghost p-1" onclick="event.stopPropagation();showToast('已取消收藏')" title="取消收藏"><svg class="icon icon-md"><use href="#icon-star"/></svg></button>
+              <div class="flex items-center justify-end gap-2 mt-3 pt-3 border-t border-line">
+                <button class="btn btn-outline text-xs" onclick="event.stopPropagation();openFavoriteDetail(this.closest('.fav-card'))">查看</button>
+                <button class="btn btn-ghost text-xs text-danger" onclick="event.stopPropagation();cancelFavorite(this)">取消收藏</button>
+              </div>
             </div>
-            <div class="card fav-card p-4 cursor-pointer" onclick="switchView('customer360')">
+            <div class="card fav-card p-4 cursor-pointer" data-fav-type="project" onclick="openFavoriteDetail(this)">
               <div class="flex items-start gap-3">
                 <div class="w-12 h-12 rounded-xl bg-success-bg text-success flex items-center justify-center flex-shrink-0"><svg class="icon icon-2xl"><use href="#icon-building"/></svg></div>
                 <div class="flex-1 min-w-0">
@@ -9128,9 +9134,12 @@
                   <div class="text-sub text-sm mt-1 truncate">生化分析仪采购 · 方案确认中</div>
                 </div>
               </div>
-              <button class="fav-cancel btn btn-ghost p-1" onclick="event.stopPropagation();showToast('已取消收藏')" title="取消收藏"><svg class="icon icon-md"><use href="#icon-star"/></svg></button>
+              <div class="flex items-center justify-end gap-2 mt-3 pt-3 border-t border-line">
+                <button class="btn btn-outline text-xs" onclick="event.stopPropagation();openFavoriteDetail(this.closest('.fav-card'))">查看</button>
+                <button class="btn btn-ghost text-xs text-danger" onclick="event.stopPropagation();cancelFavorite(this)">取消收藏</button>
+              </div>
             </div>
-            <div class="card fav-card p-4 cursor-pointer" onclick="switchView('dashboard')">
+            <div class="card fav-card p-4 cursor-pointer" data-fav-type="page" onclick="openFavoriteDetail(this)">
               <div class="flex items-start gap-3">
                 <div class="w-12 h-12 rounded-xl bg-info-bg text-info flex items-center justify-center flex-shrink-0"><svg class="icon icon-2xl"><use href="#icon-dashboard"/></svg></div>
                 <div class="flex-1 min-w-0">
@@ -9141,9 +9150,12 @@
                   <div class="text-sub text-sm mt-1 truncate">全局指标、预警、下钻分析</div>
                 </div>
               </div>
-              <button class="fav-cancel btn btn-ghost p-1" onclick="event.stopPropagation();showToast('已取消收藏')" title="取消收藏"><svg class="icon icon-md"><use href="#icon-star"/></svg></button>
+              <div class="flex items-center justify-end gap-2 mt-3 pt-3 border-t border-line">
+                <button class="btn btn-outline text-xs" onclick="event.stopPropagation();openFavoriteDetail(this.closest('.fav-card'))">查看</button>
+                <button class="btn btn-ghost text-xs text-danger" onclick="event.stopPropagation();cancelFavorite(this)">取消收藏</button>
+              </div>
             </div>
-            <div class="card fav-card p-4 cursor-pointer" onclick="switchView('tasks')">
+            <div class="card fav-card p-4 cursor-pointer" data-fav-type="task" onclick="openFavoriteDetail(this)">
               <div class="flex items-start gap-3">
                 <div class="w-12 h-12 rounded-xl bg-warning-bg text-warning flex items-center justify-center flex-shrink-0"><svg class="icon icon-2xl"><use href="#icon-tasks"/></svg></div>
                 <div class="flex-1 min-w-0">
@@ -9154,9 +9166,12 @@
                   <div class="text-sub text-sm mt-1 truncate">进行中 · 截止 2026-07-30</div>
                 </div>
               </div>
-              <button class="fav-cancel btn btn-ghost p-1" onclick="event.stopPropagation();showToast('已取消收藏')" title="取消收藏"><svg class="icon icon-md"><use href="#icon-star"/></svg></button>
+              <div class="flex items-center justify-end gap-2 mt-3 pt-3 border-t border-line">
+                <button class="btn btn-outline text-xs" onclick="event.stopPropagation();openFavoriteDetail(this.closest('.fav-card'))">查看</button>
+                <button class="btn btn-ghost text-xs text-danger" onclick="event.stopPropagation();cancelFavorite(this)">取消收藏</button>
+              </div>
             </div>
-            <div class="card fav-card p-4 cursor-pointer" onclick="switchView('brand')">
+            <div class="card fav-card p-4 cursor-pointer" data-fav-type="doc" onclick="openFavoriteDetail(this)">
               <div class="flex items-start gap-3">
                 <div class="w-12 h-12 rounded-xl bg-gray-bg text-sub flex items-center justify-center flex-shrink-0"><svg class="icon icon-2xl"><use href="#icon-brand"/></svg></div>
                 <div class="flex-1 min-w-0">
@@ -9167,7 +9182,10 @@
                   <div class="text-sub text-sm mt-1 truncate">注册证编号：国械注进 20262400001</div>
                 </div>
               </div>
-              <button class="fav-cancel btn btn-ghost p-1" onclick="event.stopPropagation();showToast('已取消收藏')" title="取消收藏"><svg class="icon icon-md"><use href="#icon-star"/></svg></button>
+              <div class="flex items-center justify-end gap-2 mt-3 pt-3 border-t border-line">
+                <button class="btn btn-outline text-xs" onclick="event.stopPropagation();openFavoriteDetail(this.closest('.fav-card'))">查看</button>
+                <button class="btn btn-ghost text-xs text-danger" onclick="event.stopPropagation();cancelFavorite(this)">取消收藏</button>
+              </div>
             </div>
           </div>
 
@@ -11082,42 +11100,42 @@ Content-Type: application/json
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
-          <div class="card card-hover p-4">
+          <div class="card card-hover p-4 cursor-pointer" data-project="云南省肿瘤医院生化免疫流水线" data-customer="云南省肿瘤医院" data-owner="张经理" data-stage="招标中" data-amount="¥860万" data-health="82" data-health-level="良好" data-deadline="2026-08-10" data-close-date="2026-09" onclick="openDealroomDetailOverlay(this)">
             <div class="flex items-start justify-between mb-3"><span class="badge badge-primary">招标中</span><span class="text-xs text-sub">健康度 82</span></div>
             <h3 class="font-semibold text-ink mb-1">云南省肿瘤医院生化免疫流水线</h3>
             <div class="text-sm text-sub mb-3">云南省肿瘤医院 · 张经理</div>
             <div class="dealroom-countdown-banner mb-3"><svg class="icon icon-sm"><use href="#icon-clock"/></svg><span>距投标截止剩余 12 天</span></div>
             <div class="flex items-center justify-between text-sm"><span class="text-sub">预计金额</span><span class="font-bold text-primary">¥860万</span></div>
           </div>
-          <div class="card card-hover p-4">
+          <div class="card card-hover p-4 cursor-pointer" data-project="昆明市第一人民医院血球升级" data-customer="昆明市第一人民医院" data-owner="李经理" data-stage="谈判中" data-amount="¥420万" data-health="68" data-health-level="关注" data-deadline="2026-08-03" data-close-date="2026-08" onclick="openDealroomDetailOverlay(this)">
             <div class="flex items-start justify-between mb-3"><span class="badge badge-warning">谈判中</span><span class="text-xs text-sub">健康度 68</span></div>
             <h3 class="font-semibold text-ink mb-1">昆明市第一人民医院血球升级</h3>
             <div class="text-sm text-sub mb-3">昆明市第一人民医院 · 李经理</div>
             <div class="dealroom-countdown-banner warning mb-3"><svg class="icon icon-sm"><use href="#icon-clock"/></svg><span>距合同签署剩余 5 天</span></div>
             <div class="flex items-center justify-between text-sm"><span class="text-sub">预计金额</span><span class="font-bold text-primary">¥420万</span></div>
           </div>
-          <div class="card card-hover p-4">
+          <div class="card card-hover p-4 cursor-pointer" data-project="大理州人民医院凝血分析项目" data-customer="大理州人民医院" data-owner="王经理" data-stage="中标待签" data-amount="¥195万" data-health="91" data-health-level="优秀" data-deadline="2026-08-15" data-close-date="2026-08" onclick="openDealroomDetailOverlay(this)">
             <div class="flex items-start justify-between mb-3"><span class="badge badge-success">中标待签</span><span class="text-xs text-sub">健康度 91</span></div>
             <h3 class="font-semibold text-ink mb-1">大理州人民医院凝血分析项目</h3>
             <div class="text-sm text-sub mb-3">大理州人民医院 · 王经理</div>
             <div class="dealroom-countdown-banner safe mb-3"><svg class="icon icon-sm"><use href="#icon-clock"/></svg><span>已中标，待签约</span></div>
             <div class="flex items-center justify-between text-sm"><span class="text-sub">预计金额</span><span class="font-bold text-primary">¥195万</span></div>
           </div>
-          <div class="card card-hover p-4">
+          <div class="card card-hover p-4 cursor-pointer" data-project="曲靖市妇幼保健院检验科整体改造" data-customer="曲靖市妇幼保健院" data-owner="赵经理" data-stage="需求确认" data-amount="¥320万" data-health="75" data-health-level="良好" data-deadline="2026-08-16" data-close-date="2026-09" onclick="openDealroomDetailOverlay(this)">
             <div class="flex items-start justify-between mb-3"><span class="badge badge-primary">需求确认</span><span class="text-xs text-sub">健康度 75</span></div>
             <h3 class="font-semibold text-ink mb-1">曲靖市妇幼保健院检验科整体改造</h3>
             <div class="text-sm text-sub mb-3">曲靖市妇幼保健院 · 赵经理</div>
             <div class="dealroom-countdown-banner mb-3"><svg class="icon icon-sm"><use href="#icon-clock"/></svg><span>距方案提交剩余 18 天</span></div>
             <div class="flex items-center justify-between text-sm"><span class="text-sub">预计金额</span><span class="font-bold text-primary">¥320万</span></div>
           </div>
-          <div class="card card-hover p-4">
+          <div class="card card-hover p-4 cursor-pointer" data-project="玉溪市人民医院微生物鉴定系统" data-customer="玉溪市人民医院" data-owner="刘经理" data-stage="停滞" data-amount="¥260万" data-health="45" data-health-level="高风险" data-deadline="2026-08-20" data-close-date="待定" onclick="openDealroomDetailOverlay(this)">
             <div class="flex items-start justify-between mb-3"><span class="badge badge-danger">停滞</span><span class="text-xs text-sub">健康度 45</span></div>
             <h3 class="font-semibold text-ink mb-1">玉溪市人民医院微生物鉴定系统</h3>
             <div class="text-sm text-sub mb-3">玉溪市人民医院 · 刘经理</div>
             <div class="dealroom-countdown-banner urgent mb-3"><svg class="icon icon-sm"><use href="#icon-warning"/></svg><span>停滞 23 天，需高层介入</span></div>
             <div class="flex items-center justify-between text-sm"><span class="text-sub">预计金额</span><span class="font-bold text-primary">¥260万</span></div>
           </div>
-          <div class="card card-hover p-4">
+          <div class="card card-hover p-4 cursor-pointer" data-project="红河州第一人民医院尿液分析流水线" data-customer="红河州第一人民医院" data-owner="陈经理" data-stage="招标中" data-amount="¥155万" data-health="78" data-health-level="良好" data-deadline="2026-08-07" data-close-date="2026-09" onclick="openDealroomDetailOverlay(this)">
             <div class="flex items-start justify-between mb-3"><span class="badge badge-primary">招标中</span><span class="text-xs text-sub">健康度 78</span></div>
             <h3 class="font-semibold text-ink mb-1">红河州第一人民医院尿液分析流水线</h3>
             <div class="text-sm text-sub mb-3">红河州第一人民医院 · 陈经理</div>
@@ -11139,7 +11157,7 @@ Content-Type: application/json
             <h1 class="text-2xl font-bold text-ink mb-1">渠道秩序</h1>
             <p class="text-sub text-sm">区域保护、撞单预警、越区出货监控与冲突裁决。</p>
           </div>
-          <button class="btn btn-primary" onclick="showToast(`功能演示：新建区域保护规则`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建保护规则</button>
+          <button class="btn btn-primary" onclick="openChannelRuleOverlay()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建保护规则</button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
           <div class="card card-hover p-4"><div class="text-sub text-xs mb-1">有效保护期</div><div class="text-2xl font-bold text-ink">186</div><div class="text-xs text-sub mt-1">覆盖项目</div></div>
@@ -11155,9 +11173,9 @@ Content-Type: application/json
           <div class="card p-4">
             <div class="font-semibold text-ink mb-4">近期待裁决冲突</div>
             <div class="space-y-3">
-              <div class="p-3 rounded-lg bg-danger-bg border border-danger/20 cursor-pointer" onclick="openChannelConflictModal(this)" data-title="云南省肿瘤医院项目撞单" data-party-a="张经理" data-party-b="昆明博奥" data-status="待裁决"><div class="text-sm font-medium text-danger">云南省肿瘤医院项目撞单</div><div class="text-xs text-sub mt-1">双方：张经理 / 昆明博奥</div><div class="text-xs text-sub">剩余裁决时间：2 天</div></div>
-              <div class="p-3 rounded-lg bg-warning-bg border border-warning/20 cursor-pointer" onclick="openChannelConflictModal(this)" data-title="曲靖妇幼项目跨区报备" data-party-a="李经理" data-party-b="云南健达" data-status="待裁决"><div class="text-sm font-medium text-warning">曲靖妇幼项目跨区报备</div><div class="text-xs text-sub mt-1">双方：李经理 / 云南健达</div><div class="text-xs text-sub">剩余裁决时间：4 天</div></div>
-              <div class="p-3 rounded-lg bg-primary-light border border-primary/20 cursor-pointer" onclick="openChannelConflictModal(this)" data-title="大理州医院渠道归属争议" data-party-a="王经理" data-party-b="大理云检" data-status="待裁决"><div class="text-sm font-medium text-primary">大理州医院渠道归属争议</div><div class="text-xs text-sub mt-1">双方：王经理 / 大理云检</div><div class="text-xs text-sub">剩余裁决时间：6 天</div></div>
+              <div class="p-3 rounded-lg bg-danger-bg border border-danger/20 cursor-pointer" onclick="openChannelConflictOverlay(this)" data-title="云南省肿瘤医院项目撞单" data-party-a="张经理" data-party-b="昆明博奥" data-status="待裁决"><div class="text-sm font-medium text-danger">云南省肿瘤医院项目撞单</div><div class="text-xs text-sub mt-1">双方：张经理 / 昆明博奥</div><div class="text-xs text-sub">剩余裁决时间：2 天</div></div>
+              <div class="p-3 rounded-lg bg-warning-bg border border-warning/20 cursor-pointer" onclick="openChannelConflictOverlay(this)" data-title="曲靖妇幼项目跨区报备" data-party-a="李经理" data-party-b="云南健达" data-status="待裁决"><div class="text-sm font-medium text-warning">曲靖妇幼项目跨区报备</div><div class="text-xs text-sub mt-1">双方：李经理 / 云南健达</div><div class="text-xs text-sub">剩余裁决时间：4 天</div></div>
+              <div class="p-3 rounded-lg bg-primary-light border border-primary/20 cursor-pointer" onclick="openChannelConflictOverlay(this)" data-title="大理州医院渠道归属争议" data-party-a="王经理" data-party-b="大理云检" data-status="待裁决"><div class="text-sm font-medium text-primary">大理州医院渠道归属争议</div><div class="text-xs text-sub mt-1">双方：王经理 / 大理云检</div><div class="text-xs text-sub">剩余裁决时间：6 天</div></div>
             </div>
           </div>
         </div>
@@ -17050,6 +17068,249 @@ Content-Type: application/json
     }
 
 
+
+    /* ===== Batch 2: Calendar event form overlay ===== */
+    function openCalendarEventOverlay(e) {
+      const isEdit = e && (typeof e === 'object' || (typeof e === 'string' && e.startsWith('%7B')));
+      let ev = null;
+      if (e) {
+        if (typeof e === 'string') {
+          try { ev = JSON.parse(decodeURIComponent(e)); } catch (err) { ev = null; }
+        } else if (typeof e === 'object') {
+          ev = e;
+        }
+      }
+      document.getElementById('calendar-event-form-title').textContent = ev ? '查看日程' : '新建日程';
+      document.getElementById('calendar-event-title').value = ev ? (ev.title || '') : '';
+      document.getElementById('calendar-event-date').value = ev ? (ev.date || '') : (currentScheduleDay || '');
+      document.getElementById('calendar-event-time').value = ev ? (ev.time || '') : '';
+      document.getElementById('calendar-event-location').value = ev ? (ev.location || '') : '';
+      document.getElementById('calendar-event-customer').value = ev ? (ev.customer || '') : '';
+      document.getElementById('calendar-event-intention').value = ev ? (ev.intention || '') : '';
+      document.getElementById('calendar-event-note').value = ev ? (ev.note || '') : '';
+      const typeVal = ev ? (ev.type || '拜访') : '拜访';
+      document.querySelectorAll('input[name="calendarEventType"]').forEach(r => {
+        r.checked = (r.value === typeVal);
+        if (r.closest('.radio-card')) updateRadioCards(r);
+      });
+      document.getElementById('calendar-event-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCalendarEventOverlay() {
+      document.getElementById('calendar-event-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function saveCalendarEvent() {
+      const title = document.getElementById('calendar-event-title').value.trim();
+      if (!title) { showToast('请输入日程标题'); return; }
+      showToast('日程已保存');
+      closeCalendarEventOverlay();
+    }
+
+    /* ===== Batch 2: Message detail overlay ===== */
+    let currentMessageEl = null;
+    function openMessageDetailOverlay(el) {
+      currentMessageEl = el;
+      const d = el.dataset || {};
+      const type = d.type || 'todo';
+      const titleEl = el.querySelector('.font-medium');
+      const contentEl = el.querySelector('.text-sub.text-xs');
+      const timeEl = el.querySelector('.text-placeholder');
+      const title = titleEl ? titleEl.textContent : '消息详情';
+      const content = contentEl ? contentEl.textContent : '';
+      const time = timeEl ? timeEl.textContent : '';
+      const badgeMap = {
+        'todo': '<span class="badge badge-danger">待办</span>',
+        'warning': '<span class="badge badge-warning">预警</span>',
+        'notice': '<span class="badge badge-info">通知</span>',
+        'announce': '<span class="badge badge-success">公告</span>'
+      };
+      const typeTextMap = { 'todo': '待办事项', 'warning': '风险预警', 'notice': '系统通知', 'announce': '企业公告' };
+      document.getElementById('message-detail-title').textContent = title;
+      document.getElementById('message-detail-badge').innerHTML = badgeMap[type] || badgeMap['todo'];
+      document.getElementById('message-detail-time').textContent = time;
+      document.getElementById('message-detail-sender').textContent = type === 'notice' ? '系统管理员' : (type === 'announce' ? '市场部' : '业务系统');
+      document.getElementById('message-detail-type-text').textContent = typeTextMap[type] || '消息';
+      document.getElementById('message-detail-content').textContent = content;
+      document.getElementById('message-detail-biz-type').textContent = type === 'todo' ? '返利审批' : (type === 'warning' ? '库存/保护期预警' : '系统通知');
+      document.getElementById('message-detail-biz-no').textContent = type === 'todo' ? 'REB-2026-Q2-001' : (type === 'warning' ? 'WARN-20260729-001' : '-');
+      document.getElementById('message-detail-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMessageDetailOverlay() {
+      document.getElementById('message-detail-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+      currentMessageEl = null;
+    }
+    function markCurrentMessageRead() {
+      if (currentMessageEl) {
+        currentMessageEl.classList.remove('unread');
+        const dot = currentMessageEl.querySelector('.bg-danger.flex-shrink-0[title="未读"]');
+        if (dot) dot.remove();
+      }
+      showToast('已标记为已读');
+      closeMessageDetailOverlay();
+    }
+    function deleteCurrentMessage() {
+      if (currentMessageEl && currentMessageEl.parentElement) {
+        currentMessageEl.remove();
+      }
+      showToast('消息已删除');
+      closeMessageDetailOverlay();
+    }
+    function loadMoreMessages() {
+      showToast('加载更多历史消息...');
+      const list = document.getElementById('msg-list');
+      if (!list) return;
+      const now = new Date();
+      const timeStr = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+      const newItems = [
+        { type: 'notice', icon: '#icon-bell', cls: 'bg-info-bg text-info', badge: '通知', title: '系统通知：周末服务器维护公告', content: '计划于 2026-08-02 02:00-04:00 进行系统维护，期间部分服务可能短暂不可用。', time: timeStr },
+        { type: 'todo', icon: '#icon-task', cls: 'bg-warning-bg text-warning', badge: '待办', title: '任务到期提醒：曲靖妇幼方案提交', content: '曲靖市妇幼保健院检验科整体改造方案将于明日 18:00 到期，请及时提交。', time: timeStr }
+      ];
+      newItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'msg-item flex items-start gap-3 p-3 rounded-lg hover:bg-line-light cursor-pointer transition-colors';
+        div.dataset.type = item.type;
+        div.setAttribute('onclick', 'openMessageDetailOverlay(this)');
+        div.innerHTML = '<div class="w-10 h-10 rounded-full ' + item.cls + ' flex items-center justify-center flex-shrink-0"><svg class="icon icon-md"><use href="' + item.icon + '"/></svg></div>' +
+          '<div class="flex-1 min-w-0">' +
+            '<div class="flex items-center gap-2"><span class="font-medium text-ink">' + item.title + '</span><span class="badge badge-' + (item.type === 'todo' ? 'warning' : (item.type === 'warning' ? 'danger' : (item.type === 'notice' ? 'info' : 'success'))) + '">' + item.badge + '</span></div>' +
+            '<div class="text-sub text-xs mt-1">' + item.content + '</div>' +
+            '<div class="text-placeholder text-xs mt-2">' + item.time + '</div>' +
+          '</div>';
+        list.appendChild(div);
+      });
+      const activeTab = document.querySelector('#view-messages .tab.active');
+      if (activeTab) switchMsgTab(activeTab);
+    }
+
+    /* ===== Batch 2: Channel conflict overlay ===== */
+    function openChannelConflictOverlay(el) {
+      const d = el ? (el.dataset || {}) : {};
+      document.getElementById('channel-conflict-title').textContent = d.title || '渠道冲突详情';
+      const status = d.status || '待裁决';
+      const statusClass = status === '待裁决' ? 'badge-warning' : 'badge-success';
+      document.getElementById('channel-conflict-status').innerHTML = '<span class="badge ' + statusClass + '">' + status + '</span>';
+      document.getElementById('channel-conflict-a-customer').textContent = '云南省肿瘤医院 · 血球流水线升级';
+      document.getElementById('channel-conflict-a-owner').textContent = (d.partyA || '张经理') + ' · 云南销售一部';
+      document.getElementById('channel-conflict-a-protect').textContent = '2026-08-20';
+      document.getElementById('channel-conflict-b-customer').textContent = '云南省肿瘤医院 · 血球流水线升级';
+      document.getElementById('channel-conflict-b-owner').textContent = (d.partyB || '昆明博奥') + ' · 云南-昆明';
+      document.getElementById('channel-conflict-b-protect').textContent = '2026-08-25';
+      document.getElementById('channel-conflict-reason').textContent = '同一客户同一项目重复报单，双方均主张保护期优先，需进行冲突裁决。';
+      document.querySelectorAll('input[name="channelConflictResult"]').forEach(r => { r.checked = (r.value === '甲方'); if (r.closest('.radio-card')) updateRadioCards(r); });
+      document.getElementById('channel-conflict-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeChannelConflictOverlay() {
+      document.getElementById('channel-conflict-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function saveChannelConflictResult() {
+      const selected = document.querySelector('input[name="channelConflictResult"]:checked');
+      const result = selected ? selected.value : '甲方';
+      showToast('已裁决：归属' + result);
+      closeChannelConflictOverlay();
+    }
+
+    /* ===== Batch 2: Channel rule overlay ===== */
+    function openChannelRuleOverlay() {
+      document.getElementById('channel-rule-title').textContent = '新建保护规则';
+      document.getElementById('channel-rule-name').value = '';
+      document.getElementById('channel-rule-region').selectedIndex = 0;
+      document.getElementById('channel-rule-days').value = '30';
+      document.getElementById('channel-rule-scope').selectedIndex = 0;
+      document.getElementById('channel-rule-remark').value = '';
+      document.getElementById('channel-rule-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeChannelRuleOverlay() {
+      document.getElementById('channel-rule-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function saveChannelRule() {
+      const name = document.getElementById('channel-rule-name').value.trim();
+      if (!name) { showToast('请输入规则名称'); return; }
+      showToast('规则已保存');
+      closeChannelRuleOverlay();
+    }
+
+    /* ===== Batch 2: Dealroom detail overlay ===== */
+    function openDealroomDetailOverlay(el) {
+      const d = el ? (el.dataset || {}) : {};
+      document.getElementById('dealroom-detail-project').textContent = d.project || '-';
+      document.getElementById('dealroom-detail-client').textContent = d.customer || '-';
+      document.getElementById('dealroom-detail-manager').textContent = '负责人：' + (d.owner || '-');
+      document.getElementById('dealroom-detail-forecast').textContent = d.amount || '-';
+      document.getElementById('dealroom-detail-status').textContent = d.stage || '-';
+      document.getElementById('dealroom-detail-stage3').textContent = d.stage || '-';
+      document.getElementById('dealroom-detail-amount3').textContent = d.amount || '-';
+      document.getElementById('dealroom-detail-close3').textContent = d.closeDate || '-';
+      document.getElementById('dealroom-detail-health3').textContent = (d.health || '-') + ' · ' + (d.healthLevel || '-');
+      document.getElementById('dealroom-detail-decision-makers').innerHTML = '<div class="flex items-center gap-2"><span class="dealroom-member-avatar">张</span><span class="text-ink">张主任 · 检验科主任</span></div><div class="flex items-center gap-2"><span class="dealroom-member-avatar">李</span><span class="text-ink">李科长 · 设备科</span></div>';
+      document.getElementById('dealroom-detail-next-todo').innerHTML = '<div class="dealroom-todo-item"><div class="flex-1 min-w-0"><div class="text-sm font-medium text-ink">提交最终报价单</div><div class="text-xs text-sub mt-0.5">负责人：' + (d.owner || '-') + ' · 截止：' + (d.deadline || '2026-08-05') + '</div></div><span class="badge badge-primary">待办</span></div>';
+      document.getElementById('dealroom-detail-resource-needs').innerHTML = '<div class="flex items-start gap-2 text-sm text-ink"><svg class="icon icon-sm text-primary mt-0.5 flex-shrink-0"><use href="#icon-check"/></svg><span>需要样机演示支持</span></div><div class="flex items-start gap-2 text-sm text-ink"><svg class="icon icon-sm text-primary mt-0.5 flex-shrink-0"><use href="#icon-check"/></svg><span>申请价格特批</span></div>';
+      document.getElementById('dealroom-detail-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDealroomDetailOverlay() {
+      document.getElementById('dealroom-detail-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* ===== Batch 2: Dealroom resource overlay ===== */
+    function openDealroomResourceOverlay() {
+      document.getElementById('dealroom-resource-desc').value = '';
+      document.getElementById('dealroom-resource-date').value = '';
+      document.querySelectorAll('input[name="dealroomResourceType"]').forEach(r => { r.checked = (r.value === '样机'); if (r.closest('.radio-card')) updateRadioCards(r); });
+      document.getElementById('dealroom-resource-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDealroomResourceOverlay() {
+      document.getElementById('dealroom-resource-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function submitDealroomResource() {
+      const desc = document.getElementById('dealroom-resource-desc').value.trim();
+      if (!desc) { showToast('请输入资源说明'); return; }
+      showToast('资源申请已提交');
+      closeDealroomResourceOverlay();
+      closeDealroomDetailOverlay();
+    }
+
+    /* ===== Batch 2: Favorites interaction ===== */
+    function openFavoriteDetail(el) {
+      const d = el.dataset || {};
+      const type = d.favType || 'customer';
+      if (type === 'customer') {
+        switchView('customer360');
+      } else if (type === 'intention') {
+        const code = d.favCode || '';
+        let target = document.querySelector('.intention-card[data-code="' + code + '"], .intention-row[data-code="' + code + '"]');
+        if (!code) target = document.querySelector('.intention-card, .intention-row');
+        if (target) {
+          openIntentionModal(target);
+        } else {
+          switchView('intentions');
+          showToast('已切换到意向列表');
+        }
+      } else if (type === 'project') {
+        switchView('customer360');
+      } else if (type === 'doc') {
+        showToast('打开文档预览');
+      } else {
+        const viewMap = { 'page': 'dashboard', 'task': 'tasks', 'brand': 'brand' };
+        switchView(viewMap[type] || 'dashboard');
+      }
+    }
+    function cancelFavorite(el) {
+      event.stopPropagation();
+      const card = el.closest('.fav-card');
+      if (card) card.remove();
+      showToast('已取消收藏');
+    }
+
   </script>
 
   <!-- ===== 撞单裁决弹窗 ===== -->
@@ -17310,6 +17571,312 @@ Content-Type: application/json
           <svg class="icon icon-sm"><use href="#icon-link"/></svg> 查看关联意向
         </button>
         <button class="btn btn-primary" onclick="closeDealroomModal();showToast('已保存作战室更新')">保存更新</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 第2批：日历新建/编辑日程弹窗 -->
+  <div id="calendar-event-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeCalendarEventOverlay()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink" id="calendar-event-form-title">新建日程</h3>
+          <div class="text-sub text-sm mt-1">安排拜访、任务、工单或活动</div>
+        </div>
+        <button class="btn btn-ghost" onclick="closeCalendarEventOverlay()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group md:col-span-2">
+            <label class="form-label">日程标题</label>
+            <input type="text" class="input" id="calendar-event-title" placeholder="请输入日程标题">
+          </div>
+          <div class="form-group">
+            <label class="form-label">日期</label>
+            <input type="date" class="input" id="calendar-event-date">
+          </div>
+          <div class="form-group">
+            <label class="form-label">时间</label>
+            <input type="time" class="input" id="calendar-event-time">
+          </div>
+          <div class="form-group md:col-span-2">
+            <label class="form-label">日程类型</label>
+            <div class="flex flex-wrap gap-2">
+              <label class="radio-card selected"><input type="radio" name="calendarEventType" value="拜访" checked onchange="updateRadioCards(this)"> 拜访</label>
+              <label class="radio-card"><input type="radio" name="calendarEventType" value="任务" onchange="updateRadioCards(this)"> 任务</label>
+              <label class="radio-card"><input type="radio" name="calendarEventType" value="工单" onchange="updateRadioCards(this)"> 工单</label>
+              <label class="radio-card"><input type="radio" name="calendarEventType" value="活动" onchange="updateRadioCards(this)"> 活动</label>
+            </div>
+          </div>
+          <div class="form-group md:col-span-2">
+            <label class="form-label">地点</label>
+            <input type="text" class="input" id="calendar-event-location" placeholder="请输入地点">
+          </div>
+          <div class="form-group">
+            <label class="form-label">关联客户</label>
+            <input type="text" class="input" id="calendar-event-customer" placeholder="搜索客户">
+          </div>
+          <div class="form-group">
+            <label class="form-label">关联意向</label>
+            <input type="text" class="input" id="calendar-event-intention" placeholder="搜索意向">
+          </div>
+          <div class="form-group md:col-span-2">
+            <label class="form-label">备注</label>
+            <textarea class="input" id="calendar-event-note" rows="3" placeholder="请输入备注"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeCalendarEventOverlay()">取消</button>
+        <button class="btn btn-primary" onclick="saveCalendarEvent()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第2批：消息详情弹窗 -->
+  <div id="message-detail-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeMessageDetailOverlay()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 mb-1">
+            <span id="message-detail-badge"></span>
+            <span class="text-xs text-placeholder" id="message-detail-time">-</span>
+          </div>
+          <h3 class="text-lg font-bold text-ink truncate" id="message-detail-title">-</h3>
+        </div>
+        <button class="btn btn-ghost flex-shrink-0" onclick="closeMessageDetailOverlay()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="bg-panel rounded-xl p-4 mb-4">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-full bg-primary-light text-primary flex items-center justify-center flex-shrink-0"><svg class="icon icon-md"><use href="#icon-user"/></svg></div>
+            <div>
+              <div class="font-medium text-ink" id="message-detail-sender">系统</div>
+              <div class="text-xs text-sub" id="message-detail-type-text">系统通知</div>
+            </div>
+          </div>
+          <p class="text-sm text-ink leading-relaxed" id="message-detail-content">-</p>
+        </div>
+        <div class="bg-panel rounded-xl p-4 mb-4">
+          <h4 class="font-semibold text-ink mb-3">关联单据</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-sub">单据类型</span><span class="text-ink" id="message-detail-biz-type">-</span></div>
+            <div class="flex justify-between"><span class="text-sub">单据编号</span><span class="text-primary cursor-pointer hover:underline" id="message-detail-biz-no">-</span></div>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-4">
+            <button class="btn btn-primary" onclick="showToast('查看关联单据详情');closeMessageDetailOverlay()">查看详情</button>
+            <button class="btn btn-outline" onclick="showToast('前往处理页面');closeMessageDetailOverlay()">去处理</button>
+          </div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-danger" onclick="deleteCurrentMessage()">删除</button>
+        <button class="btn btn-outline" onclick="markCurrentMessageRead()">标记已读</button>
+        <button class="btn btn-ghost" onclick="closeMessageDetailOverlay()">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第2批：渠道冲突裁决弹窗 -->
+  <div id="channel-conflict-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeChannelConflictOverlay()">
+    <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs text-placeholder">冲突编号 CF-2026072901</span>
+            <span id="channel-conflict-status"></span>
+          </div>
+          <h3 class="text-lg font-bold text-ink" id="channel-conflict-title">-</h3>
+        </div>
+        <button class="btn btn-ghost flex-shrink-0" onclick="closeChannelConflictOverlay()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="bg-panel rounded-xl p-4">
+            <h4 class="font-semibold text-ink mb-3">甲方</h4>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between"><span class="text-sub">客户/项目</span><span class="text-ink" id="channel-conflict-a-customer">-</span></div>
+              <div class="flex justify-between"><span class="text-sub">负责人</span><span class="text-ink" id="channel-conflict-a-owner">-</span></div>
+              <div class="flex justify-between"><span class="text-sub">保护期截止</span><span class="text-ink" id="channel-conflict-a-protect">-</span></div>
+            </div>
+          </div>
+          <div class="bg-panel rounded-xl p-4">
+            <h4 class="font-semibold text-ink mb-3">乙方</h4>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between"><span class="text-sub">客户/项目</span><span class="text-ink" id="channel-conflict-b-customer">-</span></div>
+              <div class="flex justify-between"><span class="text-sub">负责人</span><span class="text-ink" id="channel-conflict-b-owner">-</span></div>
+              <div class="flex justify-between"><span class="text-sub">保护期截止</span><span class="text-ink" id="channel-conflict-b-protect">-</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-panel rounded-xl p-4 mb-4">
+          <h4 class="font-semibold text-ink mb-3">冲突原因</h4>
+          <p class="text-sm text-ink" id="channel-conflict-reason">同一客户同一项目重复报单，双方均主张保护期优先，需进行冲突裁决。</p>
+        </div>
+        <div class="bg-panel rounded-xl p-4 mb-4">
+          <h4 class="font-semibold text-ink mb-3">裁决结果</h4>
+          <div class="flex flex-wrap gap-2">
+            <label class="radio-card selected"><input type="radio" name="channelConflictResult" value="甲方" checked onchange="updateRadioCards(this)"> 归属甲方</label>
+            <label class="radio-card"><input type="radio" name="channelConflictResult" value="乙方" onchange="updateRadioCards(this)"> 归属乙方</label>
+            <label class="radio-card"><input type="radio" name="channelConflictResult" value="合并" onchange="updateRadioCards(this)"> 合并跟进</label>
+          </div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeChannelConflictOverlay()">关闭</button>
+        <button class="btn btn-primary" onclick="saveChannelConflictResult()">确认裁决</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第2批：新建/编辑区域保护规则弹窗 -->
+  <div id="channel-rule-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeChannelRuleOverlay()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink" id="channel-rule-title">新建保护规则</h3>
+          <div class="text-sub text-sm mt-1">配置区域保护时长与生效范围</div>
+        </div>
+        <button class="btn btn-ghost" onclick="closeChannelRuleOverlay()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label class="form-label">规则名称</label>
+            <input type="text" class="input" id="channel-rule-name" placeholder="例如：云南-昆明血球项目保护">
+          </div>
+          <div class="form-group">
+            <label class="form-label">保护区域</label>
+            <select class="input" id="channel-rule-region">
+              <option>云南-昆明</option>
+              <option>云南-大理</option>
+              <option>云南-曲靖</option>
+              <option>云南-红河</option>
+              <option>云南-玉溪</option>
+              <option>云南-全省</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">保护时长（天）</label>
+            <input type="number" class="input" id="channel-rule-days" value="30" min="1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">生效范围</label>
+            <select class="input" id="channel-rule-scope">
+              <option>全部产品线</option>
+              <option>血球分析</option>
+              <option>生化分析</option>
+              <option>凝血分析</option>
+              <option>免疫分析</option>
+            </select>
+          </div>
+          <div class="form-group md:col-span-2">
+            <label class="form-label">备注</label>
+            <textarea class="input" id="channel-rule-remark" rows="3" placeholder="请输入备注"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeChannelRuleOverlay()">取消</button>
+        <button class="btn btn-primary" onclick="saveChannelRule()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第2批：大单作战室项目详情弹窗 -->
+  <div id="dealroom-detail-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeDealroomDetailOverlay()">
+    <div class="intention-modal dealroom-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="badge badge-primary" id="dealroom-detail-status">-</span>
+          </div>
+          <h3 class="text-lg font-bold text-ink truncate" id="dealroom-detail-project">-</h3>
+          <div class="text-sub text-sm mt-1 flex items-center gap-2 flex-wrap">
+            <span id="dealroom-detail-client">-</span>
+            <span class="text-placeholder">·</span>
+            <span id="dealroom-detail-manager">-</span>
+            <span class="text-placeholder">·</span>
+            <span class="font-bold text-primary" id="dealroom-detail-forecast">-</span>
+          </div>
+        </div>
+        <button class="btn btn-ghost flex-shrink-0" onclick="closeDealroomDetailOverlay()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="bg-panel rounded-xl p-4">
+            <h4 class="font-semibold text-ink mb-3">项目基本信息</h4>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between"><span class="text-sub">当前阶段</span><span class="text-ink" id="dealroom-detail-stage3">-</span></div>
+              <div class="flex justify-between"><span class="text-sub">预计金额</span><span class="text-ink" id="dealroom-detail-amount3">-</span></div>
+              <div class="flex justify-between"><span class="text-sub">预计成交</span><span class="text-ink" id="dealroom-detail-close3">-</span></div>
+              <div class="flex justify-between"><span class="text-sub">健康度</span><span class="text-ink" id="dealroom-detail-health3">-</span></div>
+            </div>
+          </div>
+          <div class="bg-panel rounded-xl p-4">
+            <h4 class="font-semibold text-ink mb-3">关键决策人</h4>
+            <div class="space-y-2 text-sm" id="dealroom-detail-decision-makers">
+              <div class="flex items-center gap-2"><span class="dealroom-member-avatar">张</span><span class="text-ink">张主任 · 检验科主任</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-panel rounded-xl p-4 mb-4">
+          <h4 class="font-semibold text-ink mb-3">下一步待办</h4>
+          <div id="dealroom-detail-next-todo">
+            <div class="dealroom-todo-item"><div class="flex-1 min-w-0"><div class="text-sm font-medium text-ink">提交最终报价单</div><div class="text-xs text-sub mt-0.5">负责人：张经理 · 截止：2026-08-05</div></div><span class="badge badge-primary">待办</span></div>
+          </div>
+        </div>
+        <div class="bg-panel rounded-xl p-4">
+          <h4 class="font-semibold text-ink mb-3">资源需求</h4>
+          <div class="space-y-2 text-sm" id="dealroom-detail-resource-needs">
+            <div class="flex items-start gap-2 text-sm text-ink"><svg class="icon icon-sm text-primary mt-0.5 flex-shrink-0"><use href="#icon-check"/></svg><span>需要样机演示支持</span></div>
+            <div class="flex items-start gap-2 text-sm text-ink"><svg class="icon icon-sm text-primary mt-0.5 flex-shrink-0"><use href="#icon-check"/></svg><span>申请价格特批</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeDealroomDetailOverlay()">关闭</button>
+        <button class="btn btn-outline" onclick="showToast('录入跟进记录');closeDealroomDetailOverlay()">录入跟进</button>
+        <button class="btn btn-primary" onclick="openDealroomResourceOverlay()">申请资源</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第2批：大单作战室资源申请子弹窗 -->
+  <div id="dealroom-resource-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeDealroomResourceOverlay()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">申请资源</h3>
+          <div class="text-sub text-sm mt-1">为重大项目申请资源支持</div>
+        </div>
+        <button class="btn btn-ghost" onclick="closeDealroomResourceOverlay()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 gap-4">
+          <div class="form-group">
+            <label class="form-label">资源类型</label>
+            <div class="flex flex-wrap gap-2">
+              <label class="radio-card selected"><input type="radio" name="dealroomResourceType" value="样机" checked onchange="updateRadioCards(this)"> 样机</label>
+              <label class="radio-card"><input type="radio" name="dealroomResourceType" value="演示" onchange="updateRadioCards(this)"> 演示</label>
+              <label class="radio-card"><input type="radio" name="dealroomResourceType" value="专家" onchange="updateRadioCards(this)"> 专家</label>
+              <label class="radio-card"><input type="radio" name="dealroomResourceType" value="价格特批" onchange="updateRadioCards(this)"> 价格特批</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">说明</label>
+            <textarea class="input" id="dealroom-resource-desc" rows="3" placeholder="请说明资源需求"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">期望时间</label>
+            <input type="date" class="input" id="dealroom-resource-date">
+          </div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeDealroomResourceOverlay()">取消</button>
+        <button class="btn btn-primary" onclick="submitDealroomResource()">提交</button>
       </div>
     </div>
   </div>
