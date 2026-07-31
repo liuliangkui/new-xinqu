@@ -1013,7 +1013,7 @@
             <svg class="icon icon-md dark:hidden"><use href="#icon-sun"/></svg>
             <svg class="icon icon-md hidden dark:block"><use href="#icon-moon"/></svg>
           </button>
-          <button class="btn btn-ghost relative" title="消息通知">
+          <button class="btn btn-ghost relative" title="消息通知" onclick="showToast(`功能按钮`)">
             <svg class="icon icon-md"><use href="#icon-bell"/></svg>
             <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-danger"></span>
           </button>
@@ -1069,7 +1069,7 @@
             <div class="card lg:col-span-2">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="font-semibold text-lg text-ink">我的待办</h3>
-                <button class="text-sm text-primary hover:underline">查看全部</button>
+                <button class="text-sm text-primary hover:underline" onclick="showToast(`查看全部`)">查看全部</button>
               </div>
               <div class="space-y-3">
                 <div class="flex items-start gap-3 p-3 rounded-lg hover:bg-line-light transition-colors cursor-pointer">
@@ -1620,7 +1620,7 @@
             </div>
           </div>
           <div class="flex justify-center">
-            <button class="btn btn-ghost text-sm">加载更多消息</button>
+            <button class="btn btn-ghost text-sm" onclick="showToast(`加载更多数据...`)">加载更多消息</button>
           </div>
         </section>
 
@@ -1632,7 +1632,7 @@
               <p class="text-sub text-sm" id="calendar-subtitle">2026年7月29日 · 今日日程</p>
             </div>
             <div class="flex items-center gap-2">
-              <button class="btn btn-primary"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建日程</button>
+              <button class="btn btn-primary" onclick="openCalendarEventModal(); showToast(`打开新建日程`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建日程</button>
             </div>
           </div>
 
@@ -1739,7 +1739,7 @@
               <select class="input w-auto"><option>全部区域</option><option>云南-昆明</option><option>云南-大理</option><option>云南-曲靖</option></select>
               <select class="input w-auto"><option>全部状态</option><option>待分配</option><option>跟进中</option><option>已转化</option><option>已失效</option></select>
               <select class="input w-auto"><option>全部来源</option><option>官网</option><option>展会</option><option>转介绍</option></select>
-              <button class="btn btn-ghost"><svg class="icon icon-sm"><use href="#icon-filter"/></svg> 更多筛选</button>
+              <button class="btn btn-ghost" onclick="showToast(`打开高级筛选`)"><svg class="icon icon-sm"><use href="#icon-filter"/></svg> 更多筛选</button>
             </div>
           </div>
 
@@ -1867,13 +1867,13 @@
           <div class="flex items-center justify-between">
             <div class="text-sub text-sm">共 1,248 条 · 每页 20 条</div>
             <div class="pagination">
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-              <button class="page-btn active">1</button>
-              <button class="page-btn">2</button>
-              <button class="page-btn">3</button>
-              <button class="page-btn">4</button>
-              <button class="page-btn">5</button>
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+              <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+              <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
+              <button class="page-btn" onclick="showToast(`切换到第 3 页`)">3</button>
+              <button class="page-btn" onclick="showToast(`切换到第 4 页`)">4</button>
+              <button class="page-btn" onclick="showToast(`切换到第 5 页`)">5</button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
             </div>
           </div>
 
@@ -2869,7 +2869,7 @@
               <div class="flex items-center gap-2">
                 <button class="btn btn-primary" id="customer-view-grid" onclick="setCustomerView('grid')"><svg class="icon icon-sm"><use href="#icon-grid"/></svg></button>
                 <button class="btn btn-outline" id="customer-view-list" onclick="setCustomerView('list')"><svg class="icon icon-sm"><use href="#icon-list"/></svg></button>
-                <button class="btn btn-primary"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建客户</button>
+                <button class="btn btn-primary" onclick="openCustomerModalByName(`示例客户`); showToast(`打开新建客户`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建客户</button>
               </div>
             </div>
             <div class="flex flex-wrap gap-3">
@@ -2880,7 +2880,7 @@
               <select class="input w-auto"><option>全部区域</option><option>云南-昆明</option><option>云南-大理</option><option>云南-曲靖</option></select>
               <select class="input w-auto"><option>全部等级</option><option>三级甲等</option><option>三级乙等</option><option>二级医院</option></select>
               <select class="input w-auto"><option>全部类型</option><option>综合医院</option><option>肿瘤专科</option><option>妇幼医院</option></select>
-              <button class="btn btn-ghost"><svg class="icon icon-sm"><use href="#icon-filter"/></svg> 更多筛选</button>
+              <button class="btn btn-ghost" onclick="showToast(`打开高级筛选`)"><svg class="icon icon-sm"><use href="#icon-filter"/></svg> 更多筛选</button>
             </div>
           </div>
 
@@ -3033,11 +3033,11 @@
           <div class="flex items-center justify-between">
             <div class="text-sub text-sm">共 186 条 · 每页 12 条</div>
             <div class="pagination">
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-              <button class="page-btn active">1</button>
-              <button class="page-btn">2</button>
-              <button class="page-btn">3</button>
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+              <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+              <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
+              <button class="page-btn" onclick="showToast(`切换到第 3 页`)">3</button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
             </div>
           </div>
 
@@ -3267,8 +3267,8 @@
               </div>
               <div class="intention-modal-footer">
                 <button class="btn btn-ghost" onclick="closeCustomerModal()">关闭</button>
-                <button class="btn btn-primary"><svg class="icon icon-sm"><use href="#icon-phone"/></svg> 联系</button>
-                <button class="btn btn-primary"><svg class="icon icon-sm"><use href="#icon-calendar"/></svg> 预约拜访</button>
+                <button class="btn btn-primary" onclick="showToast(`打开联系人详情`)"><svg class="icon icon-sm"><use href="#icon-phone"/></svg> 联系</button>
+                <button class="btn btn-primary" onclick="showToast(`打开拜访预约`)"><svg class="icon icon-sm"><use href="#icon-calendar"/></svg> 预约拜访</button>
               </div>
             </div>
           </div>
@@ -3290,7 +3290,7 @@
                 <button class="tab" data-dealertab="warning" onclick="switchDealerTab(this)">库存预警</button>
                 <button class="tab" data-dealertab="channel-order" onclick="switchDealerTab(this)">渠道秩序</button>
               </div>
-              <button class="btn btn-primary" id="btn-create-dealer"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建代理商</button>
+              <button class="btn btn-primary" id="btn-create-dealer" onclick="openChannelSubDealerForm(); showToast(`打开新建代理商`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建代理商</button>
             </div>
           </div>
 
@@ -3312,7 +3312,7 @@
                 </div>
                 <select class="input w-auto"><option>全部区域</option><option>云南-昆明</option><option>云南-大理</option><option>云南-曲靖</option></select>
                 <select class="input w-auto"><option>全部等级</option><option>核心</option><option>一般</option><option>潜在</option></select>
-                <button class="btn btn-ghost"><svg class="icon icon-sm"><use href="#icon-filter"/></svg> 更多筛选</button>
+                <button class="btn btn-ghost" onclick="showToast(`打开高级筛选`)"><svg class="icon icon-sm"><use href="#icon-filter"/></svg> 更多筛选</button>
               </div>
             </div>
 
@@ -3320,7 +3320,7 @@
               <div class="card card-hover p-4" onclick="switchView('dealer-detail')" data-dealer-id="DL-2024001" data-dealer-name="昆明博奥生物技术有限公司" data-dealer-level="核心" data-dealer-region="云南-昆明、玉溪" data-dealer-status="授权有效" data-dealer-amount="680">
                 <div class="flex items-start justify-between mb-3">
                   <span class="badge badge-success">核心</span>
-                  <button class="text-sub hover:text-primary"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
+                  <button class="text-sub hover:text-primary" onclick="showToast(`功能按钮`)"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
                 </div>
                 <div class="font-semibold text-ink mb-1">昆明博奥生物技术有限公司</div>
                 <div class="text-sub text-sm mb-2">负责人：陈总 · 132****8888</div>
@@ -3333,7 +3333,7 @@
               <div class="card card-hover p-4" data-dealer-id="DL-2024002" data-dealer-name="大理康盛医疗器械有限公司" data-dealer-level="一般" data-dealer-region="云南-大理、丽江" data-dealer-status="授权有效" data-dealer-warning="血球试剂库存不足">
                 <div class="flex items-start justify-between mb-3">
                   <span class="badge badge-primary">一般</span>
-                  <button class="text-sub hover:text-primary"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
+                  <button class="text-sub hover:text-primary" onclick="showToast(`功能按钮`)"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
                 </div>
                 <div class="font-semibold text-ink mb-1">大理康盛医疗器械有限公司</div>
                 <div class="text-sub text-sm mb-2">负责人：杨经理 · 139****6666</div>
@@ -3346,7 +3346,7 @@
               <div class="card card-hover p-4" data-dealer-id="DL-2024003" data-dealer-name="曲靖瑞康医疗设备有限公司" data-dealer-level="潜在" data-dealer-region="云南-曲靖" data-dealer-status="授权 30 天后到期" data-dealer-amount="120">
                 <div class="flex items-start justify-between mb-3">
                   <span class="badge badge-warning">潜在</span>
-                  <button class="text-sub hover:text-primary"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
+                  <button class="text-sub hover:text-primary" onclick="showToast(`功能按钮`)"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
                 </div>
                 <div class="font-semibold text-ink mb-1">曲靖瑞康医疗设备有限公司</div>
                 <div class="text-sub text-sm mb-2">负责人：周总 · 137****5555</div>
@@ -3359,7 +3359,7 @@
               <div class="card card-hover p-4" data-dealer-id="DL-2024004" data-dealer-name="红河州博爱医疗器械有限公司" data-dealer-level="核心" data-dealer-region="云南-红河" data-dealer-status="授权有效" data-dealer-amount="420">
                 <div class="flex items-start justify-between mb-3">
                   <span class="badge badge-success">核心</span>
-                  <button class="text-sub hover:text-primary"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
+                  <button class="text-sub hover:text-primary" onclick="showToast(`功能按钮`)"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
                 </div>
                 <div class="font-semibold text-ink mb-1">红河州博爱医疗器械有限公司</div>
                 <div class="text-sub text-sm mb-2">负责人：马总 · 138****9999</div>
@@ -3527,8 +3527,8 @@
                       <td>
                         <div class="flex gap-1">
                           <button class="btn btn-ghost text-xs" onclick="showToast('查看预警详情')">详情</button>
-                          <button class="btn btn-ghost text-xs" disabled>处理</button>
-                          <button class="btn btn-ghost text-xs" disabled>拦截</button>
+                          <button class="btn btn-ghost text-xs" disabled onclick="showToast(`操作已执行`)">处理</button>
+                          <button class="btn btn-ghost text-xs" disabled onclick="showToast(`操作已执行`)">拦截</button>
                         </div>
                       </td>
                     </tr>
@@ -3785,8 +3785,8 @@
                   </div>
                 </div>
                 <div class="flex gap-2">
-                  <button class="btn btn-ghost"><svg class="icon icon-sm"><use href="#icon-edit"/></svg> 编辑</button>
-                  <button class="btn btn-primary"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新增授权</button>
+                  <button class="btn btn-ghost" onclick="showToast(`进入编辑模式`)"><svg class="icon icon-sm"><use href="#icon-edit"/></svg> 编辑</button>
+                  <button class="btn btn-primary" onclick="showToast(`新增授权`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新增授权</button>
                 </div>
               </div>
             </div>
@@ -3907,7 +3907,7 @@
           <div class="card mb-5 p-4">
             <div class="flex items-center justify-between mb-3">
               <h3 class="font-semibold text-ink">服务闭环能力</h3>
-              <button class="btn btn-outline btn-sm" onclick="showToast('工程师移动端开发中')">查看移动端</button>
+              <button class="btn btn-outline btn-sm" onclick="showToast(`功能演示：工程师移动端`)">查看移动端</button>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div class="p-3 rounded-xl bg-primary-light text-center">
@@ -3944,7 +3944,7 @@
               <div class="flex items-center gap-2">
                 <button class="btn btn-primary" id="wo-view-kanban" onclick="setWoView('kanban')"><svg class="icon icon-sm"><use href="#icon-grid"/></svg></button>
                 <button class="btn btn-outline" id="wo-view-list" onclick="setWoView('list')"><svg class="icon icon-sm"><use href="#icon-list"/></svg></button>
-                <button class="btn btn-primary"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建工单</button>
+                <button class="btn btn-primary" onclick="openWorkorderModal({dataset:{}}); showToast(`打开新建工单`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建工单</button>
               </div>
             </div>
             <div class="flex flex-wrap gap-3">
@@ -4055,11 +4055,11 @@
           <div class="flex items-center justify-between">
             <div class="text-sub text-sm">共 312 条 · 每页 20 条</div>
             <div class="pagination">
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-              <button class="page-btn active">1</button>
-              <button class="page-btn">2</button>
-              <button class="page-btn">3</button>
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+              <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+              <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
+              <button class="page-btn" onclick="showToast(`切换到第 3 页`)">3</button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
             </div>
           </div>
         </section>
@@ -4124,8 +4124,8 @@
                     <svg class="icon icon-md absolute left-3 top-1/2 -translate-y-1/2 text-placeholder"><use href="#icon-search"/></svg>
                     <input type="text" class="input pl-10" placeholder="搜索用户姓名、账号">
                   </div>
-                  <button class="btn btn-primary"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建用户</button>
-                  <button class="btn btn-ghost"><svg class="icon icon-sm"><use href="#icon-download"/></svg> 导出</button>
+                  <button class="btn btn-primary" onclick="openSettingsUserModal(); showToast(`打开新建用户`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建用户</button>
+                  <button class="btn btn-ghost" onclick="showToast(`正在导出...`)"><svg class="icon icon-sm"><use href="#icon-download"/></svg> 导出</button>
                 </div>
                 <table class="data-table">
                   <thead><tr><th>姓名</th><th>账号</th><th>部门</th><th>岗位</th><th>状态</th><th>操作</th></tr></thead>
@@ -4193,7 +4193,7 @@
                   <div class="flex items-center justify-between p-3 border border-line rounded-lg"><span class="text-ink">意向审批超时提醒（小时）</span><input type="number" class="input w-24" value="24"></div>
                   <div class="flex items-center justify-between p-3 border border-line rounded-lg"><span class="text-ink">工单紧急 SLA（小时）</span><input type="number" class="input w-24" value="4"></div>
                   <div class="flex items-center justify-between p-3 border border-line rounded-lg"><span class="text-ink">启用深色主题跟随系统</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" class="sr-only peer" checked><div class="w-11 h-6 bg-line peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div></label></div>
-                  <div class="flex justify-end"><button class="btn btn-primary">保存设置</button></div>
+                  <div class="flex justify-end"><button class="btn btn-primary" onclick="showToast(`保存成功`)">保存设置</button></div>
                 </div>
               </div>
 
@@ -4855,9 +4855,9 @@
           <div class="flex items-center justify-between">
             <div class="text-sub text-sm">共 13 条待审批</div>
             <div class="pagination">
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-              <button class="page-btn active">1</button>
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+              <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
             </div>
           </div>
         </section>
@@ -4978,7 +4978,7 @@
               <button class="btn btn-outline text-sm flex items-center gap-2" onclick="openAiQaModal()">
                 <svg class="icon icon-sm"><use href="#icon-ai"/></svg> AI 问数
               </button>
-              <button class="btn btn-primary text-sm flex items-center gap-2 relative" onclick="showToast('预警中心开发中')">
+              <button class="btn btn-primary text-sm flex items-center gap-2 relative" onclick="showToast(`功能演示：预警中心`)">
                 <svg class="icon icon-sm"><use href="#icon-bell"/></svg> 预警 <span class="badge badge-danger">3</span>
               </button>
             </div>
@@ -5077,10 +5077,10 @@
           <div class="flex flex-wrap items-center gap-3 mb-5">
             <div class="flex items-center gap-2 bg-card card px-3 py-2">
               <span class="text-sm text-sub">时间范围</span>
-              <button class="tab active text-xs">本月</button>
-              <button class="tab text-xs">本季度</button>
-              <button class="tab text-xs">本年</button>
-              <button class="tab text-xs">自定义</button>
+              <button class="tab active text-xs" onclick="switchTimeRange(this, `本月`)">本月</button>
+              <button class="tab text-xs" onclick="switchTimeRange(this, `本季度`)">本季度</button>
+              <button class="tab text-xs" onclick="switchTimeRange(this, `本年`)">本年</button>
+              <button class="tab text-xs" onclick="switchTimeRange(this, `自定义`)">自定义</button>
             </div>
             <div class="flex items-center gap-2 bg-card card px-3 py-2">
               <span class="text-sm text-sub">区域</span>
@@ -5143,7 +5143,7 @@
               <div class="card p-4">
                 <div class="flex items-center justify-between mb-3">
                   <div class="font-semibold text-ink">收入趋势</div>
-                  <button class="text-xs text-sub hover:text-primary">说明</button>
+                  <button class="text-xs text-sub hover:text-primary" onclick="showToast(`指标说明：用于展示核心趋势数据`)">说明</button>
                 </div>
                 <div class="text-2xl font-bold text-ink mb-2">¥2,860万</div>
                 <div class="text-xs text-success mb-3">环比 +12% · 同比 +18%</div>
@@ -5161,7 +5161,7 @@
               <div class="card p-4">
                 <div class="flex items-center justify-between mb-3">
                   <div class="font-semibold text-ink">回款达成</div>
-                  <button class="text-xs text-sub hover:text-primary">说明</button>
+                  <button class="text-xs text-sub hover:text-primary" onclick="showToast(`指标说明：用于展示核心趋势数据`)">说明</button>
                 </div>
                 <div class="flex items-center gap-3">
                   <div class="relative w-14 h-14 flex-shrink-0">
@@ -5182,7 +5182,7 @@
               <div class="card p-4">
                 <div class="flex items-center justify-between mb-3">
                   <div class="font-semibold text-ink">意向阶段分布</div>
-                  <button class="text-xs text-sub hover:text-primary">说明</button>
+                  <button class="text-xs text-sub hover:text-primary" onclick="showToast(`指标说明：用于展示核心趋势数据`)">说明</button>
                 </div>
                 <div class="space-y-2">
                   <div class="flex items-center gap-2"><div class="w-12 text-xs text-sub">线索</div><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:90%"></div></div><div class="w-10 text-xs text-right">128</div></div>
@@ -5195,7 +5195,7 @@
               <div class="card p-4">
                 <div class="flex items-center justify-between mb-3">
                   <div class="font-semibold text-ink">客户健康度</div>
-                  <button class="text-xs text-sub hover:text-primary">说明</button>
+                  <button class="text-xs text-sub hover:text-primary" onclick="showToast(`指标说明：用于展示核心趋势数据`)">说明</button>
                 </div>
                 <div class="grid grid-cols-3 gap-2 text-center">
                   <div class="p-2 rounded-lg bg-success-bg">
@@ -5217,7 +5217,7 @@
               <div class="card p-4">
                 <div class="flex items-center justify-between mb-3">
                   <div class="font-semibold text-ink">拜访覆盖</div>
-                  <button class="text-xs text-sub hover:text-primary">说明</button>
+                  <button class="text-xs text-sub hover:text-primary" onclick="showToast(`指标说明：用于展示核心趋势数据`)">说明</button>
                 </div>
                 <div class="text-2xl font-bold text-ink mb-1">1,246 次</div>
                 <div class="text-xs text-success mb-3">覆盖率 83% · 环比 +5%</div>
@@ -5234,7 +5234,7 @@
               <div class="card p-4">
                 <div class="flex items-center justify-between mb-3">
                   <div class="font-semibold text-ink">试剂消耗</div>
-                  <button class="text-xs text-sub hover:text-primary">说明</button>
+                  <button class="text-xs text-sub hover:text-primary" onclick="showToast(`指标说明：用于展示核心趋势数据`)">说明</button>
                 </div>
                 <div class="text-2xl font-bold text-ink mb-1">¥486万</div>
                 <div class="text-xs text-success mb-3">复购率 78% · 环比 +3%</div>
@@ -5250,7 +5250,7 @@
               <div class="card p-4">
                 <div class="flex items-center justify-between mb-3">
                   <div class="font-semibold text-ink">设备装机</div>
-                  <button class="text-xs text-sub hover:text-primary">说明</button>
+                  <button class="text-xs text-sub hover:text-primary" onclick="showToast(`指标说明：用于展示核心趋势数据`)">说明</button>
                 </div>
                 <div class="text-2xl font-bold text-ink mb-2">42 台</div>
                 <div class="text-xs text-success mb-3">本月新增 8 台 · 同比 +21%</div>
@@ -5265,7 +5265,7 @@
               <div class="card p-4">
                 <div class="flex items-center justify-between mb-3">
                   <div class="font-semibold text-ink">合规风险</div>
-                  <button class="text-xs text-sub hover:text-primary">说明</button>
+                  <button class="text-xs text-sub hover:text-primary" onclick="showToast(`指标说明：用于展示核心趋势数据`)">说明</button>
                 </div>
                 <div class="flex items-center gap-4 mb-3">
                   <div class="text-center">
@@ -5422,7 +5422,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
               <div class="card p-4 lg:col-span-2">
                 <div class="font-semibold text-ink mb-3">区域业绩地图</div>
-                <div class="h-48 rounded-xl bg-panel flex items-center justify-center text-sub text-sm">地图可视化占位：按大区/省区着色</div>
+                <div class="h-48 rounded-xl bg-panel flex flex-col items-center justify-center text-sub text-sm gap-2"><svg class="icon icon-xl text-primary/50"><use href="#icon-map"/></svg><span>可视化组件占位：按大区/省区着色</span></div>
                 <div class="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2">
                   <button class="p-2 rounded-lg bg-panel text-left hover:bg-primary-light/30" onclick="openDrillDown('region','华东大区')"><div class="text-xs text-sub">华东大区</div><div class="text-sm font-bold text-ink">¥2,860万</div></button>
                   <button class="p-2 rounded-lg bg-panel text-left hover:bg-primary-light/30" onclick="openDrillDown('region','华南大区')"><div class="text-xs text-sub">华南大区</div><div class="text-sm font-bold text-ink">¥2,120万</div></button>
@@ -5529,7 +5529,7 @@
             </div>
           </div>
           <div id="db-panel-compliance" class="db-panel hidden">
-            <div class="card p-8 text-center text-sub">合规风控屏：拜访合规、学术活动、样品管理、飞检抽查、敏感词审计（开发中）</div>
+            <div class="card p-8 text-center text-sub flex flex-col items-center gap-2"><svg class="icon icon-xl text-primary/50"><use href="#icon-shield"/></svg><span>合规风控屏：拜访合规、学术活动、样品管理、飞检抽查、敏感词审计</span></div>
           </div>
 
           <!-- 大单作战室专题屏 -->
@@ -5609,7 +5609,7 @@
                   <option value="低">低风险</option>
                 </select>
               </div>
-              <button class="btn btn-primary" onclick="showToast('新建大单项目开发中')">
+              <button class="btn btn-primary" onclick="showToast(`功能演示：新建大单项目`)">
                 <svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建大单
               </button>
             </div>
@@ -5954,7 +5954,7 @@
           <div class="card p-4">
             <div class="flex items-center justify-between mb-4">
               <div class="font-semibold text-ink">待办与预警</div>
-              <button class="btn btn-ghost text-xs" onclick="showToast('预警中心开发中')">查看全部</button>
+              <button class="btn btn-ghost text-xs" onclick="showToast(`功能演示：预警中心`)">查看全部</button>
             </div>
             <div class="space-y-3">
               <div class="flex items-start gap-3 p-3 rounded-lg bg-danger-bg border border-danger/20">
@@ -6279,11 +6279,11 @@
           <div class="flex items-center justify-between">
             <div class="text-sub text-sm">共 <span id="equipment-total">6</span> 条 · 每页 8 条</div>
             <div class="pagination">
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-              <button class="page-btn active">1</button>
-              <button class="page-btn">2</button>
-              <button class="page-btn">3</button>
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+              <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+              <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
+              <button class="page-btn" onclick="showToast(`切换到第 3 页`)">3</button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
             </div>
           </div>
 
@@ -6372,7 +6372,7 @@
               <div class="intention-modal-footer">
                 <button class="btn btn-ghost" onclick="closeEquipmentModal()">关闭</button>
                 <div class="flex items-center gap-2">
-                  <button class="btn btn-outline" onclick="showToast('编辑功能开发中')">编辑</button>
+                  <button class="btn btn-outline" onclick="showToast(`功能演示：编辑`)">编辑</button>
                   <button class="btn btn-outline" onclick="showToast('报修申请已创建')">报修</button>
                   <button class="btn btn-outline" onclick="showToast('续保意向已创建')">续保</button>
                   <button class="btn btn-primary" onclick="showToast('调拨申请已打开')">调拨</button>
@@ -6428,7 +6428,7 @@
               <p class="text-sub text-sm">消耗预测、复购预警、上量分析与库存管理。</p>
             </div>
             <div class="flex items-center gap-2">
-              <button class="btn btn-outline" onclick="showToast('数据导入功能开发中')"><svg class="icon icon-sm"><use href="#icon-upload"/></svg> 导入数据</button>
+              <button class="btn btn-outline" onclick="showToast(`功能演示：数据导入`)"><svg class="icon icon-sm"><use href="#icon-upload"/></svg> 导入数据</button>
               <button class="btn btn-primary" onclick="openReagentCreate()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建试剂档案</button>
             </div>
           </div>
@@ -6695,9 +6695,9 @@
               <div class="flex items-center justify-between mb-4">
                 <div class="font-semibold text-ink">未来 90 天消耗预测</div>
                 <div class="flex items-center gap-2">
-                  <button class="tab active text-xs">未来 30 天</button>
-                  <button class="tab text-xs">未来 60 天</button>
-                  <button class="tab text-xs">未来 90 天</button>
+                  <button class="tab active text-xs" onclick="switchForecastPeriod(this)">未来 30 天</button>
+                  <button class="tab text-xs" onclick="switchForecastPeriod(this)">未来 60 天</button>
+                  <button class="tab text-xs" onclick="switchForecastPeriod(this)">未来 90 天</button>
                 </div>
               </div>
               <div class="h-48 relative mb-4">
@@ -6743,11 +6743,11 @@
           <div id="reagent-pagination" class="flex items-center justify-between">
             <div class="text-sub text-sm">共 <span id="reagent-total">6</span> 条 · 每页 8 条</div>
             <div class="pagination">
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-              <button class="page-btn active">1</button>
-              <button class="page-btn">2</button>
-              <button class="page-btn">3</button>
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+              <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+              <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
+              <button class="page-btn" onclick="showToast(`切换到第 3 页`)">3</button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
             </div>
           </div>
 
@@ -6931,7 +6931,7 @@
               <p class="text-sub text-sm">拜访、学术活动、样品临评、飞检抽查、敏感词审计与渠道授权的全链路合规管理。</p>
             </div>
             <div class="flex items-center gap-2">
-              <button class="btn btn-outline" onclick="showToast('批量导出功能开发中')"><svg class="icon icon-sm"><use href="#icon-download"/></svg> 导出报告</button>
+              <button class="btn btn-outline" onclick="showToast(`功能演示：批量导出`)"><svg class="icon icon-sm"><use href="#icon-download"/></svg> 导出报告</button>
               <button class="btn btn-primary" onclick="openComplianceCreate()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建合规事项</button>
             </div>
           </div>
@@ -7499,11 +7499,11 @@
           <div class="flex items-center justify-between">
             <div class="text-sub text-sm">共 <span id="compliance-total">4</span> 条 · 每页 8 条</div>
             <div class="pagination">
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-              <button class="page-btn active">1</button>
-              <button class="page-btn">2</button>
-              <button class="page-btn">3</button>
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+              <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+              <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
+              <button class="page-btn" onclick="showToast(`切换到第 3 页`)">3</button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
             </div>
           </div>
 
@@ -7626,7 +7626,7 @@
               <p class="text-sub text-sm">多维度目标拆解、达成跟踪、排行榜与未达标预警。</p>
             </div>
             <div class="flex items-center gap-2">
-              <button class="btn btn-outline" onclick="showToast('导出报告功能开发中')"><svg class="icon icon-sm"><use href="#icon-download"/></svg> 导出报告</button>
+              <button class="btn btn-outline" onclick="showToast(`功能演示：导出报告`)"><svg class="icon icon-sm"><use href="#icon-download"/></svg> 导出报告</button>
               <button class="btn btn-primary" onclick="openPerformanceCreate()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 目标拆解</button>
             </div>
           </div>
@@ -7971,11 +7971,11 @@
           <div class="flex items-center justify-between">
             <div class="text-sub text-sm">共 <span id="performance-total">4</span> 条 · 每页 8 条</div>
             <div class="pagination">
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-              <button class="page-btn active">1</button>
-              <button class="page-btn">2</button>
-              <button class="page-btn">3</button>
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+              <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+              <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
+              <button class="page-btn" onclick="showToast(`切换到第 3 页`)">3</button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
             </div>
           </div>
 
@@ -8403,11 +8403,11 @@
           <div class="flex items-center justify-between">
             <div class="text-sub text-sm">共 <span id="brand-total">4</span> 条 · 每页 8 条</div>
             <div class="pagination">
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-              <button class="page-btn active">1</button>
-              <button class="page-btn">2</button>
-              <button class="page-btn">3</button>
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+              <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+              <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
+              <button class="page-btn" onclick="showToast(`切换到第 3 页`)">3</button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
             </div>
           </div>
 
@@ -8553,12 +8553,12 @@
           <div class="card mb-4 p-4">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4">
               <div class="flex flex-wrap gap-2">
-                <button class="tab active">全部任务</button>
-                <button class="tab">我的任务</button>
-                <button class="tab">团队任务</button>
-                <button class="tab">协作任务</button>
+                <button class="tab active" onclick="switchTab(this)">全部任务</button>
+                <button class="tab" onclick="switchTab(this)">我的任务</button>
+                <button class="tab" onclick="switchTab(this)">团队任务</button>
+                <button class="tab" onclick="switchTab(this)">协作任务</button>
               </div>
-              <button class="btn btn-primary"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建任务</button>
+              <button class="btn btn-primary" onclick="openTaskForm(); showToast(`打开新建任务`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建任务</button>
             </div>
             <div class="flex flex-wrap gap-3 mb-3">
               <div class="relative flex-1 min-w-[200px] max-w-sm">
@@ -8570,11 +8570,11 @@
             </div>
             <div class="flex flex-wrap gap-2">
               <span class="text-xs text-sub py-1">关联对象：</span>
-              <button class="badge badge-light cursor-pointer hover:bg-primary-light">全部</button>
-              <button class="badge badge-light cursor-pointer hover:bg-primary-light">客户</button>
-              <button class="badge badge-light cursor-pointer hover:bg-primary-light">意向</button>
-              <button class="badge badge-light cursor-pointer hover:bg-primary-light">线索</button>
-              <button class="badge badge-light cursor-pointer hover:bg-primary-light">工单</button>
+              <button class="badge badge-light cursor-pointer hover:bg-primary-light" onclick="switchTab(this)">全部</button>
+              <button class="badge badge-light cursor-pointer hover:bg-primary-light" onclick="switchTab(this)">客户</button>
+              <button class="badge badge-light cursor-pointer hover:bg-primary-light" onclick="switchTab(this)">意向</button>
+              <button class="badge badge-light cursor-pointer hover:bg-primary-light" onclick="switchTab(this)">线索</button>
+              <button class="badge badge-light cursor-pointer hover:bg-primary-light" onclick="switchTab(this)">工单</button>
             </div>
           </div>
 
@@ -8700,11 +8700,11 @@
           <div class="flex items-center justify-between">
             <div class="text-sub text-sm">共 312 条 · 每页 20 条</div>
             <div class="pagination">
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-              <button class="page-btn active">1</button>
-              <button class="page-btn">2</button>
-              <button class="page-btn">3</button>
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+              <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+              <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
+              <button class="page-btn" onclick="showToast(`切换到第 3 页`)">3</button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
             </div>
           </div>
 
@@ -8953,11 +8953,11 @@
               <div class="flex items-center justify-between">
                 <div class="text-sub text-sm">共 1,248 条 · 每页 20 条</div>
                 <div class="pagination">
-                  <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-                  <button class="page-btn active">1</button>
-                  <button class="page-btn">2</button>
-                  <button class="page-btn">3</button>
-                  <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+                  <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+                  <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+                  <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
+                  <button class="page-btn" onclick="showToast(`切换到第 3 页`)">3</button>
+                  <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
                 </div>
               </div>
             </div>
@@ -9182,10 +9182,10 @@
           <div class="flex items-center justify-between">
             <div class="text-sub text-sm">共 18 条 · 每页 12 条</div>
             <div class="pagination">
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-              <button class="page-btn active">1</button>
-              <button class="page-btn">2</button>
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+              <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+              <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
+              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
             </div>
           </div>
         </section>
@@ -9298,10 +9298,10 @@
               <div class="flex items-center justify-between">
                 <div class="text-sub text-sm">共 12 条 · 每页 8 条</div>
                 <div class="pagination">
-                  <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-                  <button class="page-btn active">1</button>
-                  <button class="page-btn">2</button>
-                  <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+                  <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+                  <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+                  <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
+                  <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
                 </div>
               </div>
             </div>
@@ -9315,15 +9315,15 @@
                 </div>
                 <select class="input w-auto"><option value="">全部对象</option><option>客户</option><option>联系人</option><option>意向</option><option>设备</option></select>
                 <select class="input w-auto"><option value="">字段类型</option><option>文本</option><option>数字</option><option>枚举</option><option>关联对象</option></select>
-                <button class="btn btn-primary"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建字段</button>
+                <button class="btn btn-primary" onclick="showToast(`打开新建字段`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建字段</button>
               </div>
               <table class="data-table">
                 <thead><tr><th>字段名称</th><th>字段编码</th><th>类型</th><th>必填</th><th>默认值</th><th>状态</th><th>引用数</th><th>操作</th></tr></thead>
                 <tbody>
-                  <tr><td>客户名称</td><td>customer_name</td><td>文本</td><td>是</td><td>-</td><td><span class="badge badge-success">启用</span></td><td>12</td><td><button class="btn btn-ghost text-xs">编辑</button></td></tr>
-                  <tr><td>意向金额</td><td>amount</td><td>金额</td><td>是</td><td>0</td><td><span class="badge badge-success">启用</span></td><td>8</td><td><button class="btn btn-ghost text-xs">编辑</button></td></tr>
-                  <tr><td>保护期截止</td><td>protect_deadline</td><td>日期</td><td>否</td><td>-</td><td><span class="badge badge-success">启用</span></td><td>5</td><td><button class="btn btn-ghost text-xs">编辑</button></td></tr>
-                  <tr><td>返利比例</td><td>rebate_rate</td><td>数字</td><td>否</td><td>-</td><td><span class="badge badge-warning">草稿</span></td><td>0</td><td><button class="btn btn-ghost text-xs">编辑</button></td></tr>
+                  <tr><td>客户名称</td><td>customer_name</td><td>文本</td><td>是</td><td>-</td><td><span class="badge badge-success">启用</span></td><td>12</td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
+                  <tr><td>意向金额</td><td>amount</td><td>金额</td><td>是</td><td>0</td><td><span class="badge badge-success">启用</span></td><td>8</td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
+                  <tr><td>保护期截止</td><td>protect_deadline</td><td>日期</td><td>否</td><td>-</td><td><span class="badge badge-success">启用</span></td><td>5</td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
+                  <tr><td>返利比例</td><td>rebate_rate</td><td>数字</td><td>否</td><td>-</td><td><span class="badge badge-warning">草稿</span></td><td>0</td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -9336,12 +9336,12 @@
                   <input type="text" class="input pl-10" placeholder="搜索视图名称">
                 </div>
                 <select class="input w-auto"><option value="">视图类型</option><option>列表页</option><option>详情页</option><option>卡片视图</option></select>
-                <button class="btn btn-primary"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建视图</button>
+                <button class="btn btn-primary" onclick="showToast(`打开新建视图`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建视图</button>
               </div>
               <div class="card-grid">
-                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">意向列表默认视图</div><span class="badge badge-primary">列表页</span></div><div class="text-xs text-sub">展示列：意向编号、客户、阶段、金额、负责人、更新时间</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs">配置列</button><button class="btn btn-ghost text-xs">预览</button></div></div>
-                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">客户 360° 详情视图</div><span class="badge badge-success">详情页</span></div><div class="text-xs text-sub">展示列：基础信息、决策链、设备地图、时间线</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs">配置列</button><button class="btn btn-ghost text-xs">预览</button></div></div>
-                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">设备卡片视图</div><span class="badge badge-warning">卡片视图</span></div><div class="text-xs text-sub">展示列：设备名称、序列号、客户、状态、保修剩余</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs">配置列</button><button class="btn btn-ghost text-xs">预览</button></div></div>
+                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">意向列表默认视图</div><span class="badge badge-primary">列表页</span></div><div class="text-xs text-sub">展示列：意向编号、客户、阶段、金额、负责人、更新时间</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="showToast(`配置列`)">配置列</button><button class="btn btn-ghost text-xs" onclick="showToast(`预览`)">预览</button></div></div>
+                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">客户 360° 详情视图</div><span class="badge badge-success">详情页</span></div><div class="text-xs text-sub">展示列：基础信息、决策链、设备地图、时间线</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="showToast(`配置列`)">配置列</button><button class="btn btn-ghost text-xs" onclick="showToast(`预览`)">预览</button></div></div>
+                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">设备卡片视图</div><span class="badge badge-warning">卡片视图</span></div><div class="text-xs text-sub">展示列：设备名称、序列号、客户、状态、保修剩余</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="showToast(`配置列`)">配置列</button><button class="btn btn-ghost text-xs" onclick="showToast(`预览`)">预览</button></div></div>
               </div>
             </div>
 
@@ -9353,14 +9353,14 @@
                   <input type="text" class="input pl-10" placeholder="搜索流程名称/编码">
                 </div>
                 <select class="input w-auto"><option value="">所属应用</option><option>合规风控</option><option>经销商协同</option><option>目标绩效</option></select>
-                <button class="btn btn-primary"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 绑定流程</button>
+                <button class="btn btn-primary" onclick="showToast(`绑定流程`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 绑定流程</button>
               </div>
               <table class="data-table">
                 <thead><tr><th>流程名称</th><th>流程编码</th><th>所属应用</th><th>版本</th><th>生效范围</th><th>触发入口</th><th>状态</th><th>操作</th></tr></thead>
                 <tbody>
-                  <tr><td>学术活动审批</td><td>activity_approve</td><td>合规风控</td><td>v1.0</td><td>全局</td><td>新建学术活动</td><td><span class="badge badge-success">已启用</span></td><td><button class="btn btn-ghost text-xs">编辑</button></td></tr>
-                  <tr><td>样品出库审批</td><td>sample_out_approve</td><td>合规风控</td><td>v1.2</td><td>指定组织</td><td>手动发起</td><td><span class="badge badge-success">已启用</span></td><td><button class="btn btn-ghost text-xs">编辑</button></td></tr>
-                  <tr><td>返利结算审批</td><td>rebate_settle</td><td>经销商协同</td><td>v2.0</td><td>指定角色</td><td>满足条件时触发</td><td><span class="badge badge-warning">草稿</span></td><td><button class="btn btn-ghost text-xs">编辑</button></td></tr>
+                  <tr><td>学术活动审批</td><td>activity_approve</td><td>合规风控</td><td>v1.0</td><td>全局</td><td>新建学术活动</td><td><span class="badge badge-success">已启用</span></td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
+                  <tr><td>样品出库审批</td><td>sample_out_approve</td><td>合规风控</td><td>v1.2</td><td>指定组织</td><td>手动发起</td><td><span class="badge badge-success">已启用</span></td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
+                  <tr><td>返利结算审批</td><td>rebate_settle</td><td>经销商协同</td><td>v2.0</td><td>指定角色</td><td>满足条件时触发</td><td><span class="badge badge-warning">草稿</span></td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -9369,7 +9369,7 @@
             <div id="appconfig-panel-permission" class="appconfig-panel hidden">
               <div class="flex flex-wrap gap-3 mb-4">
                 <select class="input w-auto"><option>全部角色</option><option>销售代表</option><option>销售经理</option><option>区域总监</option><option>系统管理员</option></select>
-                <button class="btn btn-primary">保存权限矩阵</button>
+                <button class="btn btn-primary" onclick="showToast(`保存成功`)">保存权限矩阵</button>
               </div>
               <table class="data-table">
                 <thead><tr><th>功能/数据项</th><th>销售代表</th><th>销售经理</th><th>区域总监</th><th>系统管理员</th></tr></thead>
@@ -9389,12 +9389,12 @@
                   <svg class="icon icon-md absolute left-3 top-1/2 -translate-y-1/2 text-placeholder"><use href="#icon-search"/></svg>
                   <input type="text" class="input pl-10" placeholder="搜索字典名称">
                 </div>
-                <button class="btn btn-primary"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建字典</button>
+                <button class="btn btn-primary" onclick="openSettingsDictDrawer(); showToast(`打开新建字典`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建字典</button>
               </div>
               <div class="space-y-3">
-                <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">客户等级</div><div class="text-xs text-sub">战略客户 / 重点客户 / 一般客户 / 潜在客户</div></div><button class="btn btn-ghost text-xs">管理</button></div>
-                <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">意向状态</div><div class="text-xs text-sub">草稿 / 审批中 / 生效中 / 已结束 / 被驳回</div></div><button class="btn btn-ghost text-xs">管理</button></div>
-                <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">设备状态</div><div class="text-xs text-sub">在途 / 已装机 / 运行中 / 维修中 / 闲置 / 报废</div></div><button class="btn btn-ghost text-xs">管理</button></div>
+                <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">客户等级</div><div class="text-xs text-sub">战略客户 / 重点客户 / 一般客户 / 潜在客户</div></div><button class="btn btn-ghost text-xs" onclick="showToast(`管理`)">管理</button></div>
+                <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">意向状态</div><div class="text-xs text-sub">草稿 / 审批中 / 生效中 / 已结束 / 被驳回</div></div><button class="btn btn-ghost text-xs" onclick="showToast(`管理`)">管理</button></div>
+                <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">设备状态</div><div class="text-xs text-sub">在途 / 已装机 / 运行中 / 维修中 / 闲置 / 报废</div></div><button class="btn btn-ghost text-xs" onclick="showToast(`管理`)">管理</button></div>
               </div>
             </div>
 
@@ -9410,9 +9410,9 @@
               <table class="data-table">
                 <thead><tr><th>应用名称</th><th>版本号</th><th>状态</th><th>发布时间</th><th>发布人</th><th>变更说明</th><th>操作</th></tr></thead>
                 <tbody>
-                  <tr><td>经销商协同</td><td>v1.8.0</td><td><span class="badge badge-success">已发布</span></td><td>2026-07-28</td><td>张经理</td><td>新增库存共享视图、返利规则</td><td><button class="btn btn-ghost text-xs">对比</button></td></tr>
-                  <tr><td>合规风控</td><td>v1.8.0</td><td><span class="badge badge-success">已发布</span></td><td>2026-07-28</td><td>李专员</td><td>绑定学术活动审批流程</td><td><button class="btn btn-ghost text-xs">对比</button></td></tr>
-                  <tr><td>经营驾驶舱</td><td>v1.8.1</td><td><span class="badge badge-warning">草稿</span></td><td>-</td><td>-</td><td>新增 AI 问答入口配置</td><td><button class="btn btn-ghost text-xs">编辑</button></td></tr>
+                  <tr><td>经销商协同</td><td>v1.8.0</td><td><span class="badge badge-success">已发布</span></td><td>2026-07-28</td><td>张经理</td><td>新增库存共享视图、返利规则</td><td><button class="btn btn-ghost text-xs" onclick="showToast(`对比`)">对比</button></td></tr>
+                  <tr><td>合规风控</td><td>v1.8.0</td><td><span class="badge badge-success">已发布</span></td><td>2026-07-28</td><td>李专员</td><td>绑定学术活动审批流程</td><td><button class="btn btn-ghost text-xs" onclick="showToast(`对比`)">对比</button></td></tr>
+                  <tr><td>经营驾驶舱</td><td>v1.8.1</td><td><span class="badge badge-warning">草稿</span></td><td>-</td><td>-</td><td>新增 AI 问答入口配置</td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -9566,8 +9566,8 @@
                 <div class="flex items-center justify-between mb-3">
                   <div class="font-semibold text-ink">流程画布示意：意向报备审批</div>
                   <div class="flex items-center gap-2">
-                    <button class="btn btn-ghost text-xs"><svg class="icon icon-sm"><use href="#icon-refresh"/></svg> 自动排版</button>
-                    <button class="btn btn-ghost text-xs">缩放 100%</button>
+                    <button class="btn btn-ghost text-xs" onclick="showToast(`自动排版`)"><svg class="icon icon-sm"><use href="#icon-refresh"/></svg> 自动排版</button>
+                    <button class="btn btn-ghost text-xs" onclick="showToast(`缩放 100%`)">缩放 100%</button>
                   </div>
                 </div>
                 <div class="flow-workspace">
@@ -9644,11 +9644,11 @@
               <div class="flex items-center justify-between">
                 <div class="text-sub text-sm">共 34 条 · 每页 8 条</div>
                 <div class="pagination">
-                  <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-                  <button class="page-btn active">1</button>
-                  <button class="page-btn">2</button>
-                  <button class="page-btn">3</button>
-                  <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+                  <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+                  <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+                  <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
+                  <button class="page-btn" onclick="showToast(`切换到第 3 页`)">3</button>
+                  <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
                 </div>
               </div>
             </div>
@@ -9656,9 +9656,9 @@
             <!-- 流程模板 -->
             <div id="flow-panel-template" class="flow-panel hidden">
               <div class="card-grid">
-                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">三级审批模板</div><span class="badge badge-primary">系统</span></div><div class="text-xs text-sub">上级初审 → 部门审批 → 财务复核 → 结束</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs">预览</button><button class="btn btn-primary text-xs">使用模板</button></div></div>
-                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">合规预审模板</div><span class="badge badge-success">合规</span></div><div class="text-xs text-sub">合规专员预审 → 条件分支 → 审批/驳回</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs">预览</button><button class="btn btn-primary text-xs">使用模板</button></div></div>
-                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">自动消息通知模板</div><span class="badge badge-info">自动化</span></div><div class="text-xs text-sub">开始 → 自动化任务（发送消息）→ 结束</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs">预览</button><button class="btn btn-primary text-xs">使用模板</button></div></div>
+                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">三级审批模板</div><span class="badge badge-primary">系统</span></div><div class="text-xs text-sub">上级初审 → 部门审批 → 财务复核 → 结束</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="showToast(`预览`)">预览</button><button class="btn btn-primary text-xs" onclick="showToast(`使用模板`)">使用模板</button></div></div>
+                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">合规预审模板</div><span class="badge badge-success">合规</span></div><div class="text-xs text-sub">合规专员预审 → 条件分支 → 审批/驳回</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="showToast(`预览`)">预览</button><button class="btn btn-primary text-xs" onclick="showToast(`使用模板`)">使用模板</button></div></div>
+                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">自动消息通知模板</div><span class="badge badge-info">自动化</span></div><div class="text-xs text-sub">开始 → 自动化任务（发送消息）→ 结束</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="showToast(`预览`)">预览</button><button class="btn btn-primary text-xs" onclick="showToast(`使用模板`)">使用模板</button></div></div>
               </div>
             </div>
 
@@ -9674,7 +9674,7 @@
               <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                 <div class="card p-3">
                   <div class="font-semibold text-ink mb-2">流程实例状态分布</div>
-                  <div class="chart-placeholder"><svg class="icon icon-xl mr-2"><use href="#icon-chart"/></svg> 饼图 / 横向条形图占位</div>
+                  <div class="chart-placeholder"><svg class="icon icon-xl mr-2"><use href="#icon-chart"/></svg> 饼图 / 横向条形图组件占位</div>
                 </div>
                 <div class="card p-3">
                   <div class="font-semibold text-ink mb-2">各节点平均停留时长</div>
@@ -9710,11 +9710,11 @@
                 <table class="data-table">
                   <thead><tr><th>实例编号</th><th>流程名称</th><th>发起人</th><th>当前节点</th><th>停留时长</th><th>状态</th><th>操作</th></tr></thead>
                   <tbody>
-                    <tr><td>INS2026001</td><td>意向报备审批</td><td>王五</td><td>厂家审批</td><td class="text-danger">52h</td><td><span class="badge badge-danger">异常</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026001" data-name="意向报备审批" data-initiator="王五" data-start="2026-07-29 08:00" data-current="厂家审批" data-elapsed="52h" data-status="异常">查看</button><button class="btn btn-ghost text-xs">催办</button><button class="btn btn-ghost text-xs">转交</button></td></tr>
-                    <tr><td>INS2026002</td><td>返利结算审批</td><td>赵六</td><td>财务复核</td><td class="text-warning">12h</td><td><span class="badge badge-warning">预警</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026002" data-name="返利结算审批" data-initiator="赵六" data-start="2026-07-29 10:00" data-current="财务复核" data-elapsed="12h" data-status="预警">查看</button><button class="btn btn-ghost text-xs">跳过</button></td></tr>
+                    <tr><td>INS2026001</td><td>意向报备审批</td><td>王五</td><td>厂家审批</td><td class="text-danger">52h</td><td><span class="badge badge-danger">异常</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026001" data-name="意向报备审批" data-initiator="王五" data-start="2026-07-29 08:00" data-current="厂家审批" data-elapsed="52h" data-status="异常">查看</button><button class="btn btn-ghost text-xs" onclick="showToast(`催办`)">催办</button><button class="btn btn-ghost text-xs" onclick="showToast(`转交`)">转交</button></td></tr>
+                    <tr><td>INS2026002</td><td>返利结算审批</td><td>赵六</td><td>财务复核</td><td class="text-warning">12h</td><td><span class="badge badge-warning">预警</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026002" data-name="返利结算审批" data-initiator="赵六" data-start="2026-07-29 10:00" data-current="财务复核" data-elapsed="12h" data-status="预警">查看</button><button class="btn btn-ghost text-xs" onclick="showToast(`跳过`)">跳过</button></td></tr>
                     <tr><td>INS2026003</td><td>学术活动审批</td><td>孙七</td><td>合规预审</td><td>3h</td><td><span class="badge badge-success">正常</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026003" data-name="学术活动审批" data-initiator="孙七" data-start="2026-07-31 09:00" data-current="合规预审" data-elapsed="3h" data-status="正常">查看</button></td></tr>
-                    <tr><td>INS2026004</td><td>样品出库审批</td><td>周八</td><td>部门负责人</td><td class="text-danger">49h</td><td><span class="badge badge-danger">异常</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026004" data-name="样品出库审批" data-initiator="周八" data-start="2026-07-29 08:30" data-current="部门负责人" data-elapsed="49h" data-status="异常">查看</button><button class="btn btn-ghost text-xs">催办</button><button class="btn btn-ghost text-xs">转交</button></td></tr>
-                    <tr><td>INS2026005</td><td>意向报备审批</td><td>吴九</td><td>上级初审</td><td class="text-danger">56h</td><td><span class="badge badge-danger">异常</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026005" data-name="意向报备审批" data-initiator="吴九" data-start="2026-07-29 07:00" data-current="上级初审" data-elapsed="56h" data-status="异常">查看</button><button class="btn btn-ghost text-xs">催办</button><button class="btn btn-ghost text-xs">终止</button></td></tr>
+                    <tr><td>INS2026004</td><td>样品出库审批</td><td>周八</td><td>部门负责人</td><td class="text-danger">49h</td><td><span class="badge badge-danger">异常</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026004" data-name="样品出库审批" data-initiator="周八" data-start="2026-07-29 08:30" data-current="部门负责人" data-elapsed="49h" data-status="异常">查看</button><button class="btn btn-ghost text-xs" onclick="showToast(`催办`)">催办</button><button class="btn btn-ghost text-xs" onclick="showToast(`转交`)">转交</button></td></tr>
+                    <tr><td>INS2026005</td><td>意向报备审批</td><td>吴九</td><td>上级初审</td><td class="text-danger">56h</td><td><span class="badge badge-danger">异常</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026005" data-name="意向报备审批" data-initiator="吴九" data-start="2026-07-29 07:00" data-current="上级初审" data-elapsed="56h" data-status="异常">查看</button><button class="btn btn-ghost text-xs" onclick="showToast(`催办`)">催办</button><button class="btn btn-ghost text-xs" onclick="showToast(`终止`)">终止</button></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -10472,7 +10472,7 @@
             <h1 class="text-2xl font-bold text-ink mb-1">数据建模中心</h1>
             <p class="text-sub text-sm">数据血缘、模型训练链路、模型发布与监控一站式管理。</p>
           </div>
-          <button class="btn btn-primary text-sm" onclick="showToast('模型训练任务新建弹窗开发中')">
+          <button class="btn btn-primary text-sm" onclick="showToast(`功能演示：模型训练任务新建弹窗`)">
             <svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建训练任务
           </button>
         </div>
@@ -10770,7 +10770,7 @@ Content-Type: application/json
               <div class="text-xs text-sub">来源：预警命中结果、人工处置记录、业务规则</div>
               <button class="btn btn-outline w-full text-xs mt-2" onclick="showToast('打开预警反馈入口')">反馈命中情况</button>
             </div>
-            <button class="btn btn-outline w-full text-sm" onclick="showToast('预警 Agent 配置开发中')">查看配置</button>
+            <button class="btn btn-outline w-full text-sm" onclick="showToast(`功能演示：预警 Agent 配置`)">查看配置</button>
           </div>
           <div class="card p-4 card-hover">
             <div class="flex items-center gap-3 mb-3">
@@ -10795,7 +10795,7 @@ Content-Type: application/json
               <div class="text-xs text-sub">来源：流程执行日志、异常回退记录、人工复核</div>
               <button class="btn btn-outline w-full text-xs mt-2" onclick="showToast('打开流程反馈入口')">反馈执行结果</button>
             </div>
-            <button class="btn btn-outline w-full text-sm" onclick="showToast('流程 Agent 配置开发中')">查看配置</button>
+            <button class="btn btn-outline w-full text-sm" onclick="showToast(`功能演示：流程 Agent 配置`)">查看配置</button>
           </div>
         </div>
         <div class="card p-4">
@@ -10856,7 +10856,7 @@ Content-Type: application/json
           </div>
           <div class="flex items-center gap-2">
             <select class="input w-auto"><option>2026 年</option><option>2025 年</option></select>
-            <button class="btn btn-outline" onclick="showToast('导出报表开发中')"><svg class="icon icon-sm"><use href="#icon-download"/></svg> 导出报表</button>
+            <button class="btn btn-outline" onclick="showToast(`功能演示：导出报表`)"><svg class="icon icon-sm"><use href="#icon-download"/></svg> 导出报表</button>
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
@@ -10968,7 +10968,7 @@ Content-Type: application/json
           </div>
           <div class="flex items-center gap-2">
             <select class="input w-auto"><option>近 30 天</option><option>本季度</option><option>本年度</option></select>
-            <button class="btn btn-outline" onclick="showToast('生成洞察报告开发中')"><svg class="icon icon-sm"><use href="#icon-download"/></svg> 生成报告</button>
+            <button class="btn btn-outline" onclick="showToast(`功能演示：生成洞察报告`)"><svg class="icon icon-sm"><use href="#icon-download"/></svg> 生成报告</button>
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
@@ -11071,7 +11071,7 @@ Content-Type: application/json
             <h1 class="text-2xl font-bold text-ink mb-1">大单作战室</h1>
             <p class="text-sub text-sm">重大项目集中跟进、风险预警、资源协同与阶段推进。</p>
           </div>
-          <button class="btn btn-primary" onclick="showToast('新建大项目开发中')"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建大项目</button>
+          <button class="btn btn-primary" onclick="showToast(`功能演示：新建大项目`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建大项目</button>
         </div>
         <div class="card mb-4">
           <div class="flex flex-wrap gap-3">
@@ -11139,7 +11139,7 @@ Content-Type: application/json
             <h1 class="text-2xl font-bold text-ink mb-1">渠道秩序</h1>
             <p class="text-sub text-sm">区域保护、撞单预警、越区出货监控与冲突裁决。</p>
           </div>
-          <button class="btn btn-primary" onclick="showToast('新建区域保护规则开发中')"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建保护规则</button>
+          <button class="btn btn-primary" onclick="showToast(`功能演示：新建区域保护规则`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建保护规则</button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
           <div class="card card-hover p-4"><div class="text-sub text-xs mb-1">有效保护期</div><div class="text-2xl font-bold text-ink">186</div><div class="text-xs text-sub mt-1">覆盖项目</div></div>
@@ -11189,8 +11189,8 @@ Content-Type: application/json
             <p class="text-sub text-sm">阶梯返利政策、结算核算、佣金发放与对账。</p>
           </div>
           <div class="flex items-center gap-2">
-            <button class="btn btn-outline" onclick="showToast('导出结算单开发中')"><svg class="icon icon-sm"><use href="#icon-download"/></svg> 导出结算单</button>
-            <button class="btn btn-primary" onclick="showToast('新建返利政策开发中')"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建返利政策</button>
+            <button class="btn btn-outline" onclick="showToast(`功能演示：导出结算单`)"><svg class="icon icon-sm"><use href="#icon-download"/></svg> 导出结算单</button>
+            <button class="btn btn-primary" onclick="showToast(`功能演示：新建返利政策`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建返利政策</button>
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
@@ -11263,7 +11263,7 @@ Content-Type: application/json
             <h1 class="text-2xl font-bold text-ink mb-1">资质管理</h1>
             <p class="text-sub text-sm">产品注册证、经销商资质、客户证照的归档与效期预警。</p>
           </div>
-          <button class="btn btn-primary" onclick="showToast('上传资质证照开发中')"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 上传资质</button>
+          <button class="btn btn-primary" onclick="showToast(`功能演示：上传资质证照`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 上传资质</button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
           <div class="card card-hover p-4"><div class="text-sub text-xs mb-1">产品注册证</div><div class="text-2xl font-bold text-ink">86</div><div class="text-xs text-sub mt-1">已归档</div></div>
@@ -11273,9 +11273,9 @@ Content-Type: application/json
         </div>
         <div class="card mb-4">
           <div class="flex flex-wrap gap-2 mb-4">
-            <button class="tab active">产品注册证</button>
-            <button class="tab">经销商资质</button>
-            <button class="tab">客户资质</button>
+            <button class="tab active" onclick="switchTab(this)">产品注册证</button>
+            <button class="tab" onclick="switchTab(this)">经销商资质</button>
+            <button class="tab" onclick="switchTab(this)">客户资质</button>
           </div>
           <div class="overflow-x-auto">
             <table class="data-table min-w-[720px]">
@@ -11293,7 +11293,7 @@ Content-Type: application/json
           <div class="card mb-5 p-4">
             <div class="flex items-center justify-between mb-4">
               <h3 class="font-semibold text-ink">资质证照总览</h3>
-              <button class="btn btn-primary btn-sm">上传资质</button>
+              <button class="btn btn-primary btn-sm" onclick="showToast(`上传资质`)">上传资质</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
               <div class="p-4 rounded-xl bg-primary-light text-center">
@@ -11365,7 +11365,7 @@ Content-Type: application/json
             <h1 class="text-2xl font-bold text-ink mb-1">定制项目</h1>
             <p class="text-sub text-sm">面向大型医院、集团客户的非标准化项目配置与阶段推进。</p>
           </div>
-          <button class="btn btn-primary" onclick="showToast('新建定制项目开发中')"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建定制项目</button>
+          <button class="btn btn-primary" onclick="showToast(`功能演示：新建定制项目`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建定制项目</button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
           <div class="card card-hover p-4"><div class="text-sub text-xs mb-1">进行中项目</div><div class="text-2xl font-bold text-ink">16</div><div class="text-xs text-sub mt-1">本季度</div></div>
@@ -12123,7 +12123,7 @@ Content-Type: application/json
         <button class="btn btn-ghost" onclick="closeCalendarEventModal()">关闭</button>
         <div class="flex items-center gap-2">
           <button class="btn btn-outline" onclick="showToast('日程已删除');closeCalendarEventModal()">删除</button>
-          <button class="btn btn-outline" onclick="showToast('编辑日程开发中');closeCalendarEventModal()">编辑</button>
+          <button class="btn btn-outline" onclick="showToast(`功能演示：编辑日程`);closeCalendarEventModal()">编辑</button>
           <button class="btn btn-success" onclick="showToast('日程已完成');closeCalendarEventModal()">完成</button>
         </div>
       </div>
@@ -12300,7 +12300,7 @@ Content-Type: application/json
       </div>
       <div class="intention-modal-footer">
         <button class="btn btn-ghost" onclick="closeCommissionPolicyModal()">关闭</button>
-        <button class="btn btn-primary" onclick="showToast('政策编辑开发中');closeCommissionPolicyModal()">编辑政策</button>
+        <button class="btn btn-primary" onclick="showToast(`功能演示：政策编辑`);closeCommissionPolicyModal()">编辑政策</button>
       </div>
     </div>
   </div>
@@ -12404,8 +12404,8 @@ Content-Type: application/json
         <button class="btn btn-ghost" onclick="closeQualificationModal()">关闭</button>
         <div class="flex items-center gap-2">
           <button class="btn btn-outline" onclick="showToast('已停用证照');closeQualificationModal()">停用</button>
-          <button class="btn btn-outline" onclick="showToast('延期申请开发中');closeQualificationModal()">延期</button>
-          <button class="btn btn-primary" onclick="showToast('更新证照开发中');closeQualificationModal()">更新</button>
+          <button class="btn btn-outline" onclick="showToast(`功能演示：延期申请`);closeQualificationModal()">延期</button>
+          <button class="btn btn-primary" onclick="showToast(`功能演示：更新证照`);closeQualificationModal()">更新</button>
         </div>
       </div>
     </div>
@@ -12482,7 +12482,7 @@ Content-Type: application/json
         <button class="btn btn-ghost" onclick="closeCustomProjectModal()">关闭</button>
         <div class="flex items-center gap-2">
           <button class="btn btn-outline" onclick="showToast('项目已归档');closeCustomProjectModal()">归档</button>
-          <button class="btn btn-outline" onclick="showToast('编辑项目开发中');closeCustomProjectModal()">编辑</button>
+          <button class="btn btn-outline" onclick="showToast(`功能演示：编辑项目`);closeCustomProjectModal()">编辑</button>
           <button class="btn btn-primary" onclick="showToast('阶段已推进');closeCustomProjectModal()">推进阶段</button>
         </div>
       </div>
@@ -12529,7 +12529,7 @@ Content-Type: application/json
       </div>
       <div class="intention-modal-footer">
         <button class="btn btn-ghost" onclick="closeContactModal()">关闭</button>
-        <button class="btn btn-primary" onclick="showToast('新建跟进开发中');closeContactModal()">新建跟进</button>
+        <button class="btn btn-primary" onclick="showToast(`功能演示：新建跟进`);closeContactModal()">新建跟进</button>
       </div>
     </div>
   </div>
@@ -12827,6 +12827,33 @@ Content-Type: application/json
       setTimeout(() => toast.classList.add('opacity-0'), 2000);
     }
 
+    function switchTab(btn) {
+      const parent = btn.parentElement;
+      if (parent) {
+        parent.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      }
+      btn.classList.add('active');
+      showToast('已切换视图');
+    }
+
+    function switchTimeRange(btn, range) {
+      const parent = btn.parentElement;
+      if (parent) {
+        parent.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      }
+      btn.classList.add('active');
+      showToast('时间范围切换为 ' + range);
+    }
+
+    function switchForecastPeriod(btn) {
+      const parent = btn.parentElement;
+      if (parent) {
+        parent.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      }
+      btn.classList.add('active');
+      showToast('切换预测周期');
+    }
+
     function renderWorkbenchApps() {
       const container = document.getElementById('workbench-my-apps');
       if (!container) return;
@@ -12951,7 +12978,7 @@ Content-Type: application/json
     }
 
     function openAppconfigCreate() {
-      showToast('新建应用弹窗开发中');
+      showToast(`功能演示：新建应用弹窗`);
     }
 
     /* ===== Flow Designer ===== */
@@ -13070,13 +13097,13 @@ Content-Type: application/json
       // 底部操作
       let footerActions = '';
       if (d.status === '待分配') {
-        footerActions = '<button class="btn btn-ghost">领取</button><button class="btn btn-primary">分配</button>';
+        footerActions = '<button class="btn btn-ghost" onclick="showToast(`领取`)">领取</button><button class="btn btn-primary" onclick="showToast(`分配`)">分配</button>';
       } else if (d.status === '跟进中') {
-        footerActions = '<button class="btn btn-ghost">跟进</button><button class="btn btn-primary">转意向</button>';
+        footerActions = '<button class="btn btn-ghost" onclick="showToast(`跟进`)">跟进</button><button class="btn btn-primary" onclick="showToast(`转意向`)">转意向</button>';
       } else if (d.status === '已转化') {
-        footerActions = '<button class="btn btn-ghost">查看详情</button><button class="btn btn-primary">客户 360°</button>';
+        footerActions = '<button class="btn btn-ghost" onclick="showToast(`查看详情`)">查看详情</button><button class="btn btn-primary" onclick="showToast(`客户 360°`)">客户 360°</button>';
       } else if (d.status === '已失效') {
-        footerActions = '<button class="btn btn-ghost">归档</button><button class="btn btn-primary">激活</button>';
+        footerActions = '<button class="btn btn-ghost" onclick="showToast(`归档`)">归档</button><button class="btn btn-primary" onclick="showToast(`激活`)">激活</button>';
       }
       document.getElementById('modal-lead-footer-actions').innerHTML = footerActions;
 
@@ -13107,10 +13134,10 @@ Content-Type: application/json
         else if (d.status === '已失效') statusCardHtml = '<div class="flex items-start gap-3"><svg class="icon icon-md text-danger flex-shrink-0"><use href="#icon-info"/></svg><div><div class="text-sm font-medium text-ink">该线索已失效</div><div class="text-xs text-sub mt-1">如需重新激活，请点击下方「激活」按钮。</div></div></div>';
         const field = (label, value) => '<div><div class="text-xs text-sub">' + label + '</div><div class="font-medium text-ink mt-0.5 text-sm">' + value + '</div></div>';
         let footerActions = '';
-        if (d.status === '待分配') footerActions = '<button class="btn btn-ghost">领取</button><button class="btn btn-primary">分配</button>';
-        else if (d.status === '跟进中') footerActions = '<button class="btn btn-ghost">跟进</button><button class="btn btn-primary">转意向</button>';
-        else if (d.status === '已转化') footerActions = '<button class="btn btn-ghost">查看详情</button><button class="btn btn-primary">客户 360°</button>';
-        else if (d.status === '已失效') footerActions = '<button class="btn btn-ghost">归档</button><button class="btn btn-primary">激活</button>';
+        if (d.status === '待分配') footerActions = '<button class="btn btn-ghost" onclick="showToast(`领取`)">领取</button><button class="btn btn-primary" onclick="showToast(`分配`)">分配</button>';
+        else if (d.status === '跟进中') footerActions = '<button class="btn btn-ghost" onclick="showToast(`跟进`)">跟进</button><button class="btn btn-primary" onclick="showToast(`转意向`)">转意向</button>';
+        else if (d.status === '已转化') footerActions = '<button class="btn btn-ghost" onclick="showToast(`查看详情`)">查看详情</button><button class="btn btn-primary" onclick="showToast(`客户 360°`)">客户 360°</button>';
+        else if (d.status === '已失效') footerActions = '<button class="btn btn-ghost" onclick="showToast(`归档`)">归档</button><button class="btn btn-primary" onclick="showToast(`激活`)">激活</button>';
         return renderCardModalHeader({
           iconText: '线',
           title: d.customer,
@@ -13965,7 +13992,7 @@ Content-Type: application/json
         const decisionMakers = d.decisionMakers ? d.decisionMakers.replace(/,/g, '、') : '-';
         const newDealerHtml = d.isNewDealer === 'true' ? '<span class="badge badge-danger">新</span><span class="text-xs text-sub ml-1">新增炒单商</span>' : '<span class="text-sub text-sm">-</span>';
         const attachments = (d.attachments || '').split(',').filter(Boolean);
-        const attachmentHtml = attachments.length ? attachments.map(name => '<div class="flex items-center justify-between p-2 rounded-lg bg-card border border-line"><div class="flex items-center gap-2"><svg class="icon icon-sm text-sub"><use href="#icon-download"/></svg><span class="text-sm text-ink">' + name + '</span></div><button class="btn btn-ghost text-xs">下载</button></div>').join('') : '<div class="text-sub text-sm">暂无附件</div>';
+        const attachmentHtml = attachments.length ? attachments.map(name => '<div class="flex items-center justify-between p-2 rounded-lg bg-card border border-line"><div class="flex items-center gap-2"><svg class="icon icon-sm text-sub"><use href="#icon-download"/></svg><span class="text-sm text-ink">' + name + '</span></div><button class="btn btn-ghost text-xs" onclick="showToast(`下载`)">下载</button></div>').join('') : '<div class="text-sub text-sm">暂无附件</div>';
         const history = (d.approvalHistory || '').split(';').filter(Boolean).map(rec => {
           const parts = rec.split('|');
           const node = parts[0] || '';
@@ -13980,8 +14007,8 @@ Content-Type: application/json
         const protectBanner = '<div class="flex items-center justify-between gap-2 rounded-lg p-2.5 border mb-3 ' + protectInfo.bannerBg + ' ' + protectInfo.bannerBorder + ' ' + protectInfo.bannerText + '"><div class="flex items-center gap-2 min-w-0"><svg class="icon icon-md ' + protectInfo.iconColor + ' flex-shrink-0"><use href="#icon-clock"/></svg><span class="text-sm font-medium truncate">授权保护期：' + (d.protectDeadline && d.protectDeadline !== '-' ? d.protectDeadline : '无') + '</span></div><span class="badge ' + protectInfo.badgeClass + ' flex-shrink-0">' + protectInfo.text + '</span></div>';
         let footerActions = '';
         if (d.status === '被驳回') footerActions = '<button class="btn btn-primary" onclick="openIntentionCreate(\'resubmit\');event.stopPropagation();">重新提交</button>';
-        else if (d.status === '已成交' || d.status === '已结束') footerActions = '<button class="btn btn-ghost">查看详情</button>';
-        else footerActions = '<button class="btn btn-primary">推进</button>';
+        else if (d.status === '已成交' || d.status === '已结束') footerActions = '<button class="btn btn-ghost" onclick="showToast(`查看详情`)">查看详情</button>';
+        else footerActions = '<button class="btn btn-primary" onclick="showToast(`推进`)">推进</button>';
         return renderCardModalHeader({
           iconText: '意',
           title: d.project,
@@ -14944,14 +14971,14 @@ Content-Type: application/json
       const bc = document.getElementById('drill-breadcrumb');
       bc.innerHTML = drillStack.map((item, idx) => {
         const isLast = idx === drillStack.length - 1;
-        return '<button class="' + (isLast ? 'text-ink font-medium' : 'text-primary hover:underline') + '" ' + (isLast ? '' : 'onclick="drillUpTo(' + idx + ')"') + '>' + item.name + '</button>' + (isLast ? '' : '<svg class="icon icon-xs text-sub"><use href="#icon-arrow-right"/></svg>');
+        return '<button class="' + (isLast ? 'text-ink font-medium' : 'text-primary hover:underline') + '" ' + (isLast ? '' : 'onclick="drillUpTo(' + idx + ')"') + ' onclick="showToast(`' + item.name + '`)">' + item.name + '</button>' + (isLast ? '' : '<svg class="icon icon-xs text-sub"><use href="#icon-arrow-right"/></svg>');
       }).join('');
 
       const dbc = document.getElementById('dashboard-breadcrumb');
       if (dbc) {
         dbc.innerHTML = drillStack.map((item, idx) => {
           const isLast = idx === drillStack.length - 1;
-          return '<button class="' + (isLast ? 'text-ink font-medium' : 'text-primary hover:underline') + '" ' + (isLast ? '' : 'onclick="drillUpTo(' + idx + ');event.stopPropagation()"') + '>' + item.name + '</button>' + (isLast ? '' : '<svg class="icon icon-xs text-sub"><use href="#icon-arrow-right"/></svg>');
+          return '<button class="' + (isLast ? 'text-ink font-medium' : 'text-primary hover:underline') + '" ' + (isLast ? '' : 'onclick="drillUpTo(' + idx + ');event.stopPropagation()"') + ' onclick="showToast(`' + item.name + '`)">' + item.name + '</button>' + (isLast ? '' : '<svg class="icon icon-xs text-sub"><use href="#icon-arrow-right"/></svg>');
         }).join('');
       }
 
