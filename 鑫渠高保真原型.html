@@ -3267,8 +3267,8 @@
               </div>
               <div class="intention-modal-footer">
                 <button class="btn btn-ghost" onclick="closeCustomerModal()">关闭</button>
-                <button class="btn btn-primary" onclick="showToast(`打开联系人详情`)"><svg class="icon icon-sm"><use href="#icon-phone"/></svg> 联系</button>
-                <button class="btn btn-primary" onclick="showToast(`打开拜访预约`)"><svg class="icon icon-sm"><use href="#icon-calendar"/></svg> 预约拜访</button>
+                <button class="btn btn-primary" onclick="openContactDrawer()"><svg class="icon icon-sm"><use href="#icon-phone"/></svg> 联系</button>
+                <button class="btn btn-primary" onclick="openVisitScheduleModal()"><svg class="icon icon-sm"><use href="#icon-calendar"/></svg> 预约拜访</button>
               </div>
             </div>
           </div>
@@ -3786,7 +3786,7 @@
                 </div>
                 <div class="flex gap-2">
                   <button class="btn btn-ghost" onclick="showToast(`进入编辑模式`)"><svg class="icon icon-sm"><use href="#icon-edit"/></svg> 编辑</button>
-                  <button class="btn btn-primary" onclick="showToast(`新增授权`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新增授权</button>
+                  <button class="btn btn-primary" onclick="openDealerAuthorizeModal()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新增授权</button>
                 </div>
               </div>
             </div>
@@ -5655,7 +5655,7 @@
                   <option value="低">低风险</option>
                 </select>
               </div>
-              <button class="btn btn-primary" onclick="showToast(`功能演示：新建大单项目`)">
+              <button class="btn btn-primary" onclick="openDealroomCreate()">
                 <svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建大单
               </button>
             </div>
@@ -11204,7 +11204,7 @@ Content-Type: application/json
             <h1 class="text-2xl font-bold text-ink mb-1">大单作战室</h1>
             <p class="text-sub text-sm">重大项目集中跟进、风险预警、资源协同与阶段推进。</p>
           </div>
-          <button class="btn btn-primary" onclick="showToast(`功能演示：新建大项目`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建大项目</button>
+          <button class="btn btn-primary" onclick="openDealroomCreate()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建大项目</button>
         </div>
         <div class="card mb-4">
           <div class="flex flex-wrap gap-3">
@@ -11323,7 +11323,7 @@ Content-Type: application/json
           </div>
           <div class="flex items-center gap-2">
             <button class="btn btn-outline" onclick="showToast(`功能演示：导出结算单`)"><svg class="icon icon-sm"><use href="#icon-download"/></svg> 导出结算单</button>
-            <button class="btn btn-primary" onclick="showToast(`功能演示：新建返利政策`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建返利政策</button>
+            <button class="btn btn-primary" onclick="openCommissionPolicyCreate()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建返利政策</button>
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
@@ -11396,7 +11396,7 @@ Content-Type: application/json
             <h1 class="text-2xl font-bold text-ink mb-1">资质管理</h1>
             <p class="text-sub text-sm">产品注册证、经销商资质、客户证照的归档与效期预警。</p>
           </div>
-          <button class="btn btn-primary" onclick="showToast(`功能演示：上传资质证照`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 上传资质</button>
+          <button class="btn btn-primary" onclick="openQualificationUpload()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 上传资质</button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
           <div class="card card-hover p-4"><div class="text-sub text-xs mb-1">产品注册证</div><div class="text-2xl font-bold text-ink">86</div><div class="text-xs text-sub mt-1">已归档</div></div>
@@ -11426,7 +11426,7 @@ Content-Type: application/json
           <div class="card mb-5 p-4">
             <div class="flex items-center justify-between mb-4">
               <h3 class="font-semibold text-ink">资质证照总览</h3>
-              <button class="btn btn-primary btn-sm" onclick="showToast(`上传资质`)">上传资质</button>
+              <button class="btn btn-primary btn-sm" onclick="openQualificationUpload()">上传资质</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
               <div class="p-4 rounded-xl bg-primary-light text-center">
@@ -11498,7 +11498,7 @@ Content-Type: application/json
             <h1 class="text-2xl font-bold text-ink mb-1">定制项目</h1>
             <p class="text-sub text-sm">面向大型医院、集团客户的非标准化项目配置与阶段推进。</p>
           </div>
-          <button class="btn btn-primary" onclick="showToast(`功能演示：新建定制项目`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建定制项目</button>
+          <button class="btn btn-primary" onclick="openCustomProjectCreate()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建定制项目</button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
           <div class="card card-hover p-4"><div class="text-sub text-xs mb-1">进行中项目</div><div class="text-2xl font-bold text-ink">16</div><div class="text-xs text-sub mt-1">本季度</div></div>
@@ -17711,6 +17711,70 @@ Content-Type: application/json
       document.body.style.overflow = '';
     }
 
+
+    /* ===== 应用中心核心操作弹窗/抽屉 ===== */
+    function openCustomProjectCreate() {
+      document.getElementById('custom-project-create-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCustomProjectCreate() {
+      document.getElementById('custom-project-create-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openDealroomCreate() {
+      document.getElementById('dealroom-create-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDealroomCreate() {
+      document.getElementById('dealroom-create-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openCommissionPolicyCreate() {
+      document.getElementById('commission-policy-create-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCommissionPolicyCreate() {
+      document.getElementById('commission-policy-create-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openQualificationUpload() {
+      document.getElementById('drawer-qualification-upload').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeQualificationUpload() {
+      document.getElementById('drawer-qualification-upload').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openDealerAuthorizeModal() {
+      document.getElementById('dealer-authorize-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDealerAuthorizeModal() {
+      document.getElementById('dealer-authorize-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openContactDrawer() {
+      document.getElementById('drawer-contact-action').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeContactDrawer() {
+      document.getElementById('drawer-contact-action').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openVisitScheduleModal() {
+      document.getElementById('visit-schedule-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeVisitScheduleModal() {
+      document.getElementById('visit-schedule-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
   </script>
 
   <!-- ===== 撞单裁决弹窗 ===== -->
@@ -18686,6 +18750,219 @@ Content-Type: application/json
       </div>
       <div class="intention-modal-footer">
         <button class="btn btn-ghost" onclick="closeInsightStage()">关闭</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ===== 应用中心核心操作弹窗/抽屉 ===== -->
+  <!-- 定制项目：新建定制项目 -->
+  <div id="custom-project-create-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeCustomProjectCreate()">
+    <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">新建定制项目</h3>
+          <p class="text-sub text-sm mt-1">面向大型医院或集团客户的非标准化项目立项。</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeCustomProjectCreate()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group md:col-span-2"><label class="form-label">项目名称 <span class="required">*</span></label><input type="text" class="input w-full" id="custom-project-create-name" placeholder="请输入项目名称"></div>
+          <div class="form-group"><label class="form-label">客户 <span class="required">*</span></label><input type="text" class="input w-full" id="custom-project-create-customer" placeholder="请输入客户名称"></div>
+          <div class="form-group"><label class="form-label">预计金额</label><input type="text" class="input w-full" id="custom-project-create-amount" placeholder="如：¥500万"></div>
+          <div class="form-group"><label class="form-label">负责人 <span class="required">*</span></label><input type="text" class="input w-full" id="custom-project-create-owner" placeholder="请输入负责人姓名"></div>
+          <div class="form-group"><label class="form-label">项目阶段 <span class="required">*</span></label><select class="input w-full" id="custom-project-create-stage"><option value="">请选择阶段</option><option>需求调研</option><option>方案设计</option><option>商务谈判</option><option>合同签订</option><option>交付实施</option></select></div>
+          <div class="form-group md:col-span-2"><label class="form-label">需求概述 <span class="required">*</span></label><textarea class="input w-full" id="custom-project-create-summary" rows="3" placeholder="请描述客户核心需求、交付范围、关键节点等"></textarea></div>
+          <div class="form-group md:col-span-2"><label class="form-label">风险点</label><textarea class="input w-full" id="custom-project-create-risk" rows="2" placeholder="如：审批周期长、竞品介入、定制化成本高等"></textarea></div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeCustomProjectCreate()">取消</button>
+        <button class="btn btn-primary" onclick="showToast('保存成功');closeCustomProjectCreate()">保存项目</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 大单作战室：新建大项目 -->
+  <div id="dealroom-create-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeDealroomCreate()">
+    <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">新建大项目</h3>
+          <p class="text-sub text-sm mt-1">重大项目集中跟进、风险预警与资源协同立项。</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeDealroomCreate()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group md:col-span-2"><label class="form-label">项目名称 <span class="required">*</span></label><input type="text" class="input w-full" id="dealroom-create-name" placeholder="请输入项目名称"></div>
+          <div class="form-group"><label class="form-label">客户 <span class="required">*</span></label><input type="text" class="input w-full" id="dealroom-create-customer" placeholder="请输入客户名称"></div>
+          <div class="form-group"><label class="form-label">预计金额</label><input type="text" class="input w-full" id="dealroom-create-amount" placeholder="如：¥860万"></div>
+          <div class="form-group"><label class="form-label">负责人 <span class="required">*</span></label><input type="text" class="input w-full" id="dealroom-create-owner" placeholder="请输入负责人姓名"></div>
+          <div class="form-group"><label class="form-label">当前阶段 <span class="required">*</span></label><select class="input w-full" id="dealroom-create-stage"><option value="">请选择阶段</option><option>需求确认</option><option>方案提交</option><option>招标中</option><option>谈判中</option><option>中标待签</option></select></div>
+          <div class="form-group"><label class="form-label">投标/签约截止日期</label><input type="date" class="input w-full" id="dealroom-create-deadline"></div>
+          <div class="form-group"><label class="form-label">健康度初评</label><select class="input w-full" id="dealroom-create-health"><option value="">请选择</option><option>优秀（90-100）</option><option>良好（75-89）</option><option>关注（60-74）</option><option>高风险（<60）</option></select></div>
+          <div class="form-group md:col-span-2"><label class="form-label">关键风险</label><textarea class="input w-full" id="dealroom-create-risk" rows="2" placeholder="如：竞争对手低价、决策链不清晰、交付周期紧张"></textarea></div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeDealroomCreate()">取消</button>
+        <button class="btn btn-primary" onclick="showToast('保存成功');closeDealroomCreate()">保存项目</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 返利与佣金：新建返利政策 -->
+  <div id="commission-policy-create-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeCommissionPolicyCreate()">
+    <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">新建返利政策</h3>
+          <p class="text-sub text-sm mt-1">配置阶梯返利政策并设定生效范围。</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeCommissionPolicyCreate()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group md:col-span-2"><label class="form-label">政策名称 <span class="required">*</span></label><input type="text" class="input w-full" id="commission-policy-create-name" placeholder="如：血球产品线年度阶梯返利"></div>
+          <div class="form-group md:col-span-2"><label class="form-label">适用产品线 <span class="required">*</span></label><input type="text" class="input w-full" id="commission-policy-create-line" placeholder="如：血球分析 / 血球试剂"></div>
+          <div class="form-group"><label class="form-label">返利周期 <span class="required">*</span></label><select class="input w-full" id="commission-policy-create-period"><option value="">请选择周期</option><option>月度</option><option>季度</option><option>半年度</option><option>年度</option></select></div>
+          <div class="form-group"><label class="form-label">生效日期 <span class="required">*</span></label><input type="date" class="input w-full" id="commission-policy-create-start"></div>
+          <div class="form-group md:col-span-2"><label class="form-label">阶梯条件与返利比例 <span class="required">*</span></label>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2"><span class="text-sm text-sub w-16">第一档</span><input type="text" class="input flex-1" placeholder="销售额 ≥ 100万" value="销售额 ≥ 100万"><input type="text" class="input w-24" placeholder="返利比例" value="3%"></div>
+              <div class="flex items-center gap-2"><span class="text-sm text-sub w-16">第二档</span><input type="text" class="input flex-1" placeholder="销售额 ≥ 300万" value="销售额 ≥ 300万"><input type="text" class="input w-24" placeholder="返利比例" value="5%"></div>
+              <div class="flex items-center gap-2"><span class="text-sm text-sub w-16">第三档</span><input type="text" class="input flex-1" placeholder="销售额 ≥ 500万" value="销售额 ≥ 500万"><input type="text" class="input w-24" placeholder="返利比例" value="7%"></div>
+            </div>
+          </div>
+          <div class="form-group md:col-span-2"><label class="form-label">备注</label><textarea class="input w-full" id="commission-policy-create-remark" rows="2" placeholder="补充说明，如结算方式、例外条款等"></textarea></div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeCommissionPolicyCreate()">取消</button>
+        <button class="btn btn-primary" onclick="showToast('保存成功');closeCommissionPolicyCreate()">保存政策</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 资质管理：上传资质 -->
+  <div id="drawer-qualification-upload" class="drawer-overlay" onclick="if(event.target===this) closeQualificationUpload()">
+    <div class="drawer" onclick="event.stopPropagation()">
+      <div class="drawer-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">上传资质</h3>
+          <p class="text-sub text-sm mt-1">上传产品注册证、经销商资质或客户资质证照。</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeQualificationUpload()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="drawer-body">
+        <div class="grid grid-cols-1 gap-4">
+          <div class="form-group"><label class="form-label">资质名称 <span class="required">*</span></label><input type="text" class="input w-full" id="qualification-upload-name" placeholder="请输入资质名称"></div>
+          <div class="form-group"><label class="form-label">证照编号 <span class="required">*</span></label><input type="text" class="input w-full" id="qualification-upload-no" placeholder="如：国械注准 20262220001"></div>
+          <div class="form-group"><label class="form-label">所属主体 <span class="required">*</span></label><input type="text" class="input w-full" id="qualification-upload-subject" placeholder="如：Sysmex XN-550 / 昆明博奥"></div>
+          <div class="form-group"><label class="form-label">资质类型 <span class="required">*</span></label><select class="input w-full" id="qualification-upload-type"><option value="">请选择类型</option><option>产品注册证</option><option>经销商资质</option><option>客户资质</option></select></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group"><label class="form-label">生效日期</label><input type="date" class="input w-full" id="qualification-upload-start"></div>
+            <div class="form-group"><label class="form-label">到期日期</label><input type="date" class="input w-full" id="qualification-upload-end"></div>
+          </div>
+          <div class="form-group"><label class="form-label">附件上传</label>
+            <div class="border-2 border-dashed border-line rounded-xl p-6 text-center bg-panel cursor-pointer hover:border-primary transition-colors" onclick="showToast('打开文件选择器')">
+              <svg class="icon icon-lg text-placeholder mx-auto mb-2"><use href="#icon-upload"/></svg>
+              <div class="text-sm text-sub">点击上传或拖拽文件到此处</div>
+              <div class="text-xs text-placeholder mt-1">支持 PDF、JPG、PNG，单个文件不超过 20MB</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="drawer-footer">
+        <button class="btn btn-ghost" onclick="closeQualificationUpload()">取消</button>
+        <button class="btn btn-primary" onclick="showToast('保存成功');closeQualificationUpload()">保存资质</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 经销商详情：新增授权 -->
+  <div id="dealer-authorize-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeDealerAuthorizeModal()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">新增授权</h3>
+          <p class="text-sub text-sm mt-1">为经销商新增产品线或区域授权。</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeDealerAuthorizeModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 gap-4">
+          <div class="form-group"><label class="form-label">授权产品线 <span class="required">*</span></label><select class="input w-full" id="dealer-authorize-product"><option value="">请选择产品线</option><option>血球分析</option><option>生化分析</option><option>免疫分析</option><option>凝血分析</option><option>POCT</option><option>血球试剂</option><option>生化试剂</option><option>免疫试剂</option></select></div>
+          <div class="form-group"><label class="form-label">授权区域 <span class="required">*</span></label><input type="text" class="input w-full" id="dealer-authorize-region" placeholder="如：云南-昆明"></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group"><label class="form-label">授权开始 <span class="required">*</span></label><input type="date" class="input w-full" id="dealer-authorize-start"></div>
+            <div class="form-group"><label class="form-label">授权结束 <span class="required">*</span></label><input type="date" class="input w-full" id="dealer-authorize-end"></div>
+          </div>
+          <div class="form-group"><label class="form-label">授权级别 <span class="required">*</span></label><select class="input w-full" id="dealer-authorize-level"><option value="">请选择级别</option><option>独家授权</option><option>核心授权</option><option>普通授权</option></select></div>
+          <div class="form-group"><label class="form-label">备注</label><textarea class="input w-full" id="dealer-authorize-remark" rows="2" placeholder="补充说明授权范围、销售任务等"></textarea></div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeDealerAuthorizeModal()">取消</button>
+        <button class="btn btn-primary" onclick="showToast('保存成功');closeDealerAuthorizeModal()">保存授权</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 客户360°：联系人侧边抽屉 -->
+  <div id="drawer-contact-action" class="drawer-overlay" onclick="if(event.target===this) closeContactDrawer()">
+    <div class="drawer" onclick="event.stopPropagation()">
+      <div class="drawer-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">联系记录</h3>
+          <p class="text-sub text-sm mt-1">快速记录一次客户沟通。</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeContactDrawer()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="drawer-body">
+        <div class="grid grid-cols-1 gap-4">
+          <div class="form-group"><label class="form-label">联系人 <span class="required">*</span></label><input type="text" class="input w-full" id="contact-action-name" placeholder="请输入联系人姓名"></div>
+          <div class="form-group"><label class="form-label">联系电话</label><input type="text" class="input w-full" id="contact-action-phone" placeholder="请输入联系电话"></div>
+          <div class="form-group"><label class="form-label">职务</label><input type="text" class="input w-full" id="contact-action-title" placeholder="如：检验科主任"></div>
+          <div class="form-group"><label class="form-label">联系类型 <span class="required">*</span></label><select class="input w-full" id="contact-action-type"><option value="">请选择</option><option>电话</option><option>微信</option><option>邮件</option><option>面谈</option><option>其他</option></select></div>
+          <div class="form-group"><label class="form-label">沟通内容 <span class="required">*</span></label><textarea class="input w-full" id="contact-action-content" rows="3" placeholder="请记录沟通要点、客户反馈等"></textarea></div>
+          <div class="form-group"><label class="form-label">下次跟进</label><input type="datetime-local" class="input w-full" id="contact-action-next"></div>
+        </div>
+      </div>
+      <div class="drawer-footer">
+        <button class="btn btn-ghost" onclick="closeContactDrawer()">取消</button>
+        <button class="btn btn-primary" onclick="showToast('保存成功');closeContactDrawer()">保存记录</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 客户360°：拜访预约弹窗 -->
+  <div id="visit-schedule-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeVisitScheduleModal()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">预约拜访</h3>
+          <p class="text-sub text-sm mt-1">创建一次客户拜访计划并同步到日历。</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeVisitScheduleModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 gap-4">
+          <div class="form-group"><label class="form-label">拜访对象 <span class="required">*</span></label><input type="text" class="input w-full" id="visit-schedule-target" placeholder="请输入拜访对象"></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group"><label class="form-label">拜访时间 <span class="required">*</span></label><input type="datetime-local" class="input w-full" id="visit-schedule-time"></div>
+            <div class="form-group"><label class="form-label">拜访地点</label><input type="text" class="input w-full" id="visit-schedule-location" placeholder="如：云南省肿瘤医院检验科"></div>
+          </div>
+          <div class="form-group"><label class="form-label">拜访目的 <span class="required">*</span></label><select class="input w-full" id="visit-schedule-purpose"><option value="">请选择目的</option><option>方案汇报</option><option>商务谈判</option><option>客情维护</option><option>设备巡检</option><option>学术活动</option><option>其他</option></select></div>
+          <div class="form-group"><label class="form-label">参与人员</label><input type="text" class="input w-full" id="visit-schedule-members" placeholder="如：张经理、王主任"></div>
+          <div class="form-group"><label class="form-label">备注</label><textarea class="input w-full" id="visit-schedule-remark" rows="2" placeholder="补充说明拜访准备事项、需携带资料等"></textarea></div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeVisitScheduleModal()">取消</button>
+        <button class="btn btn-primary" onclick="showToast('保存成功');closeVisitScheduleModal()">保存预约</button>
       </div>
     </div>
   </div>
