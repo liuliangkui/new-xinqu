@@ -4978,12 +4978,7 @@
 
           <!-- 第四层：指标卡片区 -->
           <div id="db-panel-overview" class="db-panel">
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-5">
-              <!-- 收入趋势 -->
-              <div class="card p-4">
-                <div class="flex items-center justify-between mb-3">
-                  <div class="font-semibold text-ink">收入趋势</div>
-            <!-- 业绩预测与缺口分析 -->
+            <!-- 业绩预测与缺口分析：全宽独立卡片 -->
             <div class="card p-4 mb-5">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="font-semibold text-ink">业绩预测与缺口分析</h3>
@@ -4992,7 +4987,7 @@
                   <select class="input text-xs py-1"><option>本季度</option><option>本年度</option></select>
                 </div>
               </div>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <div class="p-4 rounded-xl bg-primary-light">
                   <div class="text-xs text-sub mb-1">预测收入</div>
                   <div class="text-2xl font-bold text-primary">¥9,540万</div>
@@ -5008,19 +5003,34 @@
                   <div class="text-2xl font-bold text-danger">¥1,460万</div>
                   <div class="text-xs text-sub mt-1">需新增 6–8 个重点项目</div>
                 </div>
+                <div class="p-4 rounded-xl bg-success-bg">
+                  <div class="text-xs text-sub mb-1">可挽回金额</div>
+                  <div class="text-2xl font-bold text-success">¥380万</div>
+                  <div class="text-xs text-sub mt-1">3 个停滞重点意向</div>
+                </div>
               </div>
-              <div class="p-3 rounded-lg bg-panel">
-                <div class="text-sm font-medium text-ink mb-2">缺口归因</div>
-                <div class="space-y-2">
-                  <div class="flex items-center justify-between text-sm"><span class="text-sub">意向转化率低于预期</span><span class="font-medium text-danger">-¥620万</span></div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="p-3 rounded-lg bg-panel">
+                  <div class="flex items-center justify-between text-sm mb-1"><span class="text-sub">意向转化率低于预期</span><span class="font-medium text-danger">-¥620万</span></div>
                   <div class="w-full bg-line rounded-full h-2"><div class="bg-danger h-2 rounded-full" style="width: 42%"></div></div>
-                  <div class="flex items-center justify-between text-sm"><span class="text-sub">签约周期延长</span><span class="font-medium text-warning">-¥480万</span></div>
+                </div>
+                <div class="p-3 rounded-lg bg-panel">
+                  <div class="flex items-center justify-between text-sm mb-1"><span class="text-sub">签约周期延长</span><span class="font-medium text-warning">-¥480万</span></div>
                   <div class="w-full bg-line rounded-full h-2"><div class="bg-warning h-2 rounded-full" style="width: 33%"></div></div>
-                  <div class="flex items-center justify-between text-sm"><span class="text-sub">重点项目停滞</span><span class="font-medium text-info">-¥360万</span></div>
+                </div>
+                <div class="p-3 rounded-lg bg-panel">
+                  <div class="flex items-center justify-between text-sm mb-1"><span class="text-sub">重点项目停滞</span><span class="font-medium text-info">-¥360万</span></div>
                   <div class="w-full bg-line rounded-full h-2"><div class="bg-info h-2 rounded-full" style="width: 25%"></div></div>
                 </div>
               </div>
             </div>
+
+            <!-- 核心指标卡片：4 列布局 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-5">
+              <!-- 收入趋势 -->
+              <div class="card p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="font-semibold text-ink">收入趋势</div>
                   <button class="text-xs text-sub hover:text-primary">说明</button>
                 </div>
                 <div class="text-2xl font-bold text-ink mb-2">¥2,860万</div>
@@ -5041,32 +5051,32 @@
                   <div class="font-semibold text-ink">回款达成</div>
                   <button class="text-xs text-sub hover:text-primary">说明</button>
                 </div>
-                <div class="flex items-center gap-4">
-                  <div class="relative w-20 h-20">
+                <div class="flex items-center gap-3">
+                  <div class="relative w-14 h-14 flex-shrink-0">
                     <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
                       <path class="text-line" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"/>
                       <path class="text-warning" stroke-dasharray="76, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"/>
                     </svg>
-                    <div class="absolute inset-0 flex items-center justify-center text-lg font-bold text-ink">76%</div>
+                    <div class="absolute inset-0 flex items-center justify-center text-sm font-bold text-ink">76%</div>
                   </div>
-                  <div>
-                    <div class="text-sm text-sub">目标 ¥2,800万</div>
-                    <div class="text-sm text-sub">实际 ¥2,120万</div>
+                  <div class="min-w-0">
+                    <div class="text-xs text-sub">目标 ¥2,800万</div>
+                    <div class="text-xs text-sub">实际 ¥2,120万</div>
                     <div class="text-xs text-danger mt-1">缺口 ¥680万</div>
                   </div>
                 </div>
               </div>
-              <!-- 意向阶段 -->
+              <!-- 意向阶段分布 -->
               <div class="card p-4">
                 <div class="flex items-center justify-between mb-3">
                   <div class="font-semibold text-ink">意向阶段分布</div>
                   <button class="text-xs text-sub hover:text-primary">说明</button>
                 </div>
                 <div class="space-y-2">
-                  <div class="flex items-center gap-2"><div class="w-16 text-xs text-sub">线索</div><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:90%"></div></div><div class="w-10 text-xs text-right">128</div></div>
-                  <div class="flex items-center gap-2"><div class="w-16 text-xs text-sub">意向</div><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:70%"></div></div><div class="w-10 text-xs text-right">98</div></div>
-                  <div class="flex items-center gap-2"><div class="w-16 text-xs text-sub">中标</div><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:45%"></div></div><div class="w-10 text-xs text-right">42</div></div>
-                  <div class="flex items-center gap-2"><div class="w-16 text-xs text-sub">成交</div><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-success rounded-full" style="width:35%"></div></div><div class="w-10 text-xs text-right">32</div></div>
+                  <div class="flex items-center gap-2"><div class="w-12 text-xs text-sub">线索</div><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:90%"></div></div><div class="w-10 text-xs text-right">128</div></div>
+                  <div class="flex items-center gap-2"><div class="w-12 text-xs text-sub">意向</div><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:70%"></div></div><div class="w-10 text-xs text-right">98</div></div>
+                  <div class="flex items-center gap-2"><div class="w-12 text-xs text-sub">中标</div><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:45%"></div></div><div class="w-10 text-xs text-right">42</div></div>
+                  <div class="flex items-center gap-2"><div class="w-12 text-xs text-sub">成交</div><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-success rounded-full" style="width:35%"></div></div><div class="w-10 text-xs text-right">32</div></div>
                 </div>
               </div>
               <!-- 客户健康度 -->
@@ -5166,8 +5176,7 @@
               </div>
             </div>
           </div>
-
-          <!-- 专题屏占位（后续可扩展） -->
+<!-- 专题屏占位（后续可扩展） -->
           <div id="db-panel-target" class="db-panel hidden">
             <div class="card p-4 mb-5">
               <div class="flex items-center justify-between mb-4">
