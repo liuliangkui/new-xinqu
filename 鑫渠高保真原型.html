@@ -9379,15 +9379,15 @@
                 </div>
                 <select class="input w-auto"><option value="">全部对象</option><option>客户</option><option>联系人</option><option>意向</option><option>设备</option></select>
                 <select class="input w-auto"><option value="">字段类型</option><option>文本</option><option>数字</option><option>枚举</option><option>关联对象</option></select>
-                <button class="btn btn-primary" onclick="showToast(`打开新建字段`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建字段</button>
+                <button class="btn btn-primary" onclick="openAppconfigFieldCreate()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建字段</button>
               </div>
               <table class="data-table">
                 <thead><tr><th>字段名称</th><th>字段编码</th><th>类型</th><th>必填</th><th>默认值</th><th>状态</th><th>引用数</th><th>操作</th></tr></thead>
                 <tbody>
-                  <tr><td>客户名称</td><td>customer_name</td><td>文本</td><td>是</td><td>-</td><td><span class="badge badge-success">启用</span></td><td>12</td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
-                  <tr><td>意向金额</td><td>amount</td><td>金额</td><td>是</td><td>0</td><td><span class="badge badge-success">启用</span></td><td>8</td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
-                  <tr><td>保护期截止</td><td>protect_deadline</td><td>日期</td><td>否</td><td>-</td><td><span class="badge badge-success">启用</span></td><td>5</td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
-                  <tr><td>返利比例</td><td>rebate_rate</td><td>数字</td><td>否</td><td>-</td><td><span class="badge badge-warning">草稿</span></td><td>0</td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
+                  <tr><td>客户名称</td><td>customer_name</td><td>文本</td><td>是</td><td>-</td><td><span class="badge badge-success">启用</span></td><td>12</td><td><button class="btn btn-ghost text-xs" onclick="openAppconfigFieldEdit('客户名称','customer_name','文本','是','启用')">编辑</button></td></tr>
+                  <tr><td>意向金额</td><td>amount</td><td>金额</td><td>是</td><td>0</td><td><span class="badge badge-success">启用</span></td><td>8</td><td><button class="btn btn-ghost text-xs" onclick="openAppconfigFieldEdit('意向金额','amount','金额','是','启用')">编辑</button></td></tr>
+                  <tr><td>保护期截止</td><td>protect_deadline</td><td>日期</td><td>否</td><td>-</td><td><span class="badge badge-success">启用</span></td><td>5</td><td><button class="btn btn-ghost text-xs" onclick="openAppconfigFieldEdit('保护期截止','protect_deadline','日期','否','启用')">编辑</button></td></tr>
+                  <tr><td>返利比例</td><td>rebate_rate</td><td>数字</td><td>否</td><td>-</td><td><span class="badge badge-warning">草稿</span></td><td>0</td><td><button class="btn btn-ghost text-xs" onclick="openAppconfigFieldEdit('返利比例','rebate_rate','数字','否','草稿')">编辑</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -9400,12 +9400,12 @@
                   <input type="text" class="input pl-10" placeholder="搜索视图名称">
                 </div>
                 <select class="input w-auto"><option value="">视图类型</option><option>列表页</option><option>详情页</option><option>卡片视图</option></select>
-                <button class="btn btn-primary" onclick="showToast(`打开新建视图`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建视图</button>
+                <button class="btn btn-primary" onclick="openAppconfigViewCreate()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建视图</button>
               </div>
               <div class="card-grid">
-                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">意向列表默认视图</div><span class="badge badge-primary">列表页</span></div><div class="text-xs text-sub">展示列：意向编号、客户、阶段、金额、负责人、更新时间</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="showToast(`配置列`)">配置列</button><button class="btn btn-ghost text-xs" onclick="showToast(`预览`)">预览</button></div></div>
-                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">客户 360° 详情视图</div><span class="badge badge-success">详情页</span></div><div class="text-xs text-sub">展示列：基础信息、决策链、设备地图、时间线</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="showToast(`配置列`)">配置列</button><button class="btn btn-ghost text-xs" onclick="showToast(`预览`)">预览</button></div></div>
-                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">设备卡片视图</div><span class="badge badge-warning">卡片视图</span></div><div class="text-xs text-sub">展示列：设备名称、序列号、客户、状态、保修剩余</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="showToast(`配置列`)">配置列</button><button class="btn btn-ghost text-xs" onclick="showToast(`预览`)">预览</button></div></div>
+                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">意向列表默认视图</div><span class="badge badge-primary">列表页</span></div><div class="text-xs text-sub">展示列：意向编号、客户、阶段、金额、负责人、更新时间</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openAppconfigColumnConfig('意向列表默认视图')">配置列</button><button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openAppconfigViewPreview('意向列表默认视图','列表页')">预览</button></div></div>
+                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">客户 360° 详情视图</div><span class="badge badge-success">详情页</span></div><div class="text-xs text-sub">展示列：基础信息、决策链、设备地图、时间线</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openAppconfigColumnConfig('客户 360° 详情视图')">配置列</button><button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openAppconfigViewPreview('客户 360° 详情视图','详情页')">预览</button></div></div>
+                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">设备卡片视图</div><span class="badge badge-warning">卡片视图</span></div><div class="text-xs text-sub">展示列：设备名称、序列号、客户、状态、保修剩余</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openAppconfigColumnConfig('设备卡片视图')">配置列</button><button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openAppconfigViewPreview('设备卡片视图','卡片视图')">预览</button></div></div>
               </div>
             </div>
 
@@ -9417,14 +9417,14 @@
                   <input type="text" class="input pl-10" placeholder="搜索流程名称/编码">
                 </div>
                 <select class="input w-auto"><option value="">所属应用</option><option>合规风控</option><option>经销商协同</option><option>目标绩效</option></select>
-                <button class="btn btn-primary" onclick="showToast(`绑定流程`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 绑定流程</button>
+                <button class="btn btn-primary" onclick="openAppconfigFlowBind()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 绑定流程</button>
               </div>
               <table class="data-table">
                 <thead><tr><th>流程名称</th><th>流程编码</th><th>所属应用</th><th>版本</th><th>生效范围</th><th>触发入口</th><th>状态</th><th>操作</th></tr></thead>
                 <tbody>
-                  <tr><td>学术活动审批</td><td>activity_approve</td><td>合规风控</td><td>v1.0</td><td>全局</td><td>新建学术活动</td><td><span class="badge badge-success">已启用</span></td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
-                  <tr><td>样品出库审批</td><td>sample_out_approve</td><td>合规风控</td><td>v1.2</td><td>指定组织</td><td>手动发起</td><td><span class="badge badge-success">已启用</span></td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
-                  <tr><td>返利结算审批</td><td>rebate_settle</td><td>经销商协同</td><td>v2.0</td><td>指定角色</td><td>满足条件时触发</td><td><span class="badge badge-warning">草稿</span></td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
+                  <tr><td>学术活动审批</td><td>activity_approve</td><td>合规风控</td><td>v1.0</td><td>全局</td><td>新建学术活动</td><td><span class="badge badge-success">已启用</span></td><td><button class="btn btn-ghost text-xs" onclick="openAppconfigFlowBindEdit('学术活动审批','activity_approve','合规风控','v1.0','全局','新建学术活动','已启用')">编辑</button></td></tr>
+                  <tr><td>样品出库审批</td><td>sample_out_approve</td><td>合规风控</td><td>v1.2</td><td>指定组织</td><td>手动发起</td><td><span class="badge badge-success">已启用</span></td><td><button class="btn btn-ghost text-xs" onclick="openAppconfigFlowBindEdit('样品出库审批','sample_out_approve','合规风控','v1.2','指定组织','手动发起','已启用')">编辑</button></td></tr>
+                  <tr><td>返利结算审批</td><td>rebate_settle</td><td>经销商协同</td><td>v2.0</td><td>指定角色</td><td>满足条件时触发</td><td><span class="badge badge-warning">草稿</span></td><td><button class="btn btn-ghost text-xs" onclick="openAppconfigFlowBindEdit('返利结算审批','rebate_settle','经销商协同','v2.0','指定角色','满足条件时触发','草稿')">编辑</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -9453,12 +9453,12 @@
                   <svg class="icon icon-md absolute left-3 top-1/2 -translate-y-1/2 text-placeholder"><use href="#icon-search"/></svg>
                   <input type="text" class="input pl-10" placeholder="搜索字典名称">
                 </div>
-                <button class="btn btn-primary" onclick="openSettingsDictDrawer(); showToast(`打开新建字典`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建字典</button>
+                <button class="btn btn-primary" onclick="openSettingsDictDrawer()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建字典</button>
               </div>
               <div class="space-y-3">
-                <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">客户等级</div><div class="text-xs text-sub">战略客户 / 重点客户 / 一般客户 / 潜在客户</div></div><button class="btn btn-ghost text-xs" onclick="showToast(`管理`)">管理</button></div>
-                <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">意向状态</div><div class="text-xs text-sub">草稿 / 审批中 / 生效中 / 已结束 / 被驳回</div></div><button class="btn btn-ghost text-xs" onclick="showToast(`管理`)">管理</button></div>
-                <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">设备状态</div><div class="text-xs text-sub">在途 / 已装机 / 运行中 / 维修中 / 闲置 / 报废</div></div><button class="btn btn-ghost text-xs" onclick="showToast(`管理`)">管理</button></div>
+                <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">客户等级</div><div class="text-xs text-sub">战略客户 / 重点客户 / 一般客户 / 潜在客户</div></div><button class="btn btn-ghost text-xs" onclick="openSettingsDictDrawer(this)" data-name="客户等级" data-code="customer_level">管理</button></div>
+                <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">意向状态</div><div class="text-xs text-sub">草稿 / 审批中 / 生效中 / 已结束 / 被驳回</div></div><button class="btn btn-ghost text-xs" onclick="openSettingsDictDrawer(this)" data-name="意向状态" data-code="intention_status">管理</button></div>
+                <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">设备状态</div><div class="text-xs text-sub">在途 / 已装机 / 运行中 / 维修中 / 闲置 / 报废</div></div><button class="btn btn-ghost text-xs" onclick="openSettingsDictDrawer(this)" data-name="设备状态" data-code="device_status">管理</button></div>
               </div>
             </div>
 
@@ -9474,9 +9474,9 @@
               <table class="data-table">
                 <thead><tr><th>应用名称</th><th>版本号</th><th>状态</th><th>发布时间</th><th>发布人</th><th>变更说明</th><th>操作</th></tr></thead>
                 <tbody>
-                  <tr><td>经销商协同</td><td>v1.8.0</td><td><span class="badge badge-success">已发布</span></td><td>2026-07-28</td><td>张经理</td><td>新增库存共享视图、返利规则</td><td><button class="btn btn-ghost text-xs" onclick="showToast(`对比`)">对比</button></td></tr>
-                  <tr><td>合规风控</td><td>v1.8.0</td><td><span class="badge badge-success">已发布</span></td><td>2026-07-28</td><td>李专员</td><td>绑定学术活动审批流程</td><td><button class="btn btn-ghost text-xs" onclick="showToast(`对比`)">对比</button></td></tr>
-                  <tr><td>经营驾驶舱</td><td>v1.8.1</td><td><span class="badge badge-warning">草稿</span></td><td>-</td><td>-</td><td>新增 AI 问答入口配置</td><td><button class="btn btn-ghost text-xs" onclick="showToast(`进入编辑模式`)">编辑</button></td></tr>
+                  <tr><td>经销商协同</td><td>v1.8.0</td><td><span class="badge badge-success">已发布</span></td><td>2026-07-28</td><td>张经理</td><td>新增库存共享视图、返利规则</td><td><button class="btn btn-ghost text-xs" onclick="openFlowVersionCompare()">对比</button></td></tr>
+                  <tr><td>合规风控</td><td>v1.8.0</td><td><span class="badge badge-success">已发布</span></td><td>2026-07-28</td><td>李专员</td><td>绑定学术活动审批流程</td><td><button class="btn btn-ghost text-xs" onclick="openFlowVersionCompare()">对比</button></td></tr>
+                  <tr><td>经营驾驶舱</td><td>v1.8.1</td><td><span class="badge badge-warning">草稿</span></td><td>-</td><td>-</td><td>新增 AI 问答入口配置</td><td><button class="btn btn-ghost text-xs" onclick="openAppconfigVersionEdit('经营驾驶舱','v1.8.1','草稿')">编辑</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -9519,6 +9519,220 @@
               <div class="intention-modal-footer">
                 <button class="btn btn-ghost" onclick="closeAppconfigDetail()">关闭</button>
                 <button class="btn btn-primary" onclick="showToast('已保存配置');closeAppconfigDetail()">保存配置</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 字段设计器：新建字段 -->
+          <div id="appconfig-field-create-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeAppconfigFieldCreate()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div>
+                  <h3 class="text-lg font-bold text-ink">新建字段</h3>
+                  <div class="text-sub text-sm mt-1">配置业务对象字段属性</div>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeAppconfigFieldCreate()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="form-group"><label class="form-label">字段名称 <span class="required">*</span></label><input type="text" class="input w-full" id="appconfig-field-create-name" placeholder="例如：客户名称"></div>
+                <div class="form-group"><label class="form-label">字段编码 <span class="required">*</span></label><input type="text" class="input w-full" id="appconfig-field-create-code" placeholder="例如：customer_name"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="form-group"><label class="form-label">所属对象 <span class="required">*</span></label><select class="input w-full" id="appconfig-field-create-object"><option>客户</option><option>联系人</option><option>意向</option><option>设备</option></select></div>
+                  <div class="form-group"><label class="form-label">字段类型 <span class="required">*</span></label><select class="input w-full" id="appconfig-field-create-type"><option>文本</option><option>数字</option><option>金额</option><option>日期</option><option>枚举</option><option>关联对象</option></select></div>
+                </div>
+                <div class="form-group"><label class="form-label"><input type="checkbox" id="appconfig-field-create-required" class="mr-2"> 是否必填</label></div>
+                <div class="form-group"><label class="form-label">默认值</label><input type="text" class="input w-full" id="appconfig-field-create-default" placeholder="为空表示无默认值"></div>
+                <div class="form-group"><label class="form-label">字段说明</label><textarea class="input w-full" id="appconfig-field-create-desc" rows="3" placeholder="补充字段业务含义与填写规则"></textarea></div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeAppconfigFieldCreate()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('保存成功');closeAppconfigFieldCreate()">保存</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 字段设计器：编辑字段 -->
+          <div id="appconfig-field-edit-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeAppconfigFieldEdit()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div>
+                  <h3 class="text-lg font-bold text-ink">编辑字段</h3>
+                  <div class="text-sub text-sm mt-1">修改字段属性</div>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeAppconfigFieldEdit()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="form-group"><label class="form-label">字段名称 <span class="required">*</span></label><input type="text" class="input w-full" id="appconfig-field-edit-name"></div>
+                <div class="form-group"><label class="form-label">字段编码 <span class="required">*</span></label><input type="text" class="input w-full" id="appconfig-field-edit-code" readonly></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="form-group"><label class="form-label">所属对象 <span class="required">*</span></label><select class="input w-full" id="appconfig-field-edit-object"><option>客户</option><option>联系人</option><option>意向</option><option>设备</option></select></div>
+                  <div class="form-group"><label class="form-label">字段类型 <span class="required">*</span></label><select class="input w-full" id="appconfig-field-edit-type"><option>文本</option><option>数字</option><option>金额</option><option>日期</option><option>枚举</option><option>关联对象</option></select></div>
+                </div>
+                <div class="form-group"><label class="form-label"><input type="checkbox" id="appconfig-field-edit-required" class="mr-2"> 是否必填</label></div>
+                <div class="form-group"><label class="form-label">默认值</label><input type="text" class="input w-full" id="appconfig-field-edit-default" placeholder="为空表示无默认值"></div>
+                <div class="form-group"><label class="form-label">字段说明</label><textarea class="input w-full" id="appconfig-field-edit-desc" rows="3" placeholder="补充字段业务含义与填写规则"></textarea></div>
+                <div class="form-group"><label class="form-label">状态</label><select class="input w-full" id="appconfig-field-edit-status"><option>启用</option><option>草稿</option></select></div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeAppconfigFieldEdit()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('保存成功');closeAppconfigFieldEdit()">保存</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 视图设计器：新建视图 -->
+          <div id="appconfig-view-create-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeAppconfigViewCreate()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div>
+                  <h3 class="text-lg font-bold text-ink">新建视图</h3>
+                  <div class="text-sub text-sm mt-1">配置列表页/详情页/卡片视图</div>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeAppconfigViewCreate()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="form-group"><label class="form-label">视图名称 <span class="required">*</span></label><input type="text" class="input w-full" id="appconfig-view-create-name" placeholder="例如：意向列表默认视图"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="form-group"><label class="form-label">视图类型 <span class="required">*</span></label><select class="input w-full" id="appconfig-view-create-type"><option>列表页</option><option>详情页</option><option>卡片视图</option></select></div>
+                  <div class="form-group"><label class="form-label">所属对象 <span class="required">*</span></label><select class="input w-full" id="appconfig-view-create-object"><option>客户</option><option>联系人</option><option>意向</option><option>设备</option></select></div>
+                </div>
+                <div class="form-group"><label class="form-label">默认筛选条件</label><input type="text" class="input w-full" id="appconfig-view-create-filter" placeholder="例如：阶段 = 初步接洽"></div>
+                <div class="form-group"><label class="form-label">备注</label><textarea class="input w-full" id="appconfig-view-create-remark" rows="3" placeholder="补充视图用途"></textarea></div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeAppconfigViewCreate()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('保存成功');closeAppconfigViewCreate()">保存</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 视图设计器：配置列抽屉 -->
+          <div id="appconfig-column-config-drawer" class="drawer-overlay" onclick="if(event.target===this) closeAppconfigColumnConfig()">
+            <div class="drawer" onclick="event.stopPropagation()">
+              <div class="drawer-header">
+                <div>
+                  <h3 class="text-lg font-bold text-ink" id="appconfig-column-config-title">配置列</h3>
+                  <div class="text-sub text-sm mt-1">勾选需要在视图中展示的字段</div>
+                </div>
+                <button class="btn btn-ghost" onclick="closeAppconfigColumnConfig()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="drawer-body">
+                <div class="space-y-2" id="appconfig-column-config-list">
+                  <label class="flex items-center gap-2 p-2 rounded-lg border border-line cursor-pointer hover:bg-panel"><input type="checkbox" class="appconfig-column-checkbox" value="意向编号" checked><span>意向编号</span></label>
+                  <label class="flex items-center gap-2 p-2 rounded-lg border border-line cursor-pointer hover:bg-panel"><input type="checkbox" class="appconfig-column-checkbox" value="客户" checked><span>客户</span></label>
+                  <label class="flex items-center gap-2 p-2 rounded-lg border border-line cursor-pointer hover:bg-panel"><input type="checkbox" class="appconfig-column-checkbox" value="阶段" checked><span>阶段</span></label>
+                  <label class="flex items-center gap-2 p-2 rounded-lg border border-line cursor-pointer hover:bg-panel"><input type="checkbox" class="appconfig-column-checkbox" value="金额" checked><span>金额</span></label>
+                  <label class="flex items-center gap-2 p-2 rounded-lg border border-line cursor-pointer hover:bg-panel"><input type="checkbox" class="appconfig-column-checkbox" value="负责人" checked><span>负责人</span></label>
+                  <label class="flex items-center gap-2 p-2 rounded-lg border border-line cursor-pointer hover:bg-panel"><input type="checkbox" class="appconfig-column-checkbox" value="更新时间" checked><span>更新时间</span></label>
+                  <label class="flex items-center gap-2 p-2 rounded-lg border border-line cursor-pointer hover:bg-panel"><input type="checkbox" class="appconfig-column-checkbox" value="创建时间"><span>创建时间</span></label>
+                  <label class="flex items-center gap-2 p-2 rounded-lg border border-line cursor-pointer hover:bg-panel"><input type="checkbox" class="appconfig-column-checkbox" value="优先级"><span>优先级</span></label>
+                </div>
+              </div>
+              <div class="drawer-footer">
+                <button class="btn btn-ghost" onclick="closeAppconfigColumnConfig()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('保存成功');closeAppconfigColumnConfig()">保存</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 视图设计器：预览视图 -->
+          <div id="appconfig-view-preview-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeAppconfigViewPreview()">
+            <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div>
+                  <h3 class="text-lg font-bold text-ink" id="appconfig-view-preview-title">视图预览</h3>
+                  <div class="text-sub text-sm mt-1">模拟视图渲染效果</div>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeAppconfigViewPreview()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body" id="appconfig-view-preview-body">
+                <div class="text-sub text-center py-8">请选择视图类型进行预览</div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeAppconfigViewPreview()">关闭</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 流程绑定：绑定流程 -->
+          <div id="appconfig-flowbind-create-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeAppconfigFlowBind()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div>
+                  <h3 class="text-lg font-bold text-ink">绑定流程</h3>
+                  <div class="text-sub text-sm mt-1">将已有流程绑定到应用入口</div>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeAppconfigFlowBind()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="form-group"><label class="form-label">流程名称 <span class="required">*</span></label><input type="text" class="input w-full" id="appconfig-flowbind-create-name" placeholder="例如：学术活动审批"></div>
+                <div class="form-group"><label class="form-label">流程编码 <span class="required">*</span></label><input type="text" class="input w-full" id="appconfig-flowbind-create-code" placeholder="例如：activity_approve"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="form-group"><label class="form-label">所属应用 <span class="required">*</span></label><select class="input w-full" id="appconfig-flowbind-create-app"><option>合规风控</option><option>经销商协同</option><option>目标绩效</option></select></div>
+                  <div class="form-group"><label class="form-label">版本 <span class="required">*</span></label><input type="text" class="input w-full" id="appconfig-flowbind-create-version" value="v1.0"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="form-group"><label class="form-label">生效范围 <span class="required">*</span></label><select class="input w-full" id="appconfig-flowbind-create-scope"><option>全局</option><option>指定组织</option><option>指定角色</option></select></div>
+                  <div class="form-group"><label class="form-label">触发入口 <span class="required">*</span></label><select class="input w-full" id="appconfig-flowbind-create-trigger"><option>新建学术活动</option><option>手动发起</option><option>满足条件时触发</option></select></div>
+                </div>
+                <div class="form-group"><label class="form-label">状态</label><select class="input w-full" id="appconfig-flowbind-create-status"><option>已启用</option><option>草稿</option></select></div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeAppconfigFlowBind()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('保存成功');closeAppconfigFlowBind()">保存</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 流程绑定：编辑流程绑定 -->
+          <div id="appconfig-flowbind-edit-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeAppconfigFlowBindEdit()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div>
+                  <h3 class="text-lg font-bold text-ink">编辑流程绑定</h3>
+                  <div class="text-sub text-sm mt-1">修改绑定关系</div>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeAppconfigFlowBindEdit()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="form-group"><label class="form-label">流程名称 <span class="required">*</span></label><input type="text" class="input w-full" id="appconfig-flowbind-edit-name"></div>
+                <div class="form-group"><label class="form-label">流程编码 <span class="required">*</span></label><input type="text" class="input w-full" id="appconfig-flowbind-edit-code" readonly></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="form-group"><label class="form-label">所属应用 <span class="required">*</span></label><select class="input w-full" id="appconfig-flowbind-edit-app"><option>合规风控</option><option>经销商协同</option><option>目标绩效</option></select></div>
+                  <div class="form-group"><label class="form-label">版本 <span class="required">*</span></label><input type="text" class="input w-full" id="appconfig-flowbind-edit-version"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="form-group"><label class="form-label">生效范围 <span class="required">*</span></label><select class="input w-full" id="appconfig-flowbind-edit-scope"><option>全局</option><option>指定组织</option><option>指定角色</option></select></div>
+                  <div class="form-group"><label class="form-label">触发入口 <span class="required">*</span></label><select class="input w-full" id="appconfig-flowbind-edit-trigger"><option>新建学术活动</option><option>手动发起</option><option>满足条件时触发</option></select></div>
+                </div>
+                <div class="form-group"><label class="form-label">状态</label><select class="input w-full" id="appconfig-flowbind-edit-status"><option>已启用</option><option>草稿</option></select></div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeAppconfigFlowBindEdit()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('保存成功');closeAppconfigFlowBindEdit()">保存</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 版本管理：编辑版本 -->
+          <div id="appconfig-version-edit-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeAppconfigVersionEdit()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div>
+                  <h3 class="text-lg font-bold text-ink">编辑版本</h3>
+                  <div class="text-sub text-sm mt-1">维护应用版本信息</div>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeAppconfigVersionEdit()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="form-group"><label class="form-label">应用名称</label><input type="text" class="input w-full" id="appconfig-version-edit-app" readonly></div>
+                <div class="form-group"><label class="form-label">版本号 <span class="required">*</span></label><input type="text" class="input w-full" id="appconfig-version-edit-version"></div>
+                <div class="form-group"><label class="form-label">状态 <span class="required">*</span></label><select class="input w-full" id="appconfig-version-edit-status"><option>已发布</option><option>草稿</option><option>已归档</option></select></div>
+                <div class="form-group"><label class="form-label">变更说明</label><textarea class="input w-full" id="appconfig-version-edit-desc" rows="3" placeholder="说明本次版本变更内容"></textarea></div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeAppconfigVersionEdit()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('保存成功');closeAppconfigVersionEdit()">保存</button>
               </div>
             </div>
           </div>
@@ -9720,9 +9934,9 @@
             <!-- 流程模板 -->
             <div id="flow-panel-template" class="flow-panel hidden">
               <div class="card-grid">
-                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">三级审批模板</div><span class="badge badge-primary">系统</span></div><div class="text-xs text-sub">上级初审 → 部门审批 → 财务复核 → 结束</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="showToast(`预览`)">预览</button><button class="btn btn-primary text-xs" onclick="showToast(`使用模板`)">使用模板</button></div></div>
-                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">合规预审模板</div><span class="badge badge-success">合规</span></div><div class="text-xs text-sub">合规专员预审 → 条件分支 → 审批/驳回</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="showToast(`预览`)">预览</button><button class="btn btn-primary text-xs" onclick="showToast(`使用模板`)">使用模板</button></div></div>
-                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">自动消息通知模板</div><span class="badge badge-info">自动化</span></div><div class="text-xs text-sub">开始 → 自动化任务（发送消息）→ 结束</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="showToast(`预览`)">预览</button><button class="btn btn-primary text-xs" onclick="showToast(`使用模板`)">使用模板</button></div></div>
+                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">三级审批模板</div><span class="badge badge-primary">系统</span></div><div class="text-xs text-sub">上级初审 → 部门审批 → 财务复核 → 结束</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="openFlowTemplatePreview('三级审批模板')">预览</button><button class="btn btn-primary text-xs" onclick="openFlowCreate()">使用模板</button></div></div>
+                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">合规预审模板</div><span class="badge badge-success">合规</span></div><div class="text-xs text-sub">合规专员预审 → 条件分支 → 审批/驳回</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="openFlowTemplatePreview('合规预审模板')">预览</button><button class="btn btn-primary text-xs" onclick="openFlowCreate()">使用模板</button></div></div>
+                <div class="card p-4"><div class="flex items-center justify-between mb-2"><div class="font-semibold text-ink">自动消息通知模板</div><span class="badge badge-info">自动化</span></div><div class="text-xs text-sub">开始 → 自动化任务（发送消息）→ 结束</div><div class="mt-3 flex gap-2"><button class="btn btn-ghost text-xs" onclick="openFlowTemplatePreview('自动消息通知模板')">预览</button><button class="btn btn-primary text-xs" onclick="openFlowCreate()">使用模板</button></div></div>
               </div>
             </div>
 
@@ -9785,9 +9999,9 @@
                 <table class="data-table">
                   <thead><tr><th>实例编号</th><th>流程名称</th><th>当前节点</th><th>超时</th><th>操作</th></tr></thead>
                   <tbody>
-                    <tr><td>INS2026001</td><td>意向报备审批</td><td>厂家审批</td><td class="text-danger">52h</td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026001" data-name="意向报备审批" data-initiator="王五" data-start="2026-07-29 08:00" data-current="厂家审批" data-elapsed="52h" data-status="异常">查看</button><button class="btn btn-ghost text-xs" onclick="showToast('已催办')">催办</button><button class="btn btn-ghost text-xs" onclick="showToast('已转交')">转交</button></td></tr>
-                    <tr><td>INS2026004</td><td>样品出库审批</td><td>部门负责人</td><td class="text-danger">49h</td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026004" data-name="样品出库审批" data-initiator="周八" data-start="2026-07-29 08:30" data-current="部门负责人" data-elapsed="49h" data-status="异常">查看</button><button class="btn btn-ghost text-xs" onclick="showToast('已催办')">催办</button><button class="btn btn-ghost text-xs" onclick="showToast('已转交')">转交</button></td></tr>
-                    <tr><td>INS2026005</td><td>意向报备审批</td><td>上级初审</td><td class="text-danger">56h</td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026005" data-name="意向报备审批" data-initiator="吴九" data-start="2026-07-29 07:00" data-current="上级初审" data-elapsed="56h" data-status="异常">查看</button><button class="btn btn-ghost text-xs" onclick="showToast('已催办')">催办</button><button class="btn btn-ghost text-xs" onclick="showToast('已终止')">终止</button></td></tr>
+                    <tr><td>INS2026001</td><td>意向报备审批</td><td>厂家审批</td><td class="text-danger">52h</td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026001" data-name="意向报备审批" data-initiator="王五" data-start="2026-07-29 08:00" data-current="厂家审批" data-elapsed="52h" data-status="异常">查看</button><button class="btn btn-ghost text-xs" onclick="openFlowUrgeModal('INS2026001','厂家审批')">催办</button><button class="btn btn-ghost text-xs" onclick="openFlowTransferModal('INS2026001','厂家审批')">转交</button></td></tr>
+                    <tr><td>INS2026004</td><td>样品出库审批</td><td>部门负责人</td><td class="text-danger">49h</td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026004" data-name="样品出库审批" data-initiator="周八" data-start="2026-07-29 08:30" data-current="部门负责人" data-elapsed="49h" data-status="异常">查看</button><button class="btn btn-ghost text-xs" onclick="openFlowUrgeModal('INS2026004','部门负责人')">催办</button><button class="btn btn-ghost text-xs" onclick="openFlowTransferModal('INS2026004','部门负责人')">转交</button></td></tr>
+                    <tr><td>INS2026005</td><td>意向报备审批</td><td>上级初审</td><td class="text-danger">56h</td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026005" data-name="意向报备审批" data-initiator="吴九" data-start="2026-07-29 07:00" data-current="上级初审" data-elapsed="56h" data-status="异常">查看</button><button class="btn btn-ghost text-xs" onclick="openFlowUrgeModal('INS2026005','上级初审')">催办</button><button class="btn btn-ghost text-xs" onclick="openFlowTerminateModal('INS2026005','上级初审')">终止</button></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -9804,11 +10018,11 @@
                 <table class="data-table">
                   <thead><tr><th>实例编号</th><th>流程名称</th><th>发起人</th><th>当前节点</th><th>停留时长</th><th>状态</th><th>操作</th></tr></thead>
                   <tbody>
-                    <tr><td>INS2026001</td><td>意向报备审批</td><td>王五</td><td>厂家审批</td><td class="text-danger">52h</td><td><span class="badge badge-danger">异常</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026001" data-name="意向报备审批" data-initiator="王五" data-start="2026-07-29 08:00" data-current="厂家审批" data-elapsed="52h" data-status="异常">查看</button><button class="btn btn-ghost text-xs" onclick="showToast(`催办`)">催办</button><button class="btn btn-ghost text-xs" onclick="showToast(`转交`)">转交</button></td></tr>
-                    <tr><td>INS2026002</td><td>返利结算审批</td><td>赵六</td><td>财务复核</td><td class="text-warning">12h</td><td><span class="badge badge-warning">预警</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026002" data-name="返利结算审批" data-initiator="赵六" data-start="2026-07-29 10:00" data-current="财务复核" data-elapsed="12h" data-status="预警">查看</button><button class="btn btn-ghost text-xs" onclick="showToast(`跳过`)">跳过</button></td></tr>
+                    <tr><td>INS2026001</td><td>意向报备审批</td><td>王五</td><td>厂家审批</td><td class="text-danger">52h</td><td><span class="badge badge-danger">异常</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026001" data-name="意向报备审批" data-initiator="王五" data-start="2026-07-29 08:00" data-current="厂家审批" data-elapsed="52h" data-status="异常">查看</button><button class="btn btn-ghost text-xs" onclick="openFlowUrgeModal('INS2026001','厂家审批')">催办</button><button class="btn btn-ghost text-xs" onclick="openFlowTransferModal('INS2026001','厂家审批')">转交</button></td></tr>
+                    <tr><td>INS2026002</td><td>返利结算审批</td><td>赵六</td><td>财务复核</td><td class="text-warning">12h</td><td><span class="badge badge-warning">预警</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026002" data-name="返利结算审批" data-initiator="赵六" data-start="2026-07-29 10:00" data-current="财务复核" data-elapsed="12h" data-status="预警">查看</button><button class="btn btn-ghost text-xs" onclick="openFlowSkipModal('INS2026002','财务复核')">跳过</button></td></tr>
                     <tr><td>INS2026003</td><td>学术活动审批</td><td>孙七</td><td>合规预审</td><td>3h</td><td><span class="badge badge-success">正常</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026003" data-name="学术活动审批" data-initiator="孙七" data-start="2026-07-31 09:00" data-current="合规预审" data-elapsed="3h" data-status="正常">查看</button></td></tr>
-                    <tr><td>INS2026004</td><td>样品出库审批</td><td>周八</td><td>部门负责人</td><td class="text-danger">49h</td><td><span class="badge badge-danger">异常</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026004" data-name="样品出库审批" data-initiator="周八" data-start="2026-07-29 08:30" data-current="部门负责人" data-elapsed="49h" data-status="异常">查看</button><button class="btn btn-ghost text-xs" onclick="showToast(`催办`)">催办</button><button class="btn btn-ghost text-xs" onclick="showToast(`转交`)">转交</button></td></tr>
-                    <tr><td>INS2026005</td><td>意向报备审批</td><td>吴九</td><td>上级初审</td><td class="text-danger">56h</td><td><span class="badge badge-danger">异常</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026005" data-name="意向报备审批" data-initiator="吴九" data-start="2026-07-29 07:00" data-current="上级初审" data-elapsed="56h" data-status="异常">查看</button><button class="btn btn-ghost text-xs" onclick="showToast(`催办`)">催办</button><button class="btn btn-ghost text-xs" onclick="showToast(`终止`)">终止</button></td></tr>
+                    <tr><td>INS2026004</td><td>样品出库审批</td><td>周八</td><td>部门负责人</td><td class="text-danger">49h</td><td><span class="badge badge-danger">异常</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026004" data-name="样品出库审批" data-initiator="周八" data-start="2026-07-29 08:30" data-current="部门负责人" data-elapsed="49h" data-status="异常">查看</button><button class="btn btn-ghost text-xs" onclick="openFlowUrgeModal('INS2026004','部门负责人')">催办</button><button class="btn btn-ghost text-xs" onclick="openFlowTransferModal('INS2026004','部门负责人')">转交</button></td></tr>
+                    <tr><td>INS2026005</td><td>意向报备审批</td><td>吴九</td><td>上级初审</td><td class="text-danger">56h</td><td><span class="badge badge-danger">异常</span></td><td><button class="btn btn-ghost text-xs" onclick="openFlowInstanceModal(this)" data-no="INS2026005" data-name="意向报备审批" data-initiator="吴九" data-start="2026-07-29 07:00" data-current="上级初审" data-elapsed="56h" data-status="异常">查看</button><button class="btn btn-ghost text-xs" onclick="openFlowUrgeModal('INS2026005','上级初审')">催办</button><button class="btn btn-ghost text-xs" onclick="openFlowTerminateModal('INS2026005','上级初审')">终止</button></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -9942,6 +10156,130 @@
               <div class="intention-modal-footer">
                 <button class="btn btn-ghost" onclick="closeFlowVersionCompare()">关闭</button>
                 <button class="btn btn-primary" onclick="showToast('已导出版本对比报告')">导出对比报告</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 流程模板：预览模板 -->
+          <div id="flow-template-preview-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeFlowTemplatePreview()">
+            <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div>
+                  <h3 class="text-lg font-bold text-ink" id="flow-template-preview-title">模板预览</h3>
+                  <div class="text-sub text-sm mt-1">流程节点与说明</div>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeFlowTemplatePreview()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body" id="flow-template-preview-body">
+                <div class="text-sub text-center py-8">加载中...</div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeFlowTemplatePreview()">关闭</button>
+                <button class="btn btn-primary" onclick="openFlowCreate();closeFlowTemplatePreview()">使用此模板</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 流程监控：催办 -->
+          <div id="flow-urge-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeFlowUrgeModal()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div>
+                  <h3 class="text-lg font-bold text-ink">催办</h3>
+                  <div class="text-sub text-sm mt-1">提醒当前节点审批人尽快处理</div>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeFlowUrgeModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="bg-panel rounded-xl p-4 mb-4">
+                  <div class="text-sm text-ink">实例编号：<span id="flow-urge-no" class="font-medium"></span></div>
+                  <div class="text-sm text-ink mt-1">当前节点：<span id="flow-urge-node" class="font-medium"></span></div>
+                </div>
+                <div class="form-group"><label class="form-label">催办方式 <span class="required">*</span></label>
+                  <div class="space-y-2">
+                    <label class="flex items-center gap-2"><input type="checkbox" id="flow-urge-wx" checked><span>企业微信</span></label>
+                    <label class="flex items-center gap-2"><input type="checkbox" id="flow-urge-sms"><span>短信</span></label>
+                    <label class="flex items-center gap-2"><input type="checkbox" id="flow-urge-email"><span>邮件</span></label>
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label">催办内容</label><textarea class="input w-full" id="flow-urge-content" rows="3" placeholder="请输入催办内容"></textarea></div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeFlowUrgeModal()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('操作成功');closeFlowUrgeModal()">确认催办</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 流程监控：转交 -->
+          <div id="flow-transfer-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeFlowTransferModal()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div>
+                  <h3 class="text-lg font-bold text-ink">转交</h3>
+                  <div class="text-sub text-sm mt-1">将当前节点转交给他人处理</div>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeFlowTransferModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="bg-panel rounded-xl p-4 mb-4">
+                  <div class="text-sm text-ink">实例编号：<span id="flow-transfer-no" class="font-medium"></span></div>
+                  <div class="text-sm text-ink mt-1">当前节点：<span id="flow-transfer-node" class="font-medium"></span></div>
+                </div>
+                <div class="form-group"><label class="form-label">转交人 <span class="required">*</span></label><input type="text" class="input w-full" id="flow-transfer-target" placeholder="请输入转交人姓名或工号"></div>
+                <div class="form-group"><label class="form-label">转交原因</label><textarea class="input w-full" id="flow-transfer-reason" rows="3" placeholder="请输入转交原因"></textarea></div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeFlowTransferModal()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('操作成功');closeFlowTransferModal()">确认转交</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 流程监控：跳过 -->
+          <div id="flow-skip-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeFlowSkipModal()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div>
+                  <h3 class="text-lg font-bold text-ink">跳过节点</h3>
+                  <div class="text-sub text-sm mt-1">跳过当前节点继续流转</div>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeFlowSkipModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="bg-panel rounded-xl p-4 mb-4">
+                  <div class="text-sm text-ink">实例编号：<span id="flow-skip-no" class="font-medium"></span></div>
+                  <div class="text-sm text-ink mt-1">当前节点：<span id="flow-skip-node" class="font-medium"></span></div>
+                </div>
+                <p class="text-sm text-sub">确认跳过当前节点？跳过后将进入下一节点且无法撤销。</p>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeFlowSkipModal()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('操作成功');closeFlowSkipModal()">确认跳过</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 流程监控：终止 -->
+          <div id="flow-terminate-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeFlowTerminateModal()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div>
+                  <h3 class="text-lg font-bold text-ink">终止实例</h3>
+                  <div class="text-sub text-sm mt-1">强制结束流程实例</div>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeFlowTerminateModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="bg-panel rounded-xl p-4 mb-4">
+                  <div class="text-sm text-ink">实例编号：<span id="flow-terminate-no" class="font-medium"></span></div>
+                  <div class="text-sm text-ink mt-1">当前节点：<span id="flow-terminate-node" class="font-medium"></span></div>
+                </div>
+                <div class="form-group"><label class="form-label">终止原因 <span class="required">*</span></label><textarea class="input w-full" id="flow-terminate-reason" rows="3" placeholder="请输入终止原因"></textarea></div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeFlowTerminateModal()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('操作成功');closeFlowTerminateModal()">确认终止</button>
               </div>
             </div>
           </div>
@@ -17773,6 +18111,215 @@ Content-Type: application/json
     }
     function closeVisitScheduleModal() {
       document.getElementById('visit-schedule-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* ===== Appconfig field designer ===== */
+    function openAppconfigFieldCreate() {
+      document.getElementById('appconfig-field-create-name').value = '';
+      document.getElementById('appconfig-field-create-code').value = '';
+      document.getElementById('appconfig-field-create-object').selectedIndex = 0;
+      document.getElementById('appconfig-field-create-type').selectedIndex = 0;
+      document.getElementById('appconfig-field-create-required').checked = false;
+      document.getElementById('appconfig-field-create-default').value = '';
+      document.getElementById('appconfig-field-create-desc').value = '';
+      document.getElementById('appconfig-field-create-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeAppconfigFieldCreate() {
+      document.getElementById('appconfig-field-create-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function openAppconfigFieldEdit(name, code, type, required, status) {
+      document.getElementById('appconfig-field-edit-name').value = name || '';
+      document.getElementById('appconfig-field-edit-code').value = code || '';
+      const typeSelect = document.getElementById('appconfig-field-edit-type');
+      for (let i = 0; i < typeSelect.options.length; i++) {
+        if (typeSelect.options[i].text === type) { typeSelect.selectedIndex = i; break; }
+      }
+      document.getElementById('appconfig-field-edit-required').checked = required === '是';
+      const statusSelect = document.getElementById('appconfig-field-edit-status');
+      for (let i = 0; i < statusSelect.options.length; i++) {
+        if (statusSelect.options[i].text === status) { statusSelect.selectedIndex = i; break; }
+      }
+      document.getElementById('appconfig-field-edit-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeAppconfigFieldEdit() {
+      document.getElementById('appconfig-field-edit-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* ===== Appconfig view designer ===== */
+    function openAppconfigViewCreate() {
+      document.getElementById('appconfig-view-create-name').value = '';
+      document.getElementById('appconfig-view-create-type').selectedIndex = 0;
+      document.getElementById('appconfig-view-create-object').selectedIndex = 0;
+      document.getElementById('appconfig-view-create-filter').value = '';
+      document.getElementById('appconfig-view-create-remark').value = '';
+      document.getElementById('appconfig-view-create-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeAppconfigViewCreate() {
+      document.getElementById('appconfig-view-create-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function openAppconfigColumnConfig(viewName) {
+      document.getElementById('appconfig-column-config-title').textContent = '配置列：' + (viewName || '视图');
+      document.getElementById('appconfig-column-config-drawer').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeAppconfigColumnConfig() {
+      document.getElementById('appconfig-column-config-drawer').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function openAppconfigViewPreview(viewName, type) {
+      document.getElementById('appconfig-view-preview-title').textContent = '预览：' + (viewName || '视图');
+      const body = document.getElementById('appconfig-view-preview-body');
+      if (type === '列表页') {
+        body.innerHTML = '<div class="border border-line rounded-lg overflow-hidden"><table class="data-table"><thead><tr><th>意向编号</th><th>客户</th><th>阶段</th><th>金额</th><th>负责人</th><th>更新时间</th></tr></thead><tbody><tr><td>INT-2026001</td><td>云南省肿瘤医院</td><td>方案汇报</td><td>120万</td><td>张三</td><td>2026-07-31 10:00</td></tr><tr><td>INT-2026002</td><td>昆明市第一人民医院</td><td>商务谈判</td><td>85万</td><td>李四</td><td>2026-07-30 16:30</td></tr></tbody></table></div>';
+      } else if (type === '详情页') {
+        body.innerHTML = '<div class="space-y-4"><div class="bg-panel rounded-xl p-4"><div class="font-semibold text-ink mb-2">基础信息</div><div class="grid grid-cols-2 gap-3 text-sm"><div><span class="text-sub">客户：</span>云南省肿瘤医院</div><div><span class="text-sub">阶段：</span>方案汇报</div></div></div><div class="bg-panel rounded-xl p-4"><div class="font-semibold text-ink mb-2">决策链</div><div class="text-sm text-sub">院长 → 科主任 → 采购负责人</div></div></div>';
+      } else if (type === '卡片视图') {
+        body.innerHTML = '<div class="card-grid"><div class="card p-3"><div class="font-semibold text-ink">血球分析仪 BC-6000</div><div class="text-xs text-sub mt-1">序列号：SN2026001</div><div class="text-xs text-sub mt-1">客户：云南省肿瘤医院</div><div class="text-xs text-success mt-1">运行中 · 保修剩余 320 天</div></div><div class="card p-3"><div class="font-semibold text-ink">生化分析仪 BS-2800M</div><div class="text-xs text-sub mt-1">序列号：SN2026002</div><div class="text-xs text-sub mt-1">客户：昆明市第一人民医院</div><div class="text-xs text-warning mt-1">维修中 · 保修剩余 45 天</div></div></div>';
+      } else {
+        body.innerHTML = '<div class="text-sub text-center py-8">请选择视图类型进行预览</div>';
+      }
+      document.getElementById('appconfig-view-preview-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeAppconfigViewPreview() {
+      document.getElementById('appconfig-view-preview-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* ===== Appconfig flow binding ===== */
+    function openAppconfigFlowBind() {
+      document.getElementById('appconfig-flowbind-create-name').value = '';
+      document.getElementById('appconfig-flowbind-create-code').value = '';
+      document.getElementById('appconfig-flowbind-create-app').selectedIndex = 0;
+      document.getElementById('appconfig-flowbind-create-version').value = 'v1.0';
+      document.getElementById('appconfig-flowbind-create-scope').selectedIndex = 0;
+      document.getElementById('appconfig-flowbind-create-trigger').selectedIndex = 0;
+      document.getElementById('appconfig-flowbind-create-status').selectedIndex = 0;
+      document.getElementById('appconfig-flowbind-create-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeAppconfigFlowBind() {
+      document.getElementById('appconfig-flowbind-create-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function openAppconfigFlowBindEdit(name, code, app, version, scope, trigger, status) {
+      document.getElementById('appconfig-flowbind-edit-name').value = name || '';
+      document.getElementById('appconfig-flowbind-edit-code').value = code || '';
+      const appSelect = document.getElementById('appconfig-flowbind-edit-app');
+      for (let i = 0; i < appSelect.options.length; i++) {
+        if (appSelect.options[i].text === app) { appSelect.selectedIndex = i; break; }
+      }
+      document.getElementById('appconfig-flowbind-edit-version').value = version || '';
+      const scopeSelect = document.getElementById('appconfig-flowbind-edit-scope');
+      for (let i = 0; i < scopeSelect.options.length; i++) {
+        if (scopeSelect.options[i].text === scope) { scopeSelect.selectedIndex = i; break; }
+      }
+      const triggerSelect = document.getElementById('appconfig-flowbind-edit-trigger');
+      for (let i = 0; i < triggerSelect.options.length; i++) {
+        if (triggerSelect.options[i].text === trigger) { triggerSelect.selectedIndex = i; break; }
+      }
+      const statusSelect = document.getElementById('appconfig-flowbind-edit-status');
+      for (let i = 0; i < statusSelect.options.length; i++) {
+        if (statusSelect.options[i].text === status) { statusSelect.selectedIndex = i; break; }
+      }
+      document.getElementById('appconfig-flowbind-edit-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeAppconfigFlowBindEdit() {
+      document.getElementById('appconfig-flowbind-edit-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* ===== Appconfig version management ===== */
+    function openAppconfigVersionEdit(app, version, status) {
+      document.getElementById('appconfig-version-edit-app').value = app || '';
+      document.getElementById('appconfig-version-edit-version').value = version || '';
+      const statusSelect = document.getElementById('appconfig-version-edit-status');
+      for (let i = 0; i < statusSelect.options.length; i++) {
+        if (statusSelect.options[i].text === status) { statusSelect.selectedIndex = i; break; }
+      }
+      document.getElementById('appconfig-version-edit-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeAppconfigVersionEdit() {
+      document.getElementById('appconfig-version-edit-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* ===== Flow template preview ===== */
+    function openFlowTemplatePreview(name) {
+      document.getElementById('flow-template-preview-title').textContent = '模板预览：' + (name || '流程模板');
+      const body = document.getElementById('flow-template-preview-body');
+      let flow = '';
+      if (name === '三级审批模板') {
+        flow = '开始 → 上级初审 → 部门审批 → 财务复核 → 结束';
+      } else if (name === '合规预审模板') {
+        flow = '开始 → 合规专员预审 → 条件分支 → 审批通过/驳回';
+      } else if (name === '自动消息通知模板') {
+        flow = '开始 → 自动化任务（发送消息）→ 结束';
+      }
+      body.innerHTML = '<div class="space-y-4"><div class="bg-panel rounded-xl p-4"><div class="font-semibold text-ink mb-2">流程节点</div><div class="text-sm text-ink">' + flow + '</div></div><div class="bg-panel rounded-xl p-4"><div class="font-semibold text-ink mb-2">模板说明</div><div class="text-sm text-sub">该模板适用于 ' + (name || '通用') + ' 场景，使用后将自动进入流程画布进行个性化调整。</div></div></div>';
+      document.getElementById('flow-template-preview-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeFlowTemplatePreview() {
+      document.getElementById('flow-template-preview-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* ===== Flow monitor operations ===== */
+    function openFlowUrgeModal(instanceNo, currentNode) {
+      document.getElementById('flow-urge-no').textContent = instanceNo || '-';
+      document.getElementById('flow-urge-node').textContent = currentNode || '-';
+      document.getElementById('flow-urge-wx').checked = true;
+      document.getElementById('flow-urge-sms').checked = false;
+      document.getElementById('flow-urge-email').checked = false;
+      document.getElementById('flow-urge-content').value = '';
+      document.getElementById('flow-urge-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeFlowUrgeModal() {
+      document.getElementById('flow-urge-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function openFlowTransferModal(instanceNo, currentNode) {
+      document.getElementById('flow-transfer-no').textContent = instanceNo || '-';
+      document.getElementById('flow-transfer-node').textContent = currentNode || '-';
+      document.getElementById('flow-transfer-target').value = '';
+      document.getElementById('flow-transfer-reason').value = '';
+      document.getElementById('flow-transfer-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeFlowTransferModal() {
+      document.getElementById('flow-transfer-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function openFlowSkipModal(instanceNo, currentNode) {
+      document.getElementById('flow-skip-no').textContent = instanceNo || '-';
+      document.getElementById('flow-skip-node').textContent = currentNode || '-';
+      document.getElementById('flow-skip-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeFlowSkipModal() {
+      document.getElementById('flow-skip-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function openFlowTerminateModal(instanceNo, currentNode) {
+      document.getElementById('flow-terminate-no').textContent = instanceNo || '-';
+      document.getElementById('flow-terminate-node').textContent = currentNode || '-';
+      document.getElementById('flow-terminate-reason').value = '';
+      document.getElementById('flow-terminate-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeFlowTerminateModal() {
+      document.getElementById('flow-terminate-overlay').classList.remove('open');
       document.body.style.overflow = '';
     }
   </script>
