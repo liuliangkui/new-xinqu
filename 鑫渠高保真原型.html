@@ -1988,6 +1988,174 @@
               </div>
             </div>
           </div>
+          </div>
+          <!-- 线索领取确认弹窗 -->
+          <div id="lead-claim-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeLeadClaimModal()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div class="min-w-0">
+                  <h3 class="text-lg font-bold text-ink">领取线索</h3>
+                  <p class="text-sub text-sm mt-1">确认后将该线索归属到您名下</p>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeLeadClaimModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="bg-panel rounded-xl p-4 mb-4 space-y-3">
+                  <div><div class="text-xs text-sub">客户</div><div class="font-medium text-ink mt-0.5" id="lead-claim-customer">-</div></div>
+                  <div><div class="text-xs text-sub">预计金额</div><div class="font-medium text-ink mt-0.5" id="lead-claim-amount">-</div></div>
+                  <div><div class="text-xs text-sub">当前归属人</div><div class="font-medium text-ink mt-0.5" id="lead-claim-assignee">-</div></div>
+                </div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeLeadClaimModal()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('领取成功'); closeLeadClaimModal();">确认领取</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 线索分配弹窗 -->
+          <div id="lead-assign-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeLeadAssignModal()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div class="min-w-0">
+                  <h3 class="text-lg font-bold text-ink">分配线索</h3>
+                  <p class="text-sub text-sm mt-1">将该线索分配给指定负责人</p>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeLeadAssignModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="form-group">
+                  <label class="form-label">负责人 <span class="required">*</span></label>
+                  <select class="input w-full" id="lead-assign-owner"><option value="">请选择负责人</option><option>张志强</option><option>李明辉</option><option>王晓燕</option><option>陈建国</option></select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">分配原因</label>
+                  <textarea class="input w-full" id="lead-assign-reason" rows="3" placeholder="填写分配原因或备注"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">截止日期</label>
+                  <input type="date" class="input w-full" id="lead-assign-deadline">
+                </div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeLeadAssignModal()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('分配成功'); closeLeadAssignModal();">确认分配</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 线索跟进弹窗 -->
+          <div id="lead-follow-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeLeadFollowModal()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div class="min-w-0">
+                  <h3 class="text-lg font-bold text-ink">录入跟进</h3>
+                  <p class="text-sub text-sm mt-1">记录线索最新跟进情况</p>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeLeadFollowModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="form-group">
+                  <label class="form-label">跟进方式</label>
+                  <select class="input w-full" id="lead-follow-method"><option>电话</option><option>微信</option><option>邮件</option><option>上门拜访</option><option>会议</option></select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">跟进内容 <span class="required">*</span></label>
+                  <textarea class="input w-full" id="lead-follow-content" rows="3" placeholder="填写本次跟进的关键信息"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">下次跟进时间</label>
+                  <input type="datetime-local" class="input w-full" id="lead-follow-next">
+                </div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeLeadFollowModal()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('跟进记录已保存'); closeLeadFollowModal();">保存</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 线索转意向弹窗 -->
+          <div id="lead-convert-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeLeadConvertModal()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div class="min-w-0">
+                  <h3 class="text-lg font-bold text-ink">转为意向</h3>
+                  <p class="text-sub text-sm mt-1">将该线索转化为正式意向</p>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeLeadConvertModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="form-group">
+                  <label class="form-label">项目名称 <span class="required">*</span></label>
+                  <input type="text" class="input w-full" id="lead-convert-project" placeholder="请输入项目名称">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">预计金额</label>
+                  <input type="text" class="input w-full" id="lead-convert-amount" placeholder="如：¥200万+">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">意向阶段</label>
+                  <select class="input w-full" id="lead-convert-stage"><option>意向</option><option>方案</option><option>装机</option><option>试剂供应</option></select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">备注</label>
+                  <textarea class="input w-full" id="lead-convert-remark" rows="3" placeholder="补充说明"></textarea>
+                </div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeLeadConvertModal()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('转意向成功'); closeLeadConvertModal();">确认转换</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 线索归档确认弹窗 -->
+          <div id="lead-archive-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeLeadArchiveModal()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div class="min-w-0">
+                  <h3 class="text-lg font-bold text-ink">归档线索</h3>
+                  <p class="text-sub text-sm mt-1">归档后该线索将进入历史库</p>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeLeadArchiveModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="form-group">
+                  <label class="form-label">归档原因 <span class="required">*</span></label>
+                  <textarea class="input w-full" id="lead-archive-reason" rows="3" placeholder="请填写归档原因"></textarea>
+                </div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeLeadArchiveModal()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('归档成功'); closeLeadArchiveModal();">确认归档</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 线索激活确认弹窗 -->
+          <div id="lead-activate-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeLeadActivateModal()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div class="min-w-0">
+                  <h3 class="text-lg font-bold text-ink">激活线索</h3>
+                  <p class="text-sub text-sm mt-1">将已失效线索重新激活并进入跟进</p>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeLeadActivateModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="form-group">
+                  <label class="form-label">激活原因 <span class="required">*</span></label>
+                  <textarea class="input w-full" id="lead-activate-reason" rows="3" placeholder="请填写激活原因"></textarea>
+                </div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeLeadActivateModal()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('激活成功'); closeLeadActivateModal();">确认激活</button>
+              </div>
+            </div>
+          </div>
+
         </section>
 
         <!-- 6. 意向管理 Intention Management -->
@@ -2812,6 +2980,91 @@
               </div>
             </div>
           </div>
+          <!-- 意向推进弹窗 -->
+          <div id="intention-push-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeIntentionPushModal()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div class="min-w-0">
+                  <h3 class="text-lg font-bold text-ink">推进意向</h3>
+                  <p class="text-sub text-sm mt-1">将意向推进到下一阶段</p>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeIntentionPushModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="form-group">
+                  <label class="form-label">当前阶段</label>
+                  <input type="text" class="input w-full bg-gray-50" id="intention-push-current" readonly>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">推进到阶段 <span class="required">*</span></label>
+                  <select class="input w-full" id="intention-push-target">
+                    <option value="">请选择目标阶段</option>
+                    <option value="FOLLOW_UP">意向跟进</option>
+                    <option value="BID_PUBLISHED">招标挂网</option>
+                    <option value="BID_AUTHORIZE">招标授权</option>
+                    <option value="BID_RESULT">招标结果</option>
+                    <option value="DELIVERY_REVIEW">送货审批</option>
+                    <option value="TP_FOLLOW_UP">TP/捐赠跟进</option>
+                    <option value="END_CATEGORY">结束分类</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">预计金额</label>
+                  <input type="text" class="input w-full" id="intention-push-amount" placeholder="如：¥200万+">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">备注</label>
+                  <textarea class="input w-full" id="intention-push-remark" rows="3" placeholder="填写推进说明"></textarea>
+                </div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeIntentionPushModal()">取消</button>
+                <button class="btn btn-primary" onclick="showToast('推进成功'); closeIntentionPushModal();">确认推进</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 意向手风琴只读详情弹窗 -->
+          <div id="intention-accordion-detail-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeIntentionAccordionDetail()">
+            <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+              <div class="card-modal-header"><div class="flex items-start gap-4"><div class="header-avatar">意</div><div class="header-title-wrap"><div class="header-title-row"><h3 class="text-lg font-bold text-ink truncate" id="intention-accordion-detail-project"></h3><span id="intention-accordion-detail-status"></span><span class="badge badge-info" id="intention-accordion-detail-life-stage"></span></div><div class="header-meta"><span class="meta-item"><svg class="icon icon-xs"><use href="#icon-building"/></svg><span id="intention-accordion-detail-customer"></span></span><span class="meta-item"><svg class="icon icon-xs"><use href="#icon-user"/></svg><span id="intention-accordion-detail-owner"></span></span><span class="meta-item"><svg class="icon icon-xs"><use href="#icon-clock"/></svg><span id="intention-accordion-detail-submit-time"></span></span></div></div></div><button class="btn btn-ghost flex-shrink-0" onclick="closeIntentionAccordionDetail()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button></div><div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><div class="kpi-card"><div class="kpi-label">预计金额</div><div class="kpi-value text-ink" id="intention-accordion-detail-kpi-amount">-</div></div><div class="kpi-card"><div class="kpi-label">赢单率</div><div class="kpi-value text-primary" id="intention-accordion-detail-kpi-prob">-</div></div><div class="kpi-card"><div class="kpi-label">保护期剩余</div><div class="kpi-value text-warning" id="intention-accordion-detail-kpi-protect">-</div></div><div class="kpi-card"><div class="kpi-label">当前阶段</div><div class="kpi-value text-success" id="intention-accordion-detail-kpi-stage">-</div></div></div>
+              <div class="intention-modal-body">
+                <div class="mb-4"><div class="progress-steps" id="intention-accordion-detail-progress"></div></div>
+                <div class="bg-panel rounded-xl p-4 mb-4">
+                  <h4 class="font-semibold text-ink mb-3">项目信息</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><div class="text-xs text-sub">项目名称</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-project2">-</div></div>
+                    <div><div class="text-xs text-sub">业务类型</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-business-type">-</div></div>
+                    <div><div class="text-xs text-sub">预计金额</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-amount">-</div></div>
+                    <div><div class="text-xs text-sub">预计采购时间</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-purchase-time">-</div></div>
+                    <div><div class="text-xs text-sub">关键决策人</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-decision-makers">-</div></div>
+                    <div><div class="text-xs text-sub">产品型号</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-product-model">-</div></div>
+                  </div>
+                </div>
+                <div class="bg-panel rounded-xl p-4 mb-4">
+                  <h4 class="font-semibold text-ink mb-3">人员与渠道</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><div class="text-xs text-sub">负责经理</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-owner-name">-</div></div>
+                    <div><div class="text-xs text-sub">报单人</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-reporter-name">-</div></div>
+                    <div><div class="text-xs text-sub">大区经理</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-region-manager">-</div></div>
+                    <div><div class="text-xs text-sub">跟进公司</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-following-company">-</div></div>
+                  </div>
+                </div>
+                <div class="bg-panel rounded-xl p-4 mb-4">
+                  <h4 class="font-semibold text-ink mb-3">备注</h4>
+                  <div class="text-sm text-ink" id="intention-accordion-detail-remark">无</div>
+                </div>
+                <div class="bg-panel rounded-xl p-4">
+                  <h4 class="font-semibold text-ink mb-3">审批时间线</h4>
+                  <div class="timeline" id="intention-accordion-detail-timeline"></div>
+                </div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeIntentionAccordionDetail()">关闭</button>
+              </div>
+            </div>
+          </div>
+
 
         
 
@@ -13810,6 +14063,8 @@ Content-Type: application/json
     /* ===== Lead detail modal ===== */
     function openLeadModal(el) {
       const d = el.dataset;
+      window.currentLeadData = d;
+      window.currentLeadElement = el;
       document.getElementById('modal-lead-status').innerHTML = '<span class="badge ' + d.statusClass + '">' + d.status + '</span>';
       document.getElementById('modal-lead-customer').textContent = d.customer;
       document.getElementById('modal-lead-customer2').textContent = d.customer;
@@ -13865,13 +14120,13 @@ Content-Type: application/json
       // 底部操作
       let footerActions = '';
       if (d.status === '待分配') {
-        footerActions = '<button class="btn btn-ghost" onclick="showToast(`领取`)">领取</button><button class="btn btn-primary" onclick="showToast(`分配`)">分配</button>';
+        footerActions = '<button class="btn btn-ghost" onclick="openLeadClaimModal()">领取</button><button class="btn btn-primary" onclick="openLeadAssignModal()">分配</button>';
       } else if (d.status === '跟进中') {
-        footerActions = '<button class="btn btn-ghost" onclick="showToast(`跟进`)">跟进</button><button class="btn btn-primary" onclick="showToast(`转意向`)">转意向</button>';
+        footerActions = '<button class="btn btn-ghost" onclick="openLeadFollowModal()">跟进</button><button class="btn btn-primary" onclick="openLeadConvertModal()">转意向</button>';
       } else if (d.status === '已转化') {
-        footerActions = '<button class="btn btn-ghost" onclick="showToast(`查看详情`)">查看详情</button><button class="btn btn-primary" onclick="showToast(`客户 360°`)">客户 360°</button>';
+        footerActions = '<button class="btn btn-ghost" onclick="openLeadFullDetailModal()">查看详情</button><button class="btn btn-primary" onclick="switchView(\'customer360\')">客户 360°</button>';
       } else if (d.status === '已失效') {
-        footerActions = '<button class="btn btn-ghost" onclick="showToast(`归档`)">归档</button><button class="btn btn-primary" onclick="showToast(`激活`)">激活</button>';
+        footerActions = '<button class="btn btn-ghost" onclick="openLeadArchiveModal()">归档</button><button class="btn btn-primary" onclick="openLeadActivateModal()">激活</button>';
       }
       document.getElementById('modal-lead-footer-actions').innerHTML = footerActions;
 
@@ -13884,7 +14139,87 @@ Content-Type: application/json
       document.body.style.overflow = '';
     }
 
-    
+
+    function openLeadClaimModal() {
+      const d = window.currentLeadData || {};
+      document.getElementById('lead-claim-customer').textContent = d.customer || '-';
+      document.getElementById('lead-claim-amount').textContent = d.amount || '-';
+      document.getElementById('lead-claim-assignee').textContent = d.assignee || '无';
+      document.getElementById('lead-claim-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLeadClaimModal() {
+      document.getElementById('lead-claim-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openLeadAssignModal() {
+      const d = window.currentLeadData || {};
+      const deadline = new Date();
+      deadline.setDate(deadline.getDate() + 7);
+      document.getElementById('lead-assign-deadline').value = deadline.toISOString().split('T')[0];
+      document.getElementById('lead-assign-owner').value = '';
+      document.getElementById('lead-assign-reason').value = '';
+      document.getElementById('lead-assign-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLeadAssignModal() {
+      document.getElementById('lead-assign-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openLeadFollowModal() {
+      const d = window.currentLeadData || {};
+      document.getElementById('lead-follow-method').selectedIndex = 0;
+      document.getElementById('lead-follow-content').value = '';
+      document.getElementById('lead-follow-next').value = '';
+      document.getElementById('lead-follow-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLeadFollowModal() {
+      document.getElementById('lead-follow-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openLeadConvertModal() {
+      const d = window.currentLeadData || {};
+      document.getElementById('lead-convert-project').value = (d.customer || '') + ' - ' + (d.product || '项目');
+      document.getElementById('lead-convert-amount').value = d.amount || '';
+      document.getElementById('lead-convert-stage').selectedIndex = 0;
+      document.getElementById('lead-convert-remark').value = '';
+      document.getElementById('lead-convert-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLeadConvertModal() {
+      document.getElementById('lead-convert-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openLeadArchiveModal() {
+      document.getElementById('lead-archive-reason').value = '';
+      document.getElementById('lead-archive-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLeadArchiveModal() {
+      document.getElementById('lead-archive-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openLeadActivateModal() {
+      document.getElementById('lead-activate-reason').value = '';
+      document.getElementById('lead-activate-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLeadActivateModal() {
+      document.getElementById('lead-activate-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openLeadFullDetailModal() {
+      const el = window.currentLeadElement;
+      if (el) openLeadModal(el);
+    }
+
     /* ===== Lead list accordion ===== */
     function toggleLeadAccordion(row) {
       toggleDetailAccordion(row, function(d) {
@@ -13902,10 +14237,10 @@ Content-Type: application/json
         else if (d.status === '已失效') statusCardHtml = '<div class="flex items-start gap-3"><svg class="icon icon-md text-danger flex-shrink-0"><use href="#icon-info"/></svg><div><div class="text-sm font-medium text-ink">该线索已失效</div><div class="text-xs text-sub mt-1">如需重新激活，请点击下方「激活」按钮。</div></div></div>';
         const field = (label, value) => '<div><div class="text-xs text-sub">' + label + '</div><div class="font-medium text-ink mt-0.5 text-sm">' + value + '</div></div>';
         let footerActions = '';
-        if (d.status === '待分配') footerActions = '<button class="btn btn-ghost" onclick="showToast(`领取`)">领取</button><button class="btn btn-primary" onclick="showToast(`分配`)">分配</button>';
-        else if (d.status === '跟进中') footerActions = '<button class="btn btn-ghost" onclick="showToast(`跟进`)">跟进</button><button class="btn btn-primary" onclick="showToast(`转意向`)">转意向</button>';
-        else if (d.status === '已转化') footerActions = '<button class="btn btn-ghost" onclick="showToast(`查看详情`)">查看详情</button><button class="btn btn-primary" onclick="showToast(`客户 360°`)">客户 360°</button>';
-        else if (d.status === '已失效') footerActions = '<button class="btn btn-ghost" onclick="showToast(`归档`)">归档</button><button class="btn btn-primary" onclick="showToast(`激活`)">激活</button>';
+        if (d.status === '待分配') footerActions = '<button class="btn btn-ghost" onclick="openLeadClaimModal()">领取</button><button class="btn btn-primary" onclick="openLeadAssignModal()">分配</button>';
+        else if (d.status === '跟进中') footerActions = '<button class="btn btn-ghost" onclick="openLeadFollowModal()">跟进</button><button class="btn btn-primary" onclick="openLeadConvertModal()">转意向</button>';
+        else if (d.status === '已转化') footerActions = '<button class="btn btn-ghost" onclick="openLeadFullDetailModal()">查看详情</button><button class="btn btn-primary" onclick="switchView(\'customer360\')">客户 360°</button>';
+        else if (d.status === '已失效') footerActions = '<button class="btn btn-ghost" onclick="openLeadArchiveModal()">归档</button><button class="btn btn-primary" onclick="openLeadActivateModal()">激活</button>';
         return renderCardModalHeader({
           iconText: '线',
           title: d.customer,
@@ -14753,6 +15088,9 @@ Content-Type: application/json
     /* ===== Intention accordion ===== */
 /* ===== Intention accordion ===== */
     function toggleIntentionAccordion(row) {
+      const d = row.dataset;
+      window.currentIntentionData = d;
+      window.currentIntentionElement = row;
       toggleDetailAccordion(row, function(d) {
         const protectInfo = getProtectInfo(d.protectDeadline);
         const field = (label, value) => '<div><div class="text-xs text-sub">' + label + '</div><div class="font-medium text-ink mt-0.5 text-sm">' + value + '</div></div>';
@@ -14775,8 +15113,8 @@ Content-Type: application/json
         const protectBanner = '<div class="flex items-center justify-between gap-2 rounded-lg p-2.5 border mb-3 ' + protectInfo.bannerBg + ' ' + protectInfo.bannerBorder + ' ' + protectInfo.bannerText + '"><div class="flex items-center gap-2 min-w-0"><svg class="icon icon-md ' + protectInfo.iconColor + ' flex-shrink-0"><use href="#icon-clock"/></svg><span class="text-sm font-medium truncate">授权保护期：' + (d.protectDeadline && d.protectDeadline !== '-' ? d.protectDeadline : '无') + '</span></div><span class="badge ' + protectInfo.badgeClass + ' flex-shrink-0">' + protectInfo.text + '</span></div>';
         let footerActions = '';
         if (d.status === '被驳回') footerActions = '<button class="btn btn-primary" onclick="openIntentionCreate(\'resubmit\');event.stopPropagation();">重新提交</button>';
-        else if (d.status === '已成交' || d.status === '已结束') footerActions = '<button class="btn btn-ghost" onclick="showToast(`查看详情`)">查看详情</button>';
-        else footerActions = '<button class="btn btn-primary" onclick="showToast(`推进`)">推进</button>';
+        else if (d.status === '已成交' || d.status === '已结束') footerActions = '<button class="btn btn-ghost" onclick="openIntentionAccordionDetail()">查看详情</button>';
+        else footerActions = '<button class="btn btn-primary" onclick="openIntentionPushModal()">推进</button>';
         return renderCardModalHeader({
           iconText: '意',
           title: d.project,
@@ -14808,6 +15146,64 @@ Content-Type: application/json
         '<div class="bg-panel rounded-xl p-3 mb-3"><h5 class="font-semibold text-ink mb-2 text-sm">审批时间线</h5><div class="timeline">' + (history || '<div class="text-sub text-sm">暂无审批记录</div>') + '</div></div>' +
         '<div class="flex justify-end gap-2 pt-2 border-t border-line">' + footerActions + renderAccordionCloseBtn() + '</div>';
       });
+    }
+
+    function openIntentionPushModal() {
+      const d = window.currentIntentionData || {};
+      document.getElementById('intention-push-current').value = stageLabel(d.currentStage);
+      document.getElementById('intention-push-target').value = '';
+      document.getElementById('intention-push-amount').value = d.amount || '';
+      document.getElementById('intention-push-remark').value = '';
+      document.getElementById('intention-push-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeIntentionPushModal() {
+      document.getElementById('intention-push-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openIntentionAccordionDetail() {
+      const d = window.currentIntentionData || {};
+      document.getElementById('intention-accordion-detail-project').textContent = d.project || '-';
+      document.getElementById('intention-accordion-detail-project2').textContent = d.project || '-';
+      document.getElementById('intention-accordion-detail-customer').textContent = d.customer || '-';
+      document.getElementById('intention-accordion-detail-status').innerHTML = '<span class="badge ' + (d.statusClass || 'badge-gray') + '">' + (d.status || '-') + '</span>';
+      document.getElementById('intention-accordion-detail-life-stage').textContent = d.lifeStage || '-';
+      document.getElementById('intention-accordion-detail-owner').textContent = '负责经理：' + (d.ownerName || '-');
+      document.getElementById('intention-accordion-detail-owner-name').textContent = d.ownerName || '-';
+      document.getElementById('intention-accordion-detail-reporter-name').textContent = d.reporterName || '-';
+      document.getElementById('intention-accordion-detail-submit-time').textContent = '提交：' + (d.submitTime || '-');
+      document.getElementById('intention-accordion-detail-kpi-amount').textContent = d.amount || '-';
+      document.getElementById('intention-accordion-detail-kpi-prob').textContent = d.prob || '-';
+      document.getElementById('intention-accordion-detail-kpi-protect').textContent = (d.protectionDays || '-') + ' 天';
+      document.getElementById('intention-accordion-detail-kpi-stage').textContent = stageLabel(d.currentStage);
+      document.getElementById('intention-accordion-detail-business-type').textContent = d.businessType || '-';
+      document.getElementById('intention-accordion-detail-amount').textContent = d.amount || '-';
+      document.getElementById('intention-accordion-detail-purchase-time').textContent = d.purchaseTime || '-';
+      document.getElementById('intention-accordion-detail-decision-makers').textContent = d.decisionMakers ? d.decisionMakers.replace(/,/g, '、') : '-';
+      document.getElementById('intention-accordion-detail-product-model').textContent = d.productModel || '-';
+      document.getElementById('intention-accordion-detail-region-manager').textContent = d.regionManager || '-';
+      document.getElementById('intention-accordion-detail-following-company').textContent = d.followingCompany || '-';
+      document.getElementById('intention-accordion-detail-remark').textContent = d.remark || '无';
+      document.getElementById('intention-accordion-detail-progress').innerHTML = renderIntentionProgressSteps(d.currentStage, d.status);
+      const history = (d.approvalHistory || '').split(';').filter(Boolean).map(rec => {
+        const parts = rec.split('|');
+        const node = parts[0] || '';
+        const time = parts[1] || '';
+        const action = parts[2] || '';
+        const comment = parts[3] || '';
+        let dotClass = 'bg-primary', titleClass = 'text-ink';
+        if (action === '驳回') { dotClass = 'bg-danger'; titleClass = 'text-danger'; }
+        else if (action === '审批中') { dotClass = 'bg-warning'; }
+        return '<div class="timeline-item"><div class="timeline-dot ' + dotClass + '"></div><div class="flex-1 min-w-0"><div class="text-sm ' + titleClass + '">' + node + ' · ' + action + '</div>' + (comment ? '<div class="text-xs text-sub mt-0.5">' + comment + '</div>' : '') + '<div class="text-xs text-placeholder mt-0.5">' + time + '</div></div></div>';
+      }).join('');
+      document.getElementById('intention-accordion-detail-timeline').innerHTML = history || '<div class="text-sub text-sm">暂无审批记录</div>';
+      document.getElementById('intention-accordion-detail-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeIntentionAccordionDetail() {
+      document.getElementById('intention-accordion-detail-overlay').classList.remove('open');
+      document.body.style.overflow = '';
     }
 
     /* ===== Calendar tags ===== */
