@@ -6537,7 +6537,42 @@
             <div class="card card-hover"><div class="text-sub text-xs mb-1">合规评分</div><div class="text-2xl font-bold text-success">92</div><div class="text-xs text-success mt-1">较上月 +3</div></div>
           </div>
 
-          <!-- Tabs + search -->
+          <!-- 合规证据链要求 -->
+          <div class="card mb-5 p-4">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-semibold text-ink">合规证据链要求</h3>
+              <span class="text-xs text-sub">日志保留 5 年以上 · 审批记录不可篡改</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+              <div class="p-3 rounded-xl bg-primary-light text-center">
+                <div class="text-2xl mb-1">📍</div>
+                <div class="text-sm font-medium text-ink">拜访记录</div>
+                <div class="text-xs text-sub mt-1">GPS 定位 + 拍照 + 电子签名</div>
+              </div>
+              <div class="p-3 rounded-xl bg-success-bg text-center">
+                <div class="text-2xl mb-1">📋</div>
+                <div class="text-sm font-medium text-ink">学术活动</div>
+                <div class="text-xs text-sub mt-1">申请 + 预算校验 + 签到 + 核销</div>
+              </div>
+              <div class="p-3 rounded-xl bg-warning-bg text-center">
+                <div class="text-2xl mb-1">🧪</div>
+                <div class="text-sm font-medium text-ink">样品/临评</div>
+                <div class="text-xs text-sub mt-1">出库 + 签收 + 回库 + 核销</div>
+              </div>
+              <div class="p-3 rounded-xl bg-info-bg text-center">
+                <div class="text-2xl mb-1">🔍</div>
+                <div class="text-sm font-medium text-ink">飞检抽查</div>
+                <div class="text-xs text-sub mt-1">任务下发 + 现场取证 + 整改跟踪</div>
+              </div>
+              <div class="p-3 rounded-xl bg-gray-bg text-center">
+                <div class="text-2xl mb-1">🛡️</div>
+                <div class="text-sm font-medium text-ink">敏感词审计</div>
+                <div class="text-xs text-sub mt-1">实时扫描 + 命中复核 + 处置留痕</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
           <div class="card mb-4">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4">
               <div class="flex flex-wrap gap-2" id="compliance-tabs">
@@ -6676,6 +6711,36 @@
 
           <!-- 学术活动 -->
           <div id="compliance-panel-activity" class="compliance-panel hidden">
+            
+            <div class="card p-4 mb-4 bg-primary-light/30">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0">📍</div>
+                <div class="flex-1">
+                  <div class="font-medium text-ink">拜访 GPS 签到规则</div>
+                  <div class="text-sm text-sub mt-1">销售人员到达客户现场后需进行 GPS 定位打卡，系统校验定位偏差。偏差 ≤ 100 米视为正常；偏差 100–500 米需补充说明；偏差 > 500 米需部门负责人审批。</div>
+                  <div class="flex flex-wrap gap-2 mt-2">
+                    <span class="badge badge-primary">正常 14</span>
+                    <span class="badge badge-warning">需说明 3</span>
+                    <span class="badge badge-danger">待审批 1</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card p-4 mb-4 bg-success-bg/30">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-success text-white flex items-center justify-center flex-shrink-0">📋</div>
+                <div class="flex-1">
+                  <div class="font-medium text-ink">学术活动全流程</div>
+                  <div class="text-sm text-sub mt-1">活动申请 → 预算校验 → 分级审批 → 执行签到 → 费用核销 → 资料归档 → ROI 分析 → 客户时间线沉淀。</div>
+                  <div class="flex flex-wrap gap-2 mt-2">
+                    <span class="text-xs text-sub">本月活动 7 场</span>
+                    <span class="text-xs text-sub">超预算 2 笔</span>
+                    <span class="text-xs text-sub">待核销 3 笔</span>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="card-grid mb-4">
               <div class="card card-hover p-4 cursor-pointer cm-card" data-tab="activity" data-status="pending" onclick="openComplianceModal(this)" data-title="HD-20260728001 学术活动" data-customer="昆明市第一人民医院" data-dept="-" data-owner="市场专员 · 刘畅" data-time="2026-08-05 14:00" data-status-text="审批中" data-status-class="badge-warning">
                 <div class="flex items-start justify-between mb-3">
@@ -6749,6 +6814,20 @@
 
           <!-- 样品临评 -->
           <div id="compliance-panel-sample" class="compliance-panel hidden">
+            
+            <div class="card p-4 mb-4 bg-warning-bg/30">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-warning text-white flex items-center justify-center flex-shrink-0">🧪</div>
+                <div class="flex-1">
+                  <div class="font-medium text-ink">样品 / 临评 / 赠品证据链</div>
+                  <div class="text-sm text-sub mt-1">出库 → 签收 → 回库 → 核销，临评报告归档。每步均关联客户、设备、销售人员，形成完整进院证据链，满足合规审计要求。</div>
+                  <div class="flex flex-wrap gap-2 mt-2">
+                    <span class="text-xs text-sub">超期 3 笔</span>
+                    <span class="text-xs text-sub">授权到期 2 笔</span>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="card-grid mb-4">
               <div class="card card-hover p-4 cursor-pointer cm-card" data-tab="sample" data-status="pending" onclick="openComplianceModal(this)" data-title="YP-20260728001 样品申请" data-customer="曲靖市第一人民医院" data-dept="检验科" data-owner="张经理" data-time="2026-07-28 10:00" data-status-text="待出库" data-status-class="badge-warning">
                 <div class="flex items-start justify-between mb-3">
@@ -6801,6 +6880,21 @@
 
           <!-- 飞检抽查 -->
           <div id="compliance-panel-spot" class="compliance-panel hidden">
+            
+            <div class="card p-4 mb-4 bg-info-bg/30">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-info text-white flex items-center justify-center flex-shrink-0">🔍</div>
+                <div class="flex-1">
+                  <div class="font-medium text-ink">飞检抽查机制</div>
+                  <div class="text-sm text-sub mt-1">合规部门随机抽取拜访记录、学术活动、样品流向进行复核。发现问题后下发整改任务，限期闭环，整改结果纳入经销商评级。</div>
+                  <div class="flex flex-wrap gap-2 mt-2">
+                    <span class="badge badge-primary">执行中 5</span>
+                    <span class="badge badge-warning">待整改 3</span>
+                    <span class="badge badge-success">已关闭 4</span>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="card-grid mb-4">
               <div class="card card-hover p-4 cursor-pointer cm-card" data-tab="spot" data-status="pending" onclick="openComplianceModal(this)" data-title="FJ-20260729001 飞检任务" data-customer="玉溪市人民医院" data-dept="检验科" data-owner="飞检员 · 周涛" data-time="2026-07-29 09:00" data-status-text="执行中" data-status-class="badge-primary">
                 <div class="flex items-start justify-between mb-3">
