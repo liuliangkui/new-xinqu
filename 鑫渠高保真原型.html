@@ -7544,36 +7544,88 @@
           <!-- 我的绩效 / 团队绩效 / 区域绩效 / 产品绩效 / 渠道绩效 - Chart view -->
           <div id="performance-panel-chart" class="performance-panel">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+              <!-- 月度达成趋势 -->
               <div class="card lg:col-span-2">
                 <div class="flex items-center justify-between mb-4">
                   <div class="font-semibold text-ink">月度达成趋势</div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-xs text-sub flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span>目标</span>
-                    <span class="text-xs text-sub flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-success"></span>完成</span>
+                  <div class="flex items-center gap-3 text-xs">
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-primary"></span>目标</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-success"></span>完成</span>
+                    <span class="flex items-center gap-1"><span class="w-4 h-0.5 bg-warning"></span>达成率</span>
                   </div>
                 </div>
-                <div class="h-48 relative">
-                  <svg class="w-full h-full" viewBox="0 0 800 200" preserveAspectRatio="none">
-                    <polyline fill="none" stroke="#3370FF" stroke-width="2" points="0,160 80,140 160,130 240,120 320,100 400,90 480,80 560,70"/>
-                    <polyline fill="none" stroke="#34C724" stroke-width="2" points="0,170 80,150 160,145 240,110 320,105 400,85 480,75 560,65"/>
+                <div class="h-56 relative">
+                  <svg class="w-full h-full" viewBox="0 0 640 220" preserveAspectRatio="none">
+                    <!-- 网格线 -->
+                    <line x1="40" y1="20" x2="600" y2="20" stroke="#E5E7EB" stroke-width="1"/>
+                    <line x1="40" y1="70" x2="600" y2="70" stroke="#E5E7EB" stroke-width="1"/>
+                    <line x1="40" y1="120" x2="600" y2="120" stroke="#E5E7EB" stroke-width="1"/>
+                    <line x1="40" y1="170" x2="600" y2="170" stroke="#E5E7EB" stroke-width="1"/>
+                    <!-- 坐标轴 -->
+                    <line x1="40" y1="20" x2="40" y2="170" stroke="#9CA3AF" stroke-width="1"/>
+                    <line x1="40" y1="170" x2="600" y2="170" stroke="#9CA3AF" stroke-width="1"/>
+                    <!-- 目标柱（浅蓝） -->
+                    <rect x="95" y="62" width="36" height="108" fill="#3370FF" opacity="0.25" rx="4"/>
+                    <rect x="295" y="62" width="36" height="108" fill="#3370FF" opacity="0.25" rx="4"/>
+                    <rect x="495" y="62" width="36" height="108" fill="#3370FF" opacity="0.25" rx="4"/>
+                    <!-- 完成柱（绿色） -->
+                    <rect x="135" y="76" width="36" height="94" fill="#34C724" rx="4"/>
+                    <rect x="335" y="105" width="36" height="65" fill="#34C724" rx="4"/>
+                    <rect x="535" y="126" width="36" height="44" fill="#34C724" rx="4"/>
+                    <!-- 目标值标签 -->
+                    <text x="113" y="56" text-anchor="middle" font-size="10" fill="#3370FF" font-weight="500">16.7M</text>
+                    <text x="313" y="56" text-anchor="middle" font-size="10" fill="#3370FF" font-weight="500">16.7M</text>
+                    <text x="513" y="56" text-anchor="middle" font-size="10" fill="#3370FF" font-weight="500">16.7M</text>
+                    <!-- 完成值标签 -->
+                    <text x="113" y="128" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="500">14.5M</text>
+                    <text x="313" y="140" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="500">10.0M</text>
+                    <text x="513" y="150" text-anchor="middle" font-size="10" fill="#FFFFFF" font-weight="500">6.75M</text>
+                    <!-- 达成率折线 -->
+                    <polyline fill="none" stroke="#F5A623" stroke-width="2" points="113,40 313,80 513,110"/>
+                    <circle cx="113" cy="40" r="3" fill="#F5A623"/>
+                    <circle cx="313" cy="80" r="3" fill="#F5A623"/>
+                    <circle cx="513" cy="110" r="3" fill="#F5A623"/>
+                    <!-- 达成率标签 -->
+                    <text x="113" y="30" text-anchor="middle" font-size="10" fill="#F5A623" font-weight="600">86.8%</text>
+                    <text x="313" y="70" text-anchor="middle" font-size="10" fill="#F5A623" font-weight="600">60%</text>
+                    <text x="513" y="100" text-anchor="middle" font-size="10" fill="#F5A623" font-weight="600">40%</text>
                   </svg>
                 </div>
-                <div class="flex items-center justify-between text-xs text-sub mt-2"><span>7月</span><span>8月</span><span>9月</span></div>
+                <div class="flex items-center justify-around text-xs text-sub mt-2">
+                  <span class="text-center"><div class="font-medium text-ink">7月</div><div class="text-success">实际</div></span>
+                  <span class="text-center"><div class="font-medium text-ink">8月</div><div class="text-warning">预测</div></span>
+                  <span class="text-center"><div class="font-medium text-ink">9月</div><div class="text-warning">预测</div></span>
+                </div>
               </div>
+
+              <!-- 整体达成率 -->
               <div class="card">
                 <div class="font-semibold text-ink mb-4">整体达成率</div>
                 <div class="flex items-center justify-center mb-4">
-                  <svg viewBox="0 0 120 120" class="w-32 h-32">
-                    <circle cx="60" cy="60" r="50" fill="none" stroke="#E5E7EB" stroke-width="10"/>
-                    <circle cx="60" cy="60" r="50" fill="none" stroke="#3370FF" stroke-width="10" stroke-dasharray="196 314" transform="rotate(-90 60 60)"/>
-                    <text x="60" y="58" text-anchor="middle" class="text-2xl font-bold fill-current text-ink">62.5%</text>
-                    <text x="60" y="78" text-anchor="middle" class="text-xs fill-current text-sub">达成率</text>
+                  <svg viewBox="0 0 140 140" class="w-36 h-36">
+                    <!-- 外环：达成率 -->
+                    <circle cx="70" cy="70" r="58" fill="none" stroke="#E5E7EB" stroke-width="12"/>
+                    <circle cx="70" cy="70" r="58" fill="none" stroke="#3370FF" stroke-width="12" stroke-dasharray="228 364" stroke-linecap="round" transform="rotate(-90 70 70)"/>
+                    <!-- 内环：时间进度 -->
+                    <circle cx="70" cy="70" r="44" fill="none" stroke="#E5E7EB" stroke-width="8"/>
+                    <circle cx="70" cy="70" r="44" fill="none" stroke="#34C724" stroke-width="8" stroke-dasharray="182 277" stroke-linecap="round" transform="rotate(-90 70 70)"/>
+                    <text x="70" y="66" text-anchor="middle" font-size="22" font-weight="700" fill="#1F2329">62.5%</text>
+                    <text x="70" y="84" text-anchor="middle" font-size="10" fill="#6B7280">整体达成率</text>
                   </svg>
                 </div>
-                <div class="space-y-2 text-sm">
-                  <div class="flex items-center justify-between"><span class="text-sub">目标</span><span class="font-medium text-ink">¥50M</span></div>
-                  <div class="flex items-center justify-between"><span class="text-sub">完成</span><span class="font-medium text-primary">¥31.25M</span></div>
-                  <div class="flex items-center justify-between"><span class="text-sub">缺口</span><span class="font-medium text-danger">¥18.75M</span></div>
+                <div class="space-y-3 mb-4">
+                  <div>
+                    <div class="flex items-center justify-between text-xs mb-1"><span class="text-sub">时间进度</span><span class="font-medium text-success">66%</span></div>
+                    <div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-success rounded-full" style="width:66%"></div></div>
+                  </div>
+                  <div>
+                    <div class="flex items-center justify-between text-xs mb-1"><span class="text-sub">目标达成率</span><span class="font-medium text-primary">62.5%</span></div>
+                    <div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:62.5%"></div></div>
+                  </div>
+                </div>
+                <div class="p-3 rounded-lg bg-warning-bg text-warning text-sm flex items-start gap-2">
+                  <svg class="icon icon-sm flex-shrink-0 mt-0.5"><use href="#icon-warning"/></svg>
+                  <span>落后时间进度 3.5 个百分点，需在后两月补足 ¥18.75M</span>
                 </div>
               </div>
             </div>
