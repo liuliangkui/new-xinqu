@@ -1842,6 +1842,7 @@
               </div>
             </div>
           </div>
+          <div id="intention-grid-empty" class="hidden text-center py-8 text-sub">未找到匹配数据</div>
 
           <!-- List view -->
           <div id="lead-list" class="card mb-4 hidden">
@@ -2035,11 +2036,11 @@
             <div class="flex flex-wrap gap-3">
               <div class="relative flex-1 min-w-[200px] max-w-sm">
                 <svg class="icon icon-md absolute left-3 top-1/2 -translate-y-1/2 text-placeholder"><use href="#icon-search"/></svg>
-                <input type="text" class="input pl-10" placeholder="搜索意向编号、客户、项目">
+                <input type="text" id="intention-search" class="input pl-10" placeholder="搜索意向编号、客户、项目" oninput="filterIntention()">
               </div>
-              <select class="input w-auto"><option>全部区域</option><option>云南-昆明</option><option>云南-大理</option></select>
-              <select class="input w-auto"><option>全部产品线</option><option>血球</option><option>生化</option><option>免疫</option><option>POCT</option></select>
-              <button class="btn btn-ghost"><svg class="icon icon-sm"><use href="#icon-filter"/></svg> 更多筛选</button>
+              <select id="intention-region-filter" class="input w-auto" onchange="filterIntention()"><option value="">全部区域</option><option value="昆明">云南-昆明</option><option value="大理">云南-大理</option><option value="曲靖">云南-曲靖</option></select>
+              <select id="intention-product-filter" class="input w-auto" onchange="filterIntention()"><option value="">全部产品线</option><option value="血球">血球</option><option value="生化">生化</option><option value="免疫">免疫</option><option value="POCT">POCT</option></select>
+              <button class="btn btn-ghost" onclick="openIntentionFilter()"><svg class="icon icon-sm"><use href="#icon-filter"/></svg> 更多筛选</button>
             </div>
           </div>
 
@@ -2103,7 +2104,7 @@
               </div>
               <div class="flex items-center justify-between pt-3 border-t border-line">
                 <span class="text-xs text-placeholder">预计成交：2026-08-05</span>
-                <button class="btn btn-primary text-xs" onclick="event.stopPropagation()">推进</button>
+                <button class="btn btn-primary text-xs" onclick="event.stopPropagation();openIntentionFollowUp('INT-2026072501')">推进</button>
               </div>
             </div>
             <div class="card card-hover p-4 cursor-pointer intention-card" onclick="openIntentionModal(this)" data-code="INT-2026073106" data-status="冲突待判定" data-status-class="badge-yellow" data-project="昆明医科大学第一附属医院免疫分析仪补充" data-customer="昆医附一院 · 检验科" data-customer-id="6" data-amount="¥ 260万" data-prob="55%" data-progress="30" data-progress-color="bg-warning" data-date="冲突待判定" data-current-stage="CONFLICT_PENDING" data-business-type="招标" data-tp-type="否" data-purchase-time="2026-09" data-decision-makers="检验科主任" data-owner-name="李娜" data-reporter-name="李娜" data-submit-time="2026-07-31 09:00" data-report-date="2026-07-31" data-report-cycle="7" data-last-follow-time="" data-protect-deadline="2026-08-10" data-customer-level="三级甲等" data-province="云南省" data-region="昆明市" data-product-model="免疫分析仪" data-quantity="2" data-region-manager="刘大区" data-following-company="昆明博奥医学检验所" data-is-new-dealer="false" data-remark="与新申请免疫分析仪项目冲突，等待厂家经理/负责人并行裁决。" data-attachments="" data-approval-history="销售提交意向|2026-07-31 09:00|通过|提交审批;系统 冲突检测|2026-07-31 09:00|冲突待判定|检测到同客户同项目有效意向" data-life-stage="意向" data-life-stage-index="1" data-life-dwell="1" data-life-overdue="false" data-life-health-score="68" data-life-risk="中" data-protection-end="2026-08-10" data-protection-days="10" data-protection-status="normal" data-last-report="" data-next-report="2026-08-07" data-conflict-status="pending" data-conflict-with="张鹏" data-conflict-reason="同一客户同一项目重复报单" data-conflict-opponent-project="昆明医科大学第一附属医院免疫分析仪升级" data-conflict-opponent-owner="张鹏" data-conflict-opponent-region="昆明市" data-conflict-opponent-time="2026-07-25 10:00" data-conflict-opponent-protect="2026-08-20" data-manager-approval="待审批" data-director-approval="待审批" data-arbitrate-result="未裁决">
@@ -2228,7 +2229,7 @@
             <table class="data-table">
               <thead><tr><th>意向编号</th><th class="col-project">项目名称</th><th class="col-customer">客户</th><th>预计金额</th><th>概率</th><th>状态</th><th>冲突状态</th><th>项目阶段</th><th>审批进度</th><th>预计成交</th><th>保护期剩余</th><th>最近汇报</th><th>保护期状态</th><th>负责人</th><th>操作</th></tr></thead>
               <tbody>
-                <tr class="intention-row" data-code="INT-2026072501" data-status="生效中" data-status-class="badge-primary" data-project="云南省肿瘤医院血球项目" data-customer="云南省肿瘤医院 · 检验科" data-customer-id="1" data-amount="¥ 320万" data-prob="75%" data-progress="80" data-progress-color="bg-primary" data-date="2026-08-05" data-current-stage="FOLLOW_UP" data-business-type="招标" data-tp-type="否" data-purchase-time="2026-08" data-decision-makers="检验科主任,设备科" data-owner-name="张伟" data-reporter-name="厂家" data-submit-time="2026-07-20 09:30" data-report-date="2026-07-20" data-report-cycle="7" data-last-follow-time="2026-07-28 10:00" data-protect-deadline="2026-08-11" data-customer-level="三级甲等" data-province="云南省" data-region="昆明市" data-product-model="XN-9000 血液分析流水线" data-quantity="1" data-region-manager="刘大区" data-following-company="云南华鑫医疗器械有限公司" data-is-new-dealer="true" data-remark="预算充足，意向明确，需关注竞品报价。" data-attachments="招标文件.pdf,授权申请书.pdf" data-approval-history="销售提交意向|2026-07-20 09:30|通过|提交审批;上级领导初审|2026-07-21 10:15|通过|同意，进入跟进阶段" data-life-stage="装机" data-life-stage-index="5" data-life-dwell="3" data-life-overdue="false" data-life-health-score="85" data-life-risk="低" data-protection-end="2026-08-11" data-protection-days="12" data-protection-status="normal" data-last-report="2026-07-28 10:00" data-next-report="2026-08-04" data-conflict-status="none" data-conflict-with="" data-conflict-reason="" data-conflict-opponent-project="" data-conflict-opponent-owner="" data-conflict-opponent-region="" data-conflict-opponent-time="" data-conflict-opponent-protect="" data-manager-approval="" data-director-approval="" data-arbitrate-result=""><td>INT-2026072501</td><td class="col-project">云南省肿瘤医院血球项目</td><td class="col-customer">云南省肿瘤医院 · 检验科</td><td>¥ 320万</td><td>75%</td><td><span class="badge badge-primary">生效中</span></td><td><span class="badge badge-gray">无冲突</span></td><td><span class="badge badge-primary">阶段：装机</span><div class="text-xs text-sub">已停留 3 天</div></td><td><div class="h-2 bg-line rounded-full overflow-hidden w-24"><div class="h-full bg-primary rounded-full" style="width:80%"></div></div></td><td>2026-08-05</td><td><span class="badge badge-success">剩余 12 天</span></td><td>3 天前</td><td><span class="badge badge-success">正常</span></td><td>张伟</td><td><button class="btn btn-ghost text-xs" onclick="openIntentionModal(this.closest('tr'))">详情</button></td></tr>
+                <tr class="intention-row" data-code="INT-2026072501" data-status="生效中" data-status-class="badge-primary" data-project="云南省肿瘤医院血球项目" data-customer="云南省肿瘤医院 · 检验科" data-customer-id="1" data-amount="¥ 320万" data-prob="75%" data-progress="80" data-progress-color="bg-primary" data-date="2026-08-05" data-current-stage="FOLLOW_UP" data-business-type="招标" data-tp-type="否" data-purchase-time="2026-08" data-decision-makers="检验科主任,设备科" data-owner-name="张伟" data-reporter-name="厂家" data-submit-time="2026-07-20 09:30" data-report-date="2026-07-20" data-report-cycle="7" data-last-follow-time="2026-07-28 10:00" data-protect-deadline="2026-08-11" data-customer-level="三级甲等" data-province="云南省" data-region="昆明市" data-product-model="XN-9000 血液分析流水线" data-quantity="1" data-region-manager="刘大区" data-following-company="云南华鑫医疗器械有限公司" data-is-new-dealer="true" data-remark="预算充足，意向明确，需关注竞品报价。" data-attachments="招标文件.pdf,授权申请书.pdf" data-approval-history="销售提交意向|2026-07-20 09:30|通过|提交审批;上级领导初审|2026-07-21 10:15|通过|同意，进入跟进阶段" data-life-stage="装机" data-life-stage-index="5" data-life-dwell="3" data-life-overdue="false" data-life-health-score="85" data-life-risk="低" data-protection-end="2026-08-11" data-protection-days="12" data-protection-status="normal" data-last-report="2026-07-28 10:00" data-next-report="2026-08-04" data-conflict-status="none" data-conflict-with="" data-conflict-reason="" data-conflict-opponent-project="" data-conflict-opponent-owner="" data-conflict-opponent-region="" data-conflict-opponent-time="" data-conflict-opponent-protect="" data-manager-approval="" data-director-approval="" data-arbitrate-result=""><td>INT-2026072501</td><td class="col-project">云南省肿瘤医院血球项目</td><td class="col-customer">云南省肿瘤医院 · 检验科</td><td>¥ 320万</td><td>75%</td><td><span class="badge badge-primary">生效中</span></td><td><span class="badge badge-gray">无冲突</span></td><td><span class="badge badge-primary">阶段：装机</span><div class="text-xs text-sub">已停留 3 天</div></td><td><div class="h-2 bg-line rounded-full overflow-hidden w-24"><div class="h-full bg-primary rounded-full" style="width:80%"></div></div></td><td>2026-08-05</td><td><span class="badge badge-success">剩余 12 天</span></td><td>3 天前</td><td><span class="badge badge-success">正常</span></td><td>张伟</td><td><button class="btn btn-ghost text-xs" onclick="openIntentionModal(this.closest('tr'))">详情</button><button class="btn btn-primary text-xs ml-1" onclick="event.stopPropagation();openIntentionFollowUp('INT-2026072501')">推进</button></td></tr>
                 <tr class="intention-row" data-code="INT-2026073106" data-status="冲突待判定" data-status-class="badge-yellow" data-project="昆明医科大学第一附属医院免疫分析仪补充" data-customer="昆医附一院 · 检验科" data-customer-id="6" data-amount="¥ 260万" data-prob="55%" data-progress="30" data-progress-color="bg-warning" data-date="冲突待判定" data-current-stage="CONFLICT_PENDING" data-business-type="招标" data-tp-type="否" data-purchase-time="2026-09" data-decision-makers="检验科主任" data-owner-name="李娜" data-reporter-name="李娜" data-submit-time="2026-07-31 09:00" data-report-date="2026-07-31" data-report-cycle="7" data-last-follow-time="" data-protect-deadline="2026-08-10" data-customer-level="三级甲等" data-province="云南省" data-region="昆明市" data-product-model="免疫分析仪" data-quantity="2" data-region-manager="刘大区" data-following-company="昆明博奥医学检验所" data-is-new-dealer="false" data-remark="与新申请免疫分析仪项目冲突，等待厂家经理/负责人并行裁决。" data-attachments="" data-approval-history="销售提交意向|2026-07-31 09:00|通过|提交审批;系统 冲突检测|2026-07-31 09:00|冲突待判定|检测到同客户同项目有效意向" data-life-stage="意向" data-life-stage-index="1" data-life-dwell="1" data-life-overdue="false" data-life-health-score="68" data-life-risk="中" data-protection-end="2026-08-10" data-protection-days="10" data-protection-status="normal" data-last-report="" data-next-report="2026-08-07" data-conflict-status="pending" data-conflict-with="张鹏" data-conflict-reason="同一客户同一项目重复报单" data-conflict-opponent-project="昆明医科大学第一附属医院免疫分析仪升级" data-conflict-opponent-owner="张鹏" data-conflict-opponent-region="昆明市" data-conflict-opponent-time="2026-07-25 10:00" data-conflict-opponent-protect="2026-08-20" data-manager-approval="待审批" data-director-approval="待审批" data-arbitrate-result="未裁决"><td>INT-2026073106</td><td class="col-project">昆明医科大学第一附属医院免疫分析仪补充</td><td class="col-customer">昆医附一院 · 检验科</td><td>¥ 260万</td><td>55%</td><td><span class="badge badge-yellow">冲突待判定</span></td><td><span class="badge badge-yellow">冲突待判定</span><div class="text-xs text-sub">与张鹏冲突</div></td><td><span class="badge badge-primary">阶段：意向</span><div class="text-xs text-sub">已停留 1 天</div></td><td><div class="h-2 bg-line rounded-full overflow-hidden w-24"><div class="h-full bg-warning rounded-full" style="width:30%"></div></div></td><td>冲突待判定</td><td><span class="badge badge-success">剩余 10 天</span></td><td>从未汇报</td><td><span class="badge badge-warning">冲突中</span></td><td>李娜</td><td><button class="btn btn-primary text-xs" onclick="event.stopPropagation();openArbitrateModal('INT-2026073106')">裁决</button></td></tr>
                 <tr class="intention-row" data-code="INT-2026072802" data-status="厂家经理审批中" data-status-class="badge-primary" data-project="昆明医科大学第一附属医院质谱平台扩建" data-customer="昆医附一院 · 中心实验室" data-customer-id="2" data-amount="¥ 580万" data-prob="60%" data-progress="50" data-progress-color="bg-warning" data-date="待审批" data-current-stage="MANAGER_REVIEW" data-business-type="招标" data-tp-type="否" data-purchase-time="2026-09" data-decision-makers="分管院长,设备科" data-owner-name="李娜" data-reporter-name="王芳" data-submit-time="2026-07-28 11:20" data-report-date="2026-07-28" data-report-cycle="7" data-last-follow-time="2026-07-25 14:00" data-protect-deadline="2026-08-02" data-customer-level="三级甲等" data-province="云南省" data-region="昆明市" data-product-model="质谱平台" data-quantity="1" data-region-manager="刘大区" data-following-company="昆明博奥医学检验所" data-is-new-dealer="false" data-remark="质谱平台扩建与现有意向保护期重叠，需厂家经理/负责人并行裁决。" data-attachments="需求说明.pdf" data-approval-history="销售提交意向|2026-07-28 11:20|通过|提交审批;上级领导初审|2026-07-28 14:00|通过|进入冲突裁决;厂家经理审批|2026-07-29 09:00|审批中|待审批" data-life-stage="方案" data-life-stage-index="2" data-life-dwell="5" data-life-overdue="false" data-life-health-score="72" data-life-risk="中" data-protection-end="2026-08-02" data-protection-days="3" data-protection-status="warning" data-last-report="2026-07-25 14:00" data-next-report="2026-08-01" data-conflict-status="manager_review" data-conflict-with="张鹏" data-conflict-reason="保护期重叠" data-conflict-opponent-project="昆明医科大学第一附属医院质谱平台" data-conflict-opponent-owner="张鹏" data-conflict-opponent-region="昆明市" data-conflict-opponent-time="2026-07-20 10:00" data-conflict-opponent-protect="2026-08-15" data-manager-approval="待审批" data-director-approval="待审批" data-arbitrate-result="未裁决"><td>INT-2026072802</td><td class="col-project">昆明医科大学第一附属医院质谱平台扩建</td><td class="col-customer">昆医附一院 · 中心实验室</td><td>¥ 580万</td><td>60%</td><td><span class="badge badge-primary">厂家经理审批中</span></td><td><span class="badge badge-primary">厂家经理审批中</span><div class="text-xs text-sub">与张鹏冲突</div></td><td><span class="badge badge-primary">阶段：方案</span><div class="text-xs text-sub">已停留 5 天</div></td><td><div class="h-2 bg-line rounded-full overflow-hidden w-24"><div class="h-full bg-warning rounded-full" style="width:50%"></div></div></td><td>待审批</td><td><span class="badge badge-warning">剩余 3 天</span></td><td>6 天前</td><td><span class="badge badge-warning">冲突中</span></td><td>李娜</td><td><button class="btn btn-primary text-xs" onclick="event.stopPropagation();openArbitrateModal('INT-2026072802')">裁决</button></td></tr>
                 <tr class="intention-row" data-code="INT-2026061503" data-status="裁决完成" data-status-class="badge-success" data-project="大理州人民医院生化分析仪" data-customer="大理州人民医院 · 检验科" data-customer-id="3" data-amount="¥ 128万" data-prob="-" data-progress="100" data-progress-color="bg-success" data-date="2026-07-10" data-current-stage="ARBITRATE_COMPLETED" data-business-type="非招标" data-tp-type="否" data-purchase-time="2026-07" data-decision-makers="检验科主任" data-owner-name="王强" data-reporter-name="李军" data-submit-time="2026-06-10 09:00" data-report-date="2026-06-10" data-report-cycle="7" data-last-follow-time="2026-07-20 09:00" data-protect-deadline="2026-08-24" data-customer-level="三级乙等" data-province="云南省" data-region="大理白族自治州" data-product-model="BS-2800M 生化分析仪" data-quantity="2" data-region-manager="陈大区" data-following-company="大理康泰商贸有限公司" data-is-new-dealer="false" data-remark="冲突已裁决，归属给我方，已签约并验收，利润 22%。" data-attachments="合同.pdf,验收单.pdf" data-approval-history="销售提交意向|2026-06-10 09:00|通过|提交审批;上级领导初审|2026-06-11 10:00|通过|同意，进入跟进;厂家经理审批|2026-07-25 10:00|通过|同意优先保护;厂家负责人审批|2026-07-25 11:00|通过|维持原意向;结束分类|2026-07-10 16:30|通过|正常结束" data-life-stage="试剂供应" data-life-stage-index="6" data-life-dwell="0" data-life-overdue="false" data-life-health-score="92" data-life-risk="低" data-protection-end="2026-08-24" data-protection-days="25" data-protection-status="normal" data-last-report="2026-07-20 09:00" data-next-report="2026-07-27" data-conflict-status="completed" data-conflict-with="王芳" data-conflict-reason="同一客户同一项目重复报单" data-conflict-opponent-project="大理州人民医院生化分析仪（补充）" data-conflict-opponent-owner="王芳" data-conflict-opponent-region="大理白族自治州" data-conflict-opponent-time="2026-07-22 09:30" data-conflict-opponent-protect="2026-08-10" data-manager-approval="已通过|同意优先保护原意向|2026-07-25 10:00" data-director-approval="已通过|维持原意向归属|2026-07-25 11:00" data-arbitrate-result="归属给我方"><td>INT-2026061503</td><td class="col-project">大理州人民医院生化分析仪</td><td class="col-customer">大理州人民医院 · 检验科</td><td>¥ 128万</td><td>-</td><td><span class="badge badge-success">裁决完成</span></td><td><span class="badge badge-success">裁决完成</span><div class="text-xs text-sub">与王芳冲突</div></td><td><span class="badge badge-success">阶段：试剂供应</span><div class="text-xs text-sub">已停留 0 天</div></td><td><div class="h-2 bg-line rounded-full overflow-hidden w-24"><div class="h-full bg-success rounded-full" style="width:100%"></div></div></td><td>2026-07-10</td><td><span class="badge badge-success">剩余 25 天</span></td><td>11 天前</td><td><span class="badge badge-success">正常</span></td><td>王强</td><td><button class="btn btn-primary text-xs" onclick="event.stopPropagation();openArbitrationLetter('INT-2026061503')">查看裁决书</button></td></tr>
@@ -2237,16 +2238,17 @@
               </tbody>
             </table>
           </div>
+          <div id="intention-list-empty" class="hidden text-center py-8 text-sub">未找到匹配数据</div>
 
 
           <div class="flex items-center justify-between">
             <div class="text-sub text-sm">共 186 条 · 每页 12 条</div>
             <div class="pagination">
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-              <button class="page-btn active">1</button>
-              <button class="page-btn">2</button>
-              <button class="page-btn">3</button>
-              <button class="page-btn"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+              <button class="page-btn" onclick="showToast('切换到上一页')"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+              <button class="page-btn active" onclick="showToast('切换到第 1 页')">1</button>
+              <button class="page-btn" onclick="showToast('切换到第 2 页')">2</button>
+              <button class="page-btn" onclick="showToast('切换到第 3 页')">3</button>
+              <button class="page-btn" onclick="showToast('切换到下一页')"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
             </div>
           </div>
 
@@ -2704,6 +2706,172 @@
               </div>
             </div>
           </div>
+          <!-- 录入跟进弹窗 -->
+          <div id="intention-follow-up-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeIntentionFollowUp()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div class="min-w-0">
+                  <h3 class="text-lg font-bold text-ink">录入跟进</h3>
+                  <p class="text-sub text-sm mt-1">记录意向最新推进情况</p>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeIntentionFollowUp()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="form-group">
+                  <label class="form-label">跟进阶段</label>
+                  <select class="input w-full" id="follow-up-stage">
+                    <option>意向</option>
+                    <option>方案</option>
+                    <option>装机</option>
+                    <option>试剂供应</option>
+                    <option>招标挂网</option>
+                    <option>招标结果</option>
+                    <option>送货</option>
+                    <option>结束分类</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">跟进内容</label>
+                  <textarea class="input w-full" id="follow-up-content" rows="3" placeholder="填写本次跟进的关键信息"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">预计成交时间</label>
+                  <input type="date" class="input w-full" id="follow-up-date">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">成单概率 <span id="follow-up-prob-text">50%</span></label>
+                  <input type="range" class="input w-full" id="follow-up-prob" min="0" max="100" value="50" oninput="document.getElementById('follow-up-prob-text').textContent = this.value + '%'">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">附件上传</label>
+                  <div class="border border-dashed border-line rounded-xl p-4 text-center text-sub text-sm bg-panel cursor-pointer" onclick="showToast('请选择文件上传')">
+                    点击上传或拖拽文件至此
+                  </div>
+                </div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeIntentionFollowUp()">取消</button>
+                <button class="btn btn-primary" onclick="saveIntentionFollowUp()">保存</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 结束意向弹窗 -->
+          <div id="intention-end-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeIntentionEnd()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div class="min-w-0">
+                  <h3 class="text-lg font-bold text-ink">结束意向</h3>
+                  <p class="text-sub text-sm mt-1">选择结束分类并填写备注</p>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeIntentionEnd()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="form-group">
+                  <label class="form-label">结束分类</label>
+                  <div class="radio-group">
+                    <label class="radio-card selected"><input type="radio" name="endCategory" value="正常结束" checked onchange="updateRadioCards(this)"> 正常结束</label>
+                    <label class="radio-card"><input type="radio" name="endCategory" value="否单" onchange="updateRadioCards(this)"> 否单</label>
+                    <label class="radio-card"><input type="radio" name="endCategory" value="其他" onchange="updateRadioCards(this)"> 其他</label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">备注</label>
+                  <textarea class="input w-full" id="end-remark" rows="3" placeholder="填写结束原因或备注"></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">附件上传</label>
+                  <div class="border border-dashed border-line rounded-xl p-4 text-center text-sub text-sm bg-panel cursor-pointer" onclick="showToast('请选择文件上传')">
+                    点击上传或拖拽文件至此
+                  </div>
+                </div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeIntentionEnd()">取消</button>
+                <button class="btn btn-primary" onclick="submitIntentionEnd()">确认结束</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 审批弹窗 -->
+          <div id="intention-approval-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeIntentionApproval()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div class="min-w-0">
+                  <h3 class="text-lg font-bold text-ink" id="approval-title">审批</h3>
+                  <p class="text-sub text-sm mt-1">意向编号：<span id="approval-code-display">-</span></p>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeIntentionApproval()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <input type="hidden" id="approval-current-code">
+                <input type="hidden" id="approval-current-type">
+                <div class="form-group">
+                  <label class="form-label">审批意见 <span class="required">*</span></label>
+                  <textarea class="input w-full" id="approval-comment" rows="3" placeholder="请填写审批意见，至少 3 个字"></textarea>
+                </div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeIntentionApproval()">取消</button>
+                <button class="btn btn-danger" onclick="rejectIntentionApproval()">驳回</button>
+                <button class="btn btn-primary" onclick="passIntentionApproval()">通过</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 更多筛选弹窗 -->
+          <div id="intention-filter-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeIntentionFilter()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div class="min-w-0">
+                  <h3 class="text-lg font-bold text-ink">更多筛选</h3>
+                  <p class="text-sub text-sm mt-1">组合筛选意向数据</p>
+                </div>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeIntentionFilter()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="form-group">
+                  <label class="form-label">预计金额区间（万元）</label>
+                  <div class="flex items-center gap-2">
+                    <input type="number" id="filter-min-amount" class="input w-full" placeholder="最小">
+                    <span class="text-sub">-</span>
+                    <input type="number" id="filter-max-amount" class="input w-full" placeholder="最大">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">预计采购时间</label>
+                  <select id="filter-purchase-month" class="input w-full">
+                    <option value="">全部</option>
+                    <option value="2026-07">2026-07</option>
+                    <option value="2026-08">2026-08</option>
+                    <option value="2026-09">2026-09</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">保护期状态</label>
+                  <div class="radio-group">
+                    <label class="radio-card selected"><input type="radio" name="filterProtectionStatus" value="all" checked onchange="updateRadioCards(this)"> 全部</label>
+                    <label class="radio-card"><input type="radio" name="filterProtectionStatus" value="normal" onchange="updateRadioCards(this)"> 正常</label>
+                    <label class="radio-card"><input type="radio" name="filterProtectionStatus" value="warning" onchange="updateRadioCards(this)"> 即将到期</label>
+                    <label class="radio-card"><input type="radio" name="filterProtectionStatus" value="expired" onchange="updateRadioCards(this)"> 已过期</label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">是否新炒单商</label>
+                  <div class="radio-group">
+                    <label class="radio-card selected"><input type="radio" name="filterNewDealer" value="all" checked onchange="updateRadioCards(this)"> 全部</label>
+                    <label class="radio-card"><input type="radio" name="filterNewDealer" value="yes" onchange="updateRadioCards(this)"> 是</label>
+                    <label class="radio-card"><input type="radio" name="filterNewDealer" value="no" onchange="updateRadioCards(this)"> 否</label>
+                  </div>
+                </div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="resetIntentionFilters()">重置</button>
+                <button class="btn btn-primary" onclick="applyIntentionFilters()">确认</button>
+              </div>
+            </div>
+          </div>
+
         
 
           <!-- AI 分析结论：转化瓶颈 -->
@@ -12962,6 +13130,96 @@ Content-Type: application/json
     function switchIntentionTab(btn) {
       btn.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
+      filterIntention();
+    }
+
+    function filterIntention() {
+      const keyword = (document.getElementById('intention-search')?.value || '').toLowerCase();
+      const region = (document.getElementById('intention-region-filter')?.value || '').toLowerCase();
+      const product = (document.getElementById('intention-product-filter')?.value || '').toLowerCase();
+      const activeTabBtn = document.querySelector('[data-intab].active');
+      const tab = activeTabBtn ? activeTabBtn.dataset.intab : 'all';
+
+      const statusGroupMap = {
+        draft: ['DRAFT'],
+        pending: ['LEADER_REVIEW', 'MANAGER_REVIEW', 'DIRECTOR_REVIEW', 'BID_AUTHORIZE', 'DELIVERY_REVIEW'],
+        active: ['FOLLOW_UP', 'BID_PUBLISHED', 'BID_RESULT', 'TP_FOLLOW_UP', 'END_CATEGORY'],
+        done: ['ENDED', 'ARBITRATE_COMPLETED'],
+        rejected: ['REJECTED', 'ARBITRATE_REJECTED'],
+        conflict: ['CONFLICT_PENDING']
+      };
+      const allowedStages = tab === 'all' ? null : statusGroupMap[tab] || [];
+
+      // 更多筛选
+      const minAmount = parseFloat(document.getElementById('filter-min-amount')?.value) || 0;
+      const maxAmountInput = document.getElementById('filter-max-amount')?.value;
+      const maxAmount = maxAmountInput !== '' && maxAmountInput !== undefined ? parseFloat(maxAmountInput) : Infinity;
+      const purchaseMonth = document.getElementById('filter-purchase-month')?.value || '';
+      const protectStatus = document.querySelector('input[name="filterProtectionStatus"]:checked')?.value || 'all';
+      const newDealer = document.querySelector('input[name="filterNewDealer"]:checked')?.value || 'all';
+
+      function matches(el) {
+        const d = el.dataset;
+        const code = (d.code || '').toLowerCase();
+        const customer = (d.customer || '').toLowerCase();
+        const project = (d.project || '').toLowerCase();
+        if (keyword && !code.includes(keyword) && !customer.includes(keyword) && !project.includes(keyword)) return false;
+
+        const regionVal = (d.region || '').toLowerCase();
+        const regionText = el.textContent.toLowerCase();
+        if (region && !regionVal.includes(region) && !regionText.includes(region)) return false;
+
+        const productVal = (d.productModel || '').toLowerCase();
+        if (product && !productVal.includes(product) && !regionText.includes(product)) return false;
+
+        if (allowedStages && !allowedStages.includes(d.currentStage || '')) return false;
+
+        // 金额
+        const amountText = (d.amount || '').replace(/[^\d.]/g, '');
+        const amount = amountText ? parseFloat(amountText) : 0;
+        if (amount < minAmount || amount > maxAmount) return false;
+
+        // 采购月份
+        if (purchaseMonth && (d.purchaseTime || '').indexOf(purchaseMonth) !== 0) return false;
+
+        // 保护期状态
+        if (protectStatus !== 'all') {
+          const ps = d.protectionStatus || '';
+          if (protectStatus === 'normal' && ps !== 'normal') return false;
+          if (protectStatus === 'warning' && ps !== 'warning') return false;
+          if (protectStatus === 'expired' && (ps !== 'recycled' && ps !== 'frozen')) return false;
+        }
+
+        // 是否新炒单商
+        if (newDealer !== 'all') {
+          const isNew = d.isNewDealer === 'true';
+          if (newDealer === 'yes' && !isNew) return false;
+          if (newDealer === 'no' && isNew) return false;
+        }
+
+        return true;
+      }
+
+      let gridVisible = 0;
+      document.querySelectorAll('#intention-grid .intention-card').forEach(card => {
+        const ok = matches(card);
+        card.classList.toggle('hidden', !ok);
+        if (ok) gridVisible++;
+      });
+
+      let listVisible = 0;
+      document.querySelectorAll('#intention-list .intention-row').forEach(row => {
+        const ok = matches(row);
+        row.classList.toggle('hidden', !ok);
+        if (ok) listVisible++;
+      });
+
+      const gridEmpty = document.getElementById('intention-grid-empty');
+      const listEmpty = document.getElementById('intention-list-empty');
+      const gridEl = document.getElementById('intention-grid');
+      const listEl = document.getElementById('intention-list');
+      if (gridEmpty) gridEmpty.classList.toggle('hidden', !(gridEl && !gridEl.classList.contains('hidden') && gridVisible === 0));
+      if (listEmpty) listEmpty.classList.toggle('hidden', !(listEl && !listEl.classList.contains('hidden') && listVisible === 0));
     }
 
     function setIntentionView(mode) {
@@ -13126,7 +13384,7 @@ Content-Type: application/json
       // 附件
       const attachments = (d.attachments || '').split(',').filter(Boolean);
       document.getElementById('modal-intention-attachments').innerHTML = attachments.length
-        ? attachments.map(name => '<div class="flex items-center justify-between p-2 rounded-lg bg-card border border-line"><div class="flex items-center gap-2"><svg class="icon icon-sm text-sub"><use href="#icon-download"/></svg><span class="text-sm text-ink">' + name + '</span></div><button class="btn btn-ghost text-xs">下载</button></div>').join('')
+        ? attachments.map(name => '<div class="flex items-center justify-between p-2 rounded-lg bg-card border border-line"><div class="flex items-center gap-2"><svg class="icon icon-sm text-sub"><use href="#icon-download"/></svg><span class="text-sm text-ink">' + name + '</span></div><button class="btn btn-ghost text-xs" onclick="showToast(\'开始下载：' + name + '\')">下载</button></div>').join('')
         : '<div class="text-sub text-sm">暂无附件</div>';
 
       // 审批时间线
@@ -13150,18 +13408,18 @@ Content-Type: application/json
       if (d.status === '被驳回') {
         todoTitle = '<span class="text-danger font-medium">单据已被驳回</span>';
         todoNote = '驳回原因：' + (d.remark || '请查看审批时间线');
-        todoActions = '<button class="btn btn-primary">重新提交</button><button class="btn btn-ghost">查看时间线</button>';
-        footerActions = '<button class="btn btn-primary">重新提交</button>';
+        todoActions = '<button class="btn btn-primary" onclick="openIntentionCreate(\'resubmit\')">重新提交</button><button class="btn btn-ghost" onclick="scrollIntentionTimeline()">查看时间线</button>';
+        footerActions = '<button class="btn btn-primary" onclick="openIntentionCreate(\'resubmit\')">重新提交</button>';
       } else if (d.status === '已结束') {
         todoTitle = '<span class="text-sub font-medium">流程已闭环</span>';
         todoNote = '项目已结束，仅可查看或导出。';
-        todoActions = '<button class="btn btn-ghost">导出</button>';
-        footerActions = '<button class="btn btn-ghost">导出</button>';
+        todoActions = '<button class="btn btn-ghost" onclick="exportIntention(\'' + d.code + '\')">导出</button>';
+        footerActions = '<button class="btn btn-ghost" onclick="exportIntention(\'' + d.code + '\')">导出</button>';
       } else if (d.currentStage === 'LEADER_REVIEW') {
         todoTitle = '等待上级领导初审';
         todoNote = '请在审批中心及时处理该意向。';
-        todoActions = '<button class="btn btn-primary">通过</button><button class="btn btn-ghost">驳回</button>';
-        footerActions = '<button class="btn btn-primary">审批</button>';
+        todoActions = '<button class="btn btn-primary" onclick="openIntentionApproval(\'' + d.code + '\', \'leader\')">通过</button><button class="btn btn-ghost" onclick="openIntentionApproval(\'' + d.code + '\', \'leader\')">驳回</button>';
+        footerActions = '<button class="btn btn-primary" onclick="openIntentionApproval(\'' + d.code + '\', \'leader\')">审批</button>';
       } else if (['CONFLICT_PENDING','MANAGER_REVIEW','DIRECTOR_REVIEW','ARBITRATE_COMPLETED','ARBITRATE_REJECTED'].includes(d.currentStage)) {
         const cstat = d.conflictStatus || 'none';
         const cwith = d.conflictWith || '-';
@@ -13185,47 +13443,47 @@ Content-Type: application/json
           todoNote = '双人并行审批，任一驳回则当前意向结束。';
         }
         if (cstat === 'pending') {
-          todoActions = '<button class="btn btn-primary" onclick="openArbitrateModal(\' + d.code + \')">提交经理审批</button>';
-          footerActions = '<button class="btn btn-primary" onclick="openArbitrateModal(\' + d.code + \')">提交经理审批</button>';
+          todoActions = '<button class="btn btn-primary" onclick="openArbitrateModal(\'' + d.code + '\')">提交经理审批</button>';
+          footerActions = '<button class="btn btn-primary" onclick="openArbitrateModal(\'' + d.code + '\')">提交经理审批</button>';
         } else if (cstat === 'manager_review') {
-          todoActions = '<button class="btn btn-primary" onclick="openArbitrateModal(\' + d.code + \')">提交负责人审批</button><button class="btn btn-ghost" onclick="openArbitrateModal(\' + d.code + \')">申诉</button>';
-          footerActions = '<button class="btn btn-primary" onclick="openArbitrateModal(\' + d.code + \')">提交负责人审批</button>';
+          todoActions = '<button class="btn btn-primary" onclick="openArbitrateModal(\'' + d.code + '\')">提交负责人审批</button><button class="btn btn-ghost" onclick="openArbitrateModal(\'' + d.code + '\')">申诉</button>';
+          footerActions = '<button class="btn btn-primary" onclick="openArbitrateModal(\'' + d.code + '\')">提交负责人审批</button>';
         } else if (cstat === 'director_review') {
-          todoActions = '<button class="btn btn-primary" onclick="openArbitrationLetter(\' + d.code + \')">查看裁决书</button><button class="btn btn-ghost" onclick="openArbitrateModal(\' + d.code + \')">申诉</button>';
-          footerActions = '<button class="btn btn-primary" onclick="openArbitrationLetter(\' + d.code + \')">查看裁决书</button>';
+          todoActions = '<button class="btn btn-primary" onclick="openArbitrationLetter(\'' + d.code + '\')">查看裁决书</button><button class="btn btn-ghost" onclick="openArbitrateModal(\'' + d.code + '\')">申诉</button>';
+          footerActions = '<button class="btn btn-primary" onclick="openArbitrationLetter(\'' + d.code + '\')">查看裁决书</button>';
         } else {
-          todoActions = '<button class="btn btn-primary" onclick="openArbitrationLetter(\' + d.code + \')">查看裁决书</button><button class="btn btn-ghost" onclick="openArbitrateModal(\' + d.code + \')">申诉</button>';
-          footerActions = '<button class="btn btn-primary" onclick="openArbitrationLetter(\' + d.code + \')">查看裁决书</button>';
+          todoActions = '<button class="btn btn-primary" onclick="openArbitrationLetter(\'' + d.code + '\')">查看裁决书</button><button class="btn btn-ghost" onclick="openArbitrateModal(\'' + d.code + '\')">申诉</button>';
+          footerActions = '<button class="btn btn-primary" onclick="openArbitrationLetter(\'' + d.code + '\')">查看裁决书</button>';
         }
       } else if (d.currentStage === 'FOLLOW_UP' || d.currentStage === 'BID_PUBLISHED' || d.currentStage === 'TP_FOLLOW_UP') {
         todoTitle = '进入统一跟进阶段';
         todoNote = '根据业务类型录入招标、TP/捐赠或常规跟进。';
-        todoActions = '<button class="btn btn-primary">录入跟进</button><button class="btn btn-ghost">结束意向</button>';
-        footerActions = '<button class="btn btn-primary">录入跟进</button>';
+        todoActions = '<button class="btn btn-primary" onclick="openIntentionFollowUp(\'' + d.code + '\')">录入跟进</button><button class="btn btn-ghost" onclick="openIntentionEnd(\'' + d.code + '\')">结束意向</button>';
+        footerActions = '<button class="btn btn-primary" onclick="openIntentionFollowUp(\'' + d.code + '\')">录入跟进</button>';
       } else if (d.currentStage === 'BID_AUTHORIZE') {
         todoTitle = '等待厂家经理招标授权审批';
         todoNote = '授权通过后方可录入招标结果。';
-        todoActions = '<button class="btn btn-primary">通过</button><button class="btn btn-ghost">驳回</button>';
-        footerActions = '<button class="btn btn-primary">审批</button>';
+        todoActions = '<button class="btn btn-primary" onclick="openIntentionApproval(\'' + d.code + '\', \'authorize\')">通过</button><button class="btn btn-ghost" onclick="openIntentionApproval(\'' + d.code + '\', \'authorize\')">驳回</button>';
+        footerActions = '<button class="btn btn-primary" onclick="openIntentionApproval(\'' + d.code + '\', \'authorize\')">审批</button>';
       } else if (d.currentStage === 'DELIVERY_REVIEW') {
         todoTitle = '等待送货审批';
         todoNote = '中标后送货审批人进行专项审批。';
-        todoActions = '<button class="btn btn-primary">通过</button><button class="btn btn-ghost">驳回</button>';
-        footerActions = '<button class="btn btn-primary">审批</button>';
+        todoActions = '<button class="btn btn-primary" onclick="openIntentionApproval(\'' + d.code + '\', \'delivery\')">通过</button><button class="btn btn-ghost" onclick="openIntentionApproval(\'' + d.code + '\', \'delivery\')">驳回</button>';
+        footerActions = '<button class="btn btn-primary" onclick="openIntentionApproval(\'' + d.code + '\', \'delivery\')">审批</button>';
       } else if (d.currentStage === 'END_CATEGORY') {
         todoTitle = '等待结束分类';
         todoNote = '选择正常结束/否单/其他并填写备注。';
-        todoActions = '<button class="btn btn-primary">结束分类</button>';
-        footerActions = '<button class="btn btn-primary">结束分类</button>';
+        todoActions = '<button class="btn btn-primary" onclick="openIntentionEnd(\'' + d.code + '\')">结束分类</button>';
+        footerActions = '<button class="btn btn-primary" onclick="openIntentionEnd(\'' + d.code + '\')">结束分类</button>';
       } else {
         todoTitle = '暂无待办';
         todoNote = '';
-        todoActions = '<button class="btn btn-ghost">查看详情</button>';
+        todoActions = '<button class="btn btn-ghost" onclick="scrollIntentionTimeline()">查看时间线</button>';
       }
       document.getElementById('modal-intention-todo-title').innerHTML = todoTitle;
       document.getElementById('modal-intention-todo-note').textContent = todoNote;
       document.getElementById('modal-intention-todo-actions').innerHTML = todoActions;
-      document.getElementById('modal-intention-footer-actions').innerHTML = footerActions || '<button class="btn btn-primary">推进</button>';
+      document.getElementById('modal-intention-footer-actions').innerHTML = footerActions || '<button class="btn btn-primary" onclick="openIntentionFollowUp(\'' + d.code + '\')">推进</button>';
 
       document.getElementById('intention-modal-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
@@ -13277,13 +13535,13 @@ Content-Type: application/json
       const actions = document.getElementById('modal-conflict-actions');
       let btns = '';
       if (d.conflictStatus === 'pending') {
-        btns = '<button class="btn btn-primary" onclick="openArbitrateModal(\' + d.code + \')">提交经理审批</button>';
+        btns = '<button class="btn btn-primary" onclick="openArbitrateModal(\'' + d.code + '\')">提交经理审批</button>';
       } else if (d.conflictStatus === 'manager_review') {
-        btns = '<button class="btn btn-primary" onclick="openArbitrateModal(\' + d.code + \')">提交负责人审批</button><button class="btn btn-ghost" onclick="openArbitrateModal(\' + d.code + \')">申诉</button>';
+        btns = '<button class="btn btn-primary" onclick="openArbitrateModal(\'' + d.code + '\')">提交负责人审批</button><button class="btn btn-ghost" onclick="openArbitrateModal(\'' + d.code + '\')">申诉</button>';
       } else if (d.conflictStatus === 'director_review') {
-        btns = '<button class="btn btn-primary" onclick="openArbitrationLetter(\' + d.code + \')">查看裁决书</button><button class="btn btn-ghost" onclick="openArbitrateModal(\' + d.code + \')">申诉</button>';
+        btns = '<button class="btn btn-primary" onclick="openArbitrationLetter(\'' + d.code + '\')">查看裁决书</button><button class="btn btn-ghost" onclick="openArbitrateModal(\'' + d.code + '\')">申诉</button>';
       } else {
-        btns = '<button class="btn btn-primary" onclick="openArbitrationLetter(\' + d.code + \')">查看裁决书</button><button class="btn btn-ghost" onclick="openArbitrateModal(\' + d.code + \')">申诉</button>';
+        btns = '<button class="btn btn-primary" onclick="openArbitrationLetter(\'' + d.code + '\')">查看裁决书</button><button class="btn btn-ghost" onclick="openArbitrateModal(\'' + d.code + '\')">申诉</button>';
       }
       actions.innerHTML = btns;
     }
@@ -13498,6 +13756,106 @@ Content-Type: application/json
       document.getElementById('arbitrate-comment').value = '';
       document.getElementById('intention-arbitrate-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
+    }
+
+    /* ===== Follow up, End, Approval, Filter helpers ===== */
+    function openIntentionFollowUp(code) {
+      document.getElementById('follow-up-stage').value = '意向';
+      document.getElementById('follow-up-content').value = '';
+      document.getElementById('follow-up-date').value = '';
+      document.getElementById('follow-up-prob').value = 50;
+      document.getElementById('follow-up-prob-text').textContent = '50%';
+      document.getElementById('intention-follow-up-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeIntentionFollowUp() {
+      document.getElementById('intention-follow-up-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function saveIntentionFollowUp() {
+      const content = document.getElementById('follow-up-content').value.trim();
+      if (!content) { alert('请填写跟进内容'); return; }
+      showToast('跟进已录入');
+      closeIntentionFollowUp();
+    }
+
+    function openIntentionEnd(code) {
+      document.querySelectorAll('input[name="endCategory"]').forEach((el, i) => { el.checked = i === 0; });
+      updateAllRadioCards();
+      document.getElementById('end-remark').value = '';
+      document.getElementById('intention-end-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeIntentionEnd() {
+      document.getElementById('intention-end-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function submitIntentionEnd() {
+      const remark = document.getElementById('end-remark').value.trim();
+      if (!remark) { alert('请填写备注'); return; }
+      showToast('意向已结束');
+      closeIntentionEnd();
+    }
+
+    const approvalTitleMap = {
+      leader: '上级领导初审',
+      authorize: '招标授权审批',
+      delivery: '送货审批'
+    };
+    function openIntentionApproval(code, type) {
+      document.getElementById('approval-current-code').value = code || '';
+      document.getElementById('approval-current-type').value = type || '';
+      document.getElementById('approval-code-display').textContent = code || '-';
+      document.getElementById('approval-title').textContent = approvalTitleMap[type] || '审批';
+      document.getElementById('approval-comment').value = '';
+      document.getElementById('intention-approval-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeIntentionApproval() {
+      document.getElementById('intention-approval-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function passIntentionApproval() {
+      const comment = document.getElementById('approval-comment').value.trim();
+      if (!comment || comment.length < 3) { alert('请填写至少 3 个字的审批意见'); return; }
+      showToast('审批已提交');
+      closeIntentionApproval();
+    }
+    function rejectIntentionApproval() {
+      const comment = document.getElementById('approval-comment').value.trim();
+      if (!comment || comment.length < 3) { alert('请填写至少 3 个字的审批意见'); return; }
+      showToast('审批已提交');
+      closeIntentionApproval();
+    }
+
+    function openIntentionFilter() {
+      document.getElementById('intention-filter-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeIntentionFilter() {
+      document.getElementById('intention-filter-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function resetIntentionFilters() {
+      document.getElementById('filter-min-amount').value = '';
+      document.getElementById('filter-max-amount').value = '';
+      document.getElementById('filter-purchase-month').value = '';
+      document.querySelectorAll('input[name="filterProtectionStatus"]').forEach((el, i) => { el.checked = i === 0; });
+      document.querySelectorAll('input[name="filterNewDealer"]').forEach((el, i) => { el.checked = i === 0; });
+      updateAllRadioCards();
+    }
+    function applyIntentionFilters() {
+      filterIntention();
+      closeIntentionFilter();
+    }
+
+    function scrollIntentionTimeline() {
+      const timeline = document.getElementById('modal-intention-timeline');
+      if (timeline) timeline.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      showToast('已定位到审批时间线');
+    }
+    function exportIntention(code) {
+      showToast('开始导出意向：' + (code || ''));
     }
 
     function closeIntentionArbitrate() {
