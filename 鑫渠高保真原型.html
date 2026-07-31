@@ -5216,38 +5216,97 @@
             </div>
           </div>
           <div id="db-panel-funnel" class="db-panel hidden">
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-5">
-              <div class="card p-4 card-hover cursor-pointer" onclick="openDrillDown('stage','线索')">
-                <div class="flex items-center justify-between mb-2">
-                  <div class="text-sub text-xs">线索阶段</div>
-                  <svg class="icon icon-sm text-sub"><use href="#icon-arrow-right"/></svg>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
+              <!-- 销售漏斗可视化 -->
+              <div class="card p-4 lg:col-span-2">
+                <div class="flex items-center justify-between mb-4">
+                  <div class="font-semibold text-ink">销售漏斗</div>
+                  <div class="flex items-center gap-3 text-xs text-sub">
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-primary"></span>线索</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-info"></span>意向</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-warning"></span>中标</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-success"></span>成交</span>
+                  </div>
                 </div>
-                <div class="text-2xl font-bold text-ink">128</div>
-                <div class="text-xs text-success mt-1">转化率 38% <svg class="icon icon-xs inline"><use href="#icon-arrow-right"/></svg></div>
+                <div class="flex items-center justify-center">
+                  <svg viewBox="0 0 560 420" class="w-full max-w-2xl h-auto">
+                    <!-- 阶段一：线索 -->
+                    <g class="cursor-pointer" onclick="openDrillDown('stage','线索')">
+                      <polygon points="40,30 520,30 460,100 100,100" fill="#3370FF" opacity="0.92"/>
+                      <text x="280" y="58" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="600">线索阶段</text>
+                      <text x="280" y="84" text-anchor="middle" fill="#FFFFFF" font-size="16" font-weight="700">128</text>
+                    </g>
+                    <!-- 转化 1 -->
+                    <line x1="280" y1="102" x2="280" y2="128" stroke="#9CA3AF" stroke-width="1" stroke-dasharray="3 2"/>
+                    <polygon points="280,135 274,125 286,125" fill="#9CA3AF"/>
+                    <text x="296" y="122" font-size="11" fill="#34C724" font-weight="600">76.6%</text>
+
+                    <!-- 阶段二：意向 -->
+                    <g class="cursor-pointer" onclick="openDrillDown('stage','意向')">
+                      <polygon points="100,140 460,140 400,210 160,210" fill="#00A8E8" opacity="0.92"/>
+                      <text x="280" y="168" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="600">意向阶段</text>
+                      <text x="280" y="194" text-anchor="middle" fill="#FFFFFF" font-size="16" font-weight="700">98</text>
+                    </g>
+                    <!-- 转化 2 -->
+                    <line x1="280" y1="212" x2="280" y2="238" stroke="#9CA3AF" stroke-width="1" stroke-dasharray="3 2"/>
+                    <polygon points="280,245 274,235 286,235" fill="#9CA3AF"/>
+                    <text x="296" y="232" font-size="11" fill="#F5A623" font-weight="600">42.9%</text>
+
+                    <!-- 阶段三：中标 -->
+                    <g class="cursor-pointer" onclick="openDrillDown('stage','中标')">
+                      <polygon points="160,250 400,250 340,320 220,320" fill="#F5A623" opacity="0.92"/>
+                      <text x="280" y="278" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="600">中标阶段</text>
+                      <text x="280" y="304" text-anchor="middle" fill="#FFFFFF" font-size="16" font-weight="700">42</text>
+                    </g>
+                    <!-- 转化 3 -->
+                    <line x1="280" y1="322" x2="280" y2="348" stroke="#9CA3AF" stroke-width="1" stroke-dasharray="3 2"/>
+                    <polygon points="280,355 274,345 286,345" fill="#9CA3AF"/>
+                    <text x="296" y="342" font-size="11" fill="#34C724" font-weight="600">76.2%</text>
+
+                    <!-- 阶段四：成交 -->
+                    <g class="cursor-pointer" onclick="openDrillDown('stage','成交')">
+                      <polygon points="220,360 340,360 340,410 220,410" fill="#34C724" opacity="0.92"/>
+                      <text x="280" y="380" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="600">成交</text>
+                      <text x="280" y="400" text-anchor="middle" fill="#FFFFFF" font-size="16" font-weight="700">32</text>
+                    </g>
+
+                    <!-- 左侧流失标注 -->
+                    <text x="36" y="122" text-anchor="end" font-size="10" fill="#9CA3AF">流失 30</text>
+                    <text x="36" y="232" text-anchor="end" font-size="10" fill="#9CA3AF">流失 56</text>
+                    <text x="36" y="342" text-anchor="end" font-size="10" fill="#9CA3AF">流失 10</text>
+                  </svg>
+                </div>
               </div>
-              <div class="card p-4 card-hover cursor-pointer" onclick="openDrillDown('stage','意向')">
-                <div class="flex items-center justify-between mb-2">
-                  <div class="text-sub text-xs">意向阶段</div>
-                  <svg class="icon icon-sm text-sub"><use href="#icon-arrow-right"/></svg>
+
+              <!-- 阶段转化分析 -->
+              <div class="card p-4">
+                <div class="font-semibold text-ink mb-4">阶段转化分析</div>
+                <div class="space-y-4 mb-4">
+                  <div>
+                    <div class="flex items-center justify-between text-sm mb-1"><span class="text-sub">线索 → 意向</span><span class="font-medium text-success">76.6%</span></div>
+                    <div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:76.6%"></div></div>
+                    <div class="text-xs text-sub mt-1">流失 30，主要原因为信息不全/无预算</div>
+                  </div>
+                  <div>
+                    <div class="flex items-center justify-between text-sm mb-1"><span class="text-sub">意向 → 中标</span><span class="font-medium text-warning">42.9%</span></div>
+                    <div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:42.9%"></div></div>
+                    <div class="text-xs text-sub mt-1">流失 56，主要原因为竞品/决策链变动</div>
+                  </div>
+                  <div>
+                    <div class="flex items-center justify-between text-sm mb-1"><span class="text-sub">中标 → 成交</span><span class="font-medium text-success">76.2%</span></div>
+                    <div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-success rounded-full" style="width:76.2%"></div></div>
+                    <div class="text-xs text-sub mt-1">流失 10，主要原因为交付周期/合同条款</div>
+                  </div>
                 </div>
-                <div class="text-2xl font-bold text-primary">98</div>
-                <div class="text-xs text-success mt-1">转化率 43% <svg class="icon icon-xs inline"><use href="#icon-arrow-right"/></svg></div>
-              </div>
-              <div class="card p-4 card-hover cursor-pointer" onclick="openDrillDown('stage','中标')">
-                <div class="flex items-center justify-between mb-2">
-                  <div class="text-sub text-xs">中标阶段</div>
-                  <svg class="icon icon-sm text-sub"><use href="#icon-arrow-right"/></svg>
+                <div class="p-3 rounded-lg bg-panel">
+                  <div class="text-sm font-medium text-ink mb-1">整体转化</div>
+                  <div class="text-2xl font-bold text-primary">25.0%</div>
+                  <div class="text-xs text-sub mt-1">128 条线索 → 32 笔成交</div>
                 </div>
-                <div class="text-2xl font-bold text-warning">42</div>
-                <div class="text-xs text-success mt-1">转化率 76% <svg class="icon icon-xs inline"><use href="#icon-arrow-right"/></svg></div>
-              </div>
-              <div class="card p-4 card-hover cursor-pointer" onclick="openDrillDown('stage','成交')">
-                <div class="flex items-center justify-between mb-2">
-                  <div class="text-sub text-xs">成交阶段</div>
-                  <svg class="icon icon-sm text-sub"><use href="#icon-arrow-right"/></svg>
+                <div class="mt-4 p-3 rounded-lg bg-warning-bg text-warning text-sm flex items-start gap-2">
+                  <svg class="icon icon-sm flex-shrink-0 mt-0.5"><use href="#icon-warning"/></svg>
+                  <span>最大瓶颈在意向→中标，建议强化方案价值传递与高层覆盖。</span>
                 </div>
-                <div class="text-2xl font-bold text-success">32</div>
-                <div class="text-xs text-sub mt-1">本季度 <svg class="icon icon-xs inline"><use href="#icon-arrow-right"/></svg></div>
               </div>
             </div>
           </div>
