@@ -10490,7 +10490,7 @@
             <h1 class="text-2xl font-bold text-ink mb-1">数据建模中心</h1>
             <p class="text-sub text-sm">数据血缘、模型训练链路、模型发布与监控一站式管理。</p>
           </div>
-          <button class="btn btn-primary text-sm" onclick="showToast(`功能演示：模型训练任务新建弹窗`)">
+          <button class="btn btn-primary text-sm" onclick="openModelingCreate()">
             <svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建训练任务
           </button>
         </div>
@@ -10575,28 +10575,52 @@
               <svg class="icon icon-md text-primary"><use href="#icon-ai"/></svg> 模型管理
             </div>
             <div class="overflow-x-auto">
-              <table class="data-table min-w-[600px]">
-                <thead><tr><th>模型名称</th><th>类型</th><th>训练时间</th><th>准确率</th><th>状态</th><th>调用次数</th></tr></thead>
+              <table class="data-table min-w-[720px]">
+                <thead><tr><th>模型名称</th><th>类型</th><th>训练时间</th><th>准确率</th><th>状态</th><th>调用次数</th><th>操作</th></tr></thead>
                 <tbody>
-                  <tr class="cursor-pointer" onclick="openModelDetail('客户健康度预测模型')">
+                  <tr class="cursor-pointer" data-name="客户健康度预测模型" data-source="客户 360° + 工单" data-type="分类" data-time="2026-07-28 03:12" data-accuracy="91.4%" data-samples="45,230" data-status="已发布" data-status-class="badge-success" data-fields="客户ID,拜访次数,设备开机率,工单响应时长" onclick="openModelingDetail(this)">
                     <td><div class="font-medium text-ink">客户健康度预测模型</div><div class="text-xs text-sub">v2.3.1</div></td>
                     <td>分类</td><td>2026-07-28 03:12</td><td>91.4%</td>
                     <td><span class="badge badge-success">已发布</span></td><td>12,482</td>
+                    <td>
+                      <div class="flex items-center gap-2">
+                        <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openModelingCreate('客户健康度预测模型')">编辑</button>
+                        <button class="btn btn-primary text-xs" onclick="event.stopPropagation();runModelTraining('客户健康度预测模型')">运行</button>
+                      </div>
+                    </td>
                   </tr>
-                  <tr class="cursor-pointer" onclick="openModelDetail('试剂消耗预测模型')">
+                  <tr class="cursor-pointer" data-name="试剂消耗预测模型" data-source="试剂运营 + 设备" data-type="时序" data-time="2026-07-25 02:40" data-accuracy="88.7%" data-samples="128,400" data-status="已发布" data-status-class="badge-success" data-fields="历史90天消耗量,设备台数,科室门诊量,季节因子" onclick="openModelingDetail(this)">
                     <td><div class="font-medium text-ink">试剂消耗预测模型</div><div class="text-xs text-sub">v1.8.0</div></td>
                     <td>时序</td><td>2026-07-25 02:40</td><td>88.7%</td>
                     <td><span class="badge badge-success">已发布</span></td><td>8,356</td>
+                    <td>
+                      <div class="flex items-center gap-2">
+                        <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openModelingCreate('试剂消耗预测模型')">编辑</button>
+                        <button class="btn btn-primary text-xs" onclick="event.stopPropagation();runModelTraining('试剂消耗预测模型')">运行</button>
+                      </div>
+                    </td>
                   </tr>
-                  <tr class="cursor-pointer" onclick="openModelDetail('意向成交概率模型')">
+                  <tr class="cursor-pointer" data-name="意向成交概率模型" data-source="意向管理 + 线索" data-type="二分类" data-time="2026-07-27 04:05" data-accuracy="86.2%" data-samples="32,100" data-status="评估中" data-status-class="badge-warning" data-fields="跟进次数,预计金额,决策链完整度,竞品出现次数" onclick="openModelingDetail(this)">
                     <td><div class="font-medium text-ink">意向成交概率模型</div><div class="text-xs text-sub">v3.0.2</div></td>
                     <td>二分类</td><td>2026-07-27 04:05</td><td>86.2%</td>
                     <td><span class="badge badge-warning">评估中</span></td><td>3,210</td>
+                    <td>
+                      <div class="flex items-center gap-2">
+                        <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openModelingCreate('意向成交概率模型')">编辑</button>
+                        <button class="btn btn-primary text-xs" onclick="event.stopPropagation();runModelTraining('意向成交概率模型')">运行</button>
+                      </div>
+                    </td>
                   </tr>
-                  <tr class="cursor-pointer" onclick="openModelDetail('设备故障预测模型')">
+                  <tr class="cursor-pointer" data-name="设备故障预测模型" data-source="设备管理 + 工单" data-type="多分类" data-time="2026-07-20 01:18" data-accuracy="84.5%" data-samples="18,600" data-status="已发布" data-status-class="badge-success" data-fields="运行时长,告警次数,维保间隔,设备型号" onclick="openModelingDetail(this)">
                     <td><div class="font-medium text-ink">设备故障预测模型</div><div class="text-xs text-sub">v1.2.5</div></td>
                     <td>多分类</td><td>2026-07-20 01:18</td><td>84.5%</td>
                     <td><span class="badge badge-success">已发布</span></td><td>5,091</td>
+                    <td>
+                      <div class="flex items-center gap-2">
+                        <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openModelingCreate('设备故障预测模型')">编辑</button>
+                        <button class="btn btn-primary text-xs" onclick="event.stopPropagation();runModelTraining('设备故障预测模型')">运行</button>
+                      </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -10721,9 +10745,14 @@ Content-Type: application/json
             <h1 class="text-2xl font-bold text-ink mb-1">AI Agent 数字员工中心</h1>
             <p class="text-sub text-sm">配置、调度、监控 AI 数字员工，让 Agent 承接重复性经营工作。</p>
           </div>
-          <button class="btn btn-primary text-sm flex items-center gap-2" onclick="openAiQaModal()">
-            <svg class="icon icon-sm"><use href="#icon-ai"/></svg> AI 问数演示
-          </button>
+          <div class="flex items-center gap-2">
+            <button class="btn btn-outline text-sm flex items-center gap-2" onclick="openAiQaModal()">
+              <svg class="icon icon-sm"><use href="#icon-ai"/></svg> AI 问数演示
+            </button>
+            <button class="btn btn-primary text-sm flex items-center gap-2" onclick="openAiAgentCreate()">
+              <svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建数字员工
+            </button>
+          </div>
         </div>
 
         <!-- AI 三阶体系 -->
@@ -10740,7 +10769,7 @@ Content-Type: application/json
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-5">
-          <div class="card p-4 card-hover">
+          <div class="card p-4 card-hover cursor-pointer" data-name="销售助手 Agent" data-role="销售助手" data-avatar="销" data-stage="AI 助理" data-stage-class="badge-info" data-calls="128" data-success="96.2%" data-abilities="客户摘要,线索推荐,数据问答,任务提醒" data-state="运行中" onclick="openAiAgentDetail(this)">
             <div class="flex items-center gap-3 mb-3">
               <div class="w-12 h-12 rounded-xl bg-primary-light text-primary flex items-center justify-center"><svg class="icon icon-2xl"><use href="#icon-ai"/></svg></div>
               <div>
@@ -10761,11 +10790,11 @@ Content-Type: application/json
             <div class="card p-3 bg-panel mb-3">
               <div class="text-xs text-sub mb-2">训练数据反馈</div>
               <div class="text-xs text-sub">来源：历史问答日志、销售标注、客户画像</div>
-              <button class="btn btn-outline w-full text-xs mt-2" onclick="showToast('打开人工标注入口')">人工标注 / 反馈</button>
+              <button class="btn btn-outline w-full text-xs mt-2" onclick="event.stopPropagation();showToast('打开人工标注入口')">人工标注 / 反馈</button>
             </div>
-            <button class="btn btn-outline w-full text-sm" onclick="openAiQaModal()">体验问数</button>
+            <button class="btn btn-outline w-full text-sm" onclick="event.stopPropagation();openAiQaModal()">体验问数</button>
           </div>
-          <div class="card p-4 card-hover">
+          <div class="card p-4 card-hover cursor-pointer" data-name="预警 Agent" data-role="数据助手" data-avatar="预" data-stage="AI 学徒" data-stage-class="badge-warning" data-calls="86" data-success="91.5%" data-abilities="数据问答,任务提醒" data-state="运行中" onclick="openAiAgentDetail(this)">
             <div class="flex items-center gap-3 mb-3">
               <div class="w-12 h-12 rounded-xl bg-warning-bg text-warning flex items-center justify-center"><svg class="icon icon-2xl"><use href="#icon-warning"/></svg></div>
               <div>
@@ -10786,11 +10815,11 @@ Content-Type: application/json
             <div class="card p-3 bg-panel mb-3">
               <div class="text-xs text-sub mb-2">训练数据反馈</div>
               <div class="text-xs text-sub">来源：预警命中结果、人工处置记录、业务规则</div>
-              <button class="btn btn-outline w-full text-xs mt-2" onclick="showToast('打开预警反馈入口')">反馈命中情况</button>
+              <button class="btn btn-outline w-full text-xs mt-2" onclick="event.stopPropagation();showToast('打开预警反馈入口')">反馈命中情况</button>
             </div>
-            <button class="btn btn-outline w-full text-sm" onclick="showToast(`功能演示：预警 Agent 配置`)">查看配置</button>
+            <button class="btn btn-outline w-full text-sm" onclick="event.stopPropagation();showToast(`功能演示：预警 Agent 配置`)">查看配置</button>
           </div>
-          <div class="card p-4 card-hover">
+          <div class="card p-4 card-hover cursor-pointer" data-name="流程 Agent" data-role="客服助手" data-avatar="流" data-stage="AI 正式员工" data-stage-class="badge-success" data-calls="342" data-success="98.1%" data-abilities="客户摘要,任务提醒" data-state="运行中" onclick="openAiAgentDetail(this)">
             <div class="flex items-center gap-3 mb-3">
               <div class="w-12 h-12 rounded-xl bg-success-bg text-success flex items-center justify-center"><svg class="icon icon-2xl"><use href="#icon-check"/></svg></div>
               <div>
@@ -10811,9 +10840,9 @@ Content-Type: application/json
             <div class="card p-3 bg-panel mb-3">
               <div class="text-xs text-sub mb-2">训练数据反馈</div>
               <div class="text-xs text-sub">来源：流程执行日志、异常回退记录、人工复核</div>
-              <button class="btn btn-outline w-full text-xs mt-2" onclick="showToast('打开流程反馈入口')">反馈执行结果</button>
+              <button class="btn btn-outline w-full text-xs mt-2" onclick="event.stopPropagation();showToast('打开流程反馈入口')">反馈执行结果</button>
             </div>
-            <button class="btn btn-outline w-full text-sm" onclick="showToast(`功能演示：流程 Agent 配置`)">查看配置</button>
+            <button class="btn btn-outline w-full text-sm" onclick="event.stopPropagation();showToast(`功能演示：流程 Agent 配置`)">查看配置</button>
           </div>
         </div>
         <div class="card p-4">
@@ -10878,15 +10907,21 @@ Content-Type: application/json
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
-          <div class="card card-hover p-4"><div class="text-sub text-xs mb-1">营业收入</div><div class="text-2xl font-bold text-ink">¥8,450万</div><div class="text-xs text-success mt-1">同比 +16.2%</div></div>
-          <div class="card card-hover p-4"><div class="text-sub text-xs mb-1">回款金额</div><div class="text-2xl font-bold text-primary">¥6,230万</div><div class="text-xs text-primary mt-1">回款率 73.7%</div></div>
-          <div class="card card-hover p-4"><div class="text-sub text-xs mb-1">毛利润</div><div class="text-2xl font-bold text-success">¥2,210万</div><div class="text-xs text-success mt-1">毛利率 26.2%</div></div>
-          <div class="card card-hover p-4"><div class="text-sub text-xs mb-1">逾期应收</div><div class="text-2xl font-bold text-danger">¥380万</div><div class="text-xs text-danger mt-1">逾期率 4.5%</div></div>
+          <div class="card card-hover p-4 cursor-pointer" data-metric="营业收入" data-total="¥8,450万" data-yoy="+16.2%" data-mom="+4.8%" onclick="openBenefitDetail(this)"><div class="text-sub text-xs mb-1">营业收入</div><div class="text-2xl font-bold text-ink">¥8,450万</div><div class="text-xs text-success mt-1">同比 +16.2%</div></div>
+          <div class="card card-hover p-4 cursor-pointer" data-metric="回款金额" data-total="¥6,230万" data-yoy="+11.5%" data-mom="+2.3%" onclick="openBenefitDetail(this)"><div class="text-sub text-xs mb-1">回款金额</div><div class="text-2xl font-bold text-primary">¥6,230万</div><div class="text-xs text-primary mt-1">回款率 73.7%</div></div>
+          <div class="card card-hover p-4 cursor-pointer" data-metric="毛利润" data-total="¥2,210万" data-yoy="+18.7%" data-mom="+5.1%" onclick="openBenefitDetail(this)"><div class="text-sub text-xs mb-1">毛利润</div><div class="text-2xl font-bold text-success">¥2,210万</div><div class="text-xs text-success mt-1">毛利率 26.2%</div></div>
+          <div class="card card-hover p-4 cursor-pointer" data-metric="逾期应收" data-total="¥380万" data-yoy="-8.2%" data-mom="-3.1%" onclick="openBenefitDetail(this)"><div class="text-sub text-xs mb-1">逾期应收</div><div class="text-2xl font-bold text-danger">¥380万</div><div class="text-xs text-danger mt-1">逾期率 4.5%</div></div>
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
           <div class="card p-4 lg:col-span-2">
-            <div class="font-semibold text-ink mb-4">月度营收与毛利趋势</div>
-            <div class="h-48 relative">
+            <div class="flex items-center justify-between mb-4">
+              <div class="font-semibold text-ink">月度营收与毛利趋势</div>
+              <div class="flex items-center gap-2">
+                <button class="btn btn-sm btn-primary" id="benefit-chart-month-btn" onclick="switchBenefitChart('month')">月度</button>
+                <button class="btn btn-sm btn-ghost" id="benefit-chart-quarter-btn" onclick="switchBenefitChart('quarter')">季度</button>
+              </div>
+            </div>
+            <div class="h-48 relative cursor-pointer" onclick="openBenefitDetail({dataset:{metric:'营业收入',total:'¥8,450万',yoy:'+16.2%',mom:'+4.8%'}})">
               <svg class="w-full h-full" viewBox="0 0 800 200" preserveAspectRatio="none">
                 <rect x="40" y="120" width="50" height="60" fill="#3370FF" opacity="0.8"/>
                 <rect x="120" y="100" width="50" height="80" fill="#3370FF" opacity="0.8"/>
@@ -10899,6 +10934,10 @@ Content-Type: application/json
               </svg>
             </div>
             <div class="flex items-center justify-between text-xs text-sub mt-2"><span>1月</span><span>2月</span><span>3月</span><span>4月</span><span>5月</span><span>6月</span><span>7月</span></div>
+            <div class="flex items-center gap-4 mt-3 text-xs">
+              <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-primary"></span>营业收入</span>
+              <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-success"></span>毛利润</span>
+            </div>
           </div>
           <div class="card p-4">
             <div class="font-semibold text-ink mb-4">区域营收占比</div>
@@ -10986,7 +11025,7 @@ Content-Type: application/json
           </div>
           <div class="flex items-center gap-2">
             <select class="input w-auto"><option>近 30 天</option><option>本季度</option><option>本年度</option></select>
-            <button class="btn btn-outline" onclick="showToast(`功能演示：生成洞察报告`)"><svg class="icon icon-sm"><use href="#icon-download"/></svg> 生成报告</button>
+            <button class="btn btn-outline" onclick="openInsightReport()"><svg class="icon icon-sm"><use href="#icon-download"/></svg> 生成报告</button>
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
@@ -10999,13 +11038,13 @@ Content-Type: application/json
           <div class="card p-4">
             <div class="font-semibold text-ink mb-4">核心转化漏斗</div>
             <div class="space-y-3">
-              <div class="flex flex-col items-center"><div class="w-full py-2 rounded-lg bg-primary text-white text-center text-sm font-medium">线索 1,248</div><div class="text-xs text-sub mt-1">100%</div></div>
+              <div class="flex flex-col items-center"><div class="w-full py-2 rounded-lg bg-primary text-white text-center text-sm font-medium cursor-pointer hover:opacity-90" onclick="openInsightStage('线索',1248,'¥6,240万','100%')">线索 1,248</div><div class="text-xs text-sub mt-1">100%</div></div>
               <div class="flex justify-center"><svg class="icon text-sub"><use href="#icon-arrow-down"/></svg></div>
-              <div class="flex flex-col items-center"><div class="w-[85%] py-2 rounded-lg bg-primary-light text-primary text-center text-sm font-medium">有效线索 786</div><div class="text-xs text-sub mt-1">63.0%</div></div>
+              <div class="flex flex-col items-center"><div class="w-[85%] py-2 rounded-lg bg-primary-light text-primary text-center text-sm font-medium cursor-pointer hover:opacity-90" onclick="openInsightStage('有效线索',786,'¥4,680万','63.0%')">有效线索 786</div><div class="text-xs text-sub mt-1">63.0%</div></div>
               <div class="flex justify-center"><svg class="icon text-sub"><use href="#icon-arrow-down"/></svg></div>
-              <div class="flex flex-col items-center"><div class="w-[60%] py-2 rounded-lg bg-info-bg text-info text-center text-sm font-medium">意向 357</div><div class="text-xs text-sub mt-1">28.6%</div></div>
+              <div class="flex flex-col items-center"><div class="w-[60%] py-2 rounded-lg bg-info-bg text-info text-center text-sm font-medium cursor-pointer hover:opacity-90" onclick="openInsightStage('意向',357,'¥3,210万','28.6%')">意向 357</div><div class="text-xs text-sub mt-1">28.6%</div></div>
               <div class="flex justify-center"><svg class="icon text-sub"><use href="#icon-arrow-down"/></svg></div>
-              <div class="flex flex-col items-center"><div class="w-[35%] py-2 rounded-lg bg-success-bg text-success text-center text-sm font-medium">成交 212</div><div class="text-xs text-sub mt-1">17.0%</div></div>
+              <div class="flex flex-col items-center"><div class="w-[35%] py-2 rounded-lg bg-success-bg text-success text-center text-sm font-medium cursor-pointer hover:opacity-90" onclick="openInsightStage('成交',212,'¥2,120万','17.0%')">成交 212</div><div class="text-xs text-sub mt-1">17.0%</div></div>
             </div>
           </div>
           <div class="card p-4 lg:col-span-2">
@@ -11429,9 +11468,9 @@ Content-Type: application/json
             <table class="data-table min-w-[720px]">
               <thead><tr><th>项目编号</th><th>项目名称</th><th>客户</th><th>阶段</th><th>预计金额</th><th>负责人</th><th>状态</th></tr></thead>
               <tbody>
-                <tr class="cursor-pointer" onclick="openCustomProjectModal(this)" data-code="CP-2026-001" data-name="云南省儿童医院检验科整体升级" data-customer="云南省儿童医院" data-stage="合同谈判" data-amount="¥560万" data-owner="张经理" data-status="推进中"><td>CP-2026-001</td><td>云南省儿童医院检验科整体升级</td><td>云南省儿童医院</td><td>合同谈判</td><td>¥560万</td><td>张经理</td><td><span class="badge badge-primary">推进中</span></td></tr>
-                <tr class="cursor-pointer" onclick="openCustomProjectModal(this)" data-code="CP-2026-002" data-name="曲靖市区域检验中心建设" data-customer="曲靖市卫健委" data-stage="方案设计" data-amount="¥1,200万" data-owner="李经理" data-status="关键节点"><td>CP-2026-002</td><td>曲靖市区域检验中心建设</td><td>曲靖市卫健委</td><td>方案设计</td><td>¥1,200万</td><td>李经理</td><td><span class="badge badge-warning">关键节点</span></td></tr>
-                <tr class="cursor-pointer" onclick="openCustomProjectModal(this)" data-code="CP-2026-003" data-name="昆明市一院急诊绿色通道" data-customer="昆明市第一人民医院" data-stage="装机调试" data-amount="¥180万" data-owner="王经理" data-status="正常"><td>CP-2026-003</td><td>昆明市一院急诊绿色通道</td><td>昆明市第一人民医院</td><td>装机调试</td><td>¥180万</td><td>王经理</td><td><span class="badge badge-success">正常</span></td></tr>
+                <tr class="cursor-pointer" onclick="openCustomProjectDetail(this)" data-code="CP-2026-001" data-name="云南省儿童医院检验科整体升级" data-customer="云南省儿童医院" data-stage="合同谈判" data-amount="¥560万" data-owner="张经理" data-status="推进中" data-status-class="badge-primary" data-requirement="为云南省儿童医院检验科提供血球、生化、免疫流水线整体升级，配套科室信息化改造与人员培训。" data-risks="预算审批延迟,竞品低价干扰" data-milestones="需求调研,方案设计,合同谈判,设备进场,验收交付" data-active-index="2"><td>CP-2026-001</td><td>云南省儿童医院检验科整体升级</td><td>云南省儿童医院</td><td>合同谈判</td><td>¥560万</td><td>张经理</td><td><span class="badge badge-primary">推进中</span></td></tr>
+                <tr class="cursor-pointer" onclick="openCustomProjectDetail(this)" data-code="CP-2026-002" data-name="曲靖市区域检验中心建设" data-customer="曲靖市卫健委" data-stage="方案设计" data-amount="¥1,200万" data-owner="李经理" data-status="关键节点" data-status-class="badge-warning" data-requirement="建设覆盖曲靖市 5 家核心医院的区域检验中心，实现样本流转、质控统一、报告互认。" data-risks="多院协调复杂,政策合规要求高" data-milestones="需求调研,方案设计,合同谈判,设备进场,验收交付" data-active-index="1"><td>CP-2026-002</td><td>曲靖市区域检验中心建设</td><td>曲靖市卫健委</td><td>方案设计</td><td>¥1,200万</td><td>李经理</td><td><span class="badge badge-warning">关键节点</span></td></tr>
+                <tr class="cursor-pointer" onclick="openCustomProjectDetail(this)" data-code="CP-2026-003" data-name="昆明市一院急诊绿色通道" data-customer="昆明市第一人民医院" data-stage="装机调试" data-amount="¥180万" data-owner="王经理" data-status="正常" data-status-class="badge-success" data-requirement="急诊检验 TAT 监控、设备联机、危急值预警，提升急诊样本周转效率。" data-risks="科室排期紧张" data-milestones="需求调研,方案设计,合同谈判,设备进场,验收交付" data-active-index="3"><td>CP-2026-003</td><td>昆明市一院急诊绿色通道</td><td>昆明市第一人民医院</td><td>装机调试</td><td>¥180万</td><td>王经理</td><td><span class="badge badge-success">正常</span></td></tr>
               </tbody>
             </table>
           </div>
@@ -17311,6 +17350,291 @@ Content-Type: application/json
       showToast('已取消收藏');
     }
 
+    /* ===== Batch 3: 数据建模中心 ===== */
+    function openModelingCreate(name) {
+      const titleEl = document.getElementById('modeling-create-title');
+      const nameEl = document.getElementById('modeling-create-name');
+      if (name) {
+        titleEl.textContent = '编辑模型';
+        nameEl.value = name;
+      } else {
+        titleEl.textContent = '新建训练任务';
+        nameEl.value = '';
+      }
+      document.getElementById('modeling-create-source').selectedIndex = 0;
+      document.querySelectorAll('input[name="modelingCreateType"]').forEach(r => { r.checked = (r.value === '标签分类'); if (r.closest('.radio-card')) updateRadioCards(r); });
+      document.getElementById('modeling-create-desc').value = '';
+      document.querySelectorAll('#modeling-create-overlay .checkbox-card input[type="checkbox"]').forEach(cb => { cb.checked = false; if (cb.closest('.checkbox-card')) updateCheckboxCards(cb); });
+      document.getElementById('modeling-create-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModelingCreate() {
+      document.getElementById('modeling-create-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function saveModelingCreate() {
+      const name = document.getElementById('modeling-create-name').value.trim();
+      if (!name) { showToast('请输入模型名称'); return; }
+      showToast('模型已保存');
+      closeModelingCreate();
+    }
+
+    function openModelingDetail(el) {
+      const d = el ? (el.dataset || {}) : {};
+      document.getElementById('modeling-detail-name').textContent = d.name || '-';
+      document.getElementById('modeling-detail-meta').textContent = (d.type || '-') + ' · ' + (d.time || '-');
+      document.getElementById('modeling-detail-status').innerHTML = '<span class="badge ' + (d.statusClass || 'badge-gray') + '">' + (d.status || '-') + '</span>';
+      document.getElementById('modeling-detail-source').textContent = d.source || '-';
+      document.getElementById('modeling-detail-accuracy').textContent = d.accuracy || '-';
+      document.getElementById('modeling-detail-samples').textContent = d.samples || '-';
+      const fieldsContainer = document.getElementById('modeling-detail-fields');
+      fieldsContainer.innerHTML = '';
+      (d.fields || '').split(',').filter(Boolean).forEach(f => {
+        fieldsContainer.innerHTML += '<span class="badge badge-gray">' + f + '</span>';
+      });
+      document.getElementById('modeling-detail-run-info').innerHTML = '<div class="flex justify-between"><span class="text-sub">最近运行时间</span><span class="text-ink">' + (d.time || '-') + '</span></div><div class="flex justify-between"><span class="text-sub">训练耗时</span><span class="text-ink">3h 12m</span></div><div class="flex justify-between"><span class="text-sub">运行状态</span><span class="badge badge-success">成功</span></div>';
+      const timeline = document.getElementById('modeling-detail-timeline');
+      timeline.innerHTML = '<div class="timeline-item"><div class="timeline-dot bg-success"></div><div class="text-sm text-ink font-medium">模型训练成功</div><div class="text-xs text-sub">' + (d.time || '-') + '</div></div><div class="timeline-item"><div class="timeline-dot bg-primary"></div><div class="text-sm text-ink font-medium">开始特征工程</div><div class="text-xs text-sub">特征库自动抽取 312 个字段</div></div><div class="timeline-item"><div class="timeline-dot bg-info"></div><div class="text-sm text-ink font-medium">数据清洗完成</div><div class="text-xs text-sub">异常率 0.3%，已人工复核</div></div>';
+      document.getElementById('modeling-detail-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModelingDetail() {
+      document.getElementById('modeling-detail-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function runModelTraining(name) {
+      showToast('模型训练中');
+    }
+    function publishModeling() {
+      showToast('模型已发布');
+      closeModelingDetail();
+    }
+
+    /* ===== Batch 3: AI Agent 数字员工中心 ===== */
+    function openAiAgentCreate() {
+      document.getElementById('ai-agent-create-title').textContent = '新增数字员工';
+      document.getElementById('ai-agent-create-name').value = '';
+      document.querySelectorAll('input[name="aiAgentCreateRole"]').forEach(r => { r.checked = (r.value === '销售助手'); if (r.closest('.radio-card')) updateRadioCards(r); });
+      document.querySelectorAll('#ai-agent-create-abilities .checkbox-card input[type="checkbox"]').forEach(cb => { cb.checked = (cb.value === '客户摘要'); if (cb.closest('.checkbox-card')) updateCheckboxCards(cb); });
+      document.getElementById('ai-agent-create-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeAiAgentCreate() {
+      document.getElementById('ai-agent-create-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function saveAiAgentCreate() {
+      const name = document.getElementById('ai-agent-create-name').value.trim();
+      if (!name) { showToast('请输入员工名称'); return; }
+      showToast('数字员工已保存');
+      closeAiAgentCreate();
+    }
+
+    let currentAiAgentStatus = '运行中';
+    function openAiAgentDetail(el) {
+      const d = el ? (el.dataset || {}) : {};
+      document.getElementById('ai-agent-detail-avatar').textContent = d.avatar || 'A';
+      document.getElementById('ai-agent-detail-name').textContent = d.name || '-';
+      document.getElementById('ai-agent-detail-role-badge').innerHTML = '<span class="badge ' + (d.stageClass || 'badge-gray') + '">' + (d.stage || '-') + '</span>';
+      document.getElementById('ai-agent-detail-subtitle').textContent = (d.role || '-') + ' · ' + (d.state || '运行中');
+      document.getElementById('ai-agent-detail-calls').textContent = d.calls || '-';
+      document.getElementById('ai-agent-detail-success').textContent = d.success || '-';
+      const abilities = (d.abilities || '').split(',').filter(Boolean);
+      document.getElementById('ai-agent-detail-ability-count').textContent = abilities.length;
+      const abilitiesContainer = document.getElementById('ai-agent-detail-abilities');
+      abilitiesContainer.innerHTML = '';
+      abilities.forEach(a => { abilitiesContainer.innerHTML += '<span class="badge badge-info">' + a + '</span>'; });
+      currentAiAgentStatus = d.state || '运行中';
+      document.getElementById('ai-agent-detail-state').textContent = currentAiAgentStatus;
+      const stateClass = currentAiAgentStatus === '运行中' ? 'text-success' : 'text-danger';
+      document.getElementById('ai-agent-detail-state').className = 'text-xl font-bold mt-1 ' + stateClass;
+      document.getElementById('ai-agent-detail-chat').innerHTML = '<div class="p-2 rounded-lg bg-panel"><div class="text-xs text-sub">用户</div><div class="text-ink">帮我总结下云南省肿瘤医院的近况</div></div><div class="p-2 rounded-lg bg-primary-light"><div class="text-xs text-primary">Agent</div><div class="text-ink">该客户近 30 天拜访 2 次，设备开机率 94%，试剂消耗环比 +8%，健康度良好。</div></div>';
+      document.getElementById('ai-agent-detail-logs').innerHTML = [
+        '<div class="flex items-center justify-between text-sm"><span class="text-ink">执行客户摘要</span><span class="text-sub">10:23</span></div>',
+        '<div class="flex items-center justify-between text-sm"><span class="text-ink">生成日报草稿</span><span class="text-sub">09:45</span></div>',
+        '<div class="flex items-center justify-between text-sm"><span class="text-ink">数据问答：本季度达成率</span><span class="text-sub">09:12</span></div>',
+        '<div class="flex items-center justify-between text-sm"><span class="text-ink">任务提醒推送</span><span class="text-sub">08:50</span></div>',
+        '<div class="flex items-center justify-between text-sm"><span class="text-ink">线索推荐 TOP5</span><span class="text-sub">08:30</span></div>'
+      ].join('');
+      const toggleBtn = document.getElementById('ai-agent-detail-toggle-btn');
+      toggleBtn.textContent = currentAiAgentStatus === '运行中' ? '停用' : '启用';
+      toggleBtn.className = currentAiAgentStatus === '运行中' ? 'btn btn-primary' : 'btn btn-success';
+      document.getElementById('ai-agent-detail-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeAiAgentDetail() {
+      document.getElementById('ai-agent-detail-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function editAiAgentDetail() {
+      closeAiAgentDetail();
+      openAiAgentCreate();
+    }
+    function toggleAiAgentStatus() {
+      currentAiAgentStatus = currentAiAgentStatus === '运行中' ? '已停用' : '运行中';
+      showToast(currentAiAgentStatus === '运行中' ? '数字员工已启用' : '数字员工已停用');
+      closeAiAgentDetail();
+    }
+
+    /* ===== Batch 3: 定制项目 ===== */
+    function openCustomProjectDetail(el) {
+      const d = el ? (el.dataset || {}) : {};
+      document.getElementById('custom-project-detail-code').textContent = d.code || 'CP-2026-001';
+      const status = d.status || '推进中';
+      const statusClass = d.statusClass || 'badge-primary';
+      document.getElementById('custom-project-detail-status').innerHTML = '<span class="badge ' + statusClass + '">' + status + '</span>';
+      document.getElementById('custom-project-detail-name').textContent = d.name || '-';
+      document.getElementById('custom-project-detail-customer').textContent = d.customer || '-';
+      document.getElementById('custom-project-detail-owner').textContent = d.owner || '-';
+      document.getElementById('custom-project-detail-amount').textContent = d.amount || '-';
+      document.getElementById('custom-project-detail-stage').textContent = d.stage || '-';
+      document.getElementById('custom-project-detail-requirement').textContent = d.requirement || '-';
+      const risksContainer = document.getElementById('custom-project-detail-risks');
+      risksContainer.innerHTML = '';
+      (d.risks || '').split(',').filter(Boolean).forEach(r => { risksContainer.innerHTML += '<li>' + r + '</li>'; });
+      const milestones = (d.milestones || '需求调研,方案设计,合同谈判,设备进场,验收交付').split(',');
+      const activeIndex = parseInt(d.activeIndex || '0', 10);
+      const milestonesContainer = document.getElementById('custom-project-detail-milestones');
+      milestonesContainer.innerHTML = '';
+      milestones.forEach((m, i) => {
+        const cls = i < activeIndex ? 'completed' : (i === activeIndex ? 'active' : '');
+        milestonesContainer.innerHTML += '<div class="progress-step ' + cls + '"><div class="progress-step-dot">' + (i + 1) + '</div><div class="progress-step-label">' + m + '</div></div>';
+      });
+      document.getElementById('custom-project-detail-timeline').innerHTML = '<div class="timeline-item"><div class="timeline-dot bg-primary"></div><div class="text-sm text-ink font-medium">当前阶段：' + (d.stage || '-') + '</div><div class="text-xs text-sub">负责人：' + (d.owner || '-') + '</div></div><div class="timeline-item"><div class="timeline-dot bg-success"></div><div class="text-sm text-ink font-medium">完成现场调研</div><div class="text-xs text-sub">2026-06-15 · ' + (d.owner || '-') + '</div></div><div class="timeline-item"><div class="timeline-dot bg-info"></div><div class="text-sm text-ink font-medium">项目立项</div><div class="text-xs text-sub">2026-06-01 · ' + (d.owner || '-') + '</div></div>';
+      document.getElementById('custom-project-detail-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCustomProjectDetail() {
+      document.getElementById('custom-project-detail-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function advanceCustomProjectStage() {
+      showToast('阶段已推进');
+      closeCustomProjectDetail();
+    }
+    function openCustomProjectResourceOverlay() {
+      document.querySelectorAll('input[name="customProjectResourceType"]').forEach(r => { r.checked = (r.value === '研发'); if (r.closest('.radio-card')) updateRadioCards(r); });
+      document.getElementById('custom-project-resource-desc').value = '';
+      document.getElementById('custom-project-resource-date').value = '';
+      document.getElementById('custom-project-resource-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCustomProjectResourceOverlay() {
+      document.getElementById('custom-project-resource-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function submitCustomProjectResource() {
+      const desc = document.getElementById('custom-project-resource-desc').value.trim();
+      if (!desc) { showToast('请输入资源说明'); return; }
+      showToast('资源申请已提交');
+      closeCustomProjectResourceOverlay();
+    }
+
+    /* ===== Batch 3: 效益中心 ===== */
+    function openBenefitDetail(el) {
+      const d = el ? (el.dataset || {}) : {};
+      const metric = d.metric || '指标';
+      document.getElementById('benefit-detail-title').textContent = metric + '明细';
+      document.getElementById('benefit-detail-total').textContent = d.total || '-';
+      document.getElementById('benefit-detail-yoy').textContent = d.yoy || '-';
+      document.getElementById('benefit-detail-mom').textContent = d.mom || '-';
+      const tableData = [
+        ['1月', '980万', '+12.3%', '-2.1%', '11.6%'],
+        ['2月', '1,050万', '+13.5%', '+7.1%', '12.4%'],
+        ['3月', '1,120万', '+14.2%', '+6.7%', '13.3%'],
+        ['4月', '1,180万', '+15.8%', '+5.4%', '14.0%'],
+        ['5月', '1,280万', '+18.1%', '+8.5%', '15.1%'],
+        ['6月', '1,420万', '+20.4%', '+10.9%', '16.8%'],
+        ['7月', '1,420万', '+19.8%', '+0.0%', '16.8%']
+      ];
+      const tbody = document.getElementById('benefit-detail-table');
+      tbody.innerHTML = '';
+      tableData.forEach(row => {
+        tbody.innerHTML += '<tr><td>' + row[0] + '</td><td>' + row[1] + '</td><td class="text-success">' + row[2] + '</td><td class="text-primary">' + row[3] + '</td><td>' + row[4] + '</td></tr>';
+      });
+      const regions = [
+        ['西南区', 35, '#3370FF'],
+        ['华东区', 25, '#34C724'],
+        ['华南区', 20, '#FFBA00'],
+        ['其他', 20, '#E5E7EB']
+      ];
+      const regionsContainer = document.getElementById('benefit-detail-regions');
+      regionsContainer.innerHTML = '';
+      regions.forEach(r => {
+        regionsContainer.innerHTML += '<div class="flex items-center justify-between text-sm"><span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full" style="background:' + r[2] + '"></span>' + r[0] + '</span><span class="font-medium">' + r[1] + '%</span></div><div class="h-2 rounded-full bg-line"><div class="h-2 rounded-full" style="width:' + r[1] + '%;background:' + r[2] + '"></div></div>';
+      });
+      document.getElementById('benefit-detail-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeBenefitDetail() {
+      document.getElementById('benefit-detail-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function switchBenefitChart(period) {
+      document.getElementById('benefit-chart-month-btn').className = period === 'month' ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-ghost';
+      document.getElementById('benefit-chart-quarter-btn').className = period === 'quarter' ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-ghost';
+      showToast('已切换至' + (period === 'month' ? '月度' : '季度') + '视图');
+    }
+
+    /* ===== Batch 3: 数据洞察中心 ===== */
+    function openInsightReport() {
+      document.querySelectorAll('input[name="insightReportPeriod"]').forEach(r => { r.checked = (r.value === '近 30 天'); if (r.closest('.radio-card')) updateRadioCards(r); });
+      document.querySelectorAll('#insight-report-modules .checkbox-card input[type="checkbox"]').forEach(cb => { cb.checked = ['转化分析', '区域对比', '丢单原因'].includes(cb.value); if (cb.closest('.checkbox-card')) updateCheckboxCards(cb); });
+      document.querySelectorAll('input[name="insightReportFormat"]').forEach(r => { r.checked = (r.value === 'PDF'); if (r.closest('.radio-card')) updateRadioCards(r); });
+      document.getElementById('insight-report-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeInsightReport() {
+      document.getElementById('insight-report-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function generateInsightReport() {
+      showToast('报告生成中');
+      closeInsightReport();
+    }
+
+    const INSIGHT_STAGE_PROJECTS = {
+      '线索': [
+        { name: '云南省肿瘤医院血球升级', owner: '张伟', amount: '¥320万', stage: '线索', close: '2026-09' },
+        { name: '昆明市第一人民医院生化联机', owner: '李娜', amount: '¥180万', stage: '线索', close: '2026-08' },
+        { name: '曲靖市妇幼保健院检验科改造', owner: '赵敏', amount: '¥320万', stage: '线索', close: '2026-09' }
+      ],
+      '有效线索': [
+        { name: '云南省肿瘤医院血球升级', owner: '张伟', amount: '¥320万', stage: '有效线索', close: '2026-09' },
+        { name: '昆明医科大学第一附属医院质谱平台', owner: '李娜', amount: '¥580万', stage: '有效线索', close: '2026-10' }
+      ],
+      '意向': [
+        { name: '云南省儿童医院检验科整体升级', owner: '张经理', amount: '¥560万', stage: '意向', close: '2026-08' },
+        { name: '昆明市第一人民医院血球升级', owner: '李经理', amount: '¥420万', stage: '意向', close: '2026-08' }
+      ],
+      '成交': [
+        { name: '大理州人民医院凝血分析项目', owner: '王经理', amount: '¥195万', stage: '成交', close: '2026-08' },
+        { name: '红河州第一人民医院尿液分析流水线', owner: '陈经理', amount: '¥155万', stage: '成交', close: '2026-09' }
+      ]
+    };
+    function openInsightStage(stage, count, amount, rate) {
+      document.getElementById('insight-stage-title').textContent = stage + '阶段下钻';
+      document.getElementById('insight-stage-count').textContent = count;
+      document.getElementById('insight-stage-amount').textContent = amount;
+      document.getElementById('insight-stage-rate').textContent = rate;
+      const tbody = document.getElementById('insight-stage-table');
+      tbody.innerHTML = '';
+      const projects = INSIGHT_STAGE_PROJECTS[stage] || [];
+      if (projects.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-sub">暂无数据</td></tr>';
+      } else {
+        projects.forEach(p => {
+          tbody.innerHTML += '<tr><td><div class="font-medium text-ink">' + p.name + '</div></td><td>' + p.owner + '</td><td>' + p.amount + '</td><td><span class="badge badge-primary">' + p.stage + '</span></td><td>' + p.close + '</td></tr>';
+        });
+      }
+      document.getElementById('insight-stage-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeInsightStage() {
+      document.getElementById('insight-stage-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
   </script>
 
   <!-- ===== 撞单裁决弹窗 ===== -->
@@ -17877,6 +18201,415 @@ Content-Type: application/json
       <div class="intention-modal-footer">
         <button class="btn btn-ghost" onclick="closeDealroomResourceOverlay()">取消</button>
         <button class="btn btn-primary" onclick="submitDealroomResource()">提交</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Batch 3: 数据建模中心弹窗 ===== -->
+  <!-- 建模：新建模型 -->
+  <div id="modeling-create-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeModelingCreate()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink" id="modeling-create-title">新建训练任务</h3>
+          <div class="text-sub text-sm mt-1">配置数据源、模型类型与字段映射</div>
+        </div>
+        <button class="btn btn-ghost" onclick="closeModelingCreate()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group md:col-span-2">
+            <label class="form-label">模型名称 <span class="required">*</span></label>
+            <input type="text" class="input" id="modeling-create-name" placeholder="例如：客户流失预警模型">
+          </div>
+          <div class="form-group">
+            <label class="form-label">数据源 <span class="required">*</span></label>
+            <select class="input" id="modeling-create-source">
+              <option>客户 360°</option>
+              <option>意向管理</option>
+              <option>设备管理</option>
+              <option>试剂运营</option>
+              <option>工单管理</option>
+              <option>经营驾驶舱</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">模型类型 <span class="required">*</span></label>
+            <div class="flex flex-wrap gap-2">
+              <label class="radio-card selected"><input type="radio" name="modelingCreateType" value="标签分类" checked onchange="updateRadioCards(this)"> 标签分类</label>
+              <label class="radio-card"><input type="radio" name="modelingCreateType" value="预测" onchange="updateRadioCards(this)"> 预测</label>
+              <label class="radio-card"><input type="radio" name="modelingCreateType" value="关联" onchange="updateRadioCards(this)"> 关联</label>
+            </div>
+          </div>
+          <div class="form-group md:col-span-2">
+            <label class="form-label">描述</label>
+            <textarea class="input" id="modeling-create-desc" rows="3" placeholder="请输入模型用途、业务背景"></textarea>
+          </div>
+          <div class="form-group md:col-span-2">
+            <label class="form-label">字段映射（多选）</label>
+            <div class="flex flex-wrap gap-2" id="modeling-create-fields">
+              <label class="checkbox-card"><input type="checkbox" value="客户ID" onchange="updateCheckboxCards(this)"> 客户ID</label>
+              <label class="checkbox-card"><input type="checkbox" value="拜访次数" onchange="updateCheckboxCards(this)"> 拜访次数</label>
+              <label class="checkbox-card"><input type="checkbox" value="设备开机率" onchange="updateCheckboxCards(this)"> 设备开机率</label>
+              <label class="checkbox-card"><input type="checkbox" value="试剂消耗量" onchange="updateCheckboxCards(this)"> 试剂消耗量</label>
+              <label class="checkbox-card"><input type="checkbox" value="工单响应时长" onchange="updateCheckboxCards(this)"> 工单响应时长</label>
+              <label class="checkbox-card"><input type="checkbox" value="成交金额" onchange="updateCheckboxCards(this)"> 成交金额</label>
+              <label class="checkbox-card"><input type="checkbox" value="客户等级" onchange="updateCheckboxCards(this)"> 客户等级</label>
+              <label class="checkbox-card"><input type="checkbox" value="最近下单时间" onchange="updateCheckboxCards(this)"> 最近下单时间</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeModelingCreate()">取消</button>
+        <button class="btn btn-primary" onclick="saveModelingCreate()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 建模：模型详情 -->
+  <div id="modeling-detail-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeModelingDetail()">
+    <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-primary-light text-primary flex items-center justify-center"><svg class="icon icon-xl"><use href="#icon-ai"/></svg></div>
+          <div>
+            <h3 class="text-lg font-bold text-ink" id="modeling-detail-name">-</h3>
+            <div class="text-sub text-sm" id="modeling-detail-meta">-</div>
+          </div>
+        </div>
+        <button class="btn btn-ghost flex-shrink-0" onclick="closeModelingDetail()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
+          <div class="card p-3 text-center"><div class="text-xs text-sub">状态</div><div class="mt-1" id="modeling-detail-status">-</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">数据源</div><div class="text-lg font-bold text-ink mt-1" id="modeling-detail-source">-</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">准确率</div><div class="text-lg font-bold text-success mt-1" id="modeling-detail-accuracy">-</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">样本量</div><div class="text-lg font-bold text-ink mt-1" id="modeling-detail-samples">-</div></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="card p-3">
+            <div class="text-xs text-sub mb-2">字段列表</div>
+            <div class="flex flex-wrap gap-2" id="modeling-detail-fields"></div>
+          </div>
+          <div class="card p-3">
+            <div class="text-xs text-sub mb-2">最近运行</div>
+            <div class="space-y-2 text-sm" id="modeling-detail-run-info"></div>
+          </div>
+        </div>
+        <div class="card p-3">
+          <div class="text-xs text-sub mb-3">运行记录时间线</div>
+          <div class="timeline" id="modeling-detail-timeline"></div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeModelingDetail()">关闭</button>
+        <button class="btn btn-outline" onclick="runModelTraining()">运行训练</button>
+        <button class="btn btn-primary" onclick="publishModeling()">发布</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Batch 3: AI Agent 数字员工中心弹窗 ===== -->
+  <!-- AI Agent：新增员工 -->
+  <div id="ai-agent-create-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeAiAgentCreate()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink" id="ai-agent-create-title">新增数字员工</h3>
+          <div class="text-sub text-sm mt-1">配置员工角色、能力与知识库范围</div>
+        </div>
+        <button class="btn btn-ghost" onclick="closeAiAgentCreate()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 gap-4">
+          <div class="form-group">
+            <label class="form-label">员工名称 <span class="required">*</span></label>
+            <input type="text" class="input" id="ai-agent-create-name" placeholder="例如：华东销售助手">
+          </div>
+          <div class="form-group">
+            <label class="form-label">角色 <span class="required">*</span></label>
+            <div class="flex flex-wrap gap-2">
+              <label class="radio-card selected"><input type="radio" name="aiAgentCreateRole" value="销售助手" checked onchange="updateRadioCards(this)"> 销售助手</label>
+              <label class="radio-card"><input type="radio" name="aiAgentCreateRole" value="数据助手" onchange="updateRadioCards(this)"> 数据助手</label>
+              <label class="radio-card"><input type="radio" name="aiAgentCreateRole" value="客服助手" onchange="updateRadioCards(this)"> 客服助手</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">启用能力</label>
+            <div class="flex flex-wrap gap-2" id="ai-agent-create-abilities">
+              <label class="checkbox-card selected"><input type="checkbox" value="客户摘要" checked onchange="updateCheckboxCards(this)"> 客户摘要</label>
+              <label class="checkbox-card"><input type="checkbox" value="线索推荐" onchange="updateCheckboxCards(this)"> 线索推荐</label>
+              <label class="checkbox-card"><input type="checkbox" value="数据问答" onchange="updateCheckboxCards(this)"> 数据问答</label>
+              <label class="checkbox-card"><input type="checkbox" value="任务提醒" onchange="updateCheckboxCards(this)"> 任务提醒</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">知识库范围</label>
+            <div class="flex flex-wrap gap-2">
+              <label class="checkbox-card selected"><input type="checkbox" value="客户 360°" checked onchange="updateCheckboxCards(this)"> 客户 360°</label>
+              <label class="checkbox-card selected"><input type="checkbox" value="意向管理" checked onchange="updateCheckboxCards(this)"> 意向管理</label>
+              <label class="checkbox-card"><input type="checkbox" value="设备管理" onchange="updateCheckboxCards(this)"> 设备管理</label>
+              <label class="checkbox-card"><input type="checkbox" value="试剂运营" onchange="updateCheckboxCards(this)"> 试剂运营</label>
+              <label class="checkbox-card"><input type="checkbox" value="产品手册" onchange="updateCheckboxCards(this)"> 产品手册</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeAiAgentCreate()">取消</button>
+        <button class="btn btn-primary" onclick="saveAiAgentCreate()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Agent：员工详情 -->
+  <div id="ai-agent-detail-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeAiAgentDetail()">
+    <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-primary-light text-primary flex items-center justify-center text-xl font-bold" id="ai-agent-detail-avatar">A</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-lg font-bold text-ink" id="ai-agent-detail-name">-</h3>
+              <span id="ai-agent-detail-role-badge"></span>
+            </div>
+            <div class="text-sub text-sm" id="ai-agent-detail-subtitle">-</div>
+          </div>
+        </div>
+        <button class="btn btn-ghost flex-shrink-0" onclick="closeAiAgentDetail()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
+          <div class="card p-3 text-center"><div class="text-xs text-sub">今日调用</div><div class="text-xl font-bold text-ink mt-1" id="ai-agent-detail-calls">-</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">成功率</div><div class="text-xl font-bold text-success mt-1" id="ai-agent-detail-success">-</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">能力数</div><div class="text-xl font-bold text-primary mt-1" id="ai-agent-detail-ability-count">-</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">状态</div><div class="text-xl font-bold text-ink mt-1" id="ai-agent-detail-state">-</div></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="card p-3">
+            <div class="text-xs text-sub mb-2">能力标签</div>
+            <div class="flex flex-wrap gap-2" id="ai-agent-detail-abilities"></div>
+          </div>
+          <div class="card p-3">
+            <div class="text-xs text-sub mb-2">最近对话示例</div>
+            <div class="space-y-2 text-sm" id="ai-agent-detail-chat"></div>
+          </div>
+        </div>
+        <div class="card p-3">
+          <div class="text-xs text-sub mb-3">运行日志（近 5 条）</div>
+          <div class="space-y-2" id="ai-agent-detail-logs"></div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeAiAgentDetail()">关闭</button>
+        <button class="btn btn-outline" onclick="editAiAgentDetail()">编辑</button>
+        <button class="btn btn-primary" onclick="toggleAiAgentStatus()" id="ai-agent-detail-toggle-btn">停用</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Batch 3: 定制项目弹窗 ===== -->
+  <!-- 定制项目：项目详情 -->
+  <div id="custom-project-detail-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeCustomProjectDetail()">
+    <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs text-placeholder" id="custom-project-detail-code">CP-2026-001</span>
+            <span id="custom-project-detail-status"></span>
+          </div>
+          <h3 class="text-lg font-bold text-ink truncate" id="custom-project-detail-name">-</h3>
+          <div class="text-sub text-sm mt-1 flex flex-wrap gap-3">
+            <span class="flex items-center gap-1"><svg class="icon icon-xs"><use href="#icon-building"/></svg> <span id="custom-project-detail-customer">-</span></span>
+            <span class="flex items-center gap-1"><svg class="icon icon-xs"><use href="#icon-user"/></svg> 负责人：<span id="custom-project-detail-owner">-</span></span>
+          </div>
+        </div>
+        <button class="btn btn-ghost flex-shrink-0" onclick="closeCustomProjectDetail()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
+          <div class="card p-3 text-center"><div class="text-xs text-sub">预计金额</div><div class="text-xl font-bold text-ink mt-1" id="custom-project-detail-amount">-</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">当前阶段</div><div class="text-xl font-bold text-primary mt-1" id="custom-project-detail-stage">-</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">项目周期</div><div class="text-xl font-bold text-ink mt-1" id="custom-project-detail-cycle">142 天</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">风险等级</div><div class="text-xl font-bold text-warning mt-1" id="custom-project-detail-risk">中</div></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="card p-3">
+            <div class="text-xs text-sub mb-2">需求摘要</div>
+            <p class="text-sm text-ink leading-relaxed" id="custom-project-detail-requirement">-</p>
+          </div>
+          <div class="card p-3">
+            <div class="text-xs text-sub mb-2">风险提醒</div>
+            <ul class="text-sm space-y-1 text-ink list-disc list-inside" id="custom-project-detail-risks"></ul>
+          </div>
+        </div>
+        <div class="card p-3 mb-4">
+          <div class="text-xs text-sub mb-3">交付里程碑</div>
+          <div class="progress-steps" id="custom-project-detail-milestones"></div>
+        </div>
+        <div class="card p-3">
+          <div class="text-xs text-sub mb-3">项目时间线</div>
+          <div class="timeline" id="custom-project-detail-timeline"></div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeCustomProjectDetail()">关闭</button>
+        <button class="btn btn-outline" onclick="advanceCustomProjectStage()">推进阶段</button>
+        <button class="btn btn-primary" onclick="openCustomProjectResourceOverlay()">申请资源</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 定制项目：资源申请子弹窗 -->
+  <div id="custom-project-resource-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeCustomProjectResourceOverlay()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">申请资源</h3>
+          <div class="text-sub text-sm mt-1">为定制项目申请资源支持</div>
+        </div>
+        <button class="btn btn-ghost" onclick="closeCustomProjectResourceOverlay()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 gap-4">
+          <div class="form-group">
+            <label class="form-label">资源类型 <span class="required">*</span></label>
+            <div class="flex flex-wrap gap-2">
+              <label class="radio-card selected"><input type="radio" name="customProjectResourceType" value="研发" checked onchange="updateRadioCards(this)"> 研发</label>
+              <label class="radio-card"><input type="radio" name="customProjectResourceType" value="交付" onchange="updateRadioCards(this)"> 交付</label>
+              <label class="radio-card"><input type="radio" name="customProjectResourceType" value="售后" onchange="updateRadioCards(this)"> 售后</label>
+              <label class="radio-card"><input type="radio" name="customProjectResourceType" value="专家" onchange="updateRadioCards(this)"> 专家</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">说明</label>
+            <textarea class="input" id="custom-project-resource-desc" rows="3" placeholder="请说明资源需求"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">期望到位时间</label>
+            <input type="date" class="input" id="custom-project-resource-date">
+          </div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeCustomProjectResourceOverlay()">取消</button>
+        <button class="btn btn-primary" onclick="submitCustomProjectResource()">提交</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Batch 3: 效益中心数据下钻弹窗 ===== -->
+  <div id="benefit-detail-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeBenefitDetail()">
+    <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink" id="benefit-detail-title">指标明细</h3>
+          <div class="text-sub text-sm mt-1">月度明细、同比环比与区域分布</div>
+        </div>
+        <button class="btn btn-ghost" onclick="closeBenefitDetail()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+          <div class="card p-3 text-center"><div class="text-xs text-sub">当期累计</div><div class="text-xl font-bold text-ink mt-1" id="benefit-detail-total">-</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">同比</div><div class="text-xl font-bold text-success mt-1" id="benefit-detail-yoy">-</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">环比</div><div class="text-xl font-bold text-primary mt-1" id="benefit-detail-mom">-</div></div>
+        </div>
+        <div class="card p-3 mb-4">
+          <div class="text-xs text-sub mb-3">月度明细</div>
+          <div class="overflow-x-auto">
+            <table class="data-table min-w-[500px]">
+              <thead><tr><th>月份</th><th>金额</th><th>同比</th><th>环比</th><th>占比</th></tr></thead>
+              <tbody id="benefit-detail-table"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card p-3">
+          <div class="text-xs text-sub mb-3">区域分布</div>
+          <div class="space-y-3" id="benefit-detail-regions"></div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeBenefitDetail()">关闭</button>
+        <button class="btn btn-primary" onclick="showToast('已导出明细')">导出</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Batch 3: 数据洞察中心弹窗 ===== -->
+  <!-- 洞察：生成报告 -->
+  <div id="insight-report-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeInsightReport()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">生成洞察报告</h3>
+          <div class="text-sub text-sm mt-1">选择报告周期、模块与导出格式</div>
+        </div>
+        <button class="btn btn-ghost" onclick="closeInsightReport()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 gap-4">
+          <div class="form-group">
+            <label class="form-label">报告周期</label>
+            <div class="flex flex-wrap gap-2">
+              <label class="radio-card selected"><input type="radio" name="insightReportPeriod" value="近 30 天" checked onchange="updateRadioCards(this)"> 近 30 天</label>
+              <label class="radio-card"><input type="radio" name="insightReportPeriod" value="本季度" onchange="updateRadioCards(this)"> 本季度</label>
+              <label class="radio-card"><input type="radio" name="insightReportPeriod" value="本年度" onchange="updateRadioCards(this)"> 本年度</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">包含模块</label>
+            <div class="flex flex-wrap gap-2" id="insight-report-modules">
+              <label class="checkbox-card selected"><input type="checkbox" value="转化分析" checked onchange="updateCheckboxCards(this)"> 转化分析</label>
+              <label class="checkbox-card selected"><input type="checkbox" value="区域对比" checked onchange="updateCheckboxCards(this)"> 区域对比</label>
+              <label class="checkbox-card selected"><input type="checkbox" value="丢单原因" checked onchange="updateCheckboxCards(this)"> 丢单原因</label>
+              <label class="checkbox-card"><input type="checkbox" value="销售人效" onchange="updateCheckboxCards(this)"> 销售人效</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">报告格式</label>
+            <div class="flex flex-wrap gap-2">
+              <label class="radio-card selected"><input type="radio" name="insightReportFormat" value="PDF" checked onchange="updateRadioCards(this)"> PDF</label>
+              <label class="radio-card"><input type="radio" name="insightReportFormat" value="PPT" onchange="updateRadioCards(this)"> PPT</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeInsightReport()">取消</button>
+        <button class="btn btn-primary" onclick="generateInsightReport()">生成</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 洞察：漏斗阶段下钻 -->
+  <div id="insight-stage-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeInsightStage()">
+    <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink" id="insight-stage-title">阶段下钻</h3>
+          <div class="text-sub text-sm mt-1">项目列表、数量、金额与转化率</div>
+        </div>
+        <button class="btn btn-ghost" onclick="closeInsightStage()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+          <div class="card p-3 text-center"><div class="text-xs text-sub">阶段数量</div><div class="text-xl font-bold text-ink mt-1" id="insight-stage-count">-</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">阶段金额</div><div class="text-xl font-bold text-primary mt-1" id="insight-stage-amount">-</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">转化率</div><div class="text-xl font-bold text-success mt-1" id="insight-stage-rate">-</div></div>
+        </div>
+        <div class="card p-3">
+          <div class="text-xs text-sub mb-3">项目列表</div>
+          <div class="overflow-x-auto">
+            <table class="data-table min-w-[520px]">
+              <thead><tr><th>项目/客户</th><th>负责人</th><th>金额</th><th>阶段</th><th>预计成交</th></tr></thead>
+              <tbody id="insight-stage-table"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeInsightStage()">关闭</button>
       </div>
     </div>
   </div>
