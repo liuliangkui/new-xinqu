@@ -3493,8 +3493,8 @@
                       <td>
                         <div class="flex gap-1">
                           <button class="btn btn-ghost text-xs" onclick="showToast('查看预警详情')">详情</button>
-                          <button class="btn btn-primary text-xs" onclick="handleCrossShipWarning(this)">处理</button>
-                          <button class="btn btn-danger text-xs" onclick="interceptCrossShip(this)">拦截</button>
+                          <button class="btn btn-primary text-xs" onclick="event.stopPropagation();openDealerActionModal('处理', this.closest('tr').children[1].innerText)">处理</button>
+                          <button class="btn btn-danger text-xs" onclick="event.stopPropagation();openDealerActionModal('拦截', this.closest('tr').children[1].innerText)">拦截</button>
                         </div>
                       </td>
                     </tr>
@@ -3510,8 +3510,8 @@
                       <td>
                         <div class="flex gap-1">
                           <button class="btn btn-ghost text-xs" onclick="showToast('查看预警详情')">详情</button>
-                          <button class="btn btn-primary text-xs" onclick="handleCrossShipWarning(this)">处理</button>
-                          <button class="btn btn-danger text-xs" onclick="interceptCrossShip(this)">拦截</button>
+                          <button class="btn btn-primary text-xs" onclick="event.stopPropagation();openDealerActionModal('处理', this.closest('tr').children[1].innerText)">处理</button>
+                          <button class="btn btn-danger text-xs" onclick="event.stopPropagation();openDealerActionModal('拦截', this.closest('tr').children[1].innerText)">拦截</button>
                         </div>
                       </td>
                     </tr>
@@ -3527,8 +3527,8 @@
                       <td>
                         <div class="flex gap-1">
                           <button class="btn btn-ghost text-xs" onclick="showToast('查看预警详情')">详情</button>
-                          <button class="btn btn-ghost text-xs" disabled onclick="showToast(`操作已执行`)">处理</button>
-                          <button class="btn btn-ghost text-xs" disabled onclick="showToast(`操作已执行`)">拦截</button>
+                          <button class="btn btn-ghost text-xs" disabled onclick="event.stopPropagation();openDealerActionModal('处理', this.closest('tr').children[1].innerText)">处理</button>
+                          <button class="btn btn-ghost text-xs" disabled onclick="event.stopPropagation();openDealerActionModal('拦截', this.closest('tr').children[1].innerText)">拦截</button>
                         </div>
                       </td>
                     </tr>
@@ -3785,7 +3785,7 @@
                   </div>
                 </div>
                 <div class="flex gap-2">
-                  <button class="btn btn-ghost" onclick="showToast(`进入编辑模式`)"><svg class="icon icon-sm"><use href="#icon-edit"/></svg> 编辑</button>
+                  <button class="btn btn-ghost" onclick="event.stopPropagation();openDealerEditModal()"><svg class="icon icon-sm"><use href="#icon-edit"/></svg> 编辑</button>
                   <button class="btn btn-primary" onclick="openDealerAuthorizeModal()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新增授权</button>
                 </div>
               </div>
@@ -6418,7 +6418,7 @@
               <div class="intention-modal-footer">
                 <button class="btn btn-ghost" onclick="closeEquipmentModal()">关闭</button>
                 <div class="flex items-center gap-2">
-                  <button class="btn btn-outline" onclick="showToast(`功能演示：编辑`)">编辑</button>
+                  <button class="btn btn-outline" onclick="event.stopPropagation();openEquipmentEditModal(this)">编辑</button>
                   <button class="btn btn-outline" onclick="showToast('报修申请已创建')">报修</button>
                   <button class="btn btn-outline" onclick="showToast('续保意向已创建')">续保</button>
                   <button class="btn btn-primary" onclick="showToast('调拨申请已打开')">调拨</button>
@@ -6474,7 +6474,7 @@
               <p class="text-sub text-sm">消耗预测、复购预警、上量分析与库存管理。</p>
             </div>
             <div class="flex items-center gap-2">
-              <button class="btn btn-outline" onclick="showToast(`功能演示：数据导入`)"><svg class="icon icon-sm"><use href="#icon-upload"/></svg> 导入数据</button>
+              <button class="btn btn-outline" onclick="event.stopPropagation();openReagentImportModal()"><svg class="icon icon-sm"><use href="#icon-upload"/></svg> 导入数据</button>
               <button class="btn btn-primary" onclick="openReagentCreate()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建试剂档案</button>
             </div>
           </div>
@@ -13006,6 +13006,303 @@ Content-Type: application/json
   </div>
 
 
+  <!-- ===== 剩余核心操作弹窗 ===== -->
+  <!-- 经销商操作确认 -->
+  <div id="dealer-action-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeDealerActionModal()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink" id="dealer-action-title">操作确认</h3>
+          <p class="text-sub text-sm mt-1">请确认本次操作并填写原因说明</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeDealerActionModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="bg-panel rounded-xl p-4 mb-4">
+          <div class="text-sm text-sub mb-1">操作对象</div>
+          <div class="font-medium text-ink" id="dealer-action-object">-</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">原因说明 <span class="required">*</span></label>
+          <textarea class="input" id="dealer-action-reason" rows="3" placeholder="请输入操作原因"></textarea>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeDealerActionModal()">取消</button>
+        <button class="btn btn-primary" onclick="submitDealerAction()">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 经销商编辑 -->
+  <div id="dealer-edit-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeDealerEditModal()">
+    <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">编辑经销商</h3>
+          <p class="text-sub text-sm mt-1">维护经销商基础档案信息</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeDealerEditModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group"><label class="form-label">经销商名称 <span class="required">*</span></label><input type="text" class="input w-full" id="dealer-edit-name"></div>
+          <div class="form-group"><label class="form-label">统一社会信用代码</label><input type="text" class="input w-full" id="dealer-edit-credit"></div>
+          <div class="form-group"><label class="form-label">合作等级 <span class="required">*</span></label><select class="input w-full" id="dealer-edit-level"><option>核心</option><option>一般</option><option>潜在</option></select></div>
+          <div class="form-group"><label class="form-label">授权区域 <span class="required">*</span></label><input type="text" class="input w-full" id="dealer-edit-region"></div>
+          <div class="form-group md:col-span-2"><label class="form-label">主营产品线</label><input type="text" class="input w-full" id="dealer-edit-product"></div>
+          <div class="form-group"><label class="form-label">联系人</label><input type="text" class="input w-full" id="dealer-edit-contact"></div>
+          <div class="form-group"><label class="form-label">联系电话</label><input type="text" class="input w-full" id="dealer-edit-phone"></div>
+          <div class="form-group"><label class="form-label">状态 <span class="required">*</span></label><select class="input w-full" id="dealer-edit-status"><option>合作中</option><option>暂停合作</option><option>终止合作</option></select></div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeDealerEditModal()">取消</button>
+        <button class="btn btn-primary" onclick="submitDealerEdit()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 设备编辑 -->
+  <div id="equipment-edit-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeEquipmentEditModal()">
+    <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">编辑设备</h3>
+          <p class="text-sub text-sm mt-1">修改设备档案信息</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeEquipmentEditModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group"><label class="form-label">设备名称 <span class="required">*</span></label><input type="text" class="input w-full" id="equipment-edit-name"></div>
+          <div class="form-group"><label class="form-label">型号 <span class="required">*</span></label><input type="text" class="input w-full" id="equipment-edit-model"></div>
+          <div class="form-group"><label class="form-label">序列号 <span class="required">*</span></label><input type="text" class="input w-full" id="equipment-edit-sn"></div>
+          <div class="form-group"><label class="form-label">客户 <span class="required">*</span></label><input type="text" class="input w-full" id="equipment-edit-customer"></div>
+          <div class="form-group"><label class="form-label">科室 <span class="required">*</span></label><input type="text" class="input w-full" id="equipment-edit-dept"></div>
+          <div class="form-group"><label class="form-label">安装日期</label><input type="date" class="input w-full" id="equipment-edit-install"></div>
+          <div class="form-group"><label class="form-label">保修到期日</label><input type="date" class="input w-full" id="equipment-edit-warranty"></div>
+          <div class="form-group"><label class="form-label">运行状态 <span class="required">*</span></label><select class="input w-full" id="equipment-edit-status"><option>运行中</option><option>已装机</option><option>维修中</option><option>闲置</option><option>在途</option><option>报废</option></select></div>
+          <div class="form-group md:col-span-2"><label class="form-label">备注</label><textarea class="input w-full" id="equipment-edit-remark" rows="3"></textarea></div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeEquipmentEditModal()">取消</button>
+        <button class="btn btn-primary" onclick="submitEquipmentEdit()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 试剂导入 -->
+  <div id="reagent-import-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeReagentImportModal()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">导入试剂数据</h3>
+          <p class="text-sub text-sm mt-1">批量导入库存/消耗/采购数据</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeReagentImportModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="form-group">
+          <label class="form-label">文件上传 <span class="required">*</span></label>
+          <div class="border border-dashed border-line rounded-xl p-6 text-center text-sub text-sm bg-panel cursor-pointer hover:bg-line-light" onclick="showToast('请选择文件上传')">
+            <svg class="icon icon-md mx-auto mb-2"><use href="#icon-upload"/></svg>
+            <div>点击上传或拖拽文件至此处</div>
+            <div class="text-xs mt-1">支持 Excel / CSV</div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label class="form-label">数据类型 <span class="required">*</span></label>
+            <select class="input w-full" id="reagent-import-type"><option>库存</option><option>消耗</option><option>采购</option></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">导入方式 <span class="required">*</span></label>
+            <select class="input w-full" id="reagent-import-mode"><option>追加</option><option>覆盖</option></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">模板</label>
+          <a class="text-primary hover:underline text-sm cursor-pointer" onclick="showToast('模板下载中');event.stopPropagation()">下载导入模板</a>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeReagentImportModal()">取消</button>
+        <button class="btn btn-primary" onclick="submitReagentImport()">确认导入</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 定制项目：领取 -->
+  <div id="custom-project-claim-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeCustomProjectClaimModal()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">领取项目</h3>
+          <p class="text-sub text-sm mt-1">确认领取当前定制项目</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeCustomProjectClaimModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="bg-panel rounded-xl p-4 mb-4">
+          <div class="text-sm text-sub mb-1">项目名称</div>
+          <div class="font-medium text-ink mb-3" id="custom-project-claim-name">-</div>
+          <div class="text-sm text-sub mb-1">负责人</div>
+          <div class="font-medium text-ink" id="custom-project-claim-owner">-</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">领取备注</label>
+          <textarea class="input" id="custom-project-claim-remark" rows="3" placeholder="选填"></textarea>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeCustomProjectClaimModal()">取消</button>
+        <button class="btn btn-primary" onclick="submitCustomProjectClaim()">确认领取</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 定制项目：分配 -->
+  <div id="custom-project-assign-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeCustomProjectAssignModal()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">分配项目</h3>
+          <p class="text-sub text-sm mt-1">将项目分配给指定负责人</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeCustomProjectAssignModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="form-group">
+          <label class="form-label">分配人 <span class="required">*</span></label>
+          <input type="text" class="input w-full" id="custom-project-assign-owner" placeholder="请输入分配人姓名">
+        </div>
+        <div class="form-group">
+          <label class="form-label">备注</label>
+          <textarea class="input" id="custom-project-assign-remark" rows="3" placeholder="请输入备注"></textarea>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeCustomProjectAssignModal()">取消</button>
+        <button class="btn btn-primary" onclick="submitCustomProjectAssign()">确认分配</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 定制项目：跟进 -->
+  <div id="custom-project-follow-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeCustomProjectFollowModal()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">录入跟进</h3>
+          <p class="text-sub text-sm mt-1">记录本次跟进情况</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeCustomProjectFollowModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="form-group">
+          <label class="form-label">跟进内容 <span class="required">*</span></label>
+          <textarea class="input" id="custom-project-follow-content" rows="3" placeholder="填写本次跟进的关键信息"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">下次跟进时间</label>
+          <input type="datetime-local" class="input w-full" id="custom-project-follow-next">
+        </div>
+        <div class="form-group">
+          <label class="form-label">当前阶段 <span class="required">*</span></label>
+          <select class="input w-full" id="custom-project-follow-stage"><option>需求调研</option><option>方案设计</option><option>合同谈判</option><option>设备进场</option><option>验收交付</option></select>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeCustomProjectFollowModal()">取消</button>
+        <button class="btn btn-primary" onclick="submitCustomProjectFollow()">保存跟进</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 定制项目：转意向 -->
+  <div id="custom-project-convert-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeCustomProjectConvertModal()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">转意向</h3>
+          <p class="text-sub text-sm mt-1">将定制项目转为正式意向</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeCustomProjectConvertModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 gap-4">
+          <div class="form-group">
+            <label class="form-label">预计金额</label>
+            <input type="text" class="input w-full" id="custom-project-convert-amount" placeholder="如：¥560万">
+          </div>
+          <div class="form-group">
+            <label class="form-label">意向阶段 <span class="required">*</span></label>
+            <select class="input w-full" id="custom-project-convert-stage"><option>需求确认</option><option>方案论证</option><option>商务谈判</option><option>合同签订</option></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">备注</label>
+            <textarea class="input" id="custom-project-convert-remark" rows="3" placeholder="请输入备注"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeCustomProjectConvertModal()">取消</button>
+        <button class="btn btn-primary" onclick="submitCustomProjectConvert()">确认转意向</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 定制项目：完整详情 -->
+  <div id="custom-project-full-detail-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeCustomProjectFullDetailModal()">
+    <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs text-placeholder" id="custom-project-full-detail-code">-</span>
+            <span id="custom-project-full-detail-status"></span>
+          </div>
+          <h3 class="text-lg font-bold text-ink truncate" id="custom-project-full-detail-name">-</h3>
+          <div class="text-sub text-sm mt-1 flex flex-wrap gap-3">
+            <span class="flex items-center gap-1"><svg class="icon icon-xs"><use href="#icon-building"/></svg> <span id="custom-project-full-detail-customer">-</span></span>
+            <span class="flex items-center gap-1"><svg class="icon icon-xs"><use href="#icon-user"/></svg> 负责人：<span id="custom-project-full-detail-owner">-</span></span>
+          </div>
+        </div>
+        <button class="btn btn-ghost flex-shrink-0" onclick="closeCustomProjectFullDetailModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
+          <div class="card p-3 text-center"><div class="text-xs text-sub">预计金额</div><div class="text-xl font-bold text-ink mt-1" id="custom-project-full-detail-amount">-</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">当前阶段</div><div class="text-xl font-bold text-primary mt-1" id="custom-project-full-detail-stage">-</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">项目周期</div><div class="text-xl font-bold text-ink mt-1">142 天</div></div>
+          <div class="card p-3 text-center"><div class="text-xs text-sub">风险等级</div><div class="text-xl font-bold text-warning mt-1" id="custom-project-full-detail-risk">中</div></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="card p-3">
+            <div class="text-xs text-sub mb-2">需求全文</div>
+            <p class="text-sm text-ink leading-relaxed" id="custom-project-full-detail-requirement">-</p>
+          </div>
+          <div class="card p-3">
+            <div class="text-xs text-sub mb-2">风险清单</div>
+            <ul class="text-sm space-y-1 text-ink list-disc list-inside" id="custom-project-full-detail-risks"></ul>
+          </div>
+        </div>
+        <div class="card p-3 mb-4">
+          <div class="text-xs text-sub mb-3">交付里程碑</div>
+          <div class="progress-steps" id="custom-project-full-detail-milestones"></div>
+        </div>
+        <div class="card p-3">
+          <div class="text-xs text-sub mb-3">项目时间线</div>
+          <div class="timeline" id="custom-project-full-detail-timeline"></div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeCustomProjectFullDetailModal()">关闭</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     /* ===== Theme management ===== */
     function initTheme() {
@@ -16179,6 +16476,7 @@ Content-Type: application/json
     /* ===== Equipment detail modal ===== */
     function openEquipmentModal(el) {
       const d = el.dataset;
+      window.currentEquipmentData = d;
       document.getElementById('modal-equipment-status').innerHTML = '<span class="badge ' + (d.statusClass || 'badge-gray') + '">' + (d.statusText || '') + '</span>';
       document.getElementById('modal-equipment-name').textContent = d.name || '';
       document.getElementById('modal-equipment-name2').textContent = d.name || '';
@@ -17893,6 +18191,7 @@ Content-Type: application/json
     /* ===== Batch 3: 定制项目 ===== */
     function openCustomProjectDetail(el) {
       const d = el ? (el.dataset || {}) : {};
+      window.currentCustomProjectData = d;
       document.getElementById('custom-project-detail-code').textContent = d.code || 'CP-2026-001';
       const status = d.status || '推进中';
       const statusClass = d.statusClass || 'badge-primary';
@@ -18320,6 +18619,186 @@ Content-Type: application/json
     }
     function closeFlowTerminateModal() {
       document.getElementById('flow-terminate-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* ===== 剩余核心操作弹窗 ===== */
+    function openDealerActionModal(action, dealerName) {
+      document.getElementById('dealer-action-title').textContent = (action || '操作') + '确认';
+      document.getElementById('dealer-action-object').textContent = dealerName || '-';
+      document.getElementById('dealer-action-reason').value = '';
+      document.getElementById('dealer-action-overlay').dataset.action = action || '';
+      document.getElementById('dealer-action-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDealerActionModal() {
+      document.getElementById('dealer-action-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function submitDealerAction() {
+      const reason = document.getElementById('dealer-action-reason').value.trim();
+      if (!reason) { showToast('请填写原因说明'); return; }
+      showToast('操作成功');
+      closeDealerActionModal();
+    }
+
+    function openDealerEditModal() {
+      document.getElementById('dealer-edit-name').value = '昆明博奥生物技术有限公司';
+      document.getElementById('dealer-edit-credit').value = '91530100MA6K*****';
+      document.getElementById('dealer-edit-level').value = '核心';
+      document.getElementById('dealer-edit-region').value = '云南-昆明、玉溪';
+      document.getElementById('dealer-edit-product').value = '血球、生化';
+      document.getElementById('dealer-edit-contact').value = '陈总';
+      document.getElementById('dealer-edit-phone').value = '132****8888';
+      document.getElementById('dealer-edit-status').value = '合作中';
+      document.getElementById('dealer-edit-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDealerEditModal() {
+      document.getElementById('dealer-edit-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function submitDealerEdit() {
+      showToast('保存成功');
+      closeDealerEditModal();
+    }
+
+    function openEquipmentEditModal(el) {
+      const d = window.currentEquipmentData || {};
+      document.getElementById('equipment-edit-name').value = d.name || '';
+      document.getElementById('equipment-edit-model').value = d.model || '';
+      document.getElementById('equipment-edit-sn').value = d.sn || '';
+      document.getElementById('equipment-edit-customer').value = d.customer || '';
+      document.getElementById('equipment-edit-dept').value = d.dept || '';
+      document.getElementById('equipment-edit-install').value = d.install && d.install !== '-' ? d.install : '';
+      document.getElementById('equipment-edit-warranty').value = d.warranty && d.warranty !== '-' ? d.warranty : '';
+      document.getElementById('equipment-edit-status').value = d.statusText || '运行中';
+      document.getElementById('equipment-edit-remark').value = '';
+      document.getElementById('equipment-edit-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeEquipmentEditModal() {
+      document.getElementById('equipment-edit-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function submitEquipmentEdit() {
+      showToast('保存成功');
+      closeEquipmentEditModal();
+    }
+
+    function openReagentImportModal() {
+      document.getElementById('reagent-import-type').value = '库存';
+      document.getElementById('reagent-import-mode').value = '追加';
+      document.getElementById('reagent-import-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeReagentImportModal() {
+      document.getElementById('reagent-import-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function submitReagentImport() {
+      showToast('操作成功');
+      closeReagentImportModal();
+    }
+
+    function openCustomProjectClaimModal() {
+      const d = window.currentCustomProjectData || {};
+      document.getElementById('custom-project-claim-name').textContent = d.name || '-';
+      document.getElementById('custom-project-claim-owner').textContent = d.owner || '-';
+      document.getElementById('custom-project-claim-remark').value = '';
+      document.getElementById('custom-project-claim-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCustomProjectClaimModal() {
+      document.getElementById('custom-project-claim-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function submitCustomProjectClaim() {
+      showToast('操作成功');
+      closeCustomProjectClaimModal();
+    }
+
+    function openCustomProjectAssignModal() {
+      document.getElementById('custom-project-assign-owner').value = '';
+      document.getElementById('custom-project-assign-remark').value = '';
+      document.getElementById('custom-project-assign-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCustomProjectAssignModal() {
+      document.getElementById('custom-project-assign-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function submitCustomProjectAssign() {
+      const owner = document.getElementById('custom-project-assign-owner').value.trim();
+      if (!owner) { showToast('请输入分配人'); return; }
+      showToast('操作成功');
+      closeCustomProjectAssignModal();
+    }
+
+    function openCustomProjectFollowModal() {
+      document.getElementById('custom-project-follow-content').value = '';
+      document.getElementById('custom-project-follow-next').value = '';
+      const d = window.currentCustomProjectData || {};
+      const stage = d.stage || '需求调研';
+      const select = document.getElementById('custom-project-follow-stage');
+      select.value = Array.from(select.options).some(o => o.value === stage) ? stage : '需求调研';
+      document.getElementById('custom-project-follow-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCustomProjectFollowModal() {
+      document.getElementById('custom-project-follow-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function submitCustomProjectFollow() {
+      const content = document.getElementById('custom-project-follow-content').value.trim();
+      if (!content) { showToast('请填写跟进内容'); return; }
+      showToast('保存成功');
+      closeCustomProjectFollowModal();
+    }
+
+    function openCustomProjectConvertModal() {
+      const d = window.currentCustomProjectData || {};
+      document.getElementById('custom-project-convert-amount').value = d.amount || '';
+      document.getElementById('custom-project-convert-remark').value = '';
+      document.getElementById('custom-project-convert-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCustomProjectConvertModal() {
+      document.getElementById('custom-project-convert-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function submitCustomProjectConvert() {
+      showToast('操作成功');
+      closeCustomProjectConvertModal();
+    }
+
+    function openCustomProjectFullDetailModal() {
+      const d = window.currentCustomProjectData || {};
+      document.getElementById('custom-project-full-detail-code').textContent = d.code || '-';
+      document.getElementById('custom-project-full-detail-status').innerHTML = d.status && d.statusClass ? '<span class="badge ' + d.statusClass + '">' + d.status + '</span>' : '';
+      document.getElementById('custom-project-full-detail-name').textContent = d.name || '-';
+      document.getElementById('custom-project-full-detail-customer').textContent = d.customer || '-';
+      document.getElementById('custom-project-full-detail-owner').textContent = d.owner || '-';
+      document.getElementById('custom-project-full-detail-amount').textContent = d.amount || '-';
+      document.getElementById('custom-project-full-detail-stage').textContent = d.stage || '-';
+      document.getElementById('custom-project-full-detail-requirement').textContent = d.requirement || '-';
+      const risksContainer = document.getElementById('custom-project-full-detail-risks');
+      risksContainer.innerHTML = '';
+      (d.risks || '').split(',').filter(Boolean).forEach(r => { risksContainer.innerHTML += '<li>' + r + '</li>'; });
+      const milestones = (d.milestones || '需求调研,方案设计,合同谈判,设备进场,验收交付').split(',');
+      const activeIndex = parseInt(d.activeIndex || '0', 10);
+      const milestonesContainer = document.getElementById('custom-project-full-detail-milestones');
+      milestonesContainer.innerHTML = '';
+      milestones.forEach((m, i) => {
+        const cls = i < activeIndex ? 'completed' : (i === activeIndex ? 'active' : '');
+        milestonesContainer.innerHTML += '<div class="progress-step ' + cls + '"><div class="progress-step-dot">' + (i + 1) + '</div><div class="progress-step-label">' + m + '</div></div>';
+      });
+      document.getElementById('custom-project-full-detail-timeline').innerHTML = '<div class="timeline-item"><div class="timeline-dot bg-primary"></div><div class="text-sm text-ink font-medium">当前阶段：' + (d.stage || '-') + '</div><div class="text-xs text-sub">负责人：' + (d.owner || '-') + '</div></div><div class="timeline-item"><div class="timeline-dot bg-success"></div><div class="text-sm text-ink font-medium">完成现场调研</div><div class="text-xs text-sub">2026-06-15 · ' + (d.owner || '-') + '</div></div><div class="timeline-item"><div class="timeline-dot bg-info"></div><div class="text-sm text-ink font-medium">项目立项</div><div class="text-xs text-sub">2026-06-01 · ' + (d.owner || '-') + '</div></div>';
+      document.getElementById('custom-project-full-detail-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCustomProjectFullDetailModal() {
+      document.getElementById('custom-project-full-detail-overlay').classList.remove('open');
       document.body.style.overflow = '';
     }
   </script>
@@ -19142,8 +19621,11 @@ Content-Type: application/json
       </div>
       <div class="intention-modal-footer">
         <button class="btn btn-ghost" onclick="closeCustomProjectDetail()">关闭</button>
-        <button class="btn btn-outline" onclick="advanceCustomProjectStage()">推进阶段</button>
-        <button class="btn btn-primary" onclick="openCustomProjectResourceOverlay()">申请资源</button>
+        <button class="btn btn-outline" onclick="event.stopPropagation();openCustomProjectClaimModal()">领取</button>
+        <button class="btn btn-outline" onclick="event.stopPropagation();openCustomProjectAssignModal()">分配</button>
+        <button class="btn btn-outline" onclick="event.stopPropagation();openCustomProjectFollowModal()">跟进</button>
+        <button class="btn btn-primary" onclick="event.stopPropagation();openCustomProjectConvertModal()">转意向</button>
+        <button class="btn btn-ghost" onclick="event.stopPropagation();openCustomProjectFullDetailModal()">查看详情</button>
       </div>
     </div>
   </div>
