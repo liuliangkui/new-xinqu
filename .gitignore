@@ -30,8 +30,15 @@ coverage
 
 .env
 
+# Environment / tooling
+.venv/
+.claude/
+
 # Local backups and generated artifacts
 backup-local/
+screenshots/
+*.bak
+*_backup
 *.bak
 *_backup
 *_screenshot*.png
