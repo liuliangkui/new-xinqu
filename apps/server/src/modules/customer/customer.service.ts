@@ -1,20 +1,29 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
+import { DataScopeHelper, type CurrentUser } from '@/common/helpers/data-scope.helper'
 import { CreateCustomerDto } from './dto/create-customer.dto'
 import { UpdateCustomerDto } from './dto/update-customer.dto'
 
 @Injectable()
 export class CustomerService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private dataScope: DataScopeHelper,
+  ) {}
 
-  async findAll(params: { page: number; pageSize: number; keyword?: string; status?: string; level?: string }) {
+  async findAll(
+    user: CurrentUser,
+    params: { page: number; pageSize: number; keyword?: string; status?: string; level?: string },
+  ) {
     const { page, pageSize, keyword, status, level } = params
-    const where: { OR?: unknown[]; status?: string; level?: string } = {}
+    const baseWhere: { OR?: unknown[]; status?: string; level?: string } = {}
     if (keyword) {
-      where.OR = [{ name: { contains: keyword } }, { tags: { has: keyword } }]
+      baseWhere.OR = [{ name: { contains: keyword } }, { tags: { has: keyword } }]
     }
-    if (status) where.status = status
-    if (level) where.level = level
+    if (status) baseWhere.status = status
+    if (level) baseWhere.level = level
+
+    const where = await this.dataScope.apply(user, 'customer', baseWhere)
 
     const [list, total] = await Promise.all([
       this.prisma.customer.findMany({

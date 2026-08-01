@@ -17,7 +17,7 @@
     "db:migrate": "npm run db:migrate -w apps/server",
     "db:generate": "npm run db:generate -w apps/server",
     "db:seed": "npm run db:seed -w apps/server",
-    "api:types": "npm run api:types -w apps/web",
+    "api:types": "npm run openapi:generate -w apps/server && npm run api:types -w apps/web",
     "test:server": "npm test -w apps/server",
     "test:web": "npm run test:unit -w apps/web",
     "test:e2e": "playwright test --config e2e/playwright.config.ts",
@@ -41,5 +41,10 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1"
+  },
+  "msw": {
+    "workerDirectory": [
+      "apps/web/public"
+    ]
   }
 }

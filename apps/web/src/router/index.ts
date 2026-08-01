@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import type { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw, NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 import XqMainLayout from '@/layouts/XqMainLayout.vue'
+import { useAuthStore } from '@/stores/auth'
 
 /**
  * 模块路由占位 — 22 个模块全部 lazy load
@@ -167,7 +168,7 @@ const routes: RouteRecordRaw[] = [
     path: '/login',
     name: 'login',
     component: () => import('@/views/login/index.vue'),
-    meta: { title: '登录' },
+    meta: { title: '登录', public: true },
   },
   {
     path: '/',
@@ -187,5 +188,23 @@ const router = createRouter({
   routes,
   scrollBehavior: () => ({ top: 0 }),
 })
+
+router.beforeEach(
+  (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
+    const authStore = useAuthStore()
+    const isPublic = to.meta.public === true
+    const requiredPermissions = (to.meta.permissions as string[] | undefined) || []
+
+    if (!isPublic && !authStore.isLoggedIn) {
+      return next({ name: 'login', query: { redirect: to.fullPath } })
+    }
+
+    if (requiredPermissions.length > 0 && !authStore.hasAnyPermission(requiredPermissions)) {
+      return next({ name: 'not-found' })
+    }
+
+    next()
+  },
+)
 
 export default router

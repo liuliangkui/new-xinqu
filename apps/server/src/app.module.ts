@@ -4,6 +4,8 @@ import { ScheduleModule } from '@nestjs/schedule'
 import { EventEmitterModule } from '@nestjs/event-emitter'
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
 import { APP_GUARD } from '@nestjs/core'
+import { JwtAuthGuard } from './modules/auth/jwt-auth.guard'
+import { RolesGuard } from './common/guards/roles.guard'
 
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -60,6 +62,14 @@ import { SchedulerModule } from './scheduler/scheduler.module'
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

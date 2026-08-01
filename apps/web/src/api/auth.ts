@@ -1,9 +1,4 @@
-import { post } from './request'
-
-export interface LoginParams {
-  username: string
-  password: string
-}
+import { post, get } from './request'
 
 export interface LoginResult {
   accessToken: string
@@ -14,6 +9,21 @@ export interface LoginResult {
   }
 }
 
-export function login(params: LoginParams) {
-  return post<LoginResult>('/auth/login', params)
+export interface ProfileResult {
+  id: string
+  username: string
+  name: string
+  phone?: string
+  email?: string
+  departmentId?: string
+  roleIds: string[]
+  permissions: string[]
+}
+
+export function login(username: string, password: string): Promise<LoginResult> {
+  return post<LoginResult>('/auth/login', { username, password })
+}
+
+export function getProfile(): Promise<ProfileResult> {
+  return get<ProfileResult>('/auth/profile')
 }

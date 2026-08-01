@@ -1,0 +1,1038 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "HealthController_check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/files/upload": {
+      "post": {
+        "operationId": "UploadController_uploadFile",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Upload"
+        ]
+      }
+    },
+    "/files/uploads": {
+      "post": {
+        "operationId": "UploadController_uploadFiles",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Upload"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "用户登录",
+        "tags": [
+          "认证"
+        ]
+      }
+    },
+    "/auth/profile": {
+      "get": {
+        "operationId": "AuthController_profile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "当前登录用户信息",
+        "tags": [
+          "认证"
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "UserController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询用户列表",
+        "tags": [
+          "用户管理"
+        ]
+      },
+      "post": {
+        "operationId": "UserController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "创建用户",
+        "tags": [
+          "用户管理"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "UserController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询用户详情",
+        "tags": [
+          "用户管理"
+        ]
+      },
+      "put": {
+        "operationId": "UserController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "更新用户",
+        "tags": [
+          "用户管理"
+        ]
+      },
+      "delete": {
+        "operationId": "UserController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "删除用户",
+        "tags": [
+          "用户管理"
+        ]
+      }
+    },
+    "/customers": {
+      "get": {
+        "operationId": "CustomerController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "level",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询客户列表",
+        "tags": [
+          "客户管理"
+        ]
+      },
+      "post": {
+        "operationId": "CustomerController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "创建客户",
+        "tags": [
+          "客户管理"
+        ]
+      }
+    },
+    "/customers/{id}": {
+      "get": {
+        "operationId": "CustomerController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询客户详情",
+        "tags": [
+          "客户管理"
+        ]
+      },
+      "put": {
+        "operationId": "CustomerController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCustomerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "更新客户",
+        "tags": [
+          "客户管理"
+        ]
+      },
+      "delete": {
+        "operationId": "CustomerController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "删除客户",
+        "tags": [
+          "客户管理"
+        ]
+      }
+    },
+    "/leads": {
+      "get": {
+        "operationId": "LeadController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "poolType",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询线索列表",
+        "tags": [
+          "线索管理"
+        ]
+      },
+      "post": {
+        "operationId": "LeadController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLeadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "创建线索",
+        "tags": [
+          "线索管理"
+        ]
+      }
+    },
+    "/leads/{id}": {
+      "get": {
+        "operationId": "LeadController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询线索详情",
+        "tags": [
+          "线索管理"
+        ]
+      },
+      "put": {
+        "operationId": "LeadController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "更新线索",
+        "tags": [
+          "线索管理"
+        ]
+      },
+      "delete": {
+        "operationId": "LeadController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "删除线索",
+        "tags": [
+          "线索管理"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "XQCOP API",
+    "description": "鑫渠业务协同运营平台 API 文档",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "用户名"
+          },
+          "password": {
+            "type": "string",
+            "description": "密码"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "用户名"
+          },
+          "password": {
+            "type": "string",
+            "description": "密码"
+          },
+          "name": {
+            "type": "string",
+            "description": "姓名"
+          },
+          "phone": {
+            "type": "string",
+            "description": "手机号"
+          },
+          "email": {
+            "type": "string",
+            "description": "邮箱"
+          },
+          "departmentId": {
+            "type": "string",
+            "description": "部门ID"
+          },
+          "roleIds": {
+            "description": "角色ID数组",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "enum": [
+              "ACTIVE",
+              "INACTIVE"
+            ]
+          }
+        },
+        "required": [
+          "username",
+          "password",
+          "name"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "密码"
+          },
+          "name": {
+            "type": "string",
+            "description": "姓名"
+          },
+          "phone": {
+            "type": "string",
+            "description": "手机号"
+          },
+          "email": {
+            "type": "string",
+            "description": "邮箱"
+          },
+          "departmentId": {
+            "type": "string",
+            "description": "部门ID"
+          },
+          "roleIds": {
+            "description": "角色ID数组",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "enum": [
+              "ACTIVE",
+              "INACTIVE"
+            ]
+          }
+        }
+      },
+      "CreateCustomerDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "客户名称"
+          },
+          "type": {
+            "type": "string",
+            "description": "客户类型"
+          },
+          "hospitalLevel": {
+            "type": "string",
+            "description": "医院等级"
+          },
+          "level": {
+            "type": "string",
+            "description": "客户级别",
+            "enum": [
+              "STRATEGIC",
+              "NORMAL"
+            ]
+          },
+          "healthScore": {
+            "type": "number",
+            "description": "健康评分"
+          },
+          "region": {
+            "type": "string",
+            "description": "所属区域"
+          },
+          "address": {
+            "type": "object",
+            "description": "地址信息"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "负责人ID"
+          },
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "enum": [
+              "POTENTIAL",
+              "COOPERATING",
+              "LOST"
+            ]
+          },
+          "tags": {
+            "description": "标签数组",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "source": {
+            "type": "string",
+            "description": "来源"
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "region",
+          "ownerId"
+        ]
+      },
+      "UpdateCustomerDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "客户名称"
+          },
+          "type": {
+            "type": "string",
+            "description": "客户类型"
+          },
+          "hospitalLevel": {
+            "type": "string",
+            "description": "医院等级"
+          },
+          "level": {
+            "type": "string",
+            "description": "客户级别",
+            "enum": [
+              "STRATEGIC",
+              "NORMAL"
+            ]
+          },
+          "healthScore": {
+            "type": "number",
+            "description": "健康评分"
+          },
+          "region": {
+            "type": "string",
+            "description": "所属区域"
+          },
+          "address": {
+            "type": "object",
+            "description": "地址信息"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "负责人ID"
+          },
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "enum": [
+              "POTENTIAL",
+              "COOPERATING",
+              "LOST"
+            ]
+          },
+          "tags": {
+            "description": "标签数组",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "source": {
+            "type": "string",
+            "description": "来源"
+          }
+        }
+      },
+      "CreateLeadDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "线索名称"
+          },
+          "source": {
+            "type": "string",
+            "description": "线索来源"
+          },
+          "sourceDetail": {
+            "type": "string",
+            "description": "来源明细"
+          },
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "enum": [
+              "PENDING",
+              "FOLLOWING",
+              "CONVERTED",
+              "INVALID"
+            ]
+          },
+          "poolType": {
+            "type": "string",
+            "description": "线索池类型",
+            "enum": [
+              "MINE",
+              "PUBLIC",
+              "TEAM"
+            ]
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "负责人ID"
+          },
+          "region": {
+            "type": "string",
+            "description": "所属区域"
+          },
+          "contactName": {
+            "type": "string",
+            "description": "联系人姓名"
+          },
+          "contactPhone": {
+            "type": "string",
+            "description": "联系人电话"
+          },
+          "companyName": {
+            "type": "string",
+            "description": "公司名称"
+          },
+          "demand": {
+            "type": "string",
+            "description": "需求描述"
+          },
+          "estimatedAmount": {
+            "type": "number",
+            "description": "预计金额"
+          },
+          "intentionLevel": {
+            "type": "string",
+            "description": "意向等级",
+            "enum": [
+              "HIGH",
+              "MEDIUM",
+              "LOW"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "source"
+        ]
+      },
+      "UpdateLeadDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "线索名称"
+          },
+          "source": {
+            "type": "string",
+            "description": "线索来源"
+          },
+          "sourceDetail": {
+            "type": "string",
+            "description": "来源明细"
+          },
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "enum": [
+              "PENDING",
+              "FOLLOWING",
+              "CONVERTED",
+              "INVALID"
+            ]
+          },
+          "poolType": {
+            "type": "string",
+            "description": "线索池类型",
+            "enum": [
+              "MINE",
+              "PUBLIC",
+              "TEAM"
+            ]
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "负责人ID"
+          },
+          "region": {
+            "type": "string",
+            "description": "所属区域"
+          },
+          "contactName": {
+            "type": "string",
+            "description": "联系人姓名"
+          },
+          "contactPhone": {
+            "type": "string",
+            "description": "联系人电话"
+          },
+          "companyName": {
+            "type": "string",
+            "description": "公司名称"
+          },
+          "demand": {
+            "type": "string",
+            "description": "需求描述"
+          },
+          "estimatedAmount": {
+            "type": "number",
+            "description": "预计金额"
+          },
+          "intentionLevel": {
+            "type": "string",
+            "description": "意向等级",
+            "enum": [
+              "HIGH",
+              "MEDIUM",
+              "LOW"
+            ]
+          },
+          "convertedCustomerId": {
+            "type": "string",
+            "description": "转化客户ID"
+          }
+        }
+      }
+    }
+  }
+}

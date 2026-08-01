@@ -2,13 +2,14 @@ import { NestFactory } from '@nestjs/core'
 import { ValidationPipe, VersioningType, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
+import { NestExpressApplication, ExpressAdapter } from '@nestjs/platform-express'
 import helmet from 'helmet'
 import * as express from 'express'
 import { join } from 'path'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter())
   const logger = new Logger('Bootstrap')
   const configService = app.get(ConfigService)
 

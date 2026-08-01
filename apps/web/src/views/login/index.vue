@@ -22,19 +22,10 @@ async function handleLogin(): Promise<void> {
   errorMsg.value = ''
 
   try {
-    // Mock 登录 — 后续替换为真实接口
-    await new Promise((r) => setTimeout(r, 600))
-    authStore.login('mock-token', {
-      id: 1,
-      name: username.value,
-      deptId: 1,
-      deptName: '销售部',
-      roles: ['sales'],
-      permissions: ['*'],
-    })
+    await authStore.loginByCredentials(username.value, password.value)
     router.push('/')
-  } catch {
-    errorMsg.value = '登录失败，请重试'
+  } catch (e) {
+    errorMsg.value = e instanceof Error ? e.message : '登录失败，请重试'
   } finally {
     loading.value = false
   }

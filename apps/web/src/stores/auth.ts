@@ -1,23 +1,63 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { login, getProfile, type LoginResult, type ProfileResult } from '@/api/auth'
 
 export interface UserInfo {
-  id: number
+  id: string
   name: string
   avatar?: string
-  deptId: number
-  deptName: string
+  deptId?: string
+  deptName?: string
   roles: string[]
   permissions: string[]
 }
 
+const TOKEN_KEY = 'xqcop_token'
+
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<UserInfo | null>(null)
-  const token = ref<string | null>(localStorage.getItem('xinqu-token'))
+  const token = ref<string | null>(localStorage.getItem(TOKEN_KEY))
 
   const isLoggedIn = computed(() => !!token.value && !!user.value)
   const roles = computed(() => user.value?.roles ?? [])
   const permissions = computed(() => user.value?.permissions ?? [])
+
+  function setToken(newToken: string | null) {
+    token.value = newToken
+    if (newToken) {
+      localStorage.setItem(TOKEN_KEY, newToken)
+    } else {
+      localStorage.removeItem(TOKEN_KEY)
+    }
+  }
+
+  function setUser(profile: ProfileResult) {
+    user.value = {
+      id: profile.id,
+      name: profile.name,
+      deptId: profile.departmentId,
+      roles: profile.roleIds || [],
+      permissions: profile.permissions || [],
+    }
+  }
+
+  async function loginByCredentials(username: string, password: string) {
+    const res = await login(username, password)
+    setToken(res.accessToken)
+    const profile = await getProfile()
+    setUser(profile)
+  }
+
+  async function init() {
+    if (!token.value) return
+    try {
+      const profile = await getProfile()
+      setUser(profile)
+    } catch {
+      setToken(null)
+      user.value = null
+    }
+  }
 
   function hasRole(role: string): boolean {
     return roles.value.includes(role) || roles.value.includes('super_admin')
@@ -39,16 +79,9 @@ export const useAuthStore = defineStore('auth', () => {
     return permList.some((p) => permissions.value.includes(p))
   }
 
-  function login(newToken: string, userInfo: UserInfo): void {
-    token.value = newToken
-    user.value = userInfo
-    localStorage.setItem('xinqu-token', newToken)
-  }
-
   function logout(): void {
-    token.value = null
+    setToken(null)
     user.value = null
-    localStorage.removeItem('xinqu-token')
   }
 
   return {
@@ -57,11 +90,12 @@ export const useAuthStore = defineStore('auth', () => {
     isLoggedIn,
     roles,
     permissions,
+    loginByCredentials,
+    init,
     hasRole,
     hasAnyRole,
     hasPermission,
     hasAnyPermission,
-    login,
     logout,
   }
 })

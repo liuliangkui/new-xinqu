@@ -4,727 +4,827 @@
  */
 
 export interface paths {
-    "/api/v1": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["AppController_getHello_v1"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["HealthController_check_v1"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/login": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 用户登录 */
-        post: operations["AuthController_login_v1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 查询用户列表 */
-        get: operations["UserController_findAll_v1"];
-        put?: never;
-        /** 创建用户 */
-        post: operations["UserController_create_v1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/users/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 查询用户详情 */
-        get: operations["UserController_findOne_v1"];
-        /** 更新用户 */
-        put: operations["UserController_update_v1"];
-        post?: never;
-        /** 删除用户 */
-        delete: operations["UserController_remove_v1"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/customers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 查询客户列表 */
-        get: operations["CustomerController_findAll_v1"];
-        put?: never;
-        /** 创建客户 */
-        post: operations["CustomerController_create_v1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/customers/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 查询客户详情 */
-        get: operations["CustomerController_findOne_v1"];
-        /** 更新客户 */
-        put: operations["CustomerController_update_v1"];
-        post?: never;
-        /** 删除客户 */
-        delete: operations["CustomerController_remove_v1"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/leads": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 查询线索列表 */
-        get: operations["LeadController_findAll_v1"];
-        put?: never;
-        /** 创建线索 */
-        post: operations["LeadController_create_v1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/leads/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 查询线索详情 */
-        get: operations["LeadController_findOne_v1"];
-        /** 更新线索 */
-        put: operations["LeadController_update_v1"];
-        post?: never;
-        /** 删除线索 */
-        delete: operations["LeadController_remove_v1"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
+  '/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['AppController_getHello']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/health': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['HealthController_check']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/files/upload': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['UploadController_uploadFile']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/files/uploads': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['UploadController_uploadFiles']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/auth/login': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** 用户登录 */
+    post: operations['AuthController_login']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/auth/profile': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 当前登录用户信息 */
+    get: operations['AuthController_profile']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/users': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询用户列表 */
+    get: operations['UserController_findAll']
+    put?: never
+    /** 创建用户 */
+    post: operations['UserController_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/users/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询用户详情 */
+    get: operations['UserController_findOne']
+    /** 更新用户 */
+    put: operations['UserController_update']
+    post?: never
+    /** 删除用户 */
+    delete: operations['UserController_remove']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/customers': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询客户列表 */
+    get: operations['CustomerController_findAll']
+    put?: never
+    /** 创建客户 */
+    post: operations['CustomerController_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/customers/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询客户详情 */
+    get: operations['CustomerController_findOne']
+    /** 更新客户 */
+    put: operations['CustomerController_update']
+    post?: never
+    /** 删除客户 */
+    delete: operations['CustomerController_remove']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/leads': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询线索列表 */
+    get: operations['LeadController_findAll']
+    put?: never
+    /** 创建线索 */
+    post: operations['LeadController_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/leads/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询线索详情 */
+    get: operations['LeadController_findOne']
+    /** 更新线索 */
+    put: operations['LeadController_update']
+    post?: never
+    /** 删除线索 */
+    delete: operations['LeadController_remove']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
-export type webhooks = Record<string, never>;
+export type webhooks = Record<string, never>
 export interface components {
-    schemas: {
-        LoginDto: {
-            /** @description 用户名 */
-            username: string;
-            /** @description 密码 */
-            password: string;
-        };
-        CreateUserDto: {
-            /** @description 用户名 */
-            username: string;
-            /** @description 密码 */
-            password: string;
-            /** @description 姓名 */
-            name: string;
-            /** @description 手机号 */
-            phone?: string;
-            /** @description 邮箱 */
-            email?: string;
-            /** @description 部门ID */
-            departmentId?: string;
-            /** @description 角色ID数组 */
-            roleIds?: string[];
-            /**
-             * @description 状态
-             * @enum {string}
-             */
-            status?: "ACTIVE" | "INACTIVE";
-        };
-        UpdateUserDto: {
-            /** @description 密码 */
-            password?: string;
-            /** @description 姓名 */
-            name?: string;
-            /** @description 手机号 */
-            phone?: string;
-            /** @description 邮箱 */
-            email?: string;
-            /** @description 部门ID */
-            departmentId?: string;
-            /** @description 角色ID数组 */
-            roleIds?: string[];
-            /**
-             * @description 状态
-             * @enum {string}
-             */
-            status?: "ACTIVE" | "INACTIVE";
-        };
-        CreateCustomerDto: {
-            /** @description 客户名称 */
-            name: string;
-            /** @description 客户类型 */
-            type: string;
-            /** @description 医院等级 */
-            hospitalLevel?: string;
-            /**
-             * @description 客户级别
-             * @enum {string}
-             */
-            level?: "STRATEGIC" | "NORMAL";
-            /** @description 健康评分 */
-            healthScore?: number;
-            /** @description 所属区域 */
-            region: string;
-            /** @description 地址信息 */
-            address?: Record<string, never>;
-            /** @description 负责人ID */
-            ownerId: string;
-            /**
-             * @description 状态
-             * @enum {string}
-             */
-            status?: "POTENTIAL" | "COOPERATING" | "LOST";
-            /** @description 标签数组 */
-            tags?: string[];
-            /** @description 来源 */
-            source?: string;
-        };
-        UpdateCustomerDto: {
-            /** @description 客户名称 */
-            name?: string;
-            /** @description 客户类型 */
-            type?: string;
-            /** @description 医院等级 */
-            hospitalLevel?: string;
-            /**
-             * @description 客户级别
-             * @enum {string}
-             */
-            level?: "STRATEGIC" | "NORMAL";
-            /** @description 健康评分 */
-            healthScore?: number;
-            /** @description 所属区域 */
-            region?: string;
-            /** @description 地址信息 */
-            address?: Record<string, never>;
-            /** @description 负责人ID */
-            ownerId?: string;
-            /**
-             * @description 状态
-             * @enum {string}
-             */
-            status?: "POTENTIAL" | "COOPERATING" | "LOST";
-            /** @description 标签数组 */
-            tags?: string[];
-            /** @description 来源 */
-            source?: string;
-        };
-        CreateLeadDto: {
-            /** @description 线索名称 */
-            name: string;
-            /** @description 线索来源 */
-            source: string;
-            /** @description 来源明细 */
-            sourceDetail?: string;
-            /**
-             * @description 状态
-             * @enum {string}
-             */
-            status?: "PENDING" | "FOLLOWING" | "CONVERTED" | "INVALID";
-            /**
-             * @description 线索池类型
-             * @enum {string}
-             */
-            poolType?: "MINE" | "PUBLIC" | "TEAM";
-            /** @description 负责人ID */
-            ownerId?: string;
-            /** @description 所属区域 */
-            region?: string;
-            /** @description 联系人姓名 */
-            contactName?: string;
-            /** @description 联系人电话 */
-            contactPhone?: string;
-            /** @description 公司名称 */
-            companyName?: string;
-            /** @description 需求描述 */
-            demand?: string;
-            /** @description 预计金额 */
-            estimatedAmount?: number;
-            /**
-             * @description 意向等级
-             * @enum {string}
-             */
-            intentionLevel?: "HIGH" | "MEDIUM" | "LOW";
-        };
-        UpdateLeadDto: {
-            /** @description 线索名称 */
-            name?: string;
-            /** @description 线索来源 */
-            source?: string;
-            /** @description 来源明细 */
-            sourceDetail?: string;
-            /**
-             * @description 状态
-             * @enum {string}
-             */
-            status?: "PENDING" | "FOLLOWING" | "CONVERTED" | "INVALID";
-            /**
-             * @description 线索池类型
-             * @enum {string}
-             */
-            poolType?: "MINE" | "PUBLIC" | "TEAM";
-            /** @description 负责人ID */
-            ownerId?: string;
-            /** @description 所属区域 */
-            region?: string;
-            /** @description 联系人姓名 */
-            contactName?: string;
-            /** @description 联系人电话 */
-            contactPhone?: string;
-            /** @description 公司名称 */
-            companyName?: string;
-            /** @description 需求描述 */
-            demand?: string;
-            /** @description 预计金额 */
-            estimatedAmount?: number;
-            /**
-             * @description 意向等级
-             * @enum {string}
-             */
-            intentionLevel?: "HIGH" | "MEDIUM" | "LOW";
-            /** @description 转化客户ID */
-            convertedCustomerId?: string;
-        };
-    };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+  schemas: {
+    LoginDto: {
+      /** @description 用户名 */
+      username: string
+      /** @description 密码 */
+      password: string
+    }
+    CreateUserDto: {
+      /** @description 用户名 */
+      username: string
+      /** @description 密码 */
+      password: string
+      /** @description 姓名 */
+      name: string
+      /** @description 手机号 */
+      phone?: string
+      /** @description 邮箱 */
+      email?: string
+      /** @description 部门ID */
+      departmentId?: string
+      /** @description 角色ID数组 */
+      roleIds?: string[]
+      /**
+       * @description 状态
+       * @enum {string}
+       */
+      status?: 'ACTIVE' | 'INACTIVE'
+    }
+    UpdateUserDto: {
+      /** @description 密码 */
+      password?: string
+      /** @description 姓名 */
+      name?: string
+      /** @description 手机号 */
+      phone?: string
+      /** @description 邮箱 */
+      email?: string
+      /** @description 部门ID */
+      departmentId?: string
+      /** @description 角色ID数组 */
+      roleIds?: string[]
+      /**
+       * @description 状态
+       * @enum {string}
+       */
+      status?: 'ACTIVE' | 'INACTIVE'
+    }
+    CreateCustomerDto: {
+      /** @description 客户名称 */
+      name: string
+      /** @description 客户类型 */
+      type: string
+      /** @description 医院等级 */
+      hospitalLevel?: string
+      /**
+       * @description 客户级别
+       * @enum {string}
+       */
+      level?: 'STRATEGIC' | 'NORMAL'
+      /** @description 健康评分 */
+      healthScore?: number
+      /** @description 所属区域 */
+      region: string
+      /** @description 地址信息 */
+      address?: Record<string, never>
+      /** @description 负责人ID */
+      ownerId: string
+      /**
+       * @description 状态
+       * @enum {string}
+       */
+      status?: 'POTENTIAL' | 'COOPERATING' | 'LOST'
+      /** @description 标签数组 */
+      tags?: string[]
+      /** @description 来源 */
+      source?: string
+    }
+    UpdateCustomerDto: {
+      /** @description 客户名称 */
+      name?: string
+      /** @description 客户类型 */
+      type?: string
+      /** @description 医院等级 */
+      hospitalLevel?: string
+      /**
+       * @description 客户级别
+       * @enum {string}
+       */
+      level?: 'STRATEGIC' | 'NORMAL'
+      /** @description 健康评分 */
+      healthScore?: number
+      /** @description 所属区域 */
+      region?: string
+      /** @description 地址信息 */
+      address?: Record<string, never>
+      /** @description 负责人ID */
+      ownerId?: string
+      /**
+       * @description 状态
+       * @enum {string}
+       */
+      status?: 'POTENTIAL' | 'COOPERATING' | 'LOST'
+      /** @description 标签数组 */
+      tags?: string[]
+      /** @description 来源 */
+      source?: string
+    }
+    CreateLeadDto: {
+      /** @description 线索名称 */
+      name: string
+      /** @description 线索来源 */
+      source: string
+      /** @description 来源明细 */
+      sourceDetail?: string
+      /**
+       * @description 状态
+       * @enum {string}
+       */
+      status?: 'PENDING' | 'FOLLOWING' | 'CONVERTED' | 'INVALID'
+      /**
+       * @description 线索池类型
+       * @enum {string}
+       */
+      poolType?: 'MINE' | 'PUBLIC' | 'TEAM'
+      /** @description 负责人ID */
+      ownerId?: string
+      /** @description 所属区域 */
+      region?: string
+      /** @description 联系人姓名 */
+      contactName?: string
+      /** @description 联系人电话 */
+      contactPhone?: string
+      /** @description 公司名称 */
+      companyName?: string
+      /** @description 需求描述 */
+      demand?: string
+      /** @description 预计金额 */
+      estimatedAmount?: number
+      /**
+       * @description 意向等级
+       * @enum {string}
+       */
+      intentionLevel?: 'HIGH' | 'MEDIUM' | 'LOW'
+    }
+    UpdateLeadDto: {
+      /** @description 线索名称 */
+      name?: string
+      /** @description 线索来源 */
+      source?: string
+      /** @description 来源明细 */
+      sourceDetail?: string
+      /**
+       * @description 状态
+       * @enum {string}
+       */
+      status?: 'PENDING' | 'FOLLOWING' | 'CONVERTED' | 'INVALID'
+      /**
+       * @description 线索池类型
+       * @enum {string}
+       */
+      poolType?: 'MINE' | 'PUBLIC' | 'TEAM'
+      /** @description 负责人ID */
+      ownerId?: string
+      /** @description 所属区域 */
+      region?: string
+      /** @description 联系人姓名 */
+      contactName?: string
+      /** @description 联系人电话 */
+      contactPhone?: string
+      /** @description 公司名称 */
+      companyName?: string
+      /** @description 需求描述 */
+      demand?: string
+      /** @description 预计金额 */
+      estimatedAmount?: number
+      /**
+       * @description 意向等级
+       * @enum {string}
+       */
+      intentionLevel?: 'HIGH' | 'MEDIUM' | 'LOW'
+      /** @description 转化客户ID */
+      convertedCustomerId?: string
+    }
+  }
+  responses: never
+  parameters: never
+  requestBodies: never
+  headers: never
+  pathItems: never
 }
-export type $defs = Record<string, never>;
+export type $defs = Record<string, never>
 export interface operations {
-    AppController_getHello_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    HealthController_check_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AuthController_login_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LoginDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UserController_findAll_v1: {
-        parameters: {
-            query: {
-                page: number;
-                pageSize: number;
-                keyword: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UserController_create_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateUserDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UserController_findOne_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UserController_update_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateUserDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UserController_remove_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    CustomerController_findAll_v1: {
-        parameters: {
-            query: {
-                page: number;
-                pageSize: number;
-                keyword: string;
-                status: string;
-                level: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    CustomerController_create_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateCustomerDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    CustomerController_findOne_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    CustomerController_update_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateCustomerDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    CustomerController_remove_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    LeadController_findAll_v1: {
-        parameters: {
-            query: {
-                page: number;
-                pageSize: number;
-                keyword: string;
-                status: string;
-                poolType: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    LeadController_create_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateLeadDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    LeadController_findOne_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    LeadController_update_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateLeadDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    LeadController_remove_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
+  AppController_getHello: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  HealthController_check: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  UploadController_uploadFile: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  UploadController_uploadFiles: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AuthController_login: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LoginDto']
+      }
+    }
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AuthController_profile: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  UserController_findAll: {
+    parameters: {
+      query: {
+        page: number
+        pageSize: number
+        keyword: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  UserController_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateUserDto']
+      }
+    }
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  UserController_findOne: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  UserController_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateUserDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  UserController_remove: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  CustomerController_findAll: {
+    parameters: {
+      query: {
+        page: number
+        pageSize: number
+        keyword: string
+        status: string
+        level: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  CustomerController_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateCustomerDto']
+      }
+    }
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  CustomerController_findOne: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  CustomerController_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateCustomerDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  CustomerController_remove: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  LeadController_findAll: {
+    parameters: {
+      query: {
+        page: number
+        pageSize: number
+        keyword: string
+        status: string
+        poolType: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  LeadController_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateLeadDto']
+      }
+    }
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  LeadController_findOne: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  LeadController_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateLeadDto']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  LeadController_remove: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
 }

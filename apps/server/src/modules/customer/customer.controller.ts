@@ -1,27 +1,44 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, ParseIntPipe, DefaultValuePipe } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Query,
+  Req,
+  ParseIntPipe,
+  DefaultValuePipe,
+} from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger'
-import { JwtAuthGuard } from '../auth/jwt-auth.guard'
+import { Permissions } from '@/common/decorators/permissions.decorator'
 import { CustomerService } from './customer.service'
 import { CreateCustomerDto } from './dto/create-customer.dto'
 import { UpdateCustomerDto } from './dto/update-customer.dto'
+import type { Request } from 'express'
 
 @ApiTags('客户管理')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('customers')
 export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
   @Get()
+  @Permissions('customer:read')
   @ApiOperation({ summary: '查询客户列表' })
   findAll(
+    @Req() req: Request,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('pageSize', new DefaultValuePipe(20), ParseIntPipe) pageSize: number,
     @Query('keyword') keyword?: string,
     @Query('status') status?: string,
     @Query('level') level?: string,
   ) {
-    return this.customerService.findAll({ page, pageSize, keyword, status, level })
+    const user = (
+      req as Request & { user: { userId: string; roleIds: string[]; departmentId?: string; region?: string } }
+    ).user
+    return this.customerService.findAll(user, { page, pageSize, keyword, status, level })
   }
 
   @Get(':id')

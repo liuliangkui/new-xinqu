@@ -9,15 +9,28 @@ import router from './router'
 import { i18n } from '@/i18n'
 import { installXqComponents } from '@/components/xq'
 import { initTheme } from '@/utils/theme'
+import { useAuthStore } from '@/stores/auth'
 
-const app = createApp(App)
+async function bootstrap() {
+  if (import.meta.env.VITE_ENABLE_MOCK === 'true') {
+    const { worker } = await import('@/mocks/browser')
+    await worker.start({ onUnhandledRequest: 'bypass' })
+  }
 
-app.use(createPinia())
-app.use(router)
-app.use(i18n)
-app.use(Antd)
-app.use({ install: installXqComponents })
+  const app = createApp(App)
 
-initTheme()
+  app.use(createPinia())
+  app.use(router)
+  app.use(i18n)
+  app.use(Antd)
+  app.use({ install: installXqComponents })
 
-app.mount('#app')
+  const authStore = useAuthStore()
+  await authStore.init()
+
+  initTheme()
+
+  app.mount('#app')
+}
+
+bootstrap()

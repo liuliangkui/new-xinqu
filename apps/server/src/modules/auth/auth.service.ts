@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
 import * as bcrypt from 'bcrypt'
 import { PrismaService } from '@/prisma/prisma.service'
+import type { Permission } from '@/common/guards/roles.guard'
 
 interface LoginAttempt {
   count: number
@@ -48,7 +49,7 @@ export class AuthService {
 
     this.loginAttempts.delete(username)
 
-    const payload = { sub: user.id, username: user.username }
+    const payload = { sub: user.id, username: user.username, roleIds: user.roleIds }
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_SECRET'),
       expiresIn: this.configService.get('JWT_EXPIRES_IN', '2h'),
@@ -85,5 +86,45 @@ export class AuthService {
         lockedUntil: current.lockedUntil,
       })
     }
+  }
+
+  async getProfile(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        username: true,
+        name: true,
+        phone: true,
+        email: true,
+        departmentId: true,
+        roleIds: true,
+        status: true,
+      },
+    })
+    if (!user) {
+      throw new UnauthorizedException('用户不存在')
+    }
+
+    const permissions = await this.resolvePermissions(user.roleIds)
+    return { ...user, permissions }
+  }
+
+  private async resolvePermissions(roleIds: string[]): Promise<string[]> {
+    if (roleIds.length === 0) return []
+
+    const roles = await this.prisma.role.findMany({
+      where: { id: { in: roleIds }, status: 'ACTIVE' },
+    })
+
+    const set = new Set<string>()
+    for (const role of roles) {
+      const list = (role.permissions as unknown as Permission[] | undefined) || []
+      for (const p of list) {
+        set.add(`${p.resource}:${p.action}`)
+      }
+    }
+
+    return Array.from(set)
   }
 }
