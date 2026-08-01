@@ -19,7 +19,20 @@
     "db:seed": "npm run db:seed -w apps/server",
     "api:types": "npm run api:types -w apps/web",
     "test:server": "npm test -w apps/server",
-    "test:web": "npm run test:unit -w apps/web"
+    "test:web": "npm run test:unit -w apps/web",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "apps/server/**/*.ts": [
+      "prettier --write",
+      "npm run lint:server"
+    ],
+    "apps/web/**/*.{ts,vue,json,css}": [
+      "prettier --write"
+    ],
+    "**/*.md": [
+      "prettier --write"
+    ]
   },
   "engines": {
     "node": ">=22.0.0"

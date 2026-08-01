@@ -1,0 +1,10 @@
+# 运行 lint-staged 格式化与检查
+npx lint-staged
+
+# 检查 HTML 结构平衡
+python3 scripts/check-html.py
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "提交被拦截：请先修复 HTML 结构问题。"
+    exit 1
+fi

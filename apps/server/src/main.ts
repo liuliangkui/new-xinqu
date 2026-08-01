@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core'
 import { ValidationPipe, VersioningType } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
+import helmet from 'helmet'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
@@ -26,10 +27,16 @@ async function bootstrap() {
     }),
   )
 
+  // 安全头
+  app.use(helmet())
+
   // CORS
+  const corsOrigin = configService.get('CORS_ORIGIN', '')
   app.enableCors({
-    origin: configService.get('CORS_ORIGIN', '*'),
+    origin: corsOrigin ? corsOrigin.split(',') : ['http://localhost:5173'],
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 
   // Swagger 文档
