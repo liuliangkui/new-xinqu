@@ -404,6 +404,62 @@
     @media (max-width: 767px) { .intention-modal { width: 100%; max-height: 90vh; border-radius: 12px; } }
     @keyframes modalIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
     .intention-modal-header { padding: 20px 24px; border-bottom: 1px solid var(--line); display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+
+    /* ===== Card modal header ===== */
+    .card-modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .header-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .header-title-wrap {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .header-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-title-row h3 {
+      flex: 1;
+      min-width: 0;
+    }
+    .header-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      color: var(--sub);
+      font-size: 0.857rem;
+    }
+    .meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .meta-item .icon {
+      flex-shrink: 0;
+    }
+
     .intention-modal-body { padding: 24px; flex: 1; overflow-y: auto; }
     .intention-modal-footer { padding: 16px 24px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 10px; }
     .intention-modal-wide { width: min(70vw, 960px); max-height: min(84vh, 720px); }
@@ -3299,22 +3355,22 @@
             <div class="intention-modal" onclick="event.stopPropagation()">
               <div class="card-modal-header">
                 <div class="flex items-start gap-4">
-                  <div class="w-14 h-14 rounded-xl bg-primary-light text-primary flex items-center justify-center text-xl font-bold flex-shrink-0" id="customer-modal-avatar">肿</div>
-                  <div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                      <h3 class="text-lg font-bold text-ink" id="customer-modal-name">云南省肿瘤医院</h3>
+                  <div class="header-avatar" id="customer-modal-avatar">肿</div>
+                  <div class="header-title-wrap">
+                    <div class="header-title-row">
+                      <h3 class="text-lg font-bold text-ink truncate" id="customer-modal-name">云南省肿瘤医院</h3>
                       <span class="badge badge-primary" id="customer-modal-level">三级甲等</span>
                       <span class="badge badge-success" id="customer-modal-type">战略客户</span>
                     </div>
-                    <div class="text-sub text-sm mt-1 flex flex-wrap gap-3">
-                      <span class="flex items-center gap-1"><svg class="icon icon-xs"><use href="#icon-location"/></svg> <span id="customer-modal-region">云南 · 昆明</span></span>
-                      <span class="flex items-center gap-1"><svg class="icon icon-xs"><use href="#icon-building"/></svg> <span id="customer-modal-category">肿瘤专科医院</span></span>
-                      <span class="flex items-center gap-1"><svg class="icon icon-xs"><use href="#icon-user"/></svg> 决策人：<span id="customer-modal-decision">刘副院长</span></span>
-                      <span class="flex items-center gap-1"><svg class="icon icon-xs"><use href="#icon-team"/></svg> <button class="text-primary hover:underline" onclick="openCustomerGroupModal()">查看集团</button></span>
+                    <div class="header-meta">
+                      <span class="meta-item"><svg class="icon icon-xs"><use href="#icon-location"/></svg><span id="customer-modal-region">云南 · 昆明</span></span>
+                      <span class="meta-item"><svg class="icon icon-xs"><use href="#icon-building"/></svg><span id="customer-modal-category">肿瘤专科医院</span></span>
+                      <span class="meta-item"><svg class="icon icon-xs"><use href="#icon-user"/></svg><span>决策人：<span id="customer-modal-decision">刘副院长</span></span></span>
+                      <span class="meta-item"><svg class="icon icon-xs"><use href="#icon-team"/></svg><button class="text-primary hover:underline" onclick="openCustomerGroupModal()">查看集团</button></span>
                     </div>
                   </div>
                 </div>
-                <button class="btn btn-ghost" onclick="closeCustomerModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+                <button class="btn btn-ghost flex-shrink-0" onclick="closeCustomerModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
               </div>
               <div class="intention-modal-body">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
