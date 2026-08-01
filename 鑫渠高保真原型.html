@@ -9582,42 +9582,14 @@
             <div class="card card-hover"><div class="text-sub text-xs mb-1">已逾期</div><div class="text-2xl font-bold text-danger">5</div><div class="text-xs text-danger mt-1">需尽快督办</div></div>
           </div>
 
-          <!-- 关联对象快捷筛选 -->
-          <div class="card mb-4 p-4">
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4">
-              <div class="flex flex-wrap gap-2">
-                <button class="tab active" onclick="switchTab(this)">全部任务</button>
-                <button class="tab" onclick="switchTab(this)">我的任务</button>
-                <button class="tab" onclick="switchTab(this)">团队任务</button>
-                <button class="tab" onclick="switchTab(this)">协作任务</button>
-              </div>
-              <button class="btn btn-primary" onclick="openTaskForm(); showToast(`打开新建任务`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建任务</button>
-            </div>
-            <div class="flex flex-wrap gap-3 mb-3">
-              <div class="relative flex-1 min-w-[200px] max-w-sm">
-                <svg class="icon icon-md absolute left-3 top-1/2 -translate-y-1/2 text-placeholder"><use href="#icon-search"/></svg>
-                <input type="text" class="input pl-10" placeholder="搜索任务、客户、负责人">
-              </div>
-              <select class="input w-auto"><option>全部优先级</option><option>高</option><option>中</option><option>低</option></select>
-              <select class="input w-auto"><option>全部状态</option><option>待处理</option><option>进行中</option><option>已完成</option></select>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <span class="text-xs text-sub py-1">关联对象：</span>
-              <button class="badge badge-light cursor-pointer hover:bg-primary-light" onclick="switchTab(this)">全部</button>
-              <button class="badge badge-light cursor-pointer hover:bg-primary-light" onclick="switchTab(this)">客户</button>
-              <button class="badge badge-light cursor-pointer hover:bg-primary-light" onclick="switchTab(this)">意向</button>
-              <button class="badge badge-light cursor-pointer hover:bg-primary-light" onclick="switchTab(this)">线索</button>
-              <button class="badge badge-light cursor-pointer hover:bg-primary-light" onclick="switchTab(this)">工单</button>
-            </div>
-          </div>
-
+          <!-- Tab + 视图 + 筛选 -->
           <div class="card mb-4">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4">
               <div class="flex flex-wrap gap-2">
                 <button class="tab active" data-tasktab="mine" onclick="switchTaskTab(this)">我的任务</button>
                 <button class="tab" data-tasktab="team" onclick="switchTaskTab(this)">团队任务</button>
                 <button class="tab" data-tasktab="collab" onclick="switchTaskTab(this)">协作任务</button>
-                <button class="tab" data-tasktab="overdue" onclick="switchTaskTab(this)">逾期预警 <span class="badge badge-danger ml-1">5</span></button>
+                <button class="tab" data-tasktab="warning" onclick="switchTaskTab(this)">预期预警 <span class="badge badge-warning ml-1">4</span></button>
               </div>
               <div class="flex items-center gap-2">
                 <button class="btn btn-primary" id="task-view-card" onclick="setTaskView('card')"><svg class="icon icon-sm"><use href="#icon-grid"/></svg></button>
@@ -9637,142 +9609,432 @@
             </div>
           </div>
 
-          <!-- Card view -->
-          <div id="task-card" class="card-grid mb-4">
-            <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072901" data-name="XN-550 保修续签跟进" data-customer="昆明市第一人民医院" data-due="2026-07-30 18:00" data-priority="高" data-status="进行中" data-owner="张经理" data-type="协作任务">
-              <div class="flex items-start justify-between mb-3">
-                <span class="badge badge-primary">进行中</span>
-                <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
+          <!-- 我的任务 -->
+          <div id="task-panel-mine" class="task-panel">
+            <div class="task-panel-card card-grid mb-4">
+              <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072901" data-name="XN-550 保修续签跟进" data-customer="昆明市第一人民医院" data-due="2026-07-30 18:00" data-priority="高" data-status="进行中" data-owner="张经理" data-type="协作任务">
+                <div class="flex items-start justify-between mb-3">
+                  <span class="badge badge-primary">进行中</span>
+                  <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
+                </div>
+                <div class="font-semibold text-ink mb-1">XN-550 保修续签跟进</div>
+                <div class="text-sub text-sm mb-3">关联客户：昆明市第一人民医院</div>
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="badge badge-danger">高</span>
+                  <span class="badge badge-gray">协作任务</span>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <span class="text-xs text-placeholder">截止：2026-07-30 18:00</span>
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-primary-light text-primary flex items-center justify-center text-xs">张</div>
+                    <span class="text-xs text-sub">张经理</span>
+                  </div>
+                </div>
               </div>
-              <div class="font-semibold text-ink mb-1">XN-550 保修续签跟进</div>
-              <div class="text-sub text-sm mb-3">关联客户：昆明市第一人民医院</div>
-              <div class="flex items-center gap-2 mb-3">
-                <span class="badge badge-danger">高</span>
-                <span class="badge badge-gray">协作任务</span>
+              <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072902" data-name="CA-620 补货确认" data-customer="曲靖市妇幼保健院" data-due="2026-07-29 12:00" data-priority="中" data-status="待处理" data-owner="李娜" data-type="个人任务">
+                <div class="flex items-start justify-between mb-3">
+                  <span class="badge badge-warning">待处理</span>
+                  <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
+                </div>
+                <div class="font-semibold text-ink mb-1">CA-620 补货确认</div>
+                <div class="text-sub text-sm mb-3">关联客户：曲靖市妇幼保健院</div>
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="badge badge-warning">中</span>
+                  <span class="badge badge-gray">个人任务</span>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <span class="text-xs text-danger">截止：2026-07-29 12:00</span>
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-warning-bg text-warning flex items-center justify-center text-xs">李</div>
+                    <span class="text-xs text-sub">李娜</span>
+                  </div>
+                </div>
               </div>
-              <div class="flex items-center justify-between pt-3 border-t border-line">
-                <span class="text-xs text-placeholder">截止：2026-07-30 18:00</span>
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-full bg-primary-light text-primary flex items-center justify-center text-xs">张</div>
-                  <span class="text-xs text-sub">张经理</span>
+              <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072903" data-name="CS-1300 招标方案准备" data-customer="大理州人民医院" data-due="2026-08-05 17:30" data-priority="中" data-status="待处理" data-owner="王强" data-type="协作任务">
+                <div class="flex items-start justify-between mb-3">
+                  <span class="badge badge-warning">待处理</span>
+                  <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
+                </div>
+                <div class="font-semibold text-ink mb-1">CS-1300 招标方案准备</div>
+                <div class="text-sub text-sm mb-3">关联客户：大理州人民医院</div>
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="badge badge-warning">中</span>
+                  <span class="badge badge-gray">协作任务</span>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <span class="text-xs text-placeholder">截止：2026-08-05 17:30</span>
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-success-bg text-success flex items-center justify-center text-xs">王</div>
+                    <span class="text-xs text-sub">王强</span>
+                  </div>
+                </div>
+              </div>
+              <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072904" data-name="年度合同归档" data-customer="广西医科大学附一" data-due="2026-07-25 18:00" data-priority="低" data-status="已逾期" data-owner="赵敏" data-type="系统任务">
+                <div class="flex items-start justify-between mb-3">
+                  <span class="badge badge-danger">已逾期</span>
+                  <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
+                </div>
+                <div class="font-semibold text-ink mb-1 line-through text-sub">年度合同归档</div>
+                <div class="text-sub text-sm mb-3">关联客户：广西医科大学附一</div>
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="badge badge-gray">低</span>
+                  <span class="badge badge-gray">系统任务</span>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <span class="text-xs text-danger">逾期 4 天</span>
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-info-bg text-info flex items-center justify-center text-xs">赵</div>
+                    <span class="text-xs text-sub">赵敏</span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072902" data-name="CA-620 补货确认" data-customer="曲靖市妇幼保健院" data-due="2026-07-29 12:00" data-priority="中" data-status="待处理" data-owner="李娜" data-type="个人任务">
-              <div class="flex items-start justify-between mb-3">
-                <span class="badge badge-warning">待处理</span>
-                <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
-              </div>
-              <div class="font-semibold text-ink mb-1">CA-620 补货确认</div>
-              <div class="text-sub text-sm mb-3">关联客户：曲靖市妇幼保健院</div>
-              <div class="flex items-center gap-2 mb-3">
-                <span class="badge badge-warning">中</span>
-                <span class="badge badge-gray">个人任务</span>
-              </div>
-              <div class="flex items-center justify-between pt-3 border-t border-line">
-                <span class="text-xs text-danger">截止：2026-07-29 12:00</span>
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-full bg-warning-bg text-warning flex items-center justify-center text-xs">李</div>
-                  <span class="text-xs text-sub">李娜</span>
-                </div>
-              </div>
+            <div class="task-panel-list card mb-4 hidden">
+              <table class="data-table">
+                <thead><tr><th>任务名称</th><th>关联客户</th><th>截止时间</th><th>优先级</th><th>状态</th><th>负责人</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr data-code="T2026072901" data-name="XN-550 保修续签跟进" data-customer="昆明市第一人民医院" data-due="2026-07-30 18:00" data-priority="高" data-status="进行中" data-owner="张经理" data-type="协作任务"><td>XN-550 保修续签跟进</td><td>昆明市第一人民医院</td><td>2026-07-30 18:00</td><td><span class="badge badge-danger">高</span></td><td><span class="badge badge-primary">进行中</span></td><td>张经理</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
+                  <tr data-code="T2026072902" data-name="CA-620 补货确认" data-customer="曲靖市妇幼保健院" data-due="2026-07-29 12:00" data-priority="中" data-status="待处理" data-owner="李娜" data-type="个人任务"><td>CA-620 补货确认</td><td>曲靖市妇幼保健院</td><td class="text-danger">2026-07-29 12:00</td><td><span class="badge badge-warning">中</span></td><td><span class="badge badge-warning">待处理</span></td><td>李娜</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
+                  <tr data-code="T2026072903" data-name="CS-1300 招标方案准备" data-customer="大理州人民医院" data-due="2026-08-05 17:30" data-priority="中" data-status="待处理" data-owner="王强" data-type="协作任务"><td>CS-1300 招标方案准备</td><td>大理州人民医院</td><td>2026-08-05 17:30</td><td><span class="badge badge-warning">中</span></td><td><span class="badge badge-warning">待处理</span></td><td>王强</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
+                  <tr data-code="T2026072904" data-name="年度合同归档" data-customer="广西医科大学附一" data-due="2026-07-25 18:00" data-priority="低" data-status="已逾期" data-owner="赵敏" data-type="系统任务"><td class="line-through text-sub">年度合同归档</td><td>广西医科大学附一</td><td class="text-danger">逾期 4 天</td><td><span class="badge badge-gray">低</span></td><td><span class="badge badge-danger">已逾期</span></td><td>赵敏</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
+                </tbody>
+              </table>
             </div>
-            <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072903" data-name="CS-1300 招标方案准备" data-customer="大理州人民医院" data-due="2026-08-05 17:30" data-priority="中" data-status="待处理" data-owner="王强" data-type="协作任务">
-              <div class="flex items-start justify-between mb-3">
-                <span class="badge badge-warning">待处理</span>
-                <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
-              </div>
-              <div class="font-semibold text-ink mb-1">CS-1300 招标方案准备</div>
-              <div class="text-sub text-sm mb-3">关联客户：大理州人民医院</div>
-              <div class="flex items-center gap-2 mb-3">
-                <span class="badge badge-warning">中</span>
-                <span class="badge badge-gray">协作任务</span>
-              </div>
-              <div class="flex items-center justify-between pt-3 border-t border-line">
-                <span class="text-xs text-placeholder">截止：2026-08-05 17:30</span>
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-full bg-success-bg text-success flex items-center justify-center text-xs">王</div>
-                  <span class="text-xs text-sub">王强</span>
-                </div>
-              </div>
-            </div>
-            <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072904" data-name="年度合同归档" data-customer="广西医科大学附一" data-due="2026-07-25 18:00" data-priority="低" data-status="已逾期" data-owner="赵敏" data-type="系统任务">
-              <div class="flex items-start justify-between mb-3">
-                <span class="badge badge-danger">已逾期</span>
-                <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
-              </div>
-              <div class="font-semibold text-ink mb-1 line-through text-sub">年度合同归档</div>
-              <div class="text-sub text-sm mb-3">关联客户：广西医科大学附一</div>
-              <div class="flex items-center gap-2 mb-3">
-                <span class="badge badge-gray">低</span>
-                <span class="badge badge-gray">系统任务</span>
-              </div>
-              <div class="flex items-center justify-between pt-3 border-t border-line">
-                <span class="text-xs text-danger">逾期 4 天</span>
-                <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 rounded-full bg-info-bg text-info flex items-center justify-center text-xs">赵</div>
-                  <span class="text-xs text-sub">赵敏</span>
-                </div>
+            <div class="flex items-center justify-between">
+              <div class="text-sub text-sm">共 4 条 · 每页 20 条</div>
+              <div class="pagination">
+                <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+                <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+                <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
+                <button class="page-btn" onclick="showToast(`切换到第 3 页`)">3</button>
+                <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
               </div>
             </div>
           </div>
 
-          <!-- List view -->
-          <div id="task-list" class="card mb-4 hidden">
-            <table class="data-table">
-              <thead><tr><th>任务名称</th><th>关联客户</th><th>截止时间</th><th>优先级</th><th>状态</th><th>负责人</th><th>操作</th></tr></thead>
-              <tbody>
-                <tr><td>XN-550 保修续签跟进</td><td>昆明市第一人民医院</td><td>2026-07-30 18:00</td><td><span class="badge badge-danger">高</span></td><td><span class="badge badge-primary">进行中</span></td><td>张经理</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
-                <tr><td>CA-620 补货确认</td><td>曲靖市妇幼保健院</td><td class="text-danger">2026-07-29 12:00</td><td><span class="badge badge-warning">中</span></td><td><span class="badge badge-warning">待处理</span></td><td>李娜</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
-                <tr><td>CS-1300 招标方案准备</td><td>大理州人民医院</td><td>2026-08-05 17:30</td><td><span class="badge badge-warning">中</span></td><td><span class="badge badge-warning">待处理</span></td><td>王强</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
-                <tr><td class="line-through text-sub">年度合同归档</td><td>广西医科大学附一</td><td class="text-danger">逾期 4 天</td><td><span class="badge badge-gray">低</span></td><td><span class="badge badge-danger">已逾期</span></td><td>赵敏</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="flex items-center justify-between">
-            <div class="text-sub text-sm">共 312 条 · 每页 20 条</div>
-            <div class="pagination">
-              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-              <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
-              <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
-              <button class="page-btn" onclick="showToast(`切换到第 3 页`)">3</button>
-              <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+          <!-- 团队任务 -->
+          <div id="task-panel-team" class="task-panel hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+              <div class="card p-4">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-10 h-10 rounded-full bg-primary-light text-primary flex items-center justify-center font-bold">张</div>
+                  <div>
+                    <div class="font-semibold text-ink text-sm">张经理</div>
+                    <div class="text-xs text-sub">销售总监</div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-center">
+                  <div class="p-2 rounded-lg bg-panel"><div class="text-lg font-bold text-warning">3</div><div class="text-xs text-sub">待处理</div></div>
+                  <div class="p-2 rounded-lg bg-panel"><div class="text-lg font-bold text-primary">5</div><div class="text-xs text-sub">进行中</div></div>
+                  <div class="p-2 rounded-lg bg-panel"><div class="text-lg font-bold text-success">12</div><div class="text-xs text-sub">已完成</div></div>
+                </div>
+                <div class="mt-3 text-xs text-sub">本周达成率 <span class="text-success font-medium">85%</span></div>
+              </div>
+              <div class="card p-4">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-10 h-10 rounded-full bg-warning-bg text-warning flex items-center justify-center font-bold">李</div>
+                  <div>
+                    <div class="font-semibold text-ink text-sm">李娜</div>
+                    <div class="text-xs text-sub">销售经理</div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-center">
+                  <div class="p-2 rounded-lg bg-panel"><div class="text-lg font-bold text-warning">4</div><div class="text-xs text-sub">待处理</div></div>
+                  <div class="p-2 rounded-lg bg-panel"><div class="text-lg font-bold text-primary">6</div><div class="text-xs text-sub">进行中</div></div>
+                  <div class="p-2 rounded-lg bg-panel"><div class="text-lg font-bold text-success">9</div><div class="text-xs text-sub">已完成</div></div>
+                </div>
+                <div class="mt-3 text-xs text-sub">本周达成率 <span class="text-success font-medium">78%</span></div>
+              </div>
+              <div class="card p-4">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-10 h-10 rounded-full bg-success-bg text-success flex items-center justify-center font-bold">王</div>
+                  <div>
+                    <div class="font-semibold text-ink text-sm">王强</div>
+                    <div class="text-xs text-sub">销售经理</div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-center">
+                  <div class="p-2 rounded-lg bg-panel"><div class="text-lg font-bold text-warning">2</div><div class="text-xs text-sub">待处理</div></div>
+                  <div class="p-2 rounded-lg bg-panel"><div class="text-lg font-bold text-primary">7</div><div class="text-xs text-sub">进行中</div></div>
+                  <div class="p-2 rounded-lg bg-panel"><div class="text-lg font-bold text-success">15</div><div class="text-xs text-sub">已完成</div></div>
+                </div>
+                <div class="mt-3 text-xs text-sub">本周达成率 <span class="text-success font-medium">92%</span></div>
+              </div>
+              <div class="card p-4">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-10 h-10 rounded-full bg-info-bg text-info flex items-center justify-center font-bold">赵</div>
+                  <div>
+                    <div class="font-semibold text-ink text-sm">赵敏</div>
+                    <div class="text-xs text-sub">商务专员</div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-center">
+                  <div class="p-2 rounded-lg bg-panel"><div class="text-lg font-bold text-warning">3</div><div class="text-xs text-sub">待处理</div></div>
+                  <div class="p-2 rounded-lg bg-panel"><div class="text-lg font-bold text-primary">4</div><div class="text-xs text-sub">进行中</div></div>
+                  <div class="p-2 rounded-lg bg-panel"><div class="text-lg font-bold text-success">8</div><div class="text-xs text-sub">已完成</div></div>
+                </div>
+                <div class="mt-3 text-xs text-sub">本周达成率 <span class="text-warning font-medium">68%</span></div>
+              </div>
+            </div>
+            <div class="task-panel-card card-grid mb-4">
+              <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072905" data-name="团队周会材料准备" data-customer="内部" data-due="2026-07-31 10:00" data-priority="中" data-status="进行中" data-owner="李娜" data-type="团队任务">
+                <div class="flex items-start justify-between mb-3">
+                  <span class="badge badge-primary">进行中</span>
+                  <span class="badge badge-gray">团队任务</span>
+                </div>
+                <div class="font-semibold text-ink mb-1">团队周会材料准备</div>
+                <div class="text-sub text-sm mb-3">关联：销售一部</div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <span class="text-xs text-placeholder">截止：2026-07-31 10:00</span>
+                  <div class="deal-avatar-group"><div class="deal-avatar">李</div><div class="deal-avatar">王</div></div>
+                </div>
+              </div>
+              <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072906" data-name="Q3 客户拜访计划汇总" data-customer="内部" data-due="2026-08-02 18:00" data-priority="高" data-status="待处理" data-owner="张经理" data-type="团队任务">
+                <div class="flex items-start justify-between mb-3">
+                  <span class="badge badge-warning">待处理</span>
+                  <span class="badge badge-gray">团队任务</span>
+                </div>
+                <div class="font-semibold text-ink mb-1">Q3 客户拜访计划汇总</div>
+                <div class="text-sub text-sm mb-3">关联：销售二部</div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <span class="text-xs text-placeholder">截止：2026-08-02 18:00</span>
+                  <div class="deal-avatar-group"><div class="deal-avatar">张</div><div class="deal-avatar">李</div><div class="deal-avatar">赵</div></div>
+                </div>
+              </div>
+              <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072907" data-name="新人产品培训安排" data-customer="内部" data-due="2026-08-01 14:00" data-priority="低" data-status="待处理" data-owner="王强" data-type="团队任务">
+                <div class="flex items-start justify-between mb-3">
+                  <span class="badge badge-warning">待处理</span>
+                  <span class="badge badge-gray">团队任务</span>
+                </div>
+                <div class="font-semibold text-ink mb-1">新人产品培训安排</div>
+                <div class="text-sub text-sm mb-3">关联：培训部</div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <span class="text-xs text-placeholder">截止：2026-08-01 14:00</span>
+                  <div class="deal-avatar-group"><div class="deal-avatar">王</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="task-panel-list card mb-4 hidden">
+              <table class="data-table">
+                <thead><tr><th>任务名称</th><th>关联对象</th><th>截止时间</th><th>优先级</th><th>状态</th><th>负责人</th><th>参与人</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr data-code="T2026072905" data-name="团队周会材料准备" data-customer="内部" data-due="2026-07-31 10:00" data-priority="中" data-status="进行中" data-owner="李娜" data-type="团队任务"><td>团队周会材料准备</td><td>销售一部</td><td>2026-07-31 10:00</td><td><span class="badge badge-warning">中</span></td><td><span class="badge badge-primary">进行中</span></td><td>李娜</td><td>李娜、王强</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
+                  <tr data-code="T2026072906" data-name="Q3 客户拜访计划汇总" data-customer="内部" data-due="2026-08-02 18:00" data-priority="高" data-status="待处理" data-owner="张经理" data-type="团队任务"><td>Q3 客户拜访计划汇总</td><td>销售二部</td><td>2026-08-02 18:00</td><td><span class="badge badge-danger">高</span></td><td><span class="badge badge-warning">待处理</span></td><td>张经理</td><td>张经理、李娜、赵敏</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
+                  <tr data-code="T2026072907" data-name="新人产品培训安排" data-customer="内部" data-due="2026-08-01 14:00" data-priority="低" data-status="待处理" data-owner="王强" data-type="团队任务"><td>新人产品培训安排</td><td>培训部</td><td>2026-08-01 14:00</td><td><span class="badge badge-gray">低</span></td><td><span class="badge badge-warning">待处理</span></td><td>王强</td><td>王强</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="text-sub text-sm">共 3 条 · 每页 20 条</div>
+              <div class="pagination">
+                <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
+                <button class="page-btn active" onclick="showToast(`切换到第 1 页`)">1</button>
+                <button class="page-btn" onclick="showToast(`切换到第 2 页`)">2</button>
+                <button class="page-btn" onclick="showToast(`翻页`)"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
+              </div>
             </div>
           </div>
 
-          <!-- 看板视图 -->
-          <div class="card mb-4 p-4 hidden" id="task-kanban-view">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="font-semibold text-ink">任务看板</h3>
-              <button class="btn btn-outline btn-sm" onclick="showToast('切换回列表视图')">列表视图</button>
+          <!-- 协作任务 -->
+          <div id="task-panel-collab" class="task-panel hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
+              <div class="card p-4 lg:col-span-2">
+                <div class="font-semibold text-ink mb-3">待我确认 / 待我反馈</div>
+                <div class="space-y-3">
+                  <div class="flex items-start gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="showToast('打开协作任务详情')">
+                    <div class="w-10 h-10 rounded-full bg-primary-light text-primary flex items-center justify-center font-bold flex-shrink-0">王</div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="font-medium text-ink text-sm">CS-1300 招标方案准备</span>
+                        <span class="badge badge-warning">待确认</span>
+                      </div>
+                      <div class="text-xs text-sub mb-2">王强 邀请你确认招标技术参数 · 大理州人民医院</div>
+                      <div class="flex items-center gap-2 text-xs text-sub"><span>截止 2026-08-05</span><span>·</span><span>参与：王强、张经理、刘工</span></div>
+                    </div>
+                    <button class="btn btn-primary text-xs flex-shrink-0" onclick="event.stopPropagation();showToast('已确认参数')">确认</button>
+                  </div>
+                  <div class="flex items-start gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="showToast('打开协作任务详情')">
+                    <div class="w-10 h-10 rounded-full bg-warning-bg text-warning flex items-center justify-center font-bold flex-shrink-0">李</div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="font-medium text-ink text-sm">XN-550 保修续签跟进</span>
+                        <span class="badge badge-primary">进行中</span>
+                      </div>
+                      <div class="text-xs text-sub mb-2">李娜 更新了报价方案，需要你审批 · 昆明市第一人民医院</div>
+                      <div class="flex items-center gap-2 text-xs text-sub"><span>截止 2026-07-30</span><span>·</span><span>参与：张经理、李娜</span></div>
+                    </div>
+                    <button class="btn btn-primary text-xs flex-shrink-0" onclick="event.stopPropagation();showToast('已审批通过')">审批</button>
+                  </div>
+                  <div class="flex items-start gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="showToast('打开协作任务详情')">
+                    <div class="w-10 h-10 rounded-full bg-success-bg text-success flex items-center justify-center font-bold flex-shrink-0">赵</div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="font-medium text-ink text-sm">年度合同归档</span>
+                        <span class="badge badge-danger">已逾期</span>
+                      </div>
+                      <div class="text-xs text-sub mb-2">赵敏 催促你补充合同扫描件 · 广西医科大学附一</div>
+                      <div class="flex items-center gap-2 text-xs text-sub"><span>逾期 4 天</span><span>·</span><span>参与：赵敏、张经理</span></div>
+                    </div>
+                    <button class="btn btn-primary text-xs flex-shrink-0" onclick="event.stopPropagation();showToast('已上传附件')">上传</button>
+                  </div>
+                </div>
+              </div>
+              <div class="card p-4">
+                <div class="font-semibold text-ink mb-3">协作成员</div>
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-primary-light text-primary flex items-center justify-center text-xs">张</div><span class="text-sm text-ink">张经理</span></div>
+                    <span class="text-xs text-sub">参与 3 个协作任务</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-warning-bg text-warning flex items-center justify-center text-xs">李</div><span class="text-sm text-ink">李娜</span></div>
+                    <span class="text-xs text-sub">参与 2 个协作任务</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-success-bg text-success flex items-center justify-center text-xs">王</div><span class="text-sm text-ink">王强</span></div>
+                    <span class="text-xs text-sub">参与 2 个协作任务</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-info-bg text-info flex items-center justify-center text-xs">赵</div><span class="text-sm text-ink">赵敏</span></div>
+                    <span class="text-xs text-sub">参与 1 个协作任务</span>
+                  </div>
+                </div>
+                <div class="mt-4 p-3 rounded-lg bg-panel">
+                  <div class="text-xs text-sub mb-1">本月协作效率</div>
+                  <div class="text-2xl font-bold text-success">86%</div>
+                  <div class="text-xs text-sub">平均响应时间 2.3 小时</div>
+                </div>
+              </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div class="bg-panel rounded-xl p-3">
-                <div class="text-sm font-medium text-sub mb-3">待处理 <span class="badge badge-light ml-1">12</span></div>
-                <div class="space-y-2">
-                  <div class="card p-3 cursor-pointer hover:shadow-hover"><div class="text-xs text-placeholder">CA-620</div><div class="text-sm font-medium text-ink">补货确认</div><div class="text-xs text-sub mt-1">曲靖市妇幼保健院 · 中</div></div>
-                  <div class="card p-3 cursor-pointer hover:shadow-hover"><div class="text-xs text-placeholder">XN-550</div><div class="text-sm font-medium text-ink">保修续签跟进</div><div class="text-xs text-sub mt-1">昆明市第一人民医院 · 高</div></div>
+            <div class="task-panel-card card-grid mb-4">
+              <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072901" data-name="XN-550 保修续签跟进" data-customer="昆明市第一人民医院" data-due="2026-07-30 18:00" data-priority="高" data-status="进行中" data-owner="张经理" data-type="协作任务">
+                <div class="flex items-start justify-between mb-3">
+                  <span class="badge badge-primary">进行中</span>
+                  <span class="badge badge-gray">协作任务</span>
+                </div>
+                <div class="font-semibold text-ink mb-1">XN-550 保修续签跟进</div>
+                <div class="text-sub text-sm mb-3">关联客户：昆明市第一人民医院</div>
+                <div class="flex -space-x-2 mb-3">
+                  <div class="w-7 h-7 rounded-full bg-primary-light text-primary flex items-center justify-center text-xs border-2 border-white">张</div>
+                  <div class="w-7 h-7 rounded-full bg-warning-bg text-warning flex items-center justify-center text-xs border-2 border-white">李</div>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <span class="text-xs text-placeholder">截止：2026-07-30</span>
+                  <span class="text-xs text-sub">待审批</span>
                 </div>
               </div>
-              <div class="bg-panel rounded-xl p-3">
-                <div class="text-sm font-medium text-sub mb-3">进行中 <span class="badge badge-light ml-1">28</span></div>
-                <div class="space-y-2">
-                  <div class="card p-3 cursor-pointer hover:shadow-hover"><div class="text-xs text-placeholder">BF-001</div><div class="text-sm font-medium text-ink">拜访：昭通市医院</div><div class="text-xs text-sub mt-1">关联意向 · 30%</div></div>
+              <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072903" data-name="CS-1300 招标方案准备" data-customer="大理州人民医院" data-due="2026-08-05 17:30" data-priority="中" data-status="待处理" data-owner="王强" data-type="协作任务">
+                <div class="flex items-start justify-between mb-3">
+                  <span class="badge badge-warning">待处理</span>
+                  <span class="badge badge-gray">协作任务</span>
+                </div>
+                <div class="font-semibold text-ink mb-1">CS-1300 招标方案准备</div>
+                <div class="text-sub text-sm mb-3">关联客户：大理州人民医院</div>
+                <div class="flex -space-x-2 mb-3">
+                  <div class="w-7 h-7 rounded-full bg-success-bg text-success flex items-center justify-center text-xs border-2 border-white">王</div>
+                  <div class="w-7 h-7 rounded-full bg-primary-light text-primary flex items-center justify-center text-xs border-2 border-white">张</div>
+                  <div class="w-7 h-7 rounded-full bg-info-bg text-info flex items-center justify-center text-xs border-2 border-white">刘</div>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <span class="text-xs text-placeholder">截止：2026-08-05</span>
+                  <span class="text-xs text-sub">待确认</span>
                 </div>
               </div>
-              <div class="bg-panel rounded-xl p-3">
-                <div class="text-sm font-medium text-sub mb-3">已完成 <span class="badge badge-light ml-1">156</span></div>
-                <div class="space-y-2">
-                  <div class="card p-3 cursor-pointer hover:shadow-hover"><div class="text-xs text-placeholder">WO-202</div><div class="text-sm font-medium text-ink">工单回访</div><div class="text-xs text-sub mt-1">云南省肿瘤医院 · 已评价</div></div>
+            </div>
+            <div class="task-panel-list card mb-4 hidden">
+              <table class="data-table">
+                <thead><tr><th>任务名称</th><th>关联客户</th><th>截止时间</th><th>优先级</th><th>状态</th><th>负责人</th><th>参与人</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr data-code="T2026072901" data-name="XN-550 保修续签跟进" data-customer="昆明市第一人民医院" data-due="2026-07-30 18:00" data-priority="高" data-status="进行中" data-owner="张经理" data-type="协作任务"><td>XN-550 保修续签跟进</td><td>昆明市第一人民医院</td><td>2026-07-30 18:00</td><td><span class="badge badge-danger">高</span></td><td><span class="badge badge-primary">进行中</span></td><td>张经理</td><td>张经理、李娜</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
+                  <tr data-code="T2026072903" data-name="CS-1300 招标方案准备" data-customer="大理州人民医院" data-due="2026-08-05 17:30" data-priority="中" data-status="待处理" data-owner="王强" data-type="协作任务"><td>CS-1300 招标方案准备</td><td>大理州人民医院</td><td>2026-08-05 17:30</td><td><span class="badge badge-warning">中</span></td><td><span class="badge badge-warning">待处理</span></td><td>王强</td><td>王强、张经理、刘工</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 预期预警 -->
+          <div id="task-panel-warning" class="task-panel hidden">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+              <div class="card card-hover p-4">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">3 天内到期</div><svg class="icon icon-md text-warning"><use href="#icon-warning"/></svg></div>
+                <div class="text-2xl font-bold text-warning">3</div>
+                <div class="text-xs text-sub mt-1">含 1 个高优先级</div>
+              </div>
+              <div class="card card-hover p-4">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">预测延期风险</div><svg class="icon icon-md text-danger"><use href="#icon-info"/></svg></div>
+                <div class="text-2xl font-bold text-danger">2</div>
+                <div class="text-xs text-sub mt-1">历史进度滞后 >20%</div>
+              </div>
+              <div class="card card-hover p-4">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">里程碑预警</div><svg class="icon icon-md text-primary"><use href="#icon-flag"/></svg></div>
+                <div class="text-2xl font-bold text-primary">1</div>
+                <div class="text-xs text-sub mt-1">Q3 招标节点临近</div>
+              </div>
+            </div>
+            <div class="task-panel-card card-grid mb-4">
+              <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072902" data-name="CA-620 补货确认" data-customer="曲靖市妇幼保健院" data-due="2026-07-29 12:00" data-priority="中" data-status="待处理" data-owner="李娜" data-type="个人任务">
+                <div class="flex items-start justify-between mb-3">
+                  <span class="badge badge-warning">待处理</span>
+                  <span class="badge badge-warning">今日到期</span>
+                </div>
+                <div class="font-semibold text-ink mb-1">CA-620 补货确认</div>
+                <div class="text-sub text-sm mb-3">关联客户：曲靖市妇幼保健院</div>
+                <div class="p-2 rounded-lg bg-warning-bg text-warning text-xs mb-3">预计今日 12:00 前可完成</div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <span class="text-xs text-danger">截止：2026-07-29 12:00</span>
+                  <span class="text-xs text-sub">负责人：李娜</span>
                 </div>
               </div>
-              <div class="bg-panel rounded-xl p-3">
-                <div class="text-sm font-medium text-sub mb-3">已逾期 <span class="badge badge-light ml-1">5</span></div>
-                <div class="space-y-2">
-                  <div class="card p-3 cursor-pointer hover:shadow-hover border-l-4 border-danger"><div class="text-xs text-placeholder">LE-008</div><div class="text-sm font-medium text-ink">线索跟进</div><div class="text-xs text-sub mt-1">逾期 2 天 · 需督办</div></div>
+              <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072901" data-name="XN-550 保修续签跟进" data-customer="昆明市第一人民医院" data-due="2026-07-30 18:00" data-priority="高" data-status="进行中" data-owner="张经理" data-type="协作任务">
+                <div class="flex items-start justify-between mb-3">
+                  <span class="badge badge-primary">进行中</span>
+                  <span class="badge badge-warning">2 天内到期</span>
+                </div>
+                <div class="font-semibold text-ink mb-1">XN-550 保修续签跟进</div>
+                <div class="text-sub text-sm mb-3">关联客户：昆明市第一人民医院</div>
+                <div class="p-2 rounded-lg bg-danger-bg text-danger text-xs mb-3">当前进度 60%，剩余时间不足，建议加急</div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <span class="text-xs text-danger">截止：2026-07-30 18:00</span>
+                  <span class="text-xs text-sub">负责人：张经理</span>
                 </div>
               </div>
+              <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072908" data-name="BF-008 拜访纪要提交" data-customer="昭通市第一人民医院" data-due="2026-07-31 18:00" data-priority="高" data-status="待处理" data-owner="王强" data-type="个人任务">
+                <div class="flex items-start justify-between mb-3">
+                  <span class="badge badge-warning">待处理</span>
+                  <span class="badge badge-warning">3 天内到期</span>
+                </div>
+                <div class="font-semibold text-ink mb-1">BF-008 拜访纪要提交</div>
+                <div class="text-sub text-sm mb-3">关联客户：昭通市第一人民医院</div>
+                <div class="p-2 rounded-lg bg-warning-bg text-warning text-xs mb-3">负责人当前任务饱和，存在延期风险</div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <span class="text-xs text-danger">截止：2026-07-31 18:00</span>
+                  <span class="text-xs text-sub">负责人：王强</span>
+                </div>
+              </div>
+              <div class="card card-hover p-4 cursor-pointer" onclick="openTaskDetail(this)" data-code="T2026072909" data-name="Q3 质谱平台招标节点" data-customer="昆明医科大学第一附属医院" data-due="2026-08-15 18:00" data-priority="高" data-status="进行中" data-owner="李娜" data-type="协作任务">
+                <div class="flex items-start justify-between mb-3">
+                  <span class="badge badge-primary">进行中</span>
+                  <span class="badge badge-primary">里程碑</span>
+                </div>
+                <div class="font-semibold text-ink mb-1">Q3 质谱平台招标节点</div>
+                <div class="text-sub text-sm mb-3">关联客户：昆明医科大学第一附属医院</div>
+                <div class="p-2 rounded-lg bg-primary-light text-primary text-xs mb-3">距离节点 15 天，建议本周完成方案内审</div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <span class="text-xs text-placeholder">节点：2026-08-15 18:00</span>
+                  <span class="text-xs text-sub">负责人：李娜</span>
+                </div>
+              </div>
+            </div>
+            <div class="task-panel-list card mb-4 hidden">
+              <table class="data-table">
+                <thead><tr><th>任务/节点</th><th>关联客户</th><th>截止时间</th><th>风险类型</th><th>优先级</th><th>负责人</th><th>建议动作</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr data-code="T2026072902" data-name="CA-620 补货确认" data-customer="曲靖市妇幼保健院" data-due="2026-07-29 12:00" data-priority="中" data-status="待处理" data-owner="李娜" data-type="个人任务"><td>CA-620 补货确认</td><td>曲靖市妇幼保健院</td><td class="text-danger">2026-07-29 12:00</td><td><span class="badge badge-warning">今日到期</span></td><td><span class="badge badge-warning">中</span></td><td>李娜</td><td class="text-xs text-sub">今日内完成确认</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
+                  <tr data-code="T2026072901" data-name="XN-550 保修续签跟进" data-customer="昆明市第一人民医院" data-due="2026-07-30 18:00" data-priority="高" data-status="进行中" data-owner="张经理" data-type="协作任务"><td>XN-550 保修续签跟进</td><td>昆明市第一人民医院</td><td class="text-danger">2026-07-30 18:00</td><td><span class="badge badge-danger">进度滞后</span></td><td><span class="badge badge-danger">高</span></td><td>张经理</td><td class="text-xs text-sub">协调售前加急支持</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
+                  <tr data-code="T2026072908" data-name="BF-008 拜访纪要提交" data-customer="昭通市第一人民医院" data-due="2026-07-31 18:00" data-priority="高" data-status="待处理" data-owner="王强" data-type="个人任务"><td>BF-008 拜访纪要提交</td><td>昭通市第一人民医院</td><td class="text-warning">2026-07-31 18:00</td><td><span class="badge badge-warning">饱和延期</span></td><td><span class="badge badge-danger">高</span></td><td>王强</td><td class="text-xs text-sub">建议拆分或转交</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
+                  <tr data-code="T2026072909" data-name="Q3 质谱平台招标节点" data-customer="昆明医科大学第一附属医院" data-due="2026-08-15 18:00" data-priority="高" data-status="进行中" data-owner="李娜" data-type="协作任务"><td>Q3 质谱平台招标节点</td><td>昆明医科大学第一附属医院</td><td class="text-primary">2026-08-15 18:00</td><td><span class="badge badge-primary">里程碑</span></td><td><span class="badge badge-danger">高</span></td><td>李娜</td><td class="text-xs text-sub">本周完成方案内审</td><td><button class="btn btn-ghost text-xs" onclick="openTaskDetail(this.closest('tr'))">查看</button></td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
 
@@ -18651,16 +18913,26 @@ Content-Type: application/json
 
     /* ===== Tasks view helpers ===== */
     function switchTaskTab(btn) {
+      const tab = btn.dataset.tasktab;
       btn.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
+      document.querySelectorAll('.task-panel').forEach(p => p.classList.add('hidden'));
+      const panel = document.getElementById('task-panel-' + tab);
+      if (panel) panel.classList.remove('hidden');
+      // 保持当前视图模式
+      const cardBtn = document.getElementById('task-view-card');
+      const currentMode = cardBtn && cardBtn.classList.contains('btn-primary') ? 'card' : 'list';
+      setTaskView(currentMode);
     }
 
     function setTaskView(mode) {
-      const gridEl = document.getElementById('task-card');
-      const listEl = document.getElementById('task-list');
+      const activePanel = document.querySelector('.task-panel:not(.hidden)');
       const gridBtn = document.getElementById('task-view-card');
       const listBtn = document.getElementById('task-view-list');
-      if (!gridEl || !listEl || !gridBtn || !listBtn) return;
+      if (!activePanel || !gridBtn || !listBtn) return;
+      const gridEl = activePanel.querySelector('.task-panel-card');
+      const listEl = activePanel.querySelector('.task-panel-list');
+      if (!gridEl || !listEl) return;
       if (mode === 'card') {
         gridEl.classList.remove('hidden');
         listEl.classList.add('hidden');
