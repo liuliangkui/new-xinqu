@@ -7264,96 +7264,93 @@
             <div class="card card-hover"><div class="text-sub text-xs mb-1">闲置</div><div class="text-2xl font-bold text-warning">12</div><div class="text-xs text-warning mt-1">利用率低于 20%</div></div>
           </div>
 
-          <!-- 维保与保修预警 -->
+          <!-- 维保与保修预警 / 维保计划预警 -->
           <div class="card mb-5 p-4">
             <div class="flex items-center justify-between mb-4">
               <h3 class="font-semibold text-ink">维保与保修预警</h3>
               <button class="btn btn-outline btn-sm" onclick="openMaintenanceCalendarModal()">维保日历</button>
             </div>
 
-            <!-- 保修到期预警：同类指标统一一行 -->
-            <div class="mb-4">
-              <div class="flex items-center gap-2 mb-2">
-                <svg class="icon icon-sm text-danger"><use href="#icon-warning"/></svg>
-                <span class="text-sm font-medium text-ink">保修到期预警</span>
-              </div>
-              <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                <div class="p-3 rounded-xl bg-danger-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByWarranty('overdue')">
-                  <div class="text-xl font-bold text-danger">3</div>
-                  <div class="text-xs text-sub">已超时</div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <!-- 保修到期预警：一行紧凑展示 -->
+              <div class="p-3 rounded-xl bg-panel">
+                <div class="flex items-center gap-2 mb-2">
+                  <svg class="icon icon-sm text-danger"><use href="#icon-warning"/></svg>
+                  <span class="text-sm font-medium text-ink">保修到期预警</span>
                 </div>
-                <div class="p-3 rounded-xl bg-warning-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByWarranty('7')">
-                  <div class="text-xl font-bold text-warning">5</div>
-                  <div class="text-xs text-sub">7 天内到期</div>
-                </div>
-                <div class="p-3 rounded-xl bg-warning-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByWarranty('30')">
-                  <div class="text-xl font-bold text-warning">8</div>
-                  <div class="text-xs text-sub">30 天内到期</div>
-                </div>
-                <div class="p-3 rounded-xl bg-info-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByWarranty('60')">
-                  <div class="text-xl font-bold text-info">12</div>
-                  <div class="text-xs text-sub">60 天内到期</div>
-                </div>
-                <div class="p-3 rounded-xl bg-gray-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByWarranty('90')">
-                  <div class="text-xl font-bold text-ink">18</div>
-                  <div class="text-xs text-sub">90 天内到期</div>
+                <div class="flex flex-wrap gap-2">
+                  <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-danger-bg text-danger cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByWarranty('overdue')">
+                    <span class="text-lg font-bold">3</span>
+                    <span class="text-xs">已超时</span>
+                  </div>
+                  <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-warning-bg text-warning cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByWarranty('7')">
+                    <span class="text-lg font-bold">5</span>
+                    <span class="text-xs">7 天内</span>
+                  </div>
+                  <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-warning-bg text-warning cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByWarranty('30')">
+                    <span class="text-lg font-bold">8</span>
+                    <span class="text-xs">30 天内</span>
+                  </div>
+                  <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-info-bg text-info cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByWarranty('90')">
+                    <span class="text-lg font-bold">18</span>
+                    <span class="text-xs">90 天内</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 维保计划预警：同类指标统一一行 -->
-            <div class="mb-4">
-              <div class="flex items-center gap-2 mb-2">
-                <svg class="icon icon-sm text-primary"><use href="#icon-equipment"/></svg>
-                <span class="text-sm font-medium text-ink">维保计划预警</span>
-              </div>
-              <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                <div class="p-3 rounded-xl bg-danger-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByMaintenance('overdue')">
-                  <div class="text-xl font-bold text-danger">2</div>
-                  <div class="text-xs text-sub">已逾期</div>
+              <!-- 维保计划预警：一行紧凑展示 -->
+              <div class="p-3 rounded-xl bg-panel">
+                <div class="flex items-center gap-2 mb-2">
+                  <svg class="icon icon-sm text-primary"><use href="#icon-equipment"/></svg>
+                  <span class="text-sm font-medium text-ink">维保计划预警</span>
                 </div>
-                <div class="p-3 rounded-xl bg-warning-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByMaintenance('7')">
-                  <div class="text-xl font-bold text-warning">4</div>
-                  <div class="text-xs text-sub">7 天内到期</div>
-                </div>
-                <div class="p-3 rounded-xl bg-warning-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByMaintenance('30')">
-                  <div class="text-xl font-bold text-warning">9</div>
-                  <div class="text-xs text-sub">30 天内到期</div>
-                </div>
-                <div class="p-3 rounded-xl bg-info-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByMaintenance('quarter')">
-                  <div class="text-xl font-bold text-info">15</div>
-                  <div class="text-xs text-sub">本季度待维保</div>
-                </div>
-                <div class="p-3 rounded-xl bg-gray-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByMaintenance('year')">
-                  <div class="text-xl font-bold text-ink">38</div>
-                  <div class="text-xs text-sub">本年度待维保</div>
+                <div class="flex flex-wrap gap-2">
+                  <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-danger-bg text-danger cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByMaintenance('overdue')">
+                    <span class="text-lg font-bold">2</span>
+                    <span class="text-xs">已逾期</span>
+                  </div>
+                  <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-warning-bg text-warning cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByMaintenance('7')">
+                    <span class="text-lg font-bold">4</span>
+                    <span class="text-xs">7 天内</span>
+                  </div>
+                  <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-warning-bg text-warning cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByMaintenance('30')">
+                    <span class="text-lg font-bold">9</span>
+                    <span class="text-xs">30 天内</span>
+                  </div>
+                  <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-info-bg text-info cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByMaintenance('quarter')">
+                    <span class="text-lg font-bold">15</span>
+                    <span class="text-xs">本季度</span>
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- 即将到期 / 待维保设备 -->
-            <div class="p-3 rounded-lg bg-panel">
-              <div class="text-sm font-medium text-ink mb-2">即将到期 / 待维保设备</div>
-              <div class="space-y-2">
-                <div class="flex items-center justify-between text-sm">
-                  <span class="text-sub">希森美康 XN-550 · 云南省肿瘤医院</span>
-                  <span class="text-danger font-medium">保修剩余 5 天</span>
+            <div class="mt-4 p-3 rounded-lg bg-panel">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-ink">即将到期 / 待维保设备</span>
+                <span class="text-xs text-sub">5 台</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1">
+                <div class="flex items-center justify-between text-sm py-1 border-b border-line/50">
+                  <span class="text-sub truncate mr-2">XN-550 · 云南省肿瘤医院</span>
+                  <span class="text-danger font-medium text-xs flex-shrink-0">保修 5 天</span>
                 </div>
-                <div class="flex items-center justify-between text-sm">
-                  <span class="text-sub">伯腾 ELx800 · 大理州人民医院</span>
-                  <span class="text-danger font-medium">保修剩余 12 天</span>
+                <div class="flex items-center justify-between text-sm py-1 border-b border-line/50">
+                  <span class="text-sub truncate mr-2">ELx800 · 大理州人民医院</span>
+                  <span class="text-danger font-medium text-xs flex-shrink-0">保修 12 天</span>
                 </div>
-                <div class="flex items-center justify-between text-sm">
-                  <span class="text-sub">酒井康复训练仪 · 西双版纳傣族自治州医院</span>
-                  <span class="text-danger font-medium">保修剩余 8 天</span>
+                <div class="flex items-center justify-between text-sm py-1 border-b border-line/50">
+                  <span class="text-sub truncate mr-2">康复训练仪 · 西双版纳州医院</span>
+                  <span class="text-danger font-medium text-xs flex-shrink-0">保修 8 天</span>
                 </div>
-                <div class="flex items-center justify-between text-sm">
-                  <span class="text-sub">希森美康 CS-1300 · 昆明医科大学第一附属医院</span>
-                  <span class="text-warning font-medium">维保计划 3 天内到期</span>
+                <div class="flex items-center justify-between text-sm py-1 border-b border-line/50">
+                  <span class="text-sub truncate mr-2">CS-1300 · 昆医附一院</span>
+                  <span class="text-warning font-medium text-xs flex-shrink-0">维保 3 天</span>
                 </div>
-                <div class="flex items-center justify-between text-sm">
-                  <span class="text-sub">滴宝生化试剂盘 · 曲靖市第一人民医院</span>
-                  <span class="text-warning font-medium">维保计划 12 天内到期</span>
+                <div class="flex items-center justify-between text-sm py-1 border-b border-line/50">
+                  <span class="text-sub truncate mr-2">生化试剂盘 · 曲靖一院</span>
+                  <span class="text-warning font-medium text-xs flex-shrink-0">维保 12 天</span>
                 </div>
               </div>
             </div>
