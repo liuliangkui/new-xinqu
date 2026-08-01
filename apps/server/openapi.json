@@ -696,6 +696,226 @@
           "线索管理"
         ]
       }
+    },
+    "/intentions": {
+      "get": {
+        "operationId": "IntentionController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "页码",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "每页条数",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "关键字（客户名称/项目名称）",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "required": false,
+            "in": "query",
+            "description": "客户ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ownerId",
+            "required": false,
+            "in": "query",
+            "description": "负责人ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ACTIVE",
+                "WON",
+                "LOST",
+                "STALLED"
+              ]
+            }
+          },
+          {
+            "name": "stage",
+            "required": false,
+            "in": "query",
+            "description": "所处阶段",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "INITIAL",
+                "NEGOTIATION",
+                "QUOTATION",
+                "CONTRACT",
+                "WON"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "返回分页意向列表"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询意向列表",
+        "tags": [
+          "意向管理"
+        ]
+      },
+      "post": {
+        "operationId": "IntentionController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateIntentionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "创建成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "创建意向",
+        "tags": [
+          "意向管理"
+        ]
+      }
+    },
+    "/intentions/{id}": {
+      "get": {
+        "operationId": "IntentionController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "返回意向详情及阶段记录"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询意向详情",
+        "tags": [
+          "意向管理"
+        ]
+      },
+      "put": {
+        "operationId": "IntentionController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateIntentionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "更新意向",
+        "tags": [
+          "意向管理"
+        ]
+      },
+      "delete": {
+        "operationId": "IntentionController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "删除成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "删除意向（软删除）",
+        "tags": [
+          "意向管理"
+        ]
+      }
     }
   },
   "info": {
@@ -1108,6 +1328,118 @@
           "convertedCustomerId": {
             "type": "string",
             "description": "转化客户ID"
+          }
+        }
+      },
+      "CreateIntentionDto": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "客户ID"
+          },
+          "productId": {
+            "type": "string",
+            "description": "产品ID"
+          },
+          "amount": {
+            "type": "number",
+            "description": "预计金额"
+          },
+          "stage": {
+            "type": "string",
+            "description": "所处阶段",
+            "enum": [
+              "INITIAL",
+              "NEGOTIATION",
+              "QUOTATION",
+              "CONTRACT",
+              "WON"
+            ]
+          },
+          "probability": {
+            "type": "number",
+            "description": "赢单概率 0-100"
+          },
+          "expectedAt": {
+            "type": "string",
+            "description": "预计成交时间"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "负责人ID"
+          },
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "enum": [
+              "ACTIVE",
+              "WON",
+              "LOST",
+              "STALLED"
+            ]
+          },
+          "lostReason": {
+            "type": "string",
+            "description": "输单原因"
+          }
+        },
+        "required": [
+          "customerId",
+          "ownerId"
+        ]
+      },
+      "UpdateIntentionDto": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "客户ID"
+          },
+          "productId": {
+            "type": "string",
+            "description": "产品ID"
+          },
+          "amount": {
+            "type": "number",
+            "description": "预计金额"
+          },
+          "stage": {
+            "type": "string",
+            "description": "所处阶段",
+            "enum": [
+              "INITIAL",
+              "NEGOTIATION",
+              "QUOTATION",
+              "CONTRACT",
+              "WON"
+            ]
+          },
+          "probability": {
+            "type": "number",
+            "description": "赢单概率 0-100"
+          },
+          "expectedAt": {
+            "type": "string",
+            "description": "预计成交时间"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "负责人ID"
+          },
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "enum": [
+              "ACTIVE",
+              "WON",
+              "LOST",
+              "STALLED"
+            ]
+          },
+          "lostReason": {
+            "type": "string",
+            "description": "输单原因"
           }
         }
       }

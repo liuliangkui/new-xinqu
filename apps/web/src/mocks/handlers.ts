@@ -21,6 +21,14 @@ import {
   allLeads,
 } from '@/views/lead/mock'
 import type { LeadListResult, Lead, LeadForm } from '@/views/lead/types'
+import {
+  generateIntentionList,
+  createIntentionInMock,
+  updateIntentionInMock,
+  deleteIntentionFromMock,
+  allIntentions,
+} from '@/views/intention/mock'
+import type { IntentionListResult, Intention, IntentionForm } from '@/views/intention/types'
 
 const ok = <T>(data: T): ApiResponse<T> => ({
   success: true,
@@ -191,6 +199,71 @@ export const handlers = [
     if (!success) {
       return HttpResponse.json(
         { success: false, code: 404, message: '线索不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok({ success: true }))
+  }),
+
+  http.get('/api/v1/intentions', ({ request }) => {
+    const url = new URL(request.url)
+    const page = Number(url.searchParams.get('page') ?? '1')
+    const size = Number(url.searchParams.get('size') ?? '20')
+    const keyword = url.searchParams.get('keyword') ?? undefined
+    const businessType = url.searchParams.get('businessType')
+      ? Number(url.searchParams.get('businessType'))
+      : undefined
+    const status = url.searchParams.get('status') ?? undefined
+    const tabType = url.searchParams.get('tabType') ?? undefined
+
+    const result = generateIntentionList({
+      pageNum: page,
+      pageSize: size,
+      keyword,
+      businessType,
+      status,
+      tabType,
+    })
+    return HttpResponse.json(ok<IntentionListResult>(result))
+  }),
+
+  http.get('/api/v1/intentions/:id', ({ params }) => {
+    const id = Number(params.id)
+    const intention = allIntentions.find((i) => i.intentionId === id) || null
+    if (!intention) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '意向不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Intention>(intention))
+  }),
+
+  http.post('/api/v1/intentions', async ({ request }) => {
+    const body = (await request.json()) as Partial<IntentionForm>
+    const intention = createIntentionInMock(body)
+    return HttpResponse.json(ok<Intention>(intention), { status: 201 })
+  }),
+
+  http.put('/api/v1/intentions/:id', async ({ request, params }) => {
+    const id = Number(params.id)
+    const body = (await request.json()) as Partial<IntentionForm>
+    const intention = updateIntentionInMock(id, body)
+    if (!intention) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '意向不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Intention>(intention))
+  }),
+
+  http.delete('/api/v1/intentions/:id', ({ params }) => {
+    const id = Number(params.id)
+    const success = deleteIntentionFromMock(id)
+    if (!success) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '意向不存在', data: null },
         { status: 404 },
       )
     }

@@ -41,6 +41,25 @@ export interface IntentionStats {
   closedCount: number
 }
 
+export interface IntentionForm {
+  customerName: string
+  projectName: string
+  businessType: BusinessType
+  status?: IntentionStatus
+  amount?: number
+  productLine: string
+  ownerName?: string
+}
+
+export interface IntentionListParams {
+  pageNum: number
+  pageSize: number
+  keyword?: string
+  businessType?: number
+  status?: string
+  tabType?: 'all' | 'my' | 'draft' | 'approving' | 'effective'
+}
+
 export interface IntentionListResult {
   list: Intention[]
   total: number

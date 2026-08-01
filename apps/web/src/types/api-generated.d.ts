@@ -213,6 +213,43 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/intentions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询意向列表 */
+    get: operations['IntentionController_findAll']
+    put?: never
+    /** 创建意向 */
+    post: operations['IntentionController_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/intentions/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询意向详情 */
+    get: operations['IntentionController_findOne']
+    /** 更新意向 */
+    put: operations['IntentionController_update']
+    post?: never
+    /** 删除意向（软删除） */
+    delete: operations['IntentionController_remove']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -402,6 +439,58 @@ export interface components {
       intentionLevel?: 'HIGH' | 'MEDIUM' | 'LOW'
       /** @description 转化客户ID */
       convertedCustomerId?: string
+    }
+    CreateIntentionDto: {
+      /** @description 客户ID */
+      customerId: string
+      /** @description 产品ID */
+      productId?: string
+      /** @description 预计金额 */
+      amount?: number
+      /**
+       * @description 所处阶段
+       * @enum {string}
+       */
+      stage?: 'INITIAL' | 'NEGOTIATION' | 'QUOTATION' | 'CONTRACT' | 'WON'
+      /** @description 赢单概率 0-100 */
+      probability?: number
+      /** @description 预计成交时间 */
+      expectedAt?: string
+      /** @description 负责人ID */
+      ownerId: string
+      /**
+       * @description 状态
+       * @enum {string}
+       */
+      status?: 'ACTIVE' | 'WON' | 'LOST' | 'STALLED'
+      /** @description 输单原因 */
+      lostReason?: string
+    }
+    UpdateIntentionDto: {
+      /** @description 客户ID */
+      customerId?: string
+      /** @description 产品ID */
+      productId?: string
+      /** @description 预计金额 */
+      amount?: number
+      /**
+       * @description 所处阶段
+       * @enum {string}
+       */
+      stage?: 'INITIAL' | 'NEGOTIATION' | 'QUOTATION' | 'CONTRACT' | 'WON'
+      /** @description 赢单概率 0-100 */
+      probability?: number
+      /** @description 预计成交时间 */
+      expectedAt?: string
+      /** @description 负责人ID */
+      ownerId?: string
+      /**
+       * @description 状态
+       * @enum {string}
+       */
+      status?: 'ACTIVE' | 'WON' | 'LOST' | 'STALLED'
+      /** @description 输单原因 */
+      lostReason?: string
     }
   }
   responses: never
@@ -840,6 +929,125 @@ export interface operations {
     }
   }
   LeadController_remove: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 删除成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  IntentionController_findAll: {
+    parameters: {
+      query?: {
+        /** @description 页码 */
+        page?: number
+        /** @description 每页条数 */
+        pageSize?: number
+        /** @description 关键字（客户名称/项目名称） */
+        keyword?: string
+        /** @description 客户ID */
+        customerId?: string
+        /** @description 负责人ID */
+        ownerId?: string
+        /** @description 状态 */
+        status?: 'ACTIVE' | 'WON' | 'LOST' | 'STALLED'
+        /** @description 所处阶段 */
+        stage?: 'INITIAL' | 'NEGOTIATION' | 'QUOTATION' | 'CONTRACT' | 'WON'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 返回分页意向列表 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  IntentionController_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateIntentionDto']
+      }
+    }
+    responses: {
+      /** @description 创建成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  IntentionController_findOne: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 返回意向详情及阶段记录 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  IntentionController_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateIntentionDto']
+      }
+    }
+    responses: {
+      /** @description 更新成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  IntentionController_remove: {
     parameters: {
       query?: never
       header?: never

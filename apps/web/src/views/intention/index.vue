@@ -5,23 +5,38 @@
  */
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import type { NavTabItem, StatusMap } from '@/types/common'
-import type { Intention } from './types'
+import type { Intention, IntentionForm, IntentionListParams, IntentionStats } from './types'
 import { BusinessType, IntentionStatus } from './types'
-import { mockGetIntentionList } from './mock'
-import type { IntentionStats } from './types'
+import { getIntentionList, createIntention, updateIntention, deleteIntention } from './api'
 
 const isMobile = ref(false)
 
-function checkMobile(): void { isMobile.value = window.innerWidth < 768 }
+function checkMobile(): void {
+  isMobile.value = window.innerWidth < 768
+}
 
-onMounted(() => { checkMobile(); window.addEventListener('resize', checkMobile); fetchList() })
-onUnmounted(() => { window.removeEventListener('resize', checkMobile) })
+onMounted(() => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
+  fetchList()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
+})
 
 const viewMode = ref<'card' | 'list'>(isMobile.value ? 'card' : 'list')
 const intentions = ref<Intention[]>([])
 const total = ref(0)
 const loading = ref(false)
-const stats = ref<IntentionStats>({ totalCount: 0, draftCount: 0, approvingCount: 0, effectiveCount: 0, rejectedCount: 0, closedCount: 0 })
+const stats = ref<IntentionStats>({
+  totalCount: 0,
+  draftCount: 0,
+  approvingCount: 0,
+  effectiveCount: 0,
+  rejectedCount: 0,
+  closedCount: 0,
+})
 const keyword = ref('')
 const searchTimer = ref<ReturnType<typeof setTimeout> | null>(null)
 const activeTab = ref('all')
@@ -29,6 +44,13 @@ const filterValues = ref<Record<string, unknown>>({ businessType: '', status: ''
 const pagination = ref({ page: 1, size: 12 })
 const detailVisible = ref(false)
 const detailIntention = ref<Intention | null>(null)
+
+// 表单抽屉
+const formVisible = ref(false)
+const formMode = ref<'create' | 'edit'>('create')
+const formData = ref<IntentionForm>({} as IntentionForm)
+const formLoading = ref(false)
+const editingIntentionId = ref<number | null>(null)
 
 // ---- Enums ----
 const businessTypeMap: StatusMap = {
@@ -55,52 +77,218 @@ const tabs: NavTabItem[] = [
 ]
 
 const filterConfig = [
-  { key: 'businessType', label: '业务类型', options: [{ value: '', label: '全部' }, { value: '1', label: '招标' }, { value: '2', label: '非招标' }, { value: '3', label: 'TP' }, { value: '4', label: '捐赠' }] },
-  { key: 'status', label: '状态', options: [{ value: '', label: '全部' }, { value: 'draft', label: '草稿' }, { value: 'approving', label: '审批中' }, { value: 'effective', label: '生效中' }, { value: 'rejected', label: '被驳回' }, { value: 'closed', label: '已结束' }] },
+  {
+    key: 'businessType',
+    label: '业务类型',
+    options: [
+      { value: '', label: '全部' },
+      { value: '1', label: '招标' },
+      { value: '2', label: '非招标' },
+      { value: '3', label: 'TP' },
+      { value: '4', label: '捐赠' },
+    ],
+  },
+  {
+    key: 'status',
+    label: '状态',
+    options: [
+      { value: '', label: '全部' },
+      { value: 'draft', label: '草稿' },
+      { value: 'approving', label: '审批中' },
+      { value: 'effective', label: '生效中' },
+      { value: 'rejected', label: '被驳回' },
+      { value: 'closed', label: '已结束' },
+    ],
+  },
 ]
 
 const tableColumns = [
   { title: '客户', dataIndex: 'customerName', width: '180px' },
-  { title: '项目名称', dataIndex: 'projectName', width: '240px', mobileHidden: true },
+  { title: '项目名称', dataIndex: 'projectName', width: '220px', mobileHidden: true },
   { title: '业务类型', dataIndex: 'businessType', width: '90px' },
   { title: '金额', dataIndex: 'amount', width: '100px' },
   { title: '产品线', dataIndex: 'productLine', width: '140px', mobileHidden: true },
   { title: '状态', dataIndex: 'status', width: '90px' },
   { title: '负责人', dataIndex: 'ownerName', width: '80px', mobileHidden: true },
   { title: '最近更新', dataIndex: 'updateTime', width: '100px', mobileHidden: true },
+  { title: '操作', dataIndex: 'actions', width: '120px', fixed: 'right' as const },
 ]
+
+const formFields = [
+  { key: 'customerName', label: '客户名称', required: true, placeholder: '请输入客户名称' },
+  { key: 'projectName', label: '项目名称', required: true, placeholder: '请输入项目名称' },
+  {
+    key: 'businessType',
+    label: '业务类型',
+    type: 'select' as const,
+    required: true,
+    options: [
+      { value: '1', label: '招标' },
+      { value: '2', label: '非招标' },
+      { value: '3', label: 'TP' },
+      { value: '4', label: '捐赠' },
+    ],
+  },
+  {
+    key: 'status',
+    label: '状态',
+    type: 'select' as const,
+    required: true,
+    options: [
+      { value: 'draft', label: '草稿' },
+      { value: 'approving', label: '审批中' },
+      { value: 'effective', label: '生效中' },
+      { value: 'rejected', label: '被驳回' },
+      { value: 'closed', label: '已结束' },
+    ],
+  },
+  { key: 'amount', label: '预计金额', type: 'tel' as const, placeholder: '请输入预计金额' },
+  { key: 'productLine', label: '产品线', required: true, placeholder: '请输入产品线' },
+  { key: 'ownerName', label: '负责人', placeholder: '请输入负责人' },
+]
+
+function emptyForm(): IntentionForm {
+  return {
+    customerName: '',
+    projectName: '',
+    businessType: BusinessType.NON_BID,
+    status: IntentionStatus.DRAFT,
+    amount: undefined,
+    productLine: '',
+    ownerName: '张三',
+  }
+}
 
 async function fetchList(): Promise<void> {
   loading.value = true
   try {
-    const result = await mockGetIntentionList({
-      pageNum: pagination.value.page, pageSize: pagination.value.size,
+    const params: IntentionListParams = {
+      pageNum: pagination.value.page,
+      pageSize: pagination.value.size,
       ...(keyword.value ? { keyword: keyword.value } : {}),
-      ...(activeTab.value !== 'all' ? { tabType: activeTab.value } : {}),
-      ...(filterValues.value.businessType ? { businessType: Number(filterValues.value.businessType) } : {}),
+      ...(activeTab.value !== 'all' ? { tabType: activeTab.value as any } : {}),
+      ...(filterValues.value.businessType
+        ? { businessType: Number(filterValues.value.businessType) }
+        : {}),
       ...(filterValues.value.status ? { status: String(filterValues.value.status) } : {}),
-    })
-    intentions.value = result.list; total.value = result.total; stats.value = result.stats
-  } finally { loading.value = false }
+    }
+    const result = await getIntentionList(params)
+    intentions.value = result.list
+    total.value = result.total
+    stats.value = result.stats
+  } finally {
+    loading.value = false
+  }
 }
 
-function handleSearch(val: string): void { keyword.value = val; pagination.value.page = 1; fetchList() }
+function handleSearch(val: string): void {
+  keyword.value = val
+  pagination.value.page = 1
+  fetchList()
+}
 function handleSearchInput(): void {
   if (searchTimer.value) clearTimeout(searchTimer.value)
   searchTimer.value = setTimeout(() => handleSearch(keyword.value), 300)
 }
-function handleTabChange(key: string | number): void { activeTab.value = String(key); pagination.value.page = 1; fetchList() }
-function handleFilterChange(values: Record<string, unknown>): void { filterValues.value = values; pagination.value.page = 1; fetchList() }
-function handleViewChange(val: 'card' | 'list'): void { viewMode.value = val }
-function openDetail(intention: Intention): void { detailIntention.value = intention; detailVisible.value = true }
-function pageChange(page: number): void { pagination.value.page = page; fetchList() }
+function handleTabChange(key: string | number): void {
+  activeTab.value = String(key)
+  pagination.value.page = 1
+  fetchList()
+}
+function handleFilterChange(values: Record<string, unknown>): void {
+  filterValues.value = values
+  pagination.value.page = 1
+  fetchList()
+}
+function handleViewChange(val: 'card' | 'list'): void {
+  viewMode.value = val
+}
+function openDetail(intention: Intention): void {
+  detailIntention.value = intention
+  detailVisible.value = true
+}
+function pageChange(page: number): void {
+  pagination.value.page = page
+  fetchList()
+}
 const hasMore = computed(() => pagination.value.page * pagination.value.size < total.value)
+
+// ---- 表单操作 ----
+function openCreate(): void {
+  formMode.value = 'create'
+  editingIntentionId.value = null
+  formData.value = emptyForm()
+  formVisible.value = true
+}
+
+function openEdit(intention: Intention): void {
+  formMode.value = 'edit'
+  editingIntentionId.value = intention.intentionId
+  formData.value = {
+    customerName: intention.customerName,
+    projectName: intention.projectName,
+    businessType: intention.businessType,
+    status: intention.status,
+    amount: intention.amount,
+    productLine: intention.productLine,
+    ownerName: intention.ownerName,
+  }
+  formVisible.value = true
+  detailVisible.value = false
+}
+
+async function handleFormSubmit(values: Record<string, unknown>): Promise<void> {
+  formLoading.value = true
+  try {
+    const data: IntentionForm = {
+      customerName: String(values.customerName || ''),
+      projectName: String(values.projectName || ''),
+      businessType: Number(values.businessType) as BusinessType,
+      status: String(values.status || IntentionStatus.DRAFT) as IntentionStatus,
+      amount: values.amount ? Number(values.amount) : undefined,
+      productLine: String(values.productLine || ''),
+      ownerName: values.ownerName ? String(values.ownerName) : '张三',
+    }
+
+    if (formMode.value === 'create') {
+      await createIntention(data)
+    } else if (editingIntentionId.value !== null) {
+      await updateIntention(editingIntentionId.value, data)
+    }
+
+    formVisible.value = false
+    fetchList()
+  } finally {
+    formLoading.value = false
+  }
+}
+
+async function handleDelete(intention: Intention): Promise<void> {
+  // eslint-disable-next-line no-alert
+  if (!window.confirm(`确定删除意向「${intention.projectName}」吗？`)) return
+  await deleteIntention(intention.intentionId)
+  fetchList()
+  if (detailIntention.value?.intentionId === intention.intentionId) {
+    detailVisible.value = false
+    detailIntention.value = null
+  }
+}
+
+function handleApproval(): void {
+  // eslint-disable-next-line no-alert
+  window.alert('审批功能将在下一批次实现')
+}
+
+function handleFollow(): void {
+  // eslint-disable-next-line no-alert
+  window.alert('跟进功能将在下一批次实现')
+}
 </script>
 
 <template>
   <XqPageLayout title="意向管理">
     <template #actions>
-      <XqButton type="primary">
+      <XqButton type="primary" @click="openCreate">
         <XqIcon name="plus" size="14" />新建意向
       </XqButton>
     </template>
@@ -120,32 +308,98 @@ const hasMore = computed(() => pagination.value.page * pagination.value.size < t
     </template>
     <template #filter>
       <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-        <XqSearchBar v-model="keyword" placeholder="搜索客户、项目名称..." :pinyin-search="true" @search="handleSearch" @reset="handleSearch('')" @update:model-value="handleSearchInput" />
-        <XqFilterBar :filters="filterConfig" :values="filterValues" @change="handleFilterChange" @reset="handleFilterChange({ businessType: '', status: '' })" />
+        <XqSearchBar
+          v-model="keyword"
+          placeholder="搜索客户、项目名称..."
+          :pinyin-search="true"
+          @search="handleSearch"
+          @reset="handleSearch('')"
+          @update:model-value="handleSearchInput"
+        />
+        <XqFilterBar
+          :filters="filterConfig"
+          :values="filterValues"
+          @change="handleFilterChange"
+          @reset="handleFilterChange({ businessType: '', status: '' })"
+        />
       </div>
     </template>
     <template #content>
-      <XqDataTable v-if="viewMode === 'list'" :columns="tableColumns" :data-source="intentions" :loading="loading" row-key="intentionId" @row-click="(r: Intention) => openDetail(r)">
-        <template #businessType="{ value }"><XqStatusBadge :status="value" :status-map="businessTypeMap" size="small" /></template>
-        <template #status="{ value }"><XqStatusBadge :status="value" :status-map="statusMap" size="small" /></template>
-        <template #customerName="{ value, record }"><span class="text-[var(--primary)] cursor-pointer hover:underline" @click.stop="openDetail(record)">{{ value }}</span></template>
-        <template #amount="{ value }"><span v-if="value" class="font-medium text-[var(--ink)]">¥{{ Number(value).toLocaleString() }}</span><span v-else class="text-[var(--placeholder)]">-</span></template>
+      <XqDataTable
+        v-if="viewMode === 'list'"
+        :columns="tableColumns"
+        :data-source="intentions"
+        :loading="loading"
+        row-key="intentionId"
+        @row-click="(r: Intention) => openDetail(r)"
+      >
+        <template #businessType="{ value }">
+          <XqStatusBadge :status="value" :status-map="businessTypeMap" size="small" />
+        </template>
+        <template #status="{ value }">
+          <XqStatusBadge :status="value" :status-map="statusMap" size="small" />
+        </template>
+        <template #customerName="{ value, record }">
+          <span
+            class="text-[var(--primary)] cursor-pointer hover:underline"
+            @click.stop="openDetail(record)"
+          >
+            {{ value }}
+          </span>
+        </template>
+        <template #amount="{ value }">
+          <span v-if="value" class="font-medium text-[var(--ink)]"
+            >¥{{ Number(value).toLocaleString() }}</span
+          >
+          <span v-else class="text-[var(--placeholder)]">-</span>
+        </template>
+        <template #actions="{ record }">
+          <div class="flex items-center gap-2" @click.stop>
+            <button class="text-sm text-[var(--primary)] hover:underline" @click="openEdit(record)">
+              编辑
+            </button>
+            <button
+              class="text-sm text-[var(--danger)] hover:underline"
+              @click="handleDelete(record)"
+            >
+              删除
+            </button>
+          </div>
+        </template>
       </XqDataTable>
-      <XqCardGrid v-else :data-source="intentions" :columns="4" :loading="loading" @item-click="(r: Intention) => openDetail(r)">
+      <XqCardGrid
+        v-else
+        :data-source="intentions"
+        :columns="4"
+        :loading="loading"
+        @item-click="(r: Intention) => openDetail(r)"
+      >
         <template #item="{ record }">
           <div class="card card-hover cursor-pointer">
             <div class="flex items-start justify-between mb-2">
-              <h3 class="text-md font-semibold text-[var(--ink)] truncate flex-1 min-w-0 pr-2">{{ record.customerName }}</h3>
+              <h3 class="text-md font-semibold text-[var(--ink)] truncate flex-1 min-w-0 pr-2">
+                {{ record.customerName }}
+              </h3>
               <XqStatusBadge :status="record.status" :status-map="statusMap" size="small" />
             </div>
             <p class="text-sm text-[var(--sub)] mb-2 truncate">{{ record.projectName }}</p>
             <div class="flex items-center gap-2 mb-2">
-              <XqStatusBadge :status="record.businessType" :status-map="businessTypeMap" size="small" />
-              <span v-if="record.amount" class="text-sm font-semibold text-[var(--ink)]">¥{{ record.amount.toLocaleString() }}</span>
+              <XqStatusBadge
+                :status="record.businessType"
+                :status-map="businessTypeMap"
+                size="small"
+              />
+              <span v-if="record.amount" class="text-sm font-semibold text-[var(--ink)]"
+                >¥{{ record.amount.toLocaleString() }}</span
+              >
             </div>
-            <div class="flex items-center justify-between pt-2 border-t border-[var(--line-light)] text-sm">
+            <div
+              class="flex items-center justify-between pt-2 border-t border-[var(--line-light)] text-sm"
+            >
               <span class="text-[var(--sub)]">{{ record.ownerName }}</span>
-              <span class="text-xs text-[var(--placeholder)]">{{ record.updateTime.slice(0, 10) }}</span>
+              <span class="text-xs text-[var(--placeholder)]">{{
+                record.updateTime.slice(0, 10)
+              }}</span>
             </div>
           </div>
         </template>
@@ -153,37 +407,126 @@ const hasMore = computed(() => pagination.value.page * pagination.value.size < t
     </template>
     <template #footer>
       <div class="flex items-center justify-between text-sm text-[var(--sub)]">
-        <span>{{ pagination.page }} / {{ Math.ceil(total / pagination.size) }} 页，共 {{ total }} 条</span>
+        <span
+          >{{ pagination.page }} / {{ Math.ceil(total / pagination.size) }} 页，共
+          {{ total }} 条</span
+        >
         <div class="flex items-center gap-2">
-          <button class="btn btn-ghost text-sm" :disabled="pagination.page <= 1" @click="pageChange(pagination.page - 1)">上一页</button>
-          <button class="btn btn-ghost text-sm" :disabled="!hasMore" @click="pageChange(pagination.page + 1)">下一页</button>
+          <button
+            class="btn btn-ghost text-sm"
+            :disabled="pagination.page <= 1"
+            @click="pageChange(pagination.page - 1)"
+          >
+            上一页
+          </button>
+          <button
+            class="btn btn-ghost text-sm"
+            :disabled="!hasMore"
+            @click="pageChange(pagination.page + 1)"
+          >
+            下一页
+          </button>
         </div>
       </div>
     </template>
   </XqPageLayout>
 
+  <div v-if="isMobile" class="fixed bottom-5 right-5 z-50">
+    <button
+      class="w-14 h-14 rounded-full bg-[var(--primary)] text-white shadow-lg flex items-center justify-center"
+      @click="openCreate"
+    >
+      <XqIcon name="plus" size="24" />
+    </button>
+  </div>
+
   <!-- 详情抽屉 -->
-  <XqDrawer :visible="detailVisible" :title="detailIntention?.customerName || '意向详情'" :width="isMobile ? '100%' : '720px'" @close="detailVisible = false">
+  <XqDrawer
+    :visible="detailVisible"
+    :title="detailIntention?.customerName || '意向详情'"
+    :width="isMobile ? '100%' : '720px'"
+    @close="detailVisible = false"
+  >
     <div v-if="detailIntention" class="flex flex-col gap-5">
       <div class="card">
         <div class="grid grid-cols-2 gap-4 text-sm">
-          <div><span class="text-[var(--placeholder)]">意向编码</span><div class="text-[var(--ink)] mt-0.5">{{ detailIntention.intentionCode }}</div></div>
-          <div><span class="text-[var(--placeholder)]">状态</span><div class="mt-0.5"><XqStatusBadge :status="detailIntention.status" :status-map="statusMap" /></div></div>
-          <div class="col-span-2"><span class="text-[var(--placeholder)]">项目名称</span><div class="text-[var(--ink)] mt-0.5 font-medium">{{ detailIntention.projectName }}</div></div>
-          <div><span class="text-[var(--placeholder)]">业务类型</span><div class="mt-0.5"><XqStatusBadge :status="detailIntention.businessType" :status-map="businessTypeMap" size="small" /></div></div>
-          <div><span class="text-[var(--placeholder)]">金额</span><div class="text-[var(--ink)] mt-0.5 font-semibold">{{ detailIntention.amount ? '¥' + detailIntention.amount.toLocaleString() : '-' }}</div></div>
-          <div><span class="text-[var(--placeholder)]">产品线</span><div class="text-[var(--ink)] mt-0.5">{{ detailIntention.productLine }}</div></div>
-          <div><span class="text-[var(--placeholder)]">负责人</span><div class="text-[var(--ink)] mt-0.5">{{ detailIntention.ownerName }}</div></div>
+          <div>
+            <span class="text-[var(--placeholder)]">意向编码</span>
+            <div class="text-[var(--ink)] mt-0.5">{{ detailIntention.intentionCode }}</div>
+          </div>
+          <div>
+            <span class="text-[var(--placeholder)]">状态</span>
+            <div class="mt-0.5">
+              <XqStatusBadge :status="detailIntention.status" :status-map="statusMap" />
+            </div>
+          </div>
+          <div class="col-span-2">
+            <span class="text-[var(--placeholder)]">项目名称</span>
+            <div class="text-[var(--ink)] mt-0.5 font-medium">
+              {{ detailIntention.projectName }}
+            </div>
+          </div>
+          <div>
+            <span class="text-[var(--placeholder)]">业务类型</span>
+            <div class="mt-0.5">
+              <XqStatusBadge
+                :status="detailIntention.businessType"
+                :status-map="businessTypeMap"
+                size="small"
+              />
+            </div>
+          </div>
+          <div>
+            <span class="text-[var(--placeholder)]">金额</span>
+            <div class="text-[var(--ink)] mt-0.5 font-semibold">
+              {{ detailIntention.amount ? '¥' + detailIntention.amount.toLocaleString() : '-' }}
+            </div>
+          </div>
+          <div>
+            <span class="text-[var(--placeholder)]">产品线</span>
+            <div class="text-[var(--ink)] mt-0.5">{{ detailIntention.productLine }}</div>
+          </div>
+          <div>
+            <span class="text-[var(--placeholder)]">负责人</span>
+            <div class="text-[var(--ink)] mt-0.5">{{ detailIntention.ownerName }}</div>
+          </div>
         </div>
       </div>
       <div v-if="detailIntention.approvalLog?.length">
         <h4 class="text-md font-semibold text-[var(--ink)] mb-3">审批记录</h4>
-        <XqTimeline :data="detailIntention.approvalLog.map((l) => ({ time: l.time, title: `${l.operator} · ${l.action}`, content: l.comment || '', operator: l.operator }))" />
+        <XqTimeline
+          :data="
+            detailIntention.approvalLog.map((l) => ({
+              time: l.time,
+              title: `${l.operator} · ${l.action}`,
+              content: l.comment || '',
+              operator: l.operator,
+            }))
+          "
+        />
       </div>
     </div>
     <template #footer>
-      <button class="btn btn-ghost flex-1"><XqIcon name="approval" size="14" />审批</button>
-      <button class="btn btn-primary flex-1"><XqIcon name="edit" size="14" />跟进</button>
+      <button class="btn btn-ghost flex-1" @click="openEdit(detailIntention!)">
+        <XqIcon name="edit" size="14" />编辑
+      </button>
+      <button class="btn btn-ghost flex-1" @click="handleApproval">
+        <XqIcon name="approval" size="14" />审批
+      </button>
+      <button class="btn btn-primary flex-1" @click="handleFollow">
+        <XqIcon name="edit" size="14" />跟进
+      </button>
     </template>
   </XqDrawer>
+
+  <!-- 新建/编辑意向抽屉 -->
+  <XqFormDrawer
+    :visible="formVisible"
+    :title="formMode === 'create' ? '新建意向' : '编辑意向'"
+    :fields="formFields"
+    :initial-values="formData as unknown as Record<string, unknown>"
+    :loading="formLoading"
+    @submit="handleFormSubmit"
+    @cancel="formVisible = false"
+  />
 </template>
