@@ -13,43 +13,43 @@ const moduleRoutes: RouteRecordRaw[] = [
     path: '/',
     name: 'workbench',
     component: () => import('@/views/workbench/index.vue'),
-    meta: { title: '工作台', icon: 'home' },
+    meta: { title: '工作台', icon: 'home', permissions: ['workbench:read'] },
   },
   {
     path: '/calendar',
     name: 'calendar',
     component: () => import('@/views/calendar/index.vue'),
-    meta: { title: '日历', icon: 'calendar' },
+    meta: { title: '日历', icon: 'calendar', permissions: ['calendar:read'] },
   },
   {
     path: '/tasks',
     name: 'tasks',
     component: () => import('@/views/tasks/index.vue'),
-    meta: { title: '任务', icon: 'task' },
+    meta: { title: '任务', icon: 'task', permissions: ['task:read'] },
   },
   {
     path: '/message',
     name: 'message',
     component: () => import('@/views/message/index.vue'),
-    meta: { title: '消息中心', icon: 'message' },
+    meta: { title: '消息中心', icon: 'message', permissions: ['message:read'] },
   },
   {
     path: '/contacts',
     name: 'contacts',
     component: () => import('@/views/contacts/index.vue'),
-    meta: { title: '通讯录', icon: 'contacts' },
+    meta: { title: '通讯录', icon: 'contacts', permissions: ['contact:read'] },
   },
   {
     path: '/favorites',
     name: 'favorites',
     component: () => import('@/views/favorites/index.vue'),
-    meta: { title: '收藏夹', icon: 'star' },
+    meta: { title: '收藏夹', icon: 'star', permissions: ['favorite:read'] },
   },
   {
     path: '/apps',
     name: 'apps',
     component: () => import('@/views/apps/index.vue'),
-    meta: { title: '应用中心', icon: 'apps' },
+    meta: { title: '应用中心', icon: 'apps', permissions: ['app:read'] },
   },
 
   // ---- 业务管理 ----
@@ -57,43 +57,43 @@ const moduleRoutes: RouteRecordRaw[] = [
     path: '/customer',
     name: 'customer',
     component: () => import('@/views/customer/index.vue'),
-    meta: { title: '客户 360°', icon: 'customer' },
+    meta: { title: '客户 360°', icon: 'customer', permissions: ['customer:read'] },
   },
   {
     path: '/customer/:id',
     name: 'customer-detail',
     component: () => import('@/views/customer/detail.vue'),
-    meta: { title: '客户详情' },
+    meta: { title: '客户详情', permissions: ['customer:read'] },
   },
   {
     path: '/lead',
     name: 'lead',
     component: () => import('@/views/lead/index.vue'),
-    meta: { title: '线索管理', icon: 'lead' },
+    meta: { title: '线索管理', icon: 'lead', permissions: ['lead:read'] },
   },
   {
     path: '/intention',
     name: 'intention',
     component: () => import('@/views/intention/index.vue'),
-    meta: { title: '意向管理', icon: 'opportunity' },
+    meta: { title: '意向管理', icon: 'opportunity', permissions: ['intention:read'] },
   },
   {
     path: '/brand',
     name: 'brand',
     component: () => import('@/views/brand/index.vue'),
-    meta: { title: '品牌库管理', icon: 'brand' },
+    meta: { title: '品牌库管理', icon: 'brand', permissions: ['brand:read'] },
   },
   {
     path: '/equipment',
     name: 'equipment',
     component: () => import('@/views/equipment/index.vue'),
-    meta: { title: '设备管理', icon: 'equipment' },
+    meta: { title: '设备管理', icon: 'equipment', permissions: ['equipment:read'] },
   },
   {
     path: '/reagent',
     name: 'reagent',
     component: () => import('@/views/reagent/index.vue'),
-    meta: { title: '试剂运营', icon: 'reagent' },
+    meta: { title: '试剂运营', icon: 'reagent', permissions: ['reagent:read'] },
   },
 
   // ---- 流程协同 ----
@@ -101,31 +101,31 @@ const moduleRoutes: RouteRecordRaw[] = [
     path: '/approval',
     name: 'approval',
     component: () => import('@/views/approval/index.vue'),
-    meta: { title: '审批中心', icon: 'approval' },
+    meta: { title: '审批中心', icon: 'approval', permissions: ['approval:read'] },
   },
   {
     path: '/ticket',
     name: 'ticket',
     component: () => import('@/views/ticket/index.vue'),
-    meta: { title: '售后工单', icon: 'ticket' },
+    meta: { title: '售后工单', icon: 'ticket', permissions: ['ticket:read'] },
   },
   {
     path: '/kanban',
     name: 'kanban',
     component: () => import('@/views/kanban/index.vue'),
-    meta: { title: '工单看板', icon: 'kanban' },
+    meta: { title: '工单看板', icon: 'kanban', permissions: ['ticket:read'] },
   },
   {
     path: '/dealer',
     name: 'dealer',
     component: () => import('@/views/dealer/index.vue'),
-    meta: { title: '经销商协同', icon: 'dealer' },
+    meta: { title: '经销商协同', icon: 'dealer', permissions: ['dealer:read'] },
   },
   {
     path: '/designer',
     name: 'designer',
     component: () => import('@/views/designer/index.vue'),
-    meta: { title: '流程设计器', icon: 'settings' },
+    meta: { title: '流程设计器', icon: 'settings', permissions: ['workflow:read'] },
   },
 
   // ---- 管理与分析 ----
@@ -133,19 +133,19 @@ const moduleRoutes: RouteRecordRaw[] = [
     path: '/compliance',
     name: 'compliance',
     component: () => import('@/views/compliance/index.vue'),
-    meta: { title: '合规风控', icon: 'compliance' },
+    meta: { title: '合规风控', icon: 'compliance', permissions: ['compliance:read'] },
   },
   {
     path: '/performance',
     name: 'performance',
     component: () => import('@/views/performance/index.vue'),
-    meta: { title: '目标绩效', icon: 'performance' },
+    meta: { title: '目标绩效', icon: 'performance', permissions: ['performance:read'] },
   },
   {
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('@/views/dashboard/index.vue'),
-    meta: { title: '经营驾驶舱', icon: 'dashboard' },
+    meta: { title: '经营驾驶舱', icon: 'dashboard', permissions: ['dashboard:read'] },
   },
 
   // ---- 系统设置 ----
@@ -153,13 +153,13 @@ const moduleRoutes: RouteRecordRaw[] = [
     path: '/config',
     name: 'config',
     component: () => import('@/views/config/index.vue'),
-    meta: { title: '应用配置', icon: 'settings' },
+    meta: { title: '应用配置', icon: 'settings', permissions: ['config:read'] },
   },
   {
     path: '/settings',
     name: 'settings',
     component: () => import('@/views/settings/index.vue'),
-    meta: { title: '后台设置', icon: 'settings' },
+    meta: { title: '后台设置', icon: 'settings', permissions: ['system:read'] },
   },
 ]
 
@@ -179,7 +179,7 @@ const routes: RouteRecordRaw[] = [
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('@/views/not-found/index.vue'),
-    meta: { title: '404' },
+    meta: { title: '404', public: true },
   },
 ]
 

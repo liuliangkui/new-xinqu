@@ -1,4 +1,4 @@
-import { post, get } from './request'
+import { request, get } from './request'
 
 export interface LoginResult {
   accessToken: string
@@ -21,7 +21,11 @@ export interface ProfileResult {
 }
 
 export function login(username: string, password: string): Promise<LoginResult> {
-  return post<LoginResult>('/auth/login', { username, password })
+  return request<LoginResult>('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ username, password }),
+    silent: true,
+  })
 }
 
 export function getProfile(): Promise<ProfileResult> {

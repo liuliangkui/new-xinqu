@@ -1,7 +1,8 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common'
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { PrismaService } from '@/prisma/prisma.service'
 import { PERMISSIONS_KEY } from '@/common/decorators/permissions.decorator'
+import { BusinessException } from '@/common/exceptions/business.exception'
 
 export interface Permission {
   resource: string
@@ -30,7 +31,7 @@ export class RolesGuard implements CanActivate {
     const user = request.user
 
     if (!user) {
-      throw new ForbiddenException('无法获取当前用户权限')
+      throw new BusinessException('AUTH_002', '无法获取当前用户权限', 403)
     }
 
     // 超级管理员放行
@@ -42,7 +43,7 @@ export class RolesGuard implements CanActivate {
 
     const hasPermission = requiredPermissions.some((p) => permissions.has(p))
     if (!hasPermission) {
-      throw new ForbiddenException('权限不足')
+      throw new BusinessException('PERM_001', '权限不足，无法访问该资源', 403)
     }
 
     return true

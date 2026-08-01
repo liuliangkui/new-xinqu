@@ -1,8 +1,9 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common'
 import { Response } from 'express'
+import { BusinessException } from '@/common/exceptions/business.exception'
 
 export interface ErrorResponse {
-  code: number
+  code: number | string
   data: null
   message: string
   success: false
@@ -24,8 +25,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
         ? exceptionResponse
         : (exceptionResponse as { message?: string | string[] }).message || '请求失败'
 
+    const businessCode = exception instanceof BusinessException ? exception.code : String(status)
+
     const errorResponse: ErrorResponse = {
-      code: status,
+      code: businessCode,
       data: null,
       message: Array.isArray(message) ? message.join(', ') : message,
       success: false,

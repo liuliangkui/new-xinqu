@@ -1,4 +1,5 @@
 import type { ApiResponse, PageParams, PageResult } from '@/types/common'
+import { handleHttpError } from '@/utils/http-error'
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1'
 const TIMEOUT = Number(import.meta.env.VITE_API_TIMEOUT || 30000)
@@ -6,6 +7,7 @@ const TIMEOUT = Number(import.meta.env.VITE_API_TIMEOUT || 30000)
 interface RequestOptions extends RequestInit {
   params?: Record<string, unknown>
   timeout?: number
+  silent?: boolean
 }
 
 function getToken(): string | null {
@@ -29,7 +31,10 @@ function buildUrl(path: string, params?: Record<string, unknown>): string {
   return url.toString()
 }
 
-function fetchWithTimeout(input: RequestInfo, init: RequestInit & { timeout?: number }): Promise<Response> {
+function fetchWithTimeout(
+  input: RequestInfo,
+  init: RequestInit & { timeout?: number },
+): Promise<Response> {
   const { timeout = TIMEOUT, ...rest } = init
   return new Promise((resolve, reject) => {
     const controller = new AbortController()
@@ -46,7 +51,7 @@ function fetchWithTimeout(input: RequestInfo, init: RequestInit & { timeout?: nu
 }
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const { params, timeout, ...rest } = options
+  const { params, timeout, silent, ...rest } = options
   const url = buildUrl(path, params)
   const token = getToken()
 
@@ -56,36 +61,48 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     ...(rest.headers as Record<string, string>),
   }
 
-  const response = await fetchWithTimeout(url, {
-    ...rest,
-    headers,
-    timeout,
-  })
-
-  let data: ApiResponse<T>
   try {
-    data = (await response.json()) as ApiResponse<T>
-  } catch {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-  }
+    const response = await fetchWithTimeout(url, {
+      ...rest,
+      headers,
+      timeout,
+    })
 
-  // 认证失败，清理 token 并抛出错误
-  if (data.code === 401) {
-    localStorage.removeItem('xqcop_token')
-  }
+    let data: ApiResponse<T>
+    try {
+      data = (await response.json()) as ApiResponse<T>
+    } catch {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+    }
 
-  if (!data.success) {
-    throw new Error(data.message || '请求失败')
-  }
+    // 认证失败，清理 token 并抛出错误
+    if (data.code === 401) {
+      localStorage.removeItem('xqcop_token')
+      window.location.href = '/login'
+    }
 
-  return data.data
+    if (!data.success) {
+      throw new Error(data.message || '请求失败')
+    }
+
+    return data.data
+  } catch (error) {
+    if (!silent) {
+      handleHttpError(error)
+    }
+    throw error
+  }
 }
 
 export function get<T>(path: string, params?: Record<string, unknown>): Promise<T> {
   return request<T>(path, { method: 'GET', params })
 }
 
-export function post<T>(path: string, body?: unknown, params?: Record<string, unknown>): Promise<T> {
+export function post<T>(
+  path: string,
+  body?: unknown,
+  params?: Record<string, unknown>,
+): Promise<T> {
   return request<T>(path, {
     method: 'POST',
     body: body ? JSON.stringify(body) : undefined,
@@ -101,7 +118,11 @@ export function put<T>(path: string, body?: unknown, params?: Record<string, unk
   })
 }
 
-export function patch<T>(path: string, body?: unknown, params?: Record<string, unknown>): Promise<T> {
+export function patch<T>(
+  path: string,
+  body?: unknown,
+  params?: Record<string, unknown>,
+): Promise<T> {
   return request<T>(path, {
     method: 'PATCH',
     body: body ? JSON.stringify(body) : undefined,
