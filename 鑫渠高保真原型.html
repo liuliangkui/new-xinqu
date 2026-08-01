@@ -326,6 +326,9 @@
 
     /* ===== Cards / tables ===== */
     .kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+    .kpi-card { padding: 16px; border-radius: 12px; background: var(--panel); border: 1px solid var(--line); text-align: center; }
+    .kpi-label { font-size: 0.857rem; color: var(--sub); margin-bottom: 6px; }
+    .kpi-value { font-size: 1.25rem; font-weight: 700; line-height: 1.4; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
     .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
 
@@ -392,6 +395,10 @@
 
     /* ===== Intention detail interactions ===== */
     .intention-row { cursor: pointer; }
+    .intention-protect { position: relative; overflow: hidden; }
+    .detail-accordion { display: none; }
+    .detail-accordion.open { display: table-row; animation: slideDown 0.25s ease; }
+    .accordion-panel { min-height: 0; }
     .intention-accordion, .lead-accordion { display: none; background: var(--panel); }
     .intention-accordion.open, .lead-accordion.open { display: table-row; animation: slideDown 0.25s ease; }
     @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
@@ -484,6 +491,9 @@
     .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; }
     .checkbox-card { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
     .checkbox-card.selected { border-color: var(--primary); background: var(--primary-light); }
+    .appconfig-column-checkbox { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
+    label:has(.appconfig-column-checkbox) { display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 8px; border: 1px solid var(--line); cursor: pointer; }
+    label:has(.appconfig-column-checkbox):hover { background: var(--line-light); }
     .summary-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
     .summary-row:last-child { border-bottom: none; }
     .summary-label { color: var(--sub); }
@@ -3377,7 +3387,7 @@
                   <div class="kpi-card"><div class="kpi-label">设备总数</div><div class="kpi-value text-ink" id="customer-modal-devices">42</div></div>
                   <div class="kpi-card"><div class="kpi-label">在用试剂数</div><div class="kpi-value text-ink" id="customer-modal-reagents">18</div></div>
                   <div class="kpi-card"><div class="kpi-label">累计成交金额</div><div class="kpi-value text-ink" id="customer-modal-amount">¥ 3,280万</div></div>
-                  <div class="kpi-card"><div class="text-xs text-sub">客户健康度</div><div class="kpi-value text-success" id="customer-modal-health">92</div></div>
+                  <div class="kpi-card"><div class="kpi-label">客户健康度</div><div class="kpi-value text-success" id="customer-modal-health">92</div></div>
                 </div>
 
                 <div class="flex flex-wrap gap-2 border-b border-line mb-4">
