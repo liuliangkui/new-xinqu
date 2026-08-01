@@ -324,6 +324,43 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/tasks': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询任务列表 */
+    get: operations['TaskController_findAll']
+    put?: never
+    /** 创建任务 */
+    post: operations['TaskController_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/tasks/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询任务详情 */
+    get: operations['TaskController_findOne']
+    /** 更新任务 */
+    put: operations['TaskController_update']
+    post?: never
+    /** 删除任务（软删除） */
+    delete: operations['TaskController_remove']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -678,6 +715,82 @@ export interface components {
       content?: string
       /** @description 解决方案 */
       solution?: string
+    }
+    CreateTaskDto: {
+      /** @description 任务标题 */
+      title: string
+      /** @description 任务内容 */
+      content?: string
+      /**
+       * @description 任务类型
+       * @enum {string}
+       */
+      type?: 'TODO' | 'FOLLOW_UP' | 'APPROVAL' | 'REVIEW'
+      /**
+       * @description 优先级
+       * @enum {string}
+       */
+      priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
+      /**
+       * @description 状态
+       * @enum {string}
+       */
+      status?: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED'
+      /** @description 截止时间 */
+      dueAt?: string
+      /** @description 负责人ID */
+      ownerId?: string
+      /** @description 执行人ID列表 */
+      assigneeIds?: string[]
+      /** @description 参与人ID列表 */
+      participantIds?: string[]
+      /**
+       * @description 关联业务类型
+       * @enum {string}
+       */
+      relatedType?: 'CUSTOMER' | 'LEAD' | 'INTENTION' | 'TICKET'
+      /** @description 关联业务ID */
+      relatedId?: string
+      /** @description 创建人ID */
+      createdBy?: string
+    }
+    UpdateTaskDto: {
+      /** @description 任务标题 */
+      title?: string
+      /** @description 任务内容 */
+      content?: string
+      /**
+       * @description 任务类型
+       * @enum {string}
+       */
+      type?: 'TODO' | 'FOLLOW_UP' | 'APPROVAL' | 'REVIEW'
+      /**
+       * @description 优先级
+       * @enum {string}
+       */
+      priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
+      /**
+       * @description 状态
+       * @enum {string}
+       */
+      status?: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED'
+      /** @description 截止时间 */
+      dueAt?: string
+      /** @description 负责人ID */
+      ownerId?: string
+      /** @description 执行人ID列表 */
+      assigneeIds?: string[]
+      /** @description 参与人ID列表 */
+      participantIds?: string[]
+      /**
+       * @description 关联业务类型
+       * @enum {string}
+       */
+      relatedType?: 'CUSTOMER' | 'LEAD' | 'INTENTION' | 'TICKET'
+      /** @description 关联业务ID */
+      relatedId?: string
+      /** @description 创建人ID */
+      createdBy?: string
     }
   }
   responses: never
@@ -1475,6 +1588,125 @@ export interface operations {
     }
   }
   TicketController_remove: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 删除成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  TaskController_findAll: {
+    parameters: {
+      query?: {
+        /** @description 页码 */
+        page?: number
+        /** @description 每页条数 */
+        pageSize?: number
+        /** @description 关键字（任务标题/内容） */
+        keyword?: string
+        /** @description 任务类型 */
+        type?: 'TODO' | 'FOLLOW_UP' | 'APPROVAL' | 'REVIEW'
+        /** @description 优先级 */
+        priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
+        /** @description 状态 */
+        status?: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED'
+        /** @description 标签页类型 */
+        tabType?: 'my' | 'team' | 'collaboration' | 'overdue'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 返回分页任务列表 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  TaskController_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateTaskDto']
+      }
+    }
+    responses: {
+      /** @description 创建成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  TaskController_findOne: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 返回任务详情 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  TaskController_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateTaskDto']
+      }
+    }
+    responses: {
+      /** @description 更新成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  TaskController_remove: {
     parameters: {
       query?: never
       header?: never

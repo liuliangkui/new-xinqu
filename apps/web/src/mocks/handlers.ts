@@ -45,6 +45,14 @@ import {
   allTickets,
 } from '@/views/ticket/mock'
 import type { TicketListResult, Ticket, TicketForm } from '@/views/ticket/types'
+import {
+  generateTaskList,
+  createTaskInMock,
+  updateTaskInMock,
+  deleteTaskFromMock,
+  allTasks,
+} from '@/views/task/mock'
+import type { TaskListResult, Task, TaskForm } from '@/views/task/types'
 
 const ok = <T>(data: T): ApiResponse<T> => ({
   success: true,
@@ -405,6 +413,71 @@ export const handlers = [
     if (!success) {
       return HttpResponse.json(
         { success: false, code: 404, message: '工单不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok({ success: true }))
+  }),
+
+  http.get('/api/v1/tasks', ({ request }) => {
+    const url = new URL(request.url)
+    const page = Number(url.searchParams.get('page') ?? '1')
+    const size = Number(url.searchParams.get('size') ?? '20')
+    const keyword = url.searchParams.get('keyword') ?? undefined
+    const taskType = url.searchParams.get('taskType') ?? undefined
+    const priority = url.searchParams.get('priority') ?? undefined
+    const status = url.searchParams.get('status') ?? undefined
+    const tabType = url.searchParams.get('tabType') ?? undefined
+
+    const result = generateTaskList({
+      pageNum: page,
+      pageSize: size,
+      keyword,
+      taskType,
+      priority,
+      status,
+      tabType,
+    })
+    return HttpResponse.json(ok<TaskListResult>(result))
+  }),
+
+  http.get('/api/v1/tasks/:id', ({ params }) => {
+    const id = Number(params.id)
+    const task = allTasks.find((t) => t.taskId === id) || null
+    if (!task) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '任务不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Task>(task))
+  }),
+
+  http.post('/api/v1/tasks', async ({ request }) => {
+    const body = (await request.json()) as Partial<TaskForm>
+    const task = createTaskInMock(body)
+    return HttpResponse.json(ok<Task>(task), { status: 201 })
+  }),
+
+  http.put('/api/v1/tasks/:id', async ({ request, params }) => {
+    const id = Number(params.id)
+    const body = (await request.json()) as Partial<TaskForm>
+    const task = updateTaskInMock(id, body)
+    if (!task) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '任务不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Task>(task))
+  }),
+
+  http.delete('/api/v1/tasks/:id', ({ params }) => {
+    const id = Number(params.id)
+    const success = deleteTaskFromMock(id)
+    if (!success) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '任务不存在', data: null },
         { status: 404 },
       )
     }

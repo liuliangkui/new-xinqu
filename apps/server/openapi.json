@@ -1363,6 +1363,237 @@
           "工单管理"
         ]
       }
+    },
+    "/tasks": {
+      "get": {
+        "operationId": "TaskController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "页码",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "每页条数",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "关键字（任务标题/内容）",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "任务类型",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TODO",
+                "FOLLOW_UP",
+                "APPROVAL",
+                "REVIEW"
+              ]
+            }
+          },
+          {
+            "name": "priority",
+            "required": false,
+            "in": "query",
+            "description": "优先级",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "URGENT"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "IN_PROGRESS",
+                "COMPLETED",
+                "CANCELLED"
+              ]
+            }
+          },
+          {
+            "name": "tabType",
+            "required": false,
+            "in": "query",
+            "description": "标签页类型",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "my",
+                "team",
+                "collaboration",
+                "overdue"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "返回分页任务列表"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询任务列表",
+        "tags": [
+          "任务管理"
+        ]
+      },
+      "post": {
+        "operationId": "TaskController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTaskDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "创建成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "创建任务",
+        "tags": [
+          "任务管理"
+        ]
+      }
+    },
+    "/tasks/{id}": {
+      "get": {
+        "operationId": "TaskController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "返回任务详情"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询任务详情",
+        "tags": [
+          "任务管理"
+        ]
+      },
+      "put": {
+        "operationId": "TaskController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTaskDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "更新任务",
+        "tags": [
+          "任务管理"
+        ]
+      },
+      "delete": {
+        "operationId": "TaskController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "删除成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "删除任务（软删除）",
+        "tags": [
+          "任务管理"
+        ]
+      }
     }
   },
   "info": {
@@ -2125,6 +2356,175 @@
           "solution": {
             "type": "string",
             "description": "解决方案"
+          }
+        }
+      },
+      "CreateTaskDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "任务标题"
+          },
+          "content": {
+            "type": "string",
+            "description": "任务内容"
+          },
+          "type": {
+            "type": "string",
+            "description": "任务类型",
+            "enum": [
+              "TODO",
+              "FOLLOW_UP",
+              "APPROVAL",
+              "REVIEW"
+            ]
+          },
+          "priority": {
+            "type": "string",
+            "description": "优先级",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "URGENT"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "enum": [
+              "PENDING",
+              "IN_PROGRESS",
+              "COMPLETED",
+              "CANCELLED"
+            ]
+          },
+          "dueAt": {
+            "type": "string",
+            "description": "截止时间"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "负责人ID"
+          },
+          "assigneeIds": {
+            "description": "执行人ID列表",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "participantIds": {
+            "description": "参与人ID列表",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "relatedType": {
+            "type": "string",
+            "description": "关联业务类型",
+            "enum": [
+              "CUSTOMER",
+              "LEAD",
+              "INTENTION",
+              "TICKET"
+            ]
+          },
+          "relatedId": {
+            "type": "string",
+            "description": "关联业务ID"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "创建人ID"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "UpdateTaskDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "任务标题"
+          },
+          "content": {
+            "type": "string",
+            "description": "任务内容"
+          },
+          "type": {
+            "type": "string",
+            "description": "任务类型",
+            "enum": [
+              "TODO",
+              "FOLLOW_UP",
+              "APPROVAL",
+              "REVIEW"
+            ]
+          },
+          "priority": {
+            "type": "string",
+            "description": "优先级",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "URGENT"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "enum": [
+              "PENDING",
+              "IN_PROGRESS",
+              "COMPLETED",
+              "CANCELLED"
+            ]
+          },
+          "dueAt": {
+            "type": "string",
+            "description": "截止时间"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "负责人ID"
+          },
+          "assigneeIds": {
+            "description": "执行人ID列表",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "participantIds": {
+            "description": "参与人ID列表",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "relatedType": {
+            "type": "string",
+            "description": "关联业务类型",
+            "enum": [
+              "CUSTOMER",
+              "LEAD",
+              "INTENTION",
+              "TICKET"
+            ]
+          },
+          "relatedId": {
+            "type": "string",
+            "description": "关联业务ID"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "创建人ID"
           }
         }
       }
