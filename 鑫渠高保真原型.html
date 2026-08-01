@@ -6270,7 +6270,167 @@
             </div>
           </div>
           <div id="db-panel-compliance" class="db-panel hidden">
-            <div class="card p-8 text-center text-sub flex flex-col items-center gap-2"><svg class="icon icon-xl text-primary/50"><use href="#icon-shield"/></svg><span>合规风控屏：拜访合规、学术活动、样品管理、飞检抽查、敏感词审计</span></div>
+            <!-- 第一层：合规核心指标 -->
+            <div class="kpi-grid mb-5">
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">整体合规率</div><svg class="icon icon-md text-success"><use href="#icon-check"/></svg></div>
+                <div class="text-2xl font-bold text-success">91%</div>
+                <div class="text-xs text-success mt-1">环比 +2%</div>
+              </div>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">待处理风险</div><svg class="icon icon-md text-danger"><use href="#icon-warning"/></svg></div>
+                <div class="text-2xl font-bold text-danger">8</div>
+                <div class="text-xs text-danger mt-1">需 7 日内闭环</div>
+              </div>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">飞检抽查</div><svg class="icon icon-md text-info"><use href="#icon-search"/></svg></div>
+                <div class="text-2xl font-bold text-info">12</div>
+                <div class="text-xs text-sub mt-1">本月已执行</div>
+              </div>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">敏感词命中</div><svg class="icon icon-md text-warning"><use href="#icon-flag"/></svg></div>
+                <div class="text-2xl font-bold text-warning">23</div>
+                <div class="text-xs text-warning mt-1">已拦截待复核</div>
+              </div>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">样品超期未回库</div><svg class="icon icon-md text-danger"><use href="#icon-info"/></svg></div>
+                <div class="text-2xl font-bold text-danger">1</div>
+                <div class="text-xs text-sub mt-1">超 30 天未回库</div>
+              </div>
+            </div>
+
+            <!-- 第二层：合规主题卡片区 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-5">
+              <div class="card p-4 cursor-pointer hover:border-primary transition-colors" onclick="openDrillDown('compliance','visit')">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="font-semibold text-ink">拜访合规</div>
+                  <svg class="icon icon-md text-primary"><use href="#icon-calendar"/></svg>
+                </div>
+                <div class="text-2xl font-bold text-ink mb-1">1,246 次</div>
+                <div class="text-xs text-sub mb-3">本月拜访记录</div>
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">合规</span><span class="font-medium text-success">1,210</span></div>
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">缺定位照片</span><span class="font-medium text-danger">3</span></div>
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">未打卡</span><span class="font-medium text-warning">33</span></div>
+                </div>
+              </div>
+              <div class="card p-4 cursor-pointer hover:border-primary transition-colors" onclick="openDrillDown('compliance','activity')">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="font-semibold text-ink">学术活动</div>
+                  <svg class="icon icon-md text-warning"><use href="#icon-flag"/></svg>
+                </div>
+                <div class="text-2xl font-bold text-ink mb-1">38 场</div>
+                <div class="text-xs text-sub mb-3">本月活动数</div>
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">资料完整</span><span class="font-medium text-success">34</span></div>
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">费用凭证缺失</span><span class="font-medium text-warning">3</span></div>
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">未上传签到</span><span class="font-medium text-danger">1</span></div>
+                </div>
+              </div>
+              <div class="card p-4 cursor-pointer hover:border-primary transition-colors" onclick="openDrillDown('compliance','sample')">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="font-semibold text-ink">样品管理</div>
+                  <svg class="icon icon-md text-info"><use href="#icon-equipment"/></svg>
+                </div>
+                <div class="text-2xl font-bold text-ink mb-1">156 笔</div>
+                <div class="text-xs text-sub mb-3">在途样品</div>
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">正常</span><span class="font-medium text-success">142</span></div>
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">即将超期</span><span class="font-medium text-warning">13</span></div>
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">已超期</span><span class="font-medium text-danger">1</span></div>
+                </div>
+              </div>
+              <div class="card p-4 cursor-pointer hover:border-primary transition-colors" onclick="openDrillDown('compliance','audit')">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="font-semibold text-ink">飞检/敏感词审计</div>
+                  <svg class="icon icon-md text-danger"><use href="#icon-shield"/></svg>
+                </div>
+                <div class="text-2xl font-bold text-ink mb-1">35 条</div>
+                <div class="text-xs text-sub mb-3">本月审计命中</div>
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">飞检异常</span><span class="font-medium text-warning">12</span></div>
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">敏感词拦截</span><span class="font-medium text-warning">23</span></div>
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">已闭环</span><span class="font-medium text-success">27</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 第三层：风险待办列表 -->
+            <div class="card p-4 mb-5">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-semibold text-ink">合规风险待办</h3>
+                <button class="btn btn-outline btn-sm" onclick="showToast('已导出合规风险清单')">导出清单</button>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="text-sub border-b border-line"><tr><th class="text-left py-2">风险类型</th><th class="text-left py-2">对象</th><th class="text-left py-2">问题描述</th><th class="text-left py-2">责任人</th><th class="text-right py-2">剩余时间</th><th class="text-center py-2">状态</th><th class="text-right py-2">操作</th></tr></thead>
+                  <tbody>
+                    <tr class="border-b border-line-light">
+                      <td class="py-2"><span class="badge badge-danger">样品超期</span></td>
+                      <td class="py-2">昆明医科大学第一附属医院</td>
+                      <td class="py-2">质谱平台样品出库 32 天未回库</td>
+                      <td class="py-2">李娜</td>
+                      <td class="text-right py-2 text-danger">超期 2 天</td>
+                      <td class="text-center py-2"><span class="badge badge-danger">待处理</span></td>
+                      <td class="text-right py-2"><button class="btn btn-ghost text-xs" onclick="showToast('已提醒责任人')">提醒</button></td>
+                    </tr>
+                    <tr class="border-b border-line-light">
+                      <td class="py-2"><span class="badge badge-warning">拜访缺照片</span></td>
+                      <td class="py-2">云南省肿瘤医院</td>
+                      <td class="py-2">3 条拜访记录缺少定位照片</td>
+                      <td class="py-2">张伟</td>
+                      <td class="text-right py-2 text-warning">剩 3 天</td>
+                      <td class="text-center py-2"><span class="badge badge-warning">待补齐</span></td>
+                      <td class="text-right py-2"><button class="btn btn-ghost text-xs" onclick="showToast('已提醒责任人')">提醒</button></td>
+                    </tr>
+                    <tr class="border-b border-line-light">
+                      <td class="py-2"><span class="badge badge-warning">费用凭证缺失</span></td>
+                      <td class="py-2">成都城市会</td>
+                      <td class="py-2">学术活动费用报销缺少发票</td>
+                      <td class="py-2">王芳</td>
+                      <td class="text-right py-2 text-warning">剩 5 天</td>
+                      <td class="text-center py-2"><span class="badge badge-warning">待补齐</span></td>
+                      <td class="text-right py-2"><button class="btn btn-ghost text-xs" onclick="showToast('已提醒责任人')">提醒</button></td>
+                    </tr>
+                    <tr>
+                      <td class="py-2"><span class="badge badge-info">敏感词</span></td>
+                      <td class="py-2">曲靖市第一人民医院</td>
+                      <td class="py-2">沟通记录触发敏感词「回扣」</td>
+                      <td class="py-2">赵敏</td>
+                      <td class="text-right py-2">剩 7 天</td>
+                      <td class="text-center py-2"><span class="badge badge-info">待复核</span></td>
+                      <td class="text-right py-2"><button class="btn btn-ghost text-xs" onclick="showToast('已提醒责任人')">提醒</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- AI 分析结论 -->
+            <div class="card p-4 mb-5">
+              <div class="flex items-center gap-2 mb-4">
+                <svg class="icon icon-md text-primary"><use href="#icon-ai"/></svg>
+                <h3 class="font-semibold text-ink">AI 分析结论</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="p-4 rounded-lg bg-success-bg">
+                  <div class="text-sm font-medium text-success mb-1">整体合规率稳步提升</div>
+                  <div class="text-xs text-sub">整体合规率 91%，拜访、学术活动资料完整率均在 90% 以上，合规体系运行良好。</div>
+                </div>
+                <div class="p-4 rounded-lg bg-danger-bg">
+                  <div class="text-sm font-medium text-danger mb-1">样品管理存在漏洞</div>
+                  <div class="text-xs text-sub">1 笔样品超期 32 天未回库，13 笔即将超期，建议强化样品闭环跟踪与自动预警。</div>
+                </div>
+                <div class="p-4 rounded-lg bg-warning-bg">
+                  <div class="text-sm font-medium text-warning mb-1">敏感词命中需关注</div>
+                  <div class="text-xs text-sub">本月敏感词命中 23 次，集中在「回扣」「返点」等词，建议加强一线话术培训。</div>
+                </div>
+              </div>
+              <div class="p-3 rounded-lg bg-panel">
+                <div class="text-sm font-medium text-ink mb-2">经营建议</div>
+                <div class="text-sm text-sub">1. 立即跟进超期样品回库，并对即将超期样品发送预警；2. 对拜访缺照片、学术活动缺凭证的销售进行一对一辅导；3. 将敏感词拦截案例纳入月度合规培训。</div>
+              </div>
+            </div>
           </div>
 
           <!-- 大单作战室专题屏 -->
