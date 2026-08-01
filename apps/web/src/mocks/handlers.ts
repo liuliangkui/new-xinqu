@@ -76,7 +76,26 @@ import type { WorkbenchData } from '@/views/workbench/types'
 import { generatePerformanceOverview, generatePerformanceList } from '@/views/performance/mock'
 import type { PerformanceListResult, PerformanceOverview } from '@/views/performance/types'
 import { generateDashboardOverview, generateDashboardFunnel } from '@/views/dashboard/mock'
-import type { DashboardOverview, DashboardPeriod, DashboardFunnelResult } from '@/views/dashboard/types'
+import type {
+  DashboardOverview,
+  DashboardPeriod,
+  DashboardFunnelResult,
+} from '@/views/dashboard/types'
+import {
+  generateFavoriteList,
+  removeFavoriteFromMock,
+  addFavoriteToMock,
+} from '@/views/favorites/mock'
+import type { FavoriteItem, FavoriteListResult } from '@/views/favorites/types'
+import { generateConfigList, createConfigInMock, updateConfigInMock } from '@/views/config/mock'
+import type { ConfigItem, ConfigForm, ConfigListResult } from '@/views/config/types'
+import {
+  generateWorkflowList,
+  createWorkflowInMock,
+  updateWorkflowInMock,
+  deleteWorkflowFromMock,
+} from '@/views/designer/mock'
+import type { WorkflowDefinition, WorkflowForm, WorkflowListResult } from '@/views/designer/types'
 import {
   generateCalendarEventList,
   generateCalendarMonthDots,
@@ -88,7 +107,13 @@ import {
   checkInCalendarEventInMock,
   completeCalendarEventInMock,
 } from '@/views/calendar/mock'
-import type { CalendarEvent, CalendarEventForm, CalendarEventListResult, CalendarMonthDotsResult, CalendarStatsResult } from '@/views/calendar/types'
+import type {
+  CalendarEvent,
+  CalendarEventForm,
+  CalendarEventListResult,
+  CalendarMonthDotsResult,
+  CalendarStatsResult,
+} from '@/views/calendar/types'
 
 const ok = <T>(data: T): ApiResponse<T> => ({
   success: true,
@@ -697,7 +722,9 @@ export const handlers = [
         { status: 404 },
       )
     }
-    return HttpResponse.json(ok<{ id: string; eventCode: string }>({ id: event.id, eventCode: event.eventCode }))
+    return HttpResponse.json(
+      ok<{ id: string; eventCode: string }>({ id: event.id, eventCode: event.eventCode }),
+    )
   }),
 
   http.post('/api/v1/calendar/event/delete/:id', ({ params }) => {
@@ -757,5 +784,97 @@ export const handlers = [
     const regionCode = url.searchParams.get('regionCode') ?? undefined
     const result = generateDashboardFunnel({ period, regionCode })
     return HttpResponse.json(ok<DashboardFunnelResult>(result))
+  }),
+
+  // ---- 收藏夹 ----
+  http.get('/api/v1/favorites', () => {
+    const result = generateFavoriteList()
+    return HttpResponse.json(ok<FavoriteListResult>(result))
+  }),
+
+  http.post('/api/v1/favorites', async ({ request }) => {
+    const body = (await request.json()) as Partial<FavoriteItem>
+    const item = addFavoriteToMock(body)
+    return HttpResponse.json(ok<FavoriteItem>(item), { status: 201 })
+  }),
+
+  http.post('/api/v1/favorites/:id/remove', ({ params }) => {
+    const id = String(params.id)
+    const success = removeFavoriteFromMock(id)
+    if (!success) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '收藏不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok({ success: true }))
+  }),
+
+  // ---- 应用配置 ----
+  http.get('/api/v1/system-configs', ({ request }) => {
+    const url = new URL(request.url)
+    const module = url.searchParams.get('module') ?? undefined
+    const keyword = url.searchParams.get('keyword') ?? undefined
+    const result = generateConfigList({ module, keyword })
+    return HttpResponse.json(ok<ConfigListResult>(result))
+  }),
+
+  http.post('/api/v1/system-configs', async ({ request }) => {
+    const body = (await request.json()) as Partial<ConfigForm>
+    const item = createConfigInMock(body)
+    return HttpResponse.json(ok<ConfigItem>(item), { status: 201 })
+  }),
+
+  http.put('/api/v1/system-configs/:id', async ({ request, params }) => {
+    const id = String(params.id)
+    const body = (await request.json()) as Partial<ConfigForm>
+    const item = updateConfigInMock(id, body)
+    if (!item) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '配置不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<ConfigItem>(item))
+  }),
+
+  // ---- 流程设计器 ----
+  http.get('/api/v1/workflow-definitions', ({ request }) => {
+    const url = new URL(request.url)
+    const module = url.searchParams.get('module') ?? undefined
+    const keyword = url.searchParams.get('keyword') ?? undefined
+    const result = generateWorkflowList({ module, keyword })
+    return HttpResponse.json(ok<WorkflowListResult>(result))
+  }),
+
+  http.post('/api/v1/workflow-definitions', async ({ request }) => {
+    const body = (await request.json()) as Partial<WorkflowForm>
+    const item = createWorkflowInMock(body)
+    return HttpResponse.json(ok<WorkflowDefinition>(item), { status: 201 })
+  }),
+
+  http.put('/api/v1/workflow-definitions/:id', async ({ request, params }) => {
+    const id = String(params.id)
+    const body = (await request.json()) as Partial<WorkflowForm>
+    const item = updateWorkflowInMock(id, body)
+    if (!item) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '流程不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<WorkflowDefinition>(item))
+  }),
+
+  http.delete('/api/v1/workflow-definitions/:id', ({ params }) => {
+    const id = String(params.id)
+    const success = deleteWorkflowFromMock(id)
+    if (!success) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '流程不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok({ success: true }))
   }),
 ]
