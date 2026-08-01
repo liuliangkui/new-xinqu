@@ -1,10 +1,12 @@
 {
   "recommendations": [
     "Vue.volar",
-    "vitest.explorer",
     "dbaeumer.vscode-eslint",
-    "EditorConfig.EditorConfig",
-    "oxc.oxc-vscode",
-    "esbenp.prettier-vscode"
+    "esbenp.prettier-vscode",
+    "Prisma.prisma",
+    "bradlc.vscode-tailwindcss",
+    "antfu.iconify",
+    "ms-vscode.vscode-typescript-next",
+    "yzhang.markdown-all-in-one"
   ]
 }
