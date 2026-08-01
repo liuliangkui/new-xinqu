@@ -1805,18 +1805,18 @@
             <div class="flex flex-wrap gap-3">
               <div class="relative flex-1 min-w-[200px] max-w-sm">
                 <svg class="icon icon-md absolute left-3 top-1/2 -translate-y-1/2 text-placeholder"><use href="#icon-search"/></svg>
-                <input type="text" class="input pl-10" placeholder="搜索客户名称、联系人、电话">
+                <input type="text" id="lead-search" class="input pl-10" placeholder="搜索客户名称、联系人、电话" oninput="filterLead()">
               </div>
-              <select class="input w-auto"><option>全部区域</option><option>云南-昆明</option><option>云南-大理</option><option>云南-曲靖</option></select>
-              <select class="input w-auto"><option>全部状态</option><option>待分配</option><option>跟进中</option><option>已转化</option><option>已失效</option></select>
-              <select class="input w-auto"><option>全部来源</option><option>官网</option><option>展会</option><option>转介绍</option></select>
+              <select id="lead-region-filter" class="input w-auto" onchange="filterLead()"><option>全部区域</option><option>云南-昆明</option><option>云南-大理</option><option>云南-曲靖</option><option>云南-玉溪</option><option>云南-西双版纳</option><option>云南-临沧</option></select>
+              <select id="lead-status-filter" class="input w-auto" onchange="filterLead()"><option>全部状态</option><option>待分配</option><option>跟进中</option><option>已转化</option><option>已失效</option></select>
+              <select id="lead-source-filter" class="input w-auto" onchange="filterLead()"><option>全部来源</option><option>官网注册</option><option>展会</option><option>转介绍</option><option>400电话</option><option>代理商推荐</option><option>学术活动</option></select>
               <button class="btn btn-ghost" onclick="showToast(`打开高级筛选`)"><svg class="icon icon-sm"><use href="#icon-filter"/></svg> 更多筛选</button>
             </div>
           </div>
 
           <!-- Grid view -->
           <div id="lead-grid" class="card-grid mb-4">
-            <div class="card card-hover p-4 cursor-pointer" onclick="openLeadModal(this)" data-code="L2026072901" data-status="跟进中" data-status-class="badge-primary" data-customer="云南省第一人民医院" data-department="检验科" data-contact="王主任" data-product="血液分析" data-source="展会" data-amount="¥200万+" data-decision="2026-08" data-creator="张经理" data-assignee="张经理" data-summary="血球流水线升级意向，预算 200 万+" data-next-follow="2026-07-30 10:00" data-follow-history="张经理 录入线索|2026-07-20 09:00|创建;张经理 电话跟进|2026-07-22 14:00|确认需求，约拜访" data-region="云南-昆明">
+            <div class="card card-hover p-4 cursor-pointer" data-leadtab="all mine" onclick="openLeadModal(this)" data-code="L2026072901" data-status="跟进中" data-status-class="badge-primary" data-customer="云南省第一人民医院" data-department="检验科" data-contact="王主任" data-product="血液分析" data-source="展会" data-amount="¥200万+" data-decision="2026-08" data-creator="张经理" data-assignee="张经理" data-summary="血球流水线升级意向，预算 200 万+" data-next-follow="2026-07-30 10:00" data-follow-history="张经理 录入线索|2026-07-20 09:00|创建;张经理 电话跟进|2026-07-22 14:00|确认需求，约拜访" data-region="云南-昆明">
               <div class="flex items-start justify-between mb-3">
                 <span class="badge badge-primary">跟进中</span>
                 <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
@@ -1832,7 +1832,7 @@
                 </div>
               </div>
             </div>
-            <div class="card card-hover p-4 cursor-pointer" onclick="openLeadModal(this)" data-code="L2026072802" data-status="待分配" data-status-class="badge-warning" data-customer="昆明医科大学第一附属医院" data-department="中心实验室" data-contact="李老师" data-product="整体解决方案" data-source="官网注册" data-amount="待定" data-decision="2026-09" data-creator="李娜" data-assignee="-" data-summary="质谱平台咨询，预算待定" data-follow-history="李娜 录入线索|2026-07-28 11:00|创建" data-region="云南-昆明">
+            <div class="card card-hover p-4 cursor-pointer" data-leadtab="all public" onclick="openLeadModal(this)" data-code="L2026072802" data-status="待分配" data-status-class="badge-warning" data-customer="昆明医科大学第一附属医院" data-department="中心实验室" data-contact="李老师" data-product="整体解决方案" data-source="官网注册" data-amount="待定" data-decision="2026-09" data-creator="李娜" data-assignee="-" data-summary="质谱平台咨询，预算待定" data-follow-history="李娜 录入线索|2026-07-28 11:00|创建" data-region="云南-昆明">
               <div class="flex items-start justify-between mb-3">
                 <span class="badge badge-warning">待分配</span>
                 <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
@@ -1848,7 +1848,7 @@
                 </div>
               </div>
             </div>
-            <div class="card card-hover p-4 cursor-pointer" onclick="openLeadModal(this)" data-code="L2026071003" data-status="已转化" data-status-class="badge-success" data-customer="大理州人民医院" data-department="检验科" data-contact="张主任" data-product="生化分析" data-source="转介绍" data-amount="¥128万" data-decision="2026-07" data-creator="王强" data-assignee="王强" data-summary="生化分析仪成交，已转意向 INT-2026061503" data-follow-history="王强 录入线索|2026-07-01 09:00|创建;王强 客户拜访|2026-07-05 14:00|确认方案;王强 转意向|2026-07-10 10:00|生成意向单 INT-2026061503" data-region="云南-大理">
+            <div class="card card-hover p-4 cursor-pointer" data-leadtab="all team" onclick="openLeadModal(this)" data-code="L2026071003" data-status="已转化" data-status-class="badge-success" data-customer="大理州人民医院" data-department="检验科" data-contact="张主任" data-product="生化分析" data-source="转介绍" data-amount="¥128万" data-decision="2026-07" data-creator="王强" data-assignee="王强" data-summary="生化分析仪成交，已转意向 INT-2026061503" data-follow-history="王强 录入线索|2026-07-01 09:00|创建;王强 客户拜访|2026-07-05 14:00|确认方案;王强 转意向|2026-07-10 10:00|生成意向单 INT-2026061503" data-region="云南-大理">
               <div class="flex items-start justify-between mb-3">
                 <span class="badge badge-success">已转化</span>
                 <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
@@ -1864,7 +1864,7 @@
                 </div>
               </div>
             </div>
-            <div class="card card-hover p-4 cursor-pointer" onclick="openLeadModal(this)" data-code="L2026071504" data-status="已失效" data-status-class="badge-danger" data-customer="西双版纳傣族自治州医院" data-department="急诊" data-contact="岩医生" data-product="整体解决方案" data-source="400电话" data-amount="-" data-decision="-" data-creator="李丽" data-assignee="李丽" data-summary="POCT 设备需求，项目暂缓，已废弃" data-discarded-reason="项目暂缓，预算取消" data-follow-history="李丽 录入线索|2026-07-15 11:00|创建;李丽 电话跟进|2026-07-18 16:00|项目暂缓;系统 废弃|2026-07-19 09:00|项目暂缓，预算取消" data-region="云南-西双版纳">
+            <div class="card card-hover p-4 cursor-pointer" data-leadtab="all team" onclick="openLeadModal(this)" data-code="L2026071504" data-status="已失效" data-status-class="badge-danger" data-customer="西双版纳傣族自治州医院" data-department="急诊" data-contact="岩医生" data-product="整体解决方案" data-source="400电话" data-amount="-" data-decision="-" data-creator="李丽" data-assignee="李丽" data-summary="POCT 设备需求，项目暂缓，已废弃" data-discarded-reason="项目暂缓，预算取消" data-follow-history="李丽 录入线索|2026-07-15 11:00|创建;李丽 电话跟进|2026-07-18 16:00|项目暂缓;系统 废弃|2026-07-19 09:00|项目暂缓，预算取消" data-region="云南-西双版纳">
               <div class="flex items-start justify-between mb-3">
                 <span class="badge badge-danger">已失效</span>
                 <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
@@ -1880,7 +1880,7 @@
                 </div>
               </div>
             </div>
-            <div class="card card-hover p-4 cursor-pointer" onclick="openLeadModal(this)" data-code="L2026072205" data-status="跟进中" data-status-class="badge-primary" data-customer="曲靖市第一人民医院" data-department="检验科" data-contact="赵主任" data-product="血液分析" data-source="代理商推荐" data-amount="¥95万" data-decision="2026-09" data-creator="赵敏" data-assignee="赵敏" data-summary="血球项目，方案比对中" data-follow-history="赵敏 录入线索|2026-07-22 09:30|创建;赵敏 方案推送|2026-07-25 10:00|发送报价单" data-region="云南-曲靖">
+            <div class="card card-hover p-4 cursor-pointer" data-leadtab="all team" onclick="openLeadModal(this)" data-code="L2026072205" data-status="跟进中" data-status-class="badge-primary" data-customer="曲靖市第一人民医院" data-department="检验科" data-contact="赵主任" data-product="血液分析" data-source="代理商推荐" data-amount="¥95万" data-decision="2026-09" data-creator="赵敏" data-assignee="赵敏" data-summary="血球项目，方案比对中" data-follow-history="赵敏 录入线索|2026-07-22 09:30|创建;赵敏 方案推送|2026-07-25 10:00|发送报价单" data-region="云南-曲靖">
               <div class="flex items-start justify-between mb-3">
                 <span class="badge badge-primary">跟进中</span>
                 <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
@@ -1896,7 +1896,7 @@
                 </div>
               </div>
             </div>
-            <div class="card card-hover p-4 cursor-pointer" onclick="openLeadModal(this)" data-code="L2026072506" data-status="待分配" data-status-class="badge-warning" data-customer="玉溪市人民医院" data-department="输血科" data-contact="陈科长" data-product="血液分析" data-source="学术活动" data-amount="¥50万" data-decision="2026-08" data-creator="周涛" data-assignee="-" data-summary="血型分析仪需求，预算 50 万" data-follow-history="周涛 录入线索|2026-07-25 13:00|创建" data-region="云南-玉溪">
+            <div class="card card-hover p-4 cursor-pointer" data-leadtab="all public" onclick="openLeadModal(this)" data-code="L2026072506" data-status="待分配" data-status-class="badge-warning" data-customer="玉溪市人民医院" data-department="输血科" data-contact="陈科长" data-product="血液分析" data-source="学术活动" data-amount="¥50万" data-decision="2026-08" data-creator="周涛" data-assignee="-" data-summary="血型分析仪需求，预算 50 万" data-follow-history="周涛 录入线索|2026-07-25 13:00|创建" data-region="云南-玉溪">
               <div class="flex items-start justify-between mb-3">
                 <span class="badge badge-warning">待分配</span>
                 <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
@@ -1912,26 +1912,83 @@
                 </div>
               </div>
             </div>
+            <div class="card card-hover p-4 cursor-pointer" data-leadtab="all mine" onclick="openLeadModal(this)" data-code="L2026073107" data-status="跟进中" data-status-class="badge-primary" data-customer="昆明市延安医院" data-department="检验科" data-contact="刘主任" data-product="血液分析" data-source="展会" data-amount="¥80万" data-decision="2026-09" data-creator="张经理" data-assignee="张经理" data-summary="血球分析仪采购，预算 80 万" data-next-follow="2026-08-02 14:00" data-follow-history="张经理 录入线索|2026-07-21 10:00|创建;张经理 客户拜访|2026-07-28 15:00|确认科室需求" data-region="云南-昆明">
+              <div class="flex items-start justify-between mb-3">
+                <span class="badge badge-primary">跟进中</span>
+                <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
+              </div>
+              <div class="font-semibold text-ink mb-1">昆明市延安医院</div>
+              <div class="text-sub text-sm mb-3">联系人：刘主任 · 检验科</div>
+              <div class="text-xs text-sub mb-3">需求：血球分析仪采购 · 预算 ¥80万</div>
+              <div class="flex items-center justify-between pt-3 border-t border-line">
+                <span class="text-xs text-placeholder">来源：CMEF 展会</span>
+                <div class="flex gap-2">
+                  <button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">跟进</button>
+                  <button class="btn btn-primary text-xs" onclick="event.stopPropagation()">转意向</button>
+                </div>
+              </div>
+            </div>
+            <div class="card card-hover p-4 cursor-pointer" data-leadtab="all public" onclick="openLeadModal(this)" data-code="L2026080108" data-status="待分配" data-status-class="badge-warning" data-customer="临沧市人民医院" data-department="检验科" data-contact="杨老师" data-product="生化分析" data-source="官网注册" data-amount="待定" data-decision="2026-10" data-creator="周涛" data-assignee="-" data-summary="生化分析仪咨询，预算待定" data-follow-history="周涛 录入线索|2026-07-30 09:00|创建" data-region="云南-临沧">
+              <div class="flex items-start justify-between mb-3">
+                <span class="badge badge-warning">待分配</span>
+                <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
+              </div>
+              <div class="font-semibold text-ink mb-1">临沧市人民医院</div>
+              <div class="text-sub text-sm mb-3">联系人：杨老师 · 检验科</div>
+              <div class="text-xs text-sub mb-3">需求：生化分析仪咨询 · 预算待定</div>
+              <div class="flex items-center justify-between pt-3 border-t border-line">
+                <span class="text-xs text-placeholder">来源：官网注册</span>
+                <div class="flex gap-2">
+                  <button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">领取</button>
+                  <button class="btn btn-primary text-xs" onclick="event.stopPropagation()">分配</button>
+                </div>
+              </div>
+            </div>
+            <div class="card card-hover p-4 cursor-pointer" data-leadtab="all team" onclick="openLeadModal(this)" data-code="L2026080209" data-status="跟进中" data-status-class="badge-primary" data-customer="云南省肿瘤医院" data-department="中心实验室" data-contact="孙主任" data-product="免疫分析" data-source="转介绍" data-amount="¥120万" data-decision="2026-10" data-creator="李娜" data-assignee="李娜" data-summary="免疫分析流水线，方案评估中" data-follow-history="李娜 录入线索|2026-07-26 10:00|创建;李娜 电话沟通|2026-07-29 16:00|初步确认预算" data-region="云南-昆明">
+              <div class="flex items-start justify-between mb-3">
+                <span class="badge badge-primary">跟进中</span>
+                <button class="text-sub hover:text-primary" onclick="event.stopPropagation()"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
+              </div>
+              <div class="font-semibold text-ink mb-1">云南省肿瘤医院</div>
+              <div class="text-sub text-sm mb-3">联系人：孙主任 · 中心实验室</div>
+              <div class="text-xs text-sub mb-3">需求：免疫分析流水线 · 预算 ¥120万</div>
+              <div class="flex items-center justify-between pt-3 border-t border-line">
+                <span class="text-xs text-placeholder">来源：转介绍</span>
+                <div class="flex gap-2">
+                  <button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">跟进</button>
+                  <button class="btn btn-primary text-xs" onclick="event.stopPropagation()">转意向</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div id="intention-grid-empty" class="hidden text-center py-8 text-sub">未找到匹配数据</div>
+          <div id="lead-grid-empty" class="hidden text-center py-8 text-sub">未找到匹配线索</div>
 
           <!-- List view -->
           <div id="lead-list" class="card mb-4 hidden">
             <table class="data-table">
               <thead><tr><th>客户名称</th><th>联系人</th><th>需求</th><th>区域</th><th>来源</th><th>状态</th><th>负责人</th><th>操作</th></tr></thead>
               <tbody>
-                <tr class="lead-row cursor-pointer" onclick="toggleLeadAccordion(this)" data-code="L2026072901" data-status="跟进中" data-status-class="badge-primary" data-customer="云南省第一人民医院" data-department="检验科" data-contact="王主任" data-product="血液分析" data-source="展会" data-amount="¥200万+" data-decision="2026-08" data-creator="张经理" data-assignee="张经理" data-summary="血球流水线升级意向，预算 200 万+" data-next-follow="2026-07-30 10:00" data-follow-history="张经理 录入线索|2026-07-20 09:00|创建;张经理 电话跟进|2026-07-22 14:00|确认需求，约拜访" data-region="云南-昆明"><td>云南省第一人民医院</td><td>王主任</td><td>血球流水线升级</td><td>云南-昆明</td><td>CMEF 展会</td><td><span class="badge badge-primary">跟进中</span></td><td>张经理</td><td><button class="btn btn-primary text-xs" onclick="event.stopPropagation()">转意向</button></td></tr>
+                <tr class="lead-row cursor-pointer" data-leadtab="all mine" onclick="toggleLeadAccordion(this)" data-code="L2026072901" data-status="跟进中" data-status-class="badge-primary" data-customer="云南省第一人民医院" data-department="检验科" data-contact="王主任" data-product="血液分析" data-source="展会" data-amount="¥200万+" data-decision="2026-08" data-creator="张经理" data-assignee="张经理" data-summary="血球流水线升级意向，预算 200 万+" data-next-follow="2026-07-30 10:00" data-follow-history="张经理 录入线索|2026-07-20 09:00|创建;张经理 电话跟进|2026-07-22 14:00|确认需求，约拜访" data-region="云南-昆明"><td>云南省第一人民医院</td><td>王主任</td><td>血球流水线升级</td><td>云南-昆明</td><td>CMEF 展会</td><td><span class="badge badge-primary">跟进中</span></td><td>张经理</td><td><button class="btn btn-primary text-xs" onclick="event.stopPropagation()">转意向</button></td></tr>
                 <tr class="detail-accordion"><td colspan="8"><div class="accordion-panel"></div></td></tr>
-                <tr class="lead-row cursor-pointer" onclick="toggleLeadAccordion(this)" data-code="L2026072802" data-status="待分配" data-status-class="badge-warning" data-customer="昆明医科大学第一附属医院" data-department="中心实验室" data-contact="李老师" data-product="整体解决方案" data-source="官网注册" data-amount="待定" data-decision="2026-09" data-creator="李娜" data-assignee="-" data-summary="质谱平台咨询，预算待定" data-follow-history="李娜 录入线索|2026-07-28 11:00|创建" data-region="云南-昆明"><td>昆明医科大学第一附属医院</td><td>李老师</td><td>质谱平台咨询</td><td>云南-昆明</td><td>官网注册</td><td><span class="badge badge-warning">待分配</span></td><td>-</td><td><button class="btn btn-primary text-xs" onclick="event.stopPropagation()">分配</button></td></tr>
+                <tr class="lead-row cursor-pointer" data-leadtab="all public" onclick="toggleLeadAccordion(this)" data-code="L2026072802" data-status="待分配" data-status-class="badge-warning" data-customer="昆明医科大学第一附属医院" data-department="中心实验室" data-contact="李老师" data-product="整体解决方案" data-source="官网注册" data-amount="待定" data-decision="2026-09" data-creator="李娜" data-assignee="-" data-summary="质谱平台咨询，预算待定" data-follow-history="李娜 录入线索|2026-07-28 11:00|创建" data-region="云南-昆明"><td>昆明医科大学第一附属医院</td><td>李老师</td><td>质谱平台咨询</td><td>云南-昆明</td><td>官网注册</td><td><span class="badge badge-warning">待分配</span></td><td>-</td><td><button class="btn btn-primary text-xs" onclick="event.stopPropagation()">分配</button></td></tr>
                 <tr class="detail-accordion"><td colspan="8"><div class="accordion-panel"></div></td></tr>
-                <tr class="lead-row cursor-pointer" onclick="toggleLeadAccordion(this)" data-code="L2026071003" data-status="已转化" data-status-class="badge-success" data-customer="大理州人民医院" data-department="检验科" data-contact="张主任" data-product="生化分析" data-source="转介绍" data-amount="¥128万" data-decision="2026-07" data-creator="王强" data-assignee="王强" data-summary="生化分析仪成交，已转意向 INT-2026061503" data-follow-history="王强 录入线索|2026-07-01 09:00|创建;王强 客户拜访|2026-07-05 14:00|确认方案;王强 转意向|2026-07-10 10:00|生成意向单 INT-2026061503" data-region="云南-大理"><td>大理州人民医院</td><td>张主任</td><td>生化分析仪</td><td>云南-大理</td><td>转介绍</td><td><span class="badge badge-success">已转化</span></td><td>张经理</td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">查看</button></td></tr>
+                <tr class="lead-row cursor-pointer" data-leadtab="all team" onclick="toggleLeadAccordion(this)" data-code="L2026071003" data-status="已转化" data-status-class="badge-success" data-customer="大理州人民医院" data-department="检验科" data-contact="张主任" data-product="生化分析" data-source="转介绍" data-amount="¥128万" data-decision="2026-07" data-creator="王强" data-assignee="王强" data-summary="生化分析仪成交，已转意向 INT-2026061503" data-follow-history="王强 录入线索|2026-07-01 09:00|创建;王强 客户拜访|2026-07-05 14:00|确认方案;王强 转意向|2026-07-10 10:00|生成意向单 INT-2026061503" data-region="云南-大理"><td>大理州人民医院</td><td>张主任</td><td>生化分析仪</td><td>云南-大理</td><td>转介绍</td><td><span class="badge badge-success">已转化</span></td><td>王强</td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">查看</button></td></tr>
                 <tr class="detail-accordion"><td colspan="8"><div class="accordion-panel"></div></td></tr>
-                <tr class="lead-row cursor-pointer" onclick="toggleLeadAccordion(this)" data-code="L2026071504" data-status="已失效" data-status-class="badge-danger" data-customer="西双版纳傣族自治州医院" data-department="急诊" data-contact="岩医生" data-product="整体解决方案" data-source="400电话" data-amount="-" data-decision="-" data-creator="李丽" data-assignee="李丽" data-summary="POCT 设备需求，项目暂缓，已废弃" data-discarded-reason="项目暂缓，预算取消" data-follow-history="李丽 录入线索|2026-07-15 11:00|创建;李丽 电话跟进|2026-07-18 16:00|项目暂缓;系统 废弃|2026-07-19 09:00|项目暂缓，预算取消" data-region="云南-西双版纳"><td>西双版纳傣族自治州医院</td><td>岩医生</td><td>POCT 设备</td><td>云南-西双版纳</td><td>400 电话</td><td><span class="badge badge-danger">已失效</span></td><td>李丽</td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">激活</button></td></tr>
+                <tr class="lead-row cursor-pointer" data-leadtab="all team" onclick="toggleLeadAccordion(this)" data-code="L2026071504" data-status="已失效" data-status-class="badge-danger" data-customer="西双版纳傣族自治州医院" data-department="急诊" data-contact="岩医生" data-product="整体解决方案" data-source="400电话" data-amount="-" data-decision="-" data-creator="李丽" data-assignee="李丽" data-summary="POCT 设备需求，项目暂缓，已废弃" data-discarded-reason="项目暂缓，预算取消" data-follow-history="李丽 录入线索|2026-07-15 11:00|创建;李丽 电话跟进|2026-07-18 16:00|项目暂缓;系统 废弃|2026-07-19 09:00|项目暂缓，预算取消" data-region="云南-西双版纳"><td>西双版纳傣族自治州医院</td><td>岩医生</td><td>POCT 设备</td><td>云南-西双版纳</td><td>400 电话</td><td><span class="badge badge-danger">已失效</span></td><td>李丽</td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">激活</button></td></tr>
                 <tr class="detail-accordion"><td colspan="8"><div class="accordion-panel"></div></td></tr>
-                <tr class="lead-row cursor-pointer" onclick="toggleLeadAccordion(this)" data-code="L2026072205" data-status="跟进中" data-status-class="badge-primary" data-customer="曲靖市第一人民医院" data-department="检验科" data-contact="赵主任" data-product="血液分析" data-source="代理商推荐" data-amount="¥95万" data-decision="2026-09" data-creator="赵敏" data-assignee="赵敏" data-summary="血球项目，方案比对中" data-follow-history="赵敏 录入线索|2026-07-22 09:30|创建;赵敏 方案推送|2026-07-25 10:00|发送报价单" data-region="云南-曲靖"><td>曲靖市第一人民医院</td><td>赵主任</td><td>血球项目</td><td>云南-曲靖</td><td>代理商推荐</td><td><span class="badge badge-primary">跟进中</span></td><td>王强</td><td><button class="btn btn-primary text-xs" onclick="event.stopPropagation()">转意向</button></td></tr>
+                <tr class="lead-row cursor-pointer" data-leadtab="all team" onclick="toggleLeadAccordion(this)" data-code="L2026072205" data-status="跟进中" data-status-class="badge-primary" data-customer="曲靖市第一人民医院" data-department="检验科" data-contact="赵主任" data-product="血液分析" data-source="代理商推荐" data-amount="¥95万" data-decision="2026-09" data-creator="赵敏" data-assignee="赵敏" data-summary="血球项目，方案比对中" data-follow-history="赵敏 录入线索|2026-07-22 09:30|创建;赵敏 方案推送|2026-07-25 10:00|发送报价单" data-region="云南-曲靖"><td>曲靖市第一人民医院</td><td>赵主任</td><td>血球项目</td><td>云南-曲靖</td><td>代理商推荐</td><td><span class="badge badge-primary">跟进中</span></td><td>赵敏</td><td><button class="btn btn-primary text-xs" onclick="event.stopPropagation()">转意向</button></td></tr>
+                <tr class="detail-accordion"><td colspan="8"><div class="accordion-panel"></div></td></tr>
+                <tr class="lead-row cursor-pointer" data-leadtab="all public" onclick="toggleLeadAccordion(this)" data-code="L2026072506" data-status="待分配" data-status-class="badge-warning" data-customer="玉溪市人民医院" data-department="输血科" data-contact="陈科长" data-product="血液分析" data-source="学术活动" data-amount="¥50万" data-decision="2026-08" data-creator="周涛" data-assignee="-" data-summary="血型分析仪需求，预算 50 万" data-follow-history="周涛 录入线索|2026-07-25 13:00|创建" data-region="云南-玉溪"><td>玉溪市人民医院</td><td>陈科长</td><td>血型分析仪</td><td>云南-玉溪</td><td>学术活动</td><td><span class="badge badge-warning">待分配</span></td><td>-</td><td><button class="btn btn-primary text-xs" onclick="event.stopPropagation()">分配</button></td></tr>
+                <tr class="detail-accordion"><td colspan="8"><div class="accordion-panel"></div></td></tr>
+                <tr class="lead-row cursor-pointer" data-leadtab="all mine" onclick="toggleLeadAccordion(this)" data-code="L2026073107" data-status="跟进中" data-status-class="badge-primary" data-customer="昆明市延安医院" data-department="检验科" data-contact="刘主任" data-product="血液分析" data-source="展会" data-amount="¥80万" data-decision="2026-09" data-creator="张经理" data-assignee="张经理" data-summary="血球分析仪采购，预算 80 万" data-next-follow="2026-08-02 14:00" data-follow-history="张经理 录入线索|2026-07-21 10:00|创建;张经理 客户拜访|2026-07-28 15:00|确认科室需求" data-region="云南-昆明"><td>昆明市延安医院</td><td>刘主任</td><td>血球分析仪</td><td>云南-昆明</td><td>CMEF 展会</td><td><span class="badge badge-primary">跟进中</span></td><td>张经理</td><td><button class="btn btn-primary text-xs" onclick="event.stopPropagation()">转意向</button></td></tr>
+                <tr class="detail-accordion"><td colspan="8"><div class="accordion-panel"></div></td></tr>
+                <tr class="lead-row cursor-pointer" data-leadtab="all public" onclick="toggleLeadAccordion(this)" data-code="L2026080108" data-status="待分配" data-status-class="badge-warning" data-customer="临沧市人民医院" data-department="检验科" data-contact="杨老师" data-product="生化分析" data-source="官网注册" data-amount="待定" data-decision="2026-10" data-creator="周涛" data-assignee="-" data-summary="生化分析仪咨询，预算待定" data-follow-history="周涛 录入线索|2026-07-30 09:00|创建" data-region="云南-临沧"><td>临沧市人民医院</td><td>杨老师</td><td>生化分析仪</td><td>云南-临沧</td><td>官网注册</td><td><span class="badge badge-warning">待分配</span></td><td>-</td><td><button class="btn btn-primary text-xs" onclick="event.stopPropagation()">分配</button></td></tr>
+                <tr class="detail-accordion"><td colspan="8"><div class="accordion-panel"></div></td></tr>
+                <tr class="lead-row cursor-pointer" data-leadtab="all team" onclick="toggleLeadAccordion(this)" data-code="L2026080209" data-status="跟进中" data-status-class="badge-primary" data-customer="云南省肿瘤医院" data-department="中心实验室" data-contact="孙主任" data-product="免疫分析" data-source="转介绍" data-amount="¥120万" data-decision="2026-10" data-creator="李娜" data-assignee="李娜" data-summary="免疫分析流水线，方案评估中" data-follow-history="李娜 录入线索|2026-07-26 10:00|创建;李娜 电话沟通|2026-07-29 16:00|初步确认预算" data-region="云南-昆明"><td>云南省肿瘤医院</td><td>孙主任</td><td>免疫分析流水线</td><td>云南-昆明</td><td>转介绍</td><td><span class="badge badge-primary">跟进中</span></td><td>李娜</td><td><button class="btn btn-primary text-xs" onclick="event.stopPropagation()">转意向</button></td></tr>
                 <tr class="detail-accordion"><td colspan="8"><div class="accordion-panel"></div></td></tr>
               </tbody>
             </table>
+            <div id="lead-list-empty" class="hidden text-center py-8 text-sub">未找到匹配线索</div>
           </div>
 
           <!-- Pagination -->
@@ -14107,6 +14164,72 @@ Content-Type: application/json
     function switchLeadTab(btn) {
       btn.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
+      filterLead();
+    }
+
+    function filterLead() {
+      const keyword = (document.getElementById('lead-search')?.value || '').toLowerCase();
+      const region = (document.getElementById('lead-region-filter')?.value || '').toLowerCase();
+      const status = (document.getElementById('lead-status-filter')?.value || '').toLowerCase();
+      const source = (document.getElementById('lead-source-filter')?.value || '').toLowerCase();
+      const activeTabBtn = document.querySelector('[data-leadtab].active');
+      const tab = activeTabBtn ? activeTabBtn.dataset.leadtab : 'all';
+
+      function matches(el) {
+        const d = el.dataset;
+        if (tab !== 'all') {
+          const tabs = (d.leadtab || '').split(/\s+/).filter(Boolean);
+          if (!tabs.includes(tab)) return false;
+        }
+        if (keyword) {
+          const code = (d.code || '').toLowerCase();
+          const customer = (d.customer || '').toLowerCase();
+          const contact = (d.contact || '').toLowerCase();
+          const summary = (d.summary || '').toLowerCase();
+          const text = el.textContent.toLowerCase();
+          const searchStr = code + ' ' + customer + ' ' + contact + ' ' + summary;
+          if (!searchStr.includes(keyword) && !text.includes(keyword)) return false;
+        }
+        if (region && region !== '全部区域') {
+          const regionVal = (d.region || '').toLowerCase();
+          const text = el.textContent.toLowerCase();
+          if (!regionVal.includes(region) && !text.includes(region)) return false;
+        }
+        if (status && status !== '全部状态') {
+          const statusVal = (d.status || '').toLowerCase();
+          if (statusVal !== status) return false;
+        }
+        if (source && source !== '全部来源') {
+          const sourceVal = (d.source || '').toLowerCase();
+          if (sourceVal !== source) return false;
+        }
+        return true;
+      }
+
+      let gridVisible = 0;
+      document.querySelectorAll('#lead-grid .card').forEach(card => {
+        const ok = matches(card);
+        card.classList.toggle('hidden', !ok);
+        if (ok) gridVisible++;
+      });
+
+      let listVisible = 0;
+      document.querySelectorAll('#lead-list tbody tr.lead-row').forEach(row => {
+        const ok = matches(row);
+        row.classList.toggle('hidden', !ok);
+        const accordion = row.nextElementSibling;
+        if (accordion && accordion.classList.contains('detail-accordion')) {
+          accordion.classList.toggle('hidden', !ok);
+        }
+        if (ok) listVisible++;
+      });
+
+      const gridEmpty = document.getElementById('lead-grid-empty');
+      const listEmpty = document.getElementById('lead-list-empty');
+      const gridEl = document.getElementById('lead-grid');
+      const listEl = document.getElementById('lead-list');
+      if (gridEmpty) gridEmpty.classList.toggle('hidden', !(gridEl && !gridEl.classList.contains('hidden') && gridVisible === 0));
+      if (listEmpty) listEmpty.classList.toggle('hidden', !(listEl && !listEl.classList.contains('hidden') && listVisible === 0));
     }
 
     function setLeadView(mode) {
@@ -14123,7 +14246,7 @@ Content-Type: application/json
         listBtn.classList.add('btn-outline');
         listBtn.classList.remove('btn-primary');
         closeAllDetailAccordions();
-  } else {
+      } else {
         gridEl.classList.add('hidden');
         listEl.classList.remove('hidden');
         gridBtn.classList.add('btn-outline');
@@ -14131,6 +14254,7 @@ Content-Type: application/json
         listBtn.classList.add('btn-primary');
         listBtn.classList.remove('btn-outline');
       }
+      filterLead();
     }
 
     /* ===== Lead detail modal ===== */
