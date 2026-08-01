@@ -10,10 +10,10 @@
 
 | 项 | 内容 |
 |---|---|
-| 文档版本 | v1.0 |
+| 文档版本 | v1.1 |
 | 适用范围 | XQCOP 全系统 |
 | 建模方法 | DDD、事件风暴、四色原型法、用例驱动 |
-| 相关文档 | `从原型到完整系统开发方案.md`、`领域建模方案.md` |
+| 相关文档 | `从原型到完整系统开发方案.md`、`领域建模方案.md`、`XQCOP领域模型-原型对齐差异报告.md` |
 
 ---
 
@@ -23,11 +23,12 @@
 
 XQCOP 是面向医疗器械/IVD 行业的一体化业务协同运营平台，覆盖：
 
-- **销售管理**：线索、意向、客户、品牌库
+- **销售管理**：线索、意向、客户、品牌库、大单作战室、定制项目
 - **售后服务**：设备、试剂、工单、维保
-- **渠道协同**：经销商授权、库存、渠道绩效
-- **运营协同**：任务、日历、审批、消息
-- **经营分析**：目标绩效、合规风控、经营驾驶舱
+- **渠道协同**：经销商授权、库存、渠道绩效、渠道秩序、返利与佣金
+- **运营协同**：任务、日历、审批、消息、AI Agent
+- **经营分析**：目标绩效、合规风控、经营驾驶舱、效益中心、数据洞察
+- **资质合规**：产品注册证、经销商资质、客户资质
 
 ### 2.2 系统边界
 
@@ -51,6 +52,7 @@ graph LR
         F[合规域]
         G[系统域]
         H[用户权限域]
+        Q[资质域]
     end
 
     I[企业微信/钉钉] --> H
@@ -58,7 +60,10 @@ graph LR
     K[企业邮箱] --> D
     L[OSS/MinIO] --> G
     M[ERP/财务系统] --> A
+    M[ERP/财务系统] --> C
     N[BI工具] --> E
+    O[AI 大模型服务] --> D
+    P[国家药监局/资质数据库] --> Q
 ```
 
 ---
@@ -89,6 +94,14 @@ graph LR
 | 经营驾驶舱 | Dashboard | 数据看板、指标聚合 | DashboardConfig, DashboardMetric |
 | 应用配置 | App Configuration | 应用中心、菜单、字典 | App, Dictionary, Menu |
 | 流程设计器 | Process Designer | 审批流程模板设计 | ApprovalTemplate, FlowNode |
+| AI Agent | AI Agent Center | 数字员工配置、调度、训练、监控 | Agent, AgentConfig, AgentExecution |
+| 资质管理 | Qualification Management | 产品注册证、经销商资质、客户资质 | Qualification, QualificationType |
+| 效益中心 | Benefit Center | 营收、回款、毛利、应收账龄 | BenefitReport, AgingReport |
+| 数据洞察 | Data Insight | 转化漏斗、丢单原因、区域效率 | InsightReport, ConversionFunnel |
+| 大单作战室 | Deal Room | 重大项目、风险、资源协同 | DealRoomProject, DealRoomRisk |
+| 定制项目 | Custom Project | 非标准化项目配置与推进 | CustomProject, CustomProjectTemplate |
+| 渠道秩序 | Channel Order | 区域保护、撞单、越区出货、冲突裁决 | ChannelProtectionRule, ChannelConflict, ShipmentOrder |
+| 返利与佣金 | Rebate & Commission | 返利政策、结算、佣金发放 | RebatePolicy, RebateSettlement, CommissionRecord |
 
 ### 3.2 上下文映射（Context Map）
 
@@ -104,6 +117,8 @@ graph TB
         REAG[试剂运营]
         TICK[工单管理]
         DEAL[经销商协同]
+        CHORD[渠道秩序]
+        REB[返利与佣金]
         TASK[任务管理]
         CAL[日历日程]
         APP[审批中心]
@@ -111,6 +126,12 @@ graph TB
         PERF[目标绩效]
         COMP[合规风控]
         DASH[经营驾驶舱]
+        BEN[效益中心]
+        INS[数据洞察]
+        DEALROOM[大单作战室]
+        CUSTPROJ[定制项目]
+        AI[AI Agent]
+        QUAL[资质管理]
         CFG[应用配置]
         DESIGN[流程设计器]
     end
@@ -127,17 +148,31 @@ graph TB
     CUST -->|拥有| EQP
     CUST -->|发起| TICK
     CUST -->|关联| COMP
+    CUST -->|需要资质| QUAL
 
     PROD -->|被意向引用| OPP
     PROD -->|被设备引用| EQP
     PROD -->|被试剂引用| REAG
     PROD -->|被绩效统计| PERF
+    PROD -->|需要资质| QUAL
 
     DEAL -->|销售产品| PROD
     DEAL -->|产生绩效| PERF
+    DEAL -->|授权区域| CHORD
+    DEAL -->|结算返利| REB
+
+    CHORD -->|冲突裁决| DEAL
+    CHORD -->|出货数据| PERF
+    CHORD -->|渠道指标| DASH
+
+    REB -->|返利数据| DASH
+    REB -->|返利数据| BEN
 
     EQP -->|产生工单| TICK
     EQP -->|需要维保| REAG
+    EQP -->|资质要求| QUAL
+
+    QUAL -->|效期预警| MSG
 
     APP -->|发起通知| MSG
     TASK -->|发起通知| MSG
@@ -146,11 +181,25 @@ graph TB
     PERF -->|发起预警| MSG
 
     OPP -->|赢单数据| PERF
+    OPP -->|漏斗数据| INS
+    OPP -->|大单项目| DEALROOM
     TICK -->|完成数据| PERF
     COMP -->|合规数据| DASH
     PERF -->|绩效数据| DASH
+    PERF -->|绩效数据| BEN
     TICK -->|工单数据| DASH
     OPP -->|销售漏斗| DASH
+    OPP -->|销售漏斗| INS
+
+    BEN -->|效益指标| DASH
+    INS -->|洞察结论| DASH
+    DEALROOM -->|大单数据| DASH
+    AI -->|AI 分析结论| DASH
+    AI -->|AI 分析结论| INS
+    AI -->|Agent 任务| TASK
+
+    CUSTPROJ -->|项目数据| PERF
+    CUSTPROJ -->|项目数据| DASH
 ```
 
 ### 3.3 集成模式
@@ -162,6 +211,12 @@ graph TB
 | 工单管理 → 设备管理 | 客户-供应商 | 工单依赖设备信息，通过 API 查询 |
 | 经营驾驶舱 → 各业务域 | 开放主机服务 | 驾驶舱通过只读 API 聚合各域数据 |
 | 用户权限域 → 各业务域 | 客户-供应商 | 各业务域通过权限服务校验 |
+| 经销商协同 → 渠道秩序 | 客户-供应商 | 渠道秩序依赖经销商授权区域 |
+| 经销商协同 → 返利与佣金 | 客户-供应商 | 返利结算依赖经销商销售数据 |
+| 销售域 → 数据洞察 | 发布-订阅 | 销售事件驱动洞察报告更新 |
+| 销售域 → 大单作战室 | 客户-供应商 | 大单作战室引用意向/项目数据 |
+| AI Agent → 任务/驾驶舱 | 发布-订阅 | Agent 任务和结论通过事件分发 |
+| 资质管理 → 设备/产品/经销商 | 客户-供应商 | 资质校验依赖基础资料 |
 
 ---
 
@@ -212,6 +267,32 @@ graph TB
 | 驾驶舱 | Dashboard | 数据可视化分析看板 | 经营驾驶舱 |
 | 应用 | App | 应用中心中的功能模块入口 | 应用配置 |
 | 字典 | Dictionary | 可配置的基础数据分类 | 应用配置 |
+| 客户等级 | Customer Level | 客户分层，如战略客户、普通客户 | 客户管理 |
+| 关系健康度 | Relationship Health Score | 客户关系的综合评分 | 客户管理 |
+| 客户科室 | Customer Department | 医院内部科室，如检验科、康复科 | 客户管理 |
+| 决策链 | Decision Chain | 客户采购决策相关角色链路 | 客户管理 |
+| 投放模式 | Placement Mode | 设备的销售/TP/捐赠/租赁方式 | 设备管理 |
+| 维保类型 | Warranty Type | 原厂质保/延保/第三方维保/无 | 设备管理 |
+| 利用率 | Utilization Rate | 设备实际使用频率指标 | 设备管理 |
+| 试剂账本 | Reagent Ledger | 客户试剂消耗与库存记录 | 试剂运营 |
+| 工单号 | Ticket Number | 工单唯一编号 | 工单管理 |
+| 剩余 SLA | Remaining SLA | 工单剩余服务级别时间 | 工单管理 |
+| AI 数字员工 | AI Agent | 可配置执行的 AI 自动化任务单元 | AI Agent |
+| Agent 配置 | Agent Config | 数字员工的技能、触发条件、训练数据 | AI Agent |
+| 资质证照 | Qualification | 产品注册证、经销商资质、客户资质 | 资质管理 |
+| 资质类型 | Qualification Type | 证照分类，如注册证、经营许可证 | 资质管理 |
+| 效益中心 | Benefit Center | 营收、回款、毛利、应收账龄分析 | 效益中心 |
+| 应收账龄 | AR Aging | 应收账款按账龄分布 | 效益中心 |
+| 数据洞察 | Data Insight | 转化漏斗、丢单原因、区域效率分析 | 数据洞察 |
+| 大单项目 | Deal Room Project | 金额超过阈值的重点项目 | 大单作战室 |
+| 大单风险 | Deal Room Risk | 大单项目中的风险项 | 大单作战室 |
+| 定制项目 | Custom Project | 非标准化的大型项目 | 定制项目 |
+| 渠道保护规则 | Channel Protection Rule | 经销商区域保护规则 | 渠道秩序 |
+| 渠道冲突 | Channel Conflict | 撞单、越区出货等冲突 | 渠道秩序 |
+| 出货单 | Shipment Order | 产品出货记录 | 渠道秩序 |
+| 返利政策 | Rebate Policy | 按采购额阶梯返利的规则 | 返利与佣金 |
+| 返利结算单 | Rebate Settlement | 季度/年度返利结算记录 | 返利与佣金 |
+| 佣金 | Commission | 销售/渠道人员提成 | 返利与佣金 |
 
 ### 4.2 术语使用规范
 
@@ -228,9 +309,9 @@ graph TB
 | 类型 | 子域 | 战略重要性 | 投入度 |
 |---|---|---|---|
 | 核心域 | 销售域、客户域、售后域 | 最高 | 内部自建，重点投入 |
-| 支撑域 | 协同域、渠道域、合规域 | 高 | 内部自建 |
-| 通用域 | 用户权限域、系统域、消息通知 | 中 | 可部分复用开源/云服务 |
-| 分析域 | 绩效域、驾驶舱 | 高 | 内部自建，依赖核心域数据 |
+| 支撑域 | 协同域、渠道域、合规域、资质域 | 高 | 内部自建 |
+| 通用域 | 用户权限域、系统域、消息通知、AI Agent | 中 | 可部分复用开源/云服务/大模型 |
+| 分析域 | 绩效域、驾驶舱、效益中心、数据洞察 | 高 | 内部自建，依赖核心域数据 |
 
 ### 5.2 聚合根清单
 
@@ -257,6 +338,15 @@ graph TB
 | 经营驾驶舱 | DashboardConfig | DashboardWidget | WidgetType |
 | 应用配置 | App | Menu | AppCategory |
 | 应用配置 | Dictionary | - | DictionaryItem |
+| AI Agent | Agent | AgentConfig, AgentExecution | AgentCapability |
+| AI Agent | AgentTraining | TrainingRecord, FeedbackRecord | FeedbackType |
+| 资质管理 | Qualification | QualificationFile, QualificationRenewal | QualificationType |
+| 效益中心 | BenefitReport | AgingReport, RevenueReport | ReportPeriod |
+| 数据洞察 | InsightReport | ConversionFunnel, LossReasonAnalysis | InsightDimension |
+| 大单作战室 | DealRoomProject | DealRoomRisk, DealRoomMilestone | DealRoomStage |
+| 定制项目 | CustomProject | CustomProjectStage, CustomProjectTemplate | ProjectType |
+| 渠道秩序 | ChannelProtectionRule | ChannelConflict, ShipmentOrder | ConflictType |
+| 返利与佣金 | RebatePolicy | RebateSettlement, CommissionRecord | RebateTier |
 
 ---
 
@@ -381,17 +471,25 @@ class LeadFollowRecord {
 }
 
 enum LeadStatus {
-  NEW = 'NEW',
-  ASSIGNED = 'ASSIGNED',
-  FOLLOWING = 'FOLLOWING',
-  CONVERTED = 'CONVERTED',
-  INVALID = 'INVALID'
+  PENDING = 'PENDING',          // 待分配
+  FOLLOWING = 'FOLLOWING',      // 跟进中
+  CONVERTED = 'CONVERTED',      // 已转化
+  INVALID = 'INVALID'           // 已失效
 }
 
 enum PoolType {
   MINE = 'MINE',
   PUBLIC = 'PUBLIC',
   TEAM = 'TEAM'
+}
+
+enum LeadSource {
+  OFFICIAL_WEBSITE = '官网注册',
+  EXHIBITION = '展会',
+  REFERRAL = '转介绍',
+  HOTLINE = '400电话',
+  DEALER_RECOMMENDATION = '代理商推荐',
+  ACADEMIC_ACTIVITY = '学术活动'
 }
 ```
 
@@ -401,19 +499,35 @@ enum PoolType {
 class Customer {
   id: CustomerId
   name: string
-  type: CustomerType
+  type: CustomerType          // 综合医院 / 肿瘤专科 / 妇幼医院等
+  hospitalLevel: HospitalLevel // 三级甲等 / 三级乙等 / 二级医院等
   region: string
   address: Address
   ownerId: UserId
   status: CustomerStatus
+  level: CustomerLevel        // 战略客户 / 普通客户
+  healthScore: number         // 关系健康度 0-100
   tags: CustomerTag[]
   source: string
   createdAt: DateTime
   updatedAt: DateTime
 
+  contacts: Contact[]
+  departments: CustomerDepartment[]
+  decisionChains: DecisionChainNode[]
+  visitRecords: VisitRecord[]
+  intentions: Intention[]
+  equipments: Equipment[]
+  reagentLedger: ReagentLedger[]
+  tickets: Ticket[]
+
   addContact(contact: Contact): void
   removeContact(contactId: ContactId): void
   setPrimaryContact(contactId: ContactId): void
+  addDepartment(department: CustomerDepartment): void
+  removeDepartment(departmentId: CustomerDepartmentId): void
+  addDecisionChainNode(node: DecisionChainNode): void
+  updateHealthScore(score: number): void
   changeOwner(userId: UserId): void
   addTag(tag: CustomerTag): void
   removeTag(tag: CustomerTag): void
@@ -428,8 +542,27 @@ class Contact {
   phone: string
   email: string
   position: string
+  departmentId: CustomerDepartmentId
+  decisionRole: DecisionRole    // 决策人 / 影响人 / 使用人
   isPrimary: boolean
   status: Status
+}
+
+class CustomerDepartment {
+  id: CustomerDepartmentId
+  customerId: CustomerId
+  name: string                    // 检验科 / 康复科 / 设备科
+  bedCount: number | null         // 床位数（可选）
+  remark: string
+}
+
+class DecisionChainNode {
+  id: DecisionChainNodeId
+  customerId: CustomerId
+  contactId: ContactId
+  role: DecisionRole
+  influenceLevel: number          // 影响力 1-5
+  decisionArea: string            // 负责决策范围
 }
 
 class VisitRecord {
@@ -442,6 +575,33 @@ class VisitRecord {
   location: string
   attachments: Attachment[]
   createdAt: DateTime
+}
+
+enum CustomerType {
+  GENERAL_HOSPITAL = '综合医院',
+  TUMOR_SPECIALIST = '肿瘤专科',
+  WOMEN_CHILDREN = '妇幼医院',
+  LAB_CENTER = '第三方检验中心',
+  OTHER = '其他'
+}
+
+enum HospitalLevel {
+  LEVEL_3A = '三级甲等',
+  LEVEL_3B = '三级乙等',
+  LEVEL_2 = '二级医院',
+  LEVEL_1 = '一级医院'
+}
+
+enum CustomerLevel {
+  STRATEGIC = '战略客户',
+  NORMAL = '普通客户'
+}
+
+enum DecisionRole {
+  DECISION_MAKER = '决策人',
+  INFLUENCER = '影响人',
+  USER = '使用人',
+  GATEKEEPER = '把关人'
 }
 ```
 
@@ -526,19 +686,25 @@ class Equipment {
   id: EquipmentId
   customerId: CustomerId
   productId: ProductId
+  customerDepartmentId: CustomerDepartmentId | null
   serialNumber: string
+  placementMode: PlacementMode      // 销售 / TP / 捐赠 / 租赁
+  warrantyType: WarrantyType        // 原厂质保 / 延保 / 第三方维保 / 无
   installAt: DateTime
   warrantyStartAt: DateTime
   warrantyEndAt: DateTime
   status: EquipmentStatus
   location: string
+  utilizationRate: number           // 利用率 0-100%
+  ownerId: UserId
   createdAt: DateTime
   updatedAt: DateTime
 
   install(installAt: DateTime, location: string): void
-  renewWarranty(endAt: DateTime): void
+  renewWarranty(endAt: DateTime, warrantyType: WarrantyType): void
   requestMaintenance(): MaintenanceRecord
   reportFault(description: string): EquipmentFault
+  updateUtilizationRate(rate: number): void
   scrap(reason: string): void
 }
 
@@ -560,6 +726,29 @@ class EquipmentFault {
   reportedAt: DateTime
   status: FaultStatus
 }
+
+enum EquipmentStatus {
+  IN_TRANSIT = '在途',
+  INSTALLED = '已装机',
+  RUNNING = '运行中',
+  UNDER_REPAIR = '维修中',
+  IDLE = '闲置',
+  SCRAPPED = '报废'
+}
+
+enum PlacementMode {
+  SALES = '销售',
+  TP = 'TP',
+  DONATION = '捐赠',
+  LEASE = '租赁'
+}
+
+enum WarrantyType {
+  MANUFACTURER = '原厂质保',
+  EXTENDED = '延保',
+  THIRD_PARTY = '第三方维保',
+  NONE = '无'
+}
 ```
 
 #### 聚合根：Ticket（工单）
@@ -567,6 +756,7 @@ class EquipmentFault {
 ```typescript
 class Ticket {
   id: TicketId
+  ticketNumber: string              // 工单唯一编号，如 WO-20260729-0001
   customerId: CustomerId
   equipmentId: EquipmentId | null
   type: TicketType
@@ -577,6 +767,8 @@ class Ticket {
   reporterId: UserId
   ownerId: UserId | null
   attachments: Attachment[]
+  slaDeadline: DateTime             // SLA 截止时间
+  slaRemainingMinutes: number       // 剩余 SLA 分钟数（计算字段）
   createdAt: DateTime
   updatedAt: DateTime
 
@@ -614,6 +806,13 @@ enum TicketPriority {
   NORMAL = 'NORMAL',
   LOW = 'LOW'
 }
+
+enum TicketType {
+  INSTALL = '安装',
+  REPAIR = '维修',
+  MAINTENANCE = '保养',
+  INSPECTION = '巡检'
+}
 ```
 
 #### 聚合根：Reagent（试剂）
@@ -632,6 +831,20 @@ class Reagent {
   recordStockIn(quantity: number): void
   alertIfLow(stock: number, threshold: number): void
 }
+
+class ReagentLedger {
+  id: ReagentLedgerId
+  customerId: CustomerId
+  reagentId: ReagentId
+  month: string
+  openingStock: number
+  consumption: number
+  inbound: number
+  closingStock: number
+  turnoverDays: number
+  status: LedgerStatus
+  createdAt: DateTime
+}
 ```
 
 ---
@@ -645,6 +858,7 @@ class Dealer {
   id: DealerId
   name: string
   type: DealerType
+  level: DealerLevel            // A / B / C / D 级
   region: string
   authorizedStartAt: DateTime
   authorizedEndAt: DateTime
@@ -662,7 +876,7 @@ class Dealer {
   removeAuthorizedRegion(region: string): void
   freeze(reason: string): void
   unfreeze(): void
-  changeLevel(level: string): void
+  changeLevel(level: DealerLevel): void
 }
 
 class DealerStock {
@@ -670,17 +884,15 @@ class DealerStock {
   dealerId: DealerId
   productId: ProductId
   quantity: number
+  turnoverDays: number
   lastUpdatedAt: DateTime
 }
 
-class DealerRebate {
-  id: DealerRebateId
-  dealerId: DealerId
-  cycle: string
-  salesAmount: Money
-  rebateRate: number
-  rebateAmount: Money
-  status: RebateStatus
+enum DealerLevel {
+  A = 'A',
+  B = 'B',
+  C = 'C',
+  D = 'D'
 }
 ```
 
@@ -900,6 +1112,437 @@ class Dictionary {
 
 ---
 
+### 6.9 AI Agent 上下文
+
+#### 聚合根：Agent（数字员工）
+
+```typescript
+class Agent {
+  id: AgentId
+  name: string
+  type: AgentType              // 预警Agent / 销售助手 / 流程Agent
+  status: AgentStatus
+  description: string
+  capability: AgentCapability  // 技能配置
+  triggerRules: TriggerRule[]  // 触发规则
+  ownerId: UserId
+  createdAt: DateTime
+  updatedAt: DateTime
+
+  enable(): void
+  disable(): void
+  execute(input: AgentInput): AgentExecution
+  updateCapability(capability: AgentCapability): void
+}
+
+class AgentConfig {
+  id: AgentConfigId
+  agentId: AgentId
+  modelType: string             // GPT / 文心 / 通义等
+  promptTemplate: string
+  knowledgeBaseIds: string[]
+  tools: AgentTool[]
+  maxTokens: number
+  temperature: number
+}
+
+class AgentExecution {
+  id: AgentExecutionId
+  agentId: AgentId
+  input: string
+  output: string
+  status: ExecutionStatus
+  executedAt: DateTime
+}
+
+class TrainingRecord {
+  id: TrainingRecordId
+  agentId: AgentId
+  sampleInput: string
+  expectedOutput: string
+  actualOutput: string
+  accuracy: number
+  trainedAt: DateTime
+}
+
+class FeedbackRecord {
+  id: FeedbackRecordId
+  agentId: AgentId
+  executionId: AgentExecutionId
+  feedbackType: FeedbackType    // 命中 / 未命中 / 部分命中
+  comment: string
+  createdBy: UserId
+  createdAt: DateTime
+}
+
+enum AgentType {
+  ALERT = '预警Agent',
+  SALES_ASSISTANT = '销售助手',
+  PROCESS = '流程Agent'
+}
+
+enum AgentStatus {
+  ENABLED = 'ENABLED',
+  DISABLED = 'DISABLED',
+  TRAINING = 'TRAINING'
+}
+```
+
+---
+
+### 6.10 资质管理上下文
+
+#### 聚合根：Qualification（资质证照）
+
+```typescript
+class Qualification {
+  id: QualificationId
+  type: QualificationType       // 产品注册证 / 经销商资质 / 客户资质
+  subjectType: string            // PRODUCT / DEALER / CUSTOMER
+  subjectId: string
+  name: string
+  certificateNo: string
+  issuingAuthority: string
+  effectiveAt: DateTime
+  expireAt: DateTime
+  status: QualificationStatus
+  files: QualificationFile[]
+  createdAt: DateTime
+  updatedAt: DateTime
+
+  renew(certificateNo: string, expireAt: DateTime, files: QualificationFile[]): void
+  markAsExpiring(): void
+  markAsExpired(): void
+}
+
+class QualificationFile {
+  id: QualificationFileId
+  qualificationId: QualificationId
+  fileUrl: string
+  fileName: string
+  uploadedBy: UserId
+  uploadedAt: DateTime
+}
+
+class QualificationRenewal {
+  id: QualificationRenewalId
+  qualificationId: QualificationId
+  certificateNo: string
+  expireAt: DateTime
+  files: QualificationFile[]
+  createdAt: DateTime
+}
+
+enum QualificationType {
+  PRODUCT_REGISTRATION = '产品注册证',
+  DEALER_LICENSE = '经销商资质',
+  CUSTOMER_LICENSE = '客户资质',
+  BUSINESS_LICENSE = '营业执照',
+  MEDICAL_LICENSE = '医疗机构执业许可证'
+}
+```
+
+---
+
+### 6.11 效益中心上下文
+
+#### 聚合根：BenefitReport（效益报表）
+
+```typescript
+class BenefitReport {
+  id: BenefitReportId
+  type: BenefitReportType       // REVENUE / GROSS_MARGIN / AR_AGING
+  period: ReportPeriod
+  totalRevenue: Money
+  totalReceipt: Money
+  totalGrossMargin: Money
+  grossMarginRate: number
+  createdAt: DateTime
+}
+
+class AgingReport {
+  id: AgingReportId
+  period: ReportPeriod
+  customerId: CustomerId
+  amount0to30: Money
+  amount31to60: Money
+  amount61to90: Money
+  amountOver90: Money
+  totalAmount: Money
+  status: AgingStatus
+  createdAt: DateTime
+}
+
+enum BenefitReportType {
+  REVENUE = '营收分析',
+  GROSS_MARGIN = '毛利分析',
+  AR_AGING = '应收账龄'
+}
+```
+
+---
+
+### 6.12 数据洞察上下文
+
+#### 聚合根：InsightReport（洞察报告）
+
+```typescript
+class InsightReport {
+  id: InsightReportId
+  type: InsightType             // CONVERSION_FUNNEL / LOSS_REASON / REGIONAL_EFFICIENCY
+  dimension: InsightDimension
+  period: ReportPeriod
+  metrics: InsightMetric[]
+  conclusion: string
+  createdAt: DateTime
+}
+
+class ConversionFunnel {
+  id: ConversionFunnelId
+  reportId: InsightReportId
+  stageName: string              // 线索 / 意向 / 中标 / 成交
+  count: number
+  conversionRate: number
+  amount: Money
+}
+
+class LossReasonAnalysis {
+  id: LossReasonAnalysisId
+  reportId: InsightReportId
+  reason: string
+  count: number
+  amount: Money
+  percentage: number
+}
+
+enum InsightType {
+  CONVERSION_FUNNEL = '转化漏斗',
+  LOSS_REASON = '丢单原因',
+  REGIONAL_EFFICIENCY = '区域效率'
+}
+```
+
+---
+
+### 6.13 大单作战室上下文
+
+#### 聚合根：DealRoomProject（大单项目）
+
+```typescript
+class DealRoomProject {
+  id: DealRoomProjectId
+  name: string
+  customerId: CustomerId
+  amount: Money                  // 预计金额，阈值 > 100万
+  stage: DealRoomStage
+  riskLevel: RiskLevel
+  ownerId: UserId
+  expectedSignAt: DateTime
+  status: DealRoomStatus
+  createdAt: DateTime
+  updatedAt: DateTime
+
+  advanceStage(stage: DealRoomStage): void
+  updateRiskLevel(level: RiskLevel): void
+  assignResource(resource: DealRoomResource): void
+  markAsSigned(actualAmount: Money): void
+}
+
+class DealRoomRisk {
+  id: DealRoomRiskId
+  projectId: DealRoomProjectId
+  riskType: RiskType
+  description: string
+  level: RiskLevel
+  ownerId: UserId
+  status: RiskStatus
+  deadline: DateTime
+  createdAt: DateTime
+}
+
+class DealRoomMilestone {
+  id: DealRoomMilestoneId
+  projectId: DealRoomProjectId
+  name: string
+  plannedAt: DateTime
+  completedAt: DateTime | null
+  status: MilestoneStatus
+}
+
+enum DealRoomStage {
+  DEMAND_CONFIRM = '需求确认',
+  TENDER = '招标中',
+  NEGOTIATION = '谈判中',
+  CONTRACT = '合同签订',
+  DELIVERY = '交付中'
+}
+
+enum RiskLevel {
+  HIGH = '高风险',
+  MEDIUM = '中风险',
+  LOW = '低风险'
+}
+```
+
+---
+
+### 6.14 定制项目上下文
+
+#### 聚合根：CustomProject（定制项目）
+
+```typescript
+class CustomProject {
+  id: CustomProjectId
+  projectNo: string
+  name: string
+  customerId: CustomerId
+  templateId: CustomProjectTemplateId | null
+  amount: Money
+  ownerId: UserId
+  status: CustomProjectStatus
+  stages: CustomProjectStage[]
+  createdAt: DateTime
+  updatedAt: DateTime
+
+  applyTemplate(template: CustomProjectTemplate): void
+  addStage(stage: CustomProjectStage): void
+  advanceStage(stageId: CustomProjectStageId): void
+}
+
+class CustomProjectTemplate {
+  id: CustomProjectTemplateId
+  name: string
+  industry: string
+  defaultStages: TemplateStage[]
+  createdAt: DateTime
+}
+
+class CustomProjectStage {
+  id: CustomProjectStageId
+  projectId: CustomProjectId
+  name: string
+  sortOrder: number
+  plannedAt: DateTime | null
+  completedAt: DateTime | null
+  status: StageStatus
+}
+```
+
+---
+
+### 6.15 渠道秩序上下文
+
+#### 聚合根：ChannelProtectionRule（渠道保护规则）
+
+```typescript
+class ChannelProtectionRule {
+  id: ChannelProtectionRuleId
+  region: string
+  productId: ProductId | null
+  dealerId: DealerId
+  effectiveAt: DateTime
+  expireAt: DateTime
+  status: RuleStatus
+  createdAt: DateTime
+
+  assignToDealer(dealerId: DealerId): void
+  revoke(): void
+}
+
+class ShipmentOrder {
+  id: ShipmentOrderId
+  orderNo: string
+  productId: ProductId
+  quantity: number
+  shipmentRegion: string
+  authorizedRegion: string
+  dealerId: DealerId
+  customerId: CustomerId
+  amount: Money
+  shipmentAt: DateTime
+  status: ShipmentStatus
+}
+
+class ChannelConflict {
+  id: ChannelConflictId
+  type: ConflictType             // 撞单 / 越区出货
+  shipmentOrderId: ShipmentOrderId | null
+  relatedDealerIds: DealerId[]
+  description: string
+  status: ConflictStatus
+  rulingResult: string | null
+  createdAt: DateTime
+  resolvedAt: DateTime | null
+
+  submit(): void
+  rule(result: string): void
+}
+
+enum ConflictType {
+  DUPLICATE_ORDER = '撞单',
+  CROSS_REGION_SHIPMENT = '越区出货'
+}
+```
+
+---
+
+### 6.16 返利与佣金上下文
+
+#### 聚合根：RebatePolicy（返利政策）
+
+```typescript
+class RebatePolicy {
+  id: RebatePolicyId
+  name: string
+  dealerId: DealerId | null      // null 表示通用政策
+  productId: ProductId | null
+  effectiveAt: DateTime
+  expireAt: DateTime
+  tiers: RebateTier[]            // 阶梯返利规则
+  status: PolicyStatus
+  createdAt: DateTime
+
+  addTier(tier: RebateTier): void
+  removeTier(tierId: RebateTierId): void
+}
+
+class RebateTier {
+  id: RebateTierId
+  policyId: RebatePolicyId
+  minAmount: Money
+  maxAmount: Money | null
+  rebateRate: number
+}
+
+class RebateSettlement {
+  id: RebateSettlementId
+  settlementNo: string
+  dealerId: DealerId
+  cycle: string
+  salesAmount: Money
+  rebateRate: number
+  rebateAmount: Money
+  status: SettlementStatus
+  createdAt: DateTime
+  settledAt: DateTime | null
+}
+
+class CommissionRecord {
+  id: CommissionRecordId
+  userId: UserId | null
+  dealerId: DealerId | null
+  objectType: string             // 销售 / 回款 / 装机
+  objectId: string
+  amount: Money
+  commissionRate: number
+  commissionAmount: Money
+  status: CommissionStatus
+  createdAt: DateTime
+}
+```
+
+---
+
 ## 7. 领域关系总图
 
 ```mermaid
@@ -933,11 +1576,16 @@ classDiagram
         +CustomerId id
         +String name
         +CustomerType type
+        +HospitalLevel hospitalLevel
+        +CustomerLevel level
+        +Number healthScore
         +String region
         +UserId ownerId
         +CustomerStatus status
         +CustomerTag[] tags
         +addContact(contact)
+        +addDepartment(dept)
+        +updateHealthScore(score)
         +changeOwner(userId)
         +markAsLost(reason)
     }
@@ -947,7 +1595,21 @@ classDiagram
         +CustomerId customerId
         +String name
         +String phone
+        +DecisionRole decisionRole
         +Boolean isPrimary
+    }
+
+    class CustomerDepartment {
+        +CustomerDepartmentId id
+        +CustomerId customerId
+        +String name
+    }
+
+    class DecisionChainNode {
+        +DecisionChainNodeId id
+        +CustomerId customerId
+        +ContactId contactId
+        +DecisionRole role
     }
 
     class Lead {
@@ -985,12 +1647,16 @@ classDiagram
         +CustomerId customerId
         +ProductId productId
         +String serialNumber
+        +PlacementMode placementMode
+        +WarrantyType warrantyType
         +Date warrantyEndAt
+        +Number utilizationRate
         +renewWarranty(endAt)
     }
 
     class Ticket {
         +TicketId id
+        +String ticketNumber
         +CustomerId customerId
         +EquipmentId equipmentId
         +String title
@@ -1000,12 +1666,38 @@ classDiagram
         +complete()
     }
 
+    class ReagentLedger {
+        +ReagentLedgerId id
+        +CustomerId customerId
+        +String month
+        +Number turnoverDays
+    }
+
     class Dealer {
         +DealerId id
         +String name
         +DealerType type
+        +DealerLevel level
         +Date authorizedEndAt
         +renewAuthorization(start, end)
+    }
+
+    class ChannelProtectionRule {
+        +ChannelProtectionRuleId id
+        +String region
+        +DealerId dealerId
+    }
+
+    class ChannelConflict {
+        +ChannelConflictId id
+        +ConflictType type
+        +String status
+    }
+
+    class RebatePolicy {
+        +RebatePolicyId id
+        +DealerId dealerId
+        +addTier(tier)
     }
 
     class Performance {
@@ -1016,6 +1708,35 @@ classDiagram
         +Money target
         +Money done
         +Float rate
+    }
+
+    class DealRoomProject {
+        +DealRoomProjectId id
+        +String name
+        +CustomerId customerId
+        +Money amount
+        +RiskLevel riskLevel
+    }
+
+    class CustomProject {
+        +CustomProjectId id
+        +String projectNo
+        +CustomerId customerId
+        +Money amount
+    }
+
+    class Qualification {
+        +QualificationId id
+        +QualificationType type
+        +String subjectId
+        +Date expireAt
+    }
+
+    class Agent {
+        +AgentId id
+        +String name
+        +AgentType type
+        +AgentStatus status
     }
 
     class ApprovalInstance {
@@ -1030,9 +1751,12 @@ classDiagram
     User --> Department : belongs to
     User --> Role : has
     Customer --> Contact : contains
+    Customer --> CustomerDepartment : has
+    Customer --> DecisionChainNode : has
     Customer --> Lead : has
     Customer --> Intention : has
     Customer --> Equipment : owns
+    Customer --> ReagentLedger : has
     Customer --> Ticket : has
     Lead --> User : assigned to
     Intention --> Product : about
@@ -1041,6 +1765,14 @@ classDiagram
     Ticket --> Equipment : related
     Ticket --> User : handled by
     Dealer --> Product : sells
+    Dealer --> ChannelProtectionRule : owns
+    ChannelConflict --> Dealer : involves
+    Dealer --> RebatePolicy : has
+    Customer --> Qualification : needs
+    Product --> Qualification : needs
+    DealRoomProject --> Customer : about
+    CustomProject --> Customer : about
+    Agent --> Task : creates
     ApprovalInstance --> User : submitted by
 ```
 
@@ -1052,13 +1784,12 @@ classDiagram
 
 ```mermaid
 stateDiagram-v2
-    [*] --> NEW: 创建线索
-    NEW --> ASSIGNED: 分配负责人
-    ASSIGNED --> FOLLOWING: 开始跟进
+    [*] --> PENDING: 创建线索
+    PENDING --> FOLLOWING: 分配负责人/销售领取
     FOLLOWING --> CONVERTED: 转化为客户
     FOLLOWING --> INVALID: 标记无效
-    FOLLOWING --> PUBLIC: 超过7天未跟进
-    PUBLIC --> ASSIGNED: 销售领取
+    FOLLOWING --> PUBLIC: 超过N天未跟进 [待确认]
+    PUBLIC --> FOLLOWING: 销售领取
     CONVERTED --> [*]
     INVALID --> [*]
 ```
@@ -1112,7 +1843,24 @@ stateDiagram-v2
     WITHDRAWN --> [*]
 ```
 
-### 8.5 经销商状态机
+### 8.5 设备状态机
+
+```mermaid
+stateDiagram-v2
+    [*] --> IN_TRANSIT: 发货/在途
+    IN_TRANSIT --> INSTALLED: 装机验收
+    INSTALLED --> RUNNING: 投入运行
+    RUNNING --> UNDER_REPAIR: 报修
+    UNDER_REPAIR --> RUNNING: 维修完成
+    RUNNING --> IDLE: 利用率低于阈值 [待确认]
+    IDLE --> RUNNING: 恢复使用
+    RUNNING --> SCRAPPED: 报废
+    INSTALLED --> SCRAPPED: 报废
+    UNDER_REPAIR --> SCRAPPED: 报废
+    SCRAPPED --> [*]
+```
+
+### 8.6 经销商状态机
 
 ```mermaid
 stateDiagram-v2
@@ -1158,6 +1906,20 @@ stateDiagram-v2
 | PerformanceGapAlert | 目标绩效 | 消息通知、驾驶舱 | 绩效缺口预警 |
 | DealerAuthorizationExpiring | 经销商协同 | 消息通知、驾驶舱 | 授权即将到期 |
 | ComplianceAbnormal | 合规风控 | 消息通知、驾驶舱 | 合规异常 |
+| QualificationExpiring | 资质管理 | 消息通知、驾驶舱 | 资质即将到期 |
+| QualificationRenewed | 资质管理 | 设备/产品/经销商域 | 资质续期完成 |
+| ChannelConflictCreated | 渠道秩序 | 消息通知、经销商协同 | 渠道冲突产生 |
+| ChannelConflictResolved | 渠道秩序 | 消息通知、经销商协同 | 渠道冲突裁决 |
+| RebateSettlementCreated | 返利与佣金 | 消息通知、经销商协同 | 返利结算单生成 |
+| RebateSettlementPaid | 返利与佣金 | 消息通知、经销商协同 | 返利发放完成 |
+| DealRoomRiskChanged | 大单作战室 | 消息通知、驾驶舱 | 大单风险变化 |
+| DealRoomStageAdvanced | 大单作战室 | 消息通知、驾驶舱 | 大单阶段推进 |
+| CustomProjectStageCompleted | 定制项目 | 消息通知、驾驶舱 | 定制项目阶段完成 |
+| AgentExecuted | AI Agent | 任务管理、消息通知 | Agent 执行结果 |
+| BenefitReportGenerated | 效益中心 | 驾驶舱 | 效益报表生成 |
+| InsightReportGenerated | 数据洞察 | 驾驶舱 | 洞察报告生成 |
+| CustomerHealthScoreChanged | 客户管理 | 消息通知、驾驶舱 | 客户健康度变化 |
+| EquipmentUtilizationLow | 设备管理 | 消息通知、驾驶舱 | 设备利用率低 |
 
 ### 9.2 典型事件流示例：线索转化
 
@@ -1187,63 +1949,100 @@ sequenceDiagram
 
 ### 10.1 线索管理
 
-- R1：线索超过 7 天未跟进，自动从「我的线索」掉入「公海池」。
+- R1：线索超过 N 天未跟进，自动从「我的线索」掉入「公海池」。[待确认：原型显示查重分配机制，具体天数需业务方确认]
 - R2：公海池线索可被任意销售领取，领取后变为「我的线索」。
 - R3：已转化线索状态锁定，不可再编辑或分配。
-- R4：同一手机号 30 天内不能被重复录入为有效线索。
-- R5：销售代表同时跟进线索数量上限为 50 条。
+- R4：线索来源字典必须包含：官网注册、展会、转介绍、400 电话、代理商推荐、学术活动。
+- R5：线索状态包括：待分配、跟进中、已转化、已失效。
 
 ### 10.2 客户管理
 
 - R6：一个客户必须有且仅有一个主联系人。
 - R7：客户负责人离职或转岗时，客户自动转交其直属上级。
-- R8：客户 360° 视图必须聚合客户的基本信息、联系人、拜访记录、设备、工单、意向、线索。
+- R8：客户 360° 视图必须聚合客户的基本信息、联系人、科室、决策链、拜访记录、设备、试剂账本、工单、意向、线索。
 - R9：客户名称在同一区域内唯一。
+- R10：客户类型分为医院类型（综合医院、肿瘤专科、妇幼医院等）和医院等级（三级甲等、三级乙等、二级医院等）两个维度。
+- R11：客户等级包括战略客户、普通客户。[待确认：是否还有其他等级]
+- R12：客户健康度评分范围为 0-100，低于阈值时触发重点关注。[待确认：具体阈值]
 
 ### 10.3 意向管理
 
-- R10：意向金额变化必须记录变更历史。
-- R11：停滞超过 30 天的意向必须触发预警通知。
-- R12：赢单后的意向可生成销售订单或设备记录。
-- R13：意向阶段推进时，赢单概率必须同步更新。
+- R13：意向金额变化必须记录变更历史。
+- R14：停滞超过 N 天的意向必须触发预警通知。[待确认：原型未明确，当前暂用 30 天]
+- R15：赢单后的意向可生成销售订单或设备记录。
+- R16：意向阶段推进时，赢单概率必须同步更新。
 
 ### 10.4 工单管理
 
-- R14：高优先级工单 2 小时内必须响应。
-- R15：工单超时自动升级并通知处理人主管。
-- R16：工单完成后需客户确认，否则 3 天后自动完成。
-- R17：同一设备 30 天内重复报修 3 次以上，自动触发质量预警。
+- R17：工单类型包括：安装、维修、保养、巡检。
+- R18：工单优先级包括：紧急、高、中、低。
+- R19：高优先级工单必须在 N 小时内响应。[待确认：原型未明确，当前暂用 2 小时]
+- R20：工单超时自动升级并通知处理人主管。
+- R21：工单完成后需客户确认，否则 N 天后自动完成。[待确认：原型未明确，当前暂用 3 天]
+- R22：同一设备 N 天内重复报修 M 次以上，自动触发质量预警。[待确认]
 
 ### 10.5 设备与维保
 
-- R18：设备质保到期前 30 天触发预警。
-- R19：维保计划到期前 7 天自动生成维保任务。
-- R20：设备报废后，关联工单必须完结。
+- R23：设备状态包括：在途、已装机、运行中、维修中、闲置、报废。
+- R24：设备投放模式包括：销售、TP、捐赠、租赁。
+- R25：设备维保类型包括：原厂质保、延保、第三方维保、无。
+- R26：设备利用率低于 N% 时标记为闲置。[待确认：原型显示 20%]
+- R27：设备质保到期前 N 天触发预警。[待确认：原型未明确，当前暂用 30 天]
+- R28：维保计划到期前 N 天自动生成维保任务。[待确认：原型未明确，当前暂用 7 天]
+- R29：设备报废后，关联工单必须完结。
 
 ### 10.6 经销商
 
-- R21：经销商授权到期前 30 天触发预警。
-- R22：经销商冻结后，其名下客户由区域经理接管。
-- R23：经销商返利按季度结算，结算前必须完成对账。
+- R30：经销商等级包括 A、B、C、D 四级。
+- R31：经销商授权到期前 N 天触发预警。[待确认：原型未明确，当前暂用 30 天]
+- R32：经销商冻结后，其名下客户由区域经理接管。
+- R33：经销商返利按季度结算，结算前必须完成对账。
+- R34：渠道库存周转天数纳入渠道绩效指标。
+- R35：返利结算准确率纳入经销商协同指标。
 
 ### 10.7 审批
 
-- R24：审批发起人不能审批自己的申请。
-- R25：审批被驳回后，发起人可修改后重新提交。
-- R26：审批转交后，原审批人不再可见该任务。
+- R36：审批发起人不能审批自己的申请。
+- R37：审批被驳回后，发起人可修改后重新提交。
+- R38：审批转交后，原审批人不再可见该任务。
 
 ### 10.8 绩效
 
-- R27：绩效数据按周期定时聚合，不允许实时全量计算。
-- R28：团队/区域绩效需按组织架构层级汇总。
-- R29：渠道绩效需包含销售额、返利达标率、库存周转等指标。
-- R30：个人绩效仅统计本人负责的业务数据。
+- R39：绩效数据按周期定时聚合，不允许实时全量计算。
+- R40：团队/区域绩效需按组织架构层级汇总。
+- R41：渠道绩效需包含销售额、返利达标率、库存周转等指标。
+- R42：个人绩效仅统计本人负责的业务数据。
 
-### 10.9 数据权限
+### 10.9 渠道秩序
 
-- R31：用户只能看到自己有权限的数据范围（本人/本部门/本区域/全部）。
-- R32：超管可以查看全部数据，但操作日志必须记录。
-- R33：数据权限变更后，历史数据可见性不追溯变更。
+- R43：经销商授权区域外销售视为越区出货。
+- R44：多个经销商同时报备同一客户视为撞单。
+- R45：渠道冲突需提交裁决，裁决结果对参与方生效。
+
+### 10.10 返利与佣金
+
+- R46：返利政策支持阶梯返利规则。
+- R47：返利结算周期为季度。[待确认：是否也支持月度/年度]
+- R48：返利结算前必须完成对账。
+- R49：佣金可按销售、回款、装机等维度计算。
+
+### 10.11 资质管理
+
+- R50：资质类型包括产品注册证、经销商资质、客户资质等。
+- R51：资质到期前 N 天触发预警。[待确认]
+- R52：资质续期后更新有效期并保留历史版本。
+
+### 10.12 大单作战室
+
+- R53：大单定义为预计金额超过 100 万的项目。
+- R54：大单风险等级包括高、中、低。
+- R55：大单阶段包括需求确认、招标中、谈判中、合同签订、交付中。[待确认：是否与意向阶段统一]
+
+### 10.13 数据权限
+
+- R56：用户只能看到自己有权限的数据范围（本人/本部门/本区域/全部）。
+- R57：超管可以查看全部数据，但操作日志必须记录。
+- R58：数据权限变更后，历史数据可见性不追溯变更。
 
 ---
 
@@ -1261,15 +2060,15 @@ class LeadAssignmentService {
     const lead = leadRepository.findById(leadId)
     const user = userRepository.findById(userId)
     
-    // 校验线索状态
-    if (lead.status !== LeadStatus.NEW && lead.poolType !== PoolType.PUBLIC) {
+    // 校验线索状态：只有待分配或公海池线索可分配
+    if (lead.status !== LeadStatus.PENDING && lead.poolType !== PoolType.PUBLIC) {
       throw new DomainException('线索不可分配')
     }
     
-    // 校验用户接收上限
-    if (leadRepository.countByOwner(userId) >= 50) {
-      throw new DomainException('该用户跟进线索已达上限')
-    }
+    // 校验用户接收上限 [待确认：具体上限需业务方确认]
+    // if (leadRepository.countByOwner(userId) >= N) {
+    //   throw new DomainException('该用户跟进线索已达上限')
+    // }
     
     lead.assignTo(userId)
     leadRepository.save(lead)
@@ -1360,6 +2159,120 @@ class DataScopeService {
       default:
         return query
     }
+  }
+}
+```
+
+#### ChannelConflictService（渠道冲突裁决服务）
+
+```typescript
+class ChannelConflictService {
+  submitConflict(conflict: ChannelConflict): void {
+    if (conflict.type === ConflictType.DUPLICATE_ORDER) {
+      this.validateDuplicateOrder(conflict)
+    } else if (conflict.type === ConflictType.CROSS_REGION_SHIPMENT) {
+      this.validateCrossRegionShipment(conflict)
+    }
+
+    conflict.submit()
+    channelConflictRepository.save(conflict)
+    eventBus.publish(new ChannelConflictCreated(conflict.id))
+  }
+
+  ruleConflict(conflictId: ChannelConflictId, result: string, operatorId: UserId): void {
+    const conflict = channelConflictRepository.findById(conflictId)
+    conflict.rule(result)
+    channelConflictRepository.save(conflict)
+    eventBus.publish(new ChannelConflictResolved(conflict.id, result))
+  }
+}
+```
+
+#### RebateCalculationService（返利计算服务）
+
+```typescript
+class RebateCalculationService {
+  async calculateRebate(dealerId: DealerId, cycle: string): Promise<RebateSettlement> {
+    const dealer = dealerRepository.findById(dealerId)
+    const salesAmount = await salesRepository.getDealerSalesAmount(dealerId, cycle)
+    const policy = rebatePolicyRepository.findEffectivePolicy(dealerId, cycle)
+
+    const rebateRate = this.calculateRebateRate(salesAmount, policy.tiers)
+    const rebateAmount = salesAmount * rebateRate
+
+    const settlement = new RebateSettlement({
+      dealerId,
+      cycle,
+      salesAmount,
+      rebateRate,
+      rebateAmount,
+      status: SettlementStatus.PENDING_RECONCILIATION
+    })
+
+    rebateSettlementRepository.save(settlement)
+    eventBus.publish(new RebateSettlementCreated(settlement.id))
+    return settlement
+  }
+}
+```
+
+#### QualificationExpiryCheckService（资质到期检查服务）
+
+```typescript
+class QualificationExpiryCheckService {
+  async checkExpiringQualifications(): Promise<void> {
+    const expiringDays = 30 // [待确认]
+    const qualifications = qualificationRepository.findExpiring(expiringDays)
+
+    for (const qualification of qualifications) {
+      qualification.markAsExpiring()
+      qualificationRepository.save(qualification)
+      eventBus.publish(new QualificationExpiring(qualification.id))
+    }
+  }
+}
+```
+
+#### CustomerHealthScoreService（客户健康度计算服务）
+
+```typescript
+class CustomerHealthScoreService {
+  async calculateHealthScore(customerId: CustomerId): Promise<number> {
+    const customer = customerRepository.findById(customerId)
+
+    const visitScore = this.calculateVisitScore(customerId)
+    const interactionScore = this.calculateInteractionScore(customerId)
+    const equipmentScore = this.calculateEquipmentScore(customerId)
+    const ticketScore = this.calculateTicketScore(customerId)
+    const intentionScore = this.calculateIntentionScore(customerId)
+
+    const totalScore = this.weightedSum([
+      visitScore, interactionScore, equipmentScore, ticketScore, intentionScore
+    ])
+
+    customer.updateHealthScore(Math.round(totalScore))
+    customerRepository.save(customer)
+    eventBus.publish(new CustomerHealthScoreChanged(customerId, totalScore))
+    return totalScore
+  }
+}
+```
+
+#### DealRoomRiskService（大单风险服务）
+
+```typescript
+class DealRoomRiskService {
+  evaluateRisk(projectId: DealRoomProjectId): RiskLevel {
+    const project = dealRoomProjectRepository.findById(projectId)
+    const risks = dealRoomRiskRepository.findByProjectId(projectId)
+
+    if (risks.some(r => r.level === RiskLevel.HIGH)) {
+      return RiskLevel.HIGH
+    }
+    if (risks.some(r => r.level === RiskLevel.MEDIUM)) {
+      return RiskLevel.MEDIUM
+    }
+    return RiskLevel.LOW
   }
 }
 ```
@@ -1476,40 +2389,80 @@ sequenceDiagram
 
 ```prisma
 model Customer {
-  id        String   @id @default(cuid())
-  name      String
-  type      String
-  region    String
-  address   Json?
-  ownerId   String
-  status    String
-  tags      String[]
-  source    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String   @id @default(cuid())
+  name          String
+  type          String   // 医院类型：综合医院 / 肿瘤专科 / 妇幼医院等
+  hospitalLevel String   // 医院等级：三级甲等 / 三级乙等 / 二级医院等
+  level         String   // 客户等级：战略客户 / 普通客户
+  healthScore   Int?     // 关系健康度 0-100
+  region        String
+  address       Json?
+  ownerId       String
+  status        String
+  tags          String[]
+  source        String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  contacts     Contact[]
-  visitRecords VisitRecord[]
-  leads        Lead[]
-  intentions   Intention[]
-  equipments   Equipment[]
-  tickets      Ticket[]
+  contacts          Contact[]
+  departments       CustomerDepartment[]
+  decisionChains    DecisionChainNode[]
+  visitRecords      VisitRecord[]
+  leads             Lead[]
+  intentions        Intention[]
+  equipments        Equipment[]
+  reagentLedgers    ReagentLedger[]
+  tickets           Ticket[]
+  qualifications    Qualification[]
 
   @@index([ownerId])
   @@index([region])
   @@index([status])
+  @@index([type])
+  @@index([level])
 }
 
 model Contact {
+  id            String  @id @default(cuid())
+  customerId    String
+  name          String
+  phone         String
+  email         String?
+  position      String?
+  departmentId  String?
+  decisionRole  String   // 决策人 / 影响人 / 使用人 / 把关人
+  isPrimary     Boolean @default(false)
+  status        String  @default("ACTIVE")
+  createdAt     DateTime @default(now())
+
+  customer   Customer           @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  department CustomerDepartment? @relation(fields: [departmentId], references: [id])
+
+  @@index([customerId])
+}
+
+model CustomerDepartment {
   id         String  @id @default(cuid())
   customerId String
   name       String
-  phone      String
-  email      String?
-  position   String?
-  isPrimary  Boolean @default(false)
-  status     String  @default("ACTIVE")
+  bedCount   Int?
+  remark     String?
   createdAt  DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  contacts Contact[]
+
+  @@index([customerId])
+}
+
+model DecisionChainNode {
+  id             String  @id @default(cuid())
+  customerId     String
+  contactId      String
+  role           String
+  influenceLevel Int
+  decisionArea   String?
+  createdAt      DateTime @default(now())
 
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 
@@ -1567,6 +2520,21 @@ model VisitRecord {
 | 回款同步 | 外部 → XQCOP | 回款数据用于绩效计算 |
 | 发票信息 | 外部 → XQCOP | 客户开票信息 |
 
+### 14.5 AI 大模型服务
+
+| 集成点 | 方向 | 说明 |
+|---|---|---|
+| AI 问数 | XQCOP → 外部 | 自然语言查询经营数据 |
+| Agent 执行 | XQCOP → 外部 | 调用大模型完成 Agent 任务 |
+| 分析结论生成 | XQCOP → 外部 | 驾驶舱、洞察报告 AI 分析结论 |
+
+### 14.6 国家药监局/资质数据库
+
+| 集成点 | 方向 | 说明 |
+|---|---|---|
+| 产品注册证校验 | 外部 → XQCOP | 验证产品注册证真伪和有效期 |
+| 资质信息同步 | 外部 → XQCOP | 自动同步资质到期信息 |
+
 ---
 
 ## 15. 落地实施建议
@@ -1590,12 +2558,14 @@ model VisitRecord {
 建议首期只聚焦以下核心上下文：
 
 1. 用户与权限
-2. 客户管理
+2. 客户管理（含科室、决策链、健康度）
 3. 线索管理
 4. 意向管理
 5. 产品品牌
+6. 资质管理（产品注册证至少）
 
-跑通销售主线后，再扩展设备、工单、经销商、审批、绩效等域。
+P1 阶段扩展：设备、工单、经销商、渠道秩序、返利与佣金、审批、任务、绩效。
+P2 阶段扩展：AI Agent、效益中心、数据洞察、大单作战室、定制项目。
 
 ### 15.3 模型演进原则
 
@@ -1619,6 +2589,7 @@ model VisitRecord {
 | 版本 | 日期 | 作者 | 变更说明 |
 |---|---|---|---|
 | v1.0 | - | - | 初始版本，建立 XQCOP 完整领域模型 |
+| v1.1 | - | - | 基于原型扫描结果对齐：新增 AI Agent、资质管理、效益中心、数据洞察、大单作战室、定制项目、渠道秩序、返利与佣金 8 个限界上下文；修正线索/设备/工单枚举和字段；补充客户 360° 科室、决策链、健康度；业务规则标注 [待确认] 项 |
 
 ---
 
