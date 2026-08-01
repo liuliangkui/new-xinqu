@@ -6,8 +6,9 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
 
-COPY . .
-RUN npm run build
+COPY apps/server ./apps/server
+
+RUN npm run build -w apps/server
 
 # 阶段二：运行镜像
 FROM node:22-alpine
@@ -19,11 +20,11 @@ ENV NODE_ENV=production
 COPY package.json package-lock.json* ./
 RUN npm ci --omit=dev
 
-COPY prisma ./prisma
-RUN npx prisma generate
+COPY apps/server/prisma ./apps/server/prisma
+RUN npx prisma generate --schema=apps/server/prisma/schema.prisma
 
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/apps/server/dist ./apps/server/dist
 
 EXPOSE 3000
 
-CMD ["node", "dist/main"]
+CMD ["node", "apps/server/dist/main"]

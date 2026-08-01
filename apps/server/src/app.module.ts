@@ -19,6 +19,7 @@ import { LeadModule } from './modules/lead/lead.module'
 import { SystemConfigModule } from './modules/system-config/system-config.module'
 import { HealthModule } from './modules/health/health.module'
 import { UploadModule } from './upload/upload.module'
+import { SchedulerModule } from './scheduler/scheduler.module'
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { UploadModule } from './upload/upload.module'
     SystemConfigModule,
     HealthModule,
     UploadModule,
+    SchedulerModule,
     AuthModule,
     UserModule,
     CustomerModule,
