@@ -1,7 +1,13 @@
 /**
  * 客户 360° 模块 — Mock 数据
  */
-import type { Customer, CustomerDetail, CustomerListResult, CustomerStats } from './types'
+import type {
+  Customer,
+  CustomerDetail,
+  CustomerForm,
+  CustomerListResult,
+  CustomerStats,
+} from './types'
 import {
   CustomerLevel,
   OrgType,
@@ -430,4 +436,87 @@ export function mockGetCustomerDetail(customerId: number): Promise<CustomerDetai
       resolve(generateCustomerDetail(customerId))
     }, 250)
   })
+}
+
+const regionMap: Record<string, string> = {
+  '5301': '昆明',
+  '5302': '曲靖',
+  '5303': '玉溪',
+  '5304': '红河',
+  '5305': '昭通',
+  '5306': '文山',
+  '5307': '普洱',
+  '5308': '保山',
+}
+
+function computeHealthLevel(score: number): HealthLevel {
+  if (score >= 80) return HealthLevel.HEALTH
+  if (score >= 60) return HealthLevel.ATTENTION
+  if (score >= 40) return HealthLevel.RISK
+  return HealthLevel.DANGER
+}
+
+function nextCustomerId(): number {
+  return allCustomers.length > 0 ? Math.max(...allCustomers.map((c) => c.customerId)) + 1 : 1
+}
+
+/** 同步创建客户（供 MSW 使用） */
+export function createCustomerInMock(data: Partial<CustomerForm>): Customer {
+  const now = new Date().toISOString()
+  const id = nextCustomerId()
+  const regionCode = data.regionCode || '5301'
+  const customer: Customer = {
+    customerId: id,
+    customerCode: `CUST${String(id).padStart(6, '0')}`,
+    customerName: data.customerName || '新建客户',
+    customerLevel: data.customerLevel ?? CustomerLevel.三甲,
+    orgType: data.orgType ?? OrgType.综合医院,
+    regionCode,
+    regionName: data.regionName || regionMap[regionCode] || '昆明',
+    bedCount: data.bedCount ?? 0,
+    healthScore: data.healthScore ?? 60,
+    healthLevel: data.healthLevel ?? computeHealthLevel(data.healthScore ?? 60),
+    ownerId: data.ownerId ?? 1,
+    ownerName: data.ownerName || '张三',
+    deptCount: 0,
+    equipmentCount: 0,
+    intentionCount: 0,
+    createTime: now,
+    updateTime: now,
+  }
+  allCustomers.unshift(customer)
+  return customer
+}
+
+/** 同步更新客户（供 MSW 使用） */
+export function updateCustomerInMock(
+  customerId: number,
+  data: Partial<CustomerForm>,
+): Customer | null {
+  const idx = allCustomers.findIndex((c) => c.customerId === customerId)
+  if (idx === -1) return null
+  const existing = allCustomers[idx]!
+  const regionCode = data.regionCode ?? existing.regionCode
+  const healthScore = data.healthScore ?? existing.healthScore
+  const updated: Customer = {
+    ...existing,
+    ...data,
+    customerId: existing.customerId,
+    customerCode: existing.customerCode,
+    regionCode,
+    regionName: data.regionName || regionMap[regionCode] || existing.regionName,
+    healthScore,
+    healthLevel: data.healthLevel ?? computeHealthLevel(healthScore ?? 60),
+    updateTime: new Date().toISOString(),
+  }
+  allCustomers[idx] = updated
+  return updated
+}
+
+/** 同步删除客户（供 MSW 使用） */
+export function deleteCustomerFromMock(customerId: number): boolean {
+  const idx = allCustomers.findIndex((c) => c.customerId === customerId)
+  if (idx === -1) return false
+  allCustomers.splice(idx, 1)
+  return true
 }

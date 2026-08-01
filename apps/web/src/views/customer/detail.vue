@@ -130,6 +130,93 @@ function healthColor(score: number): string {
   if (score >= 60) return 'var(--warning)'
   return 'var(--danger)'
 }
+
+// ---- 快捷操作抽屉 ----
+const visitDrawerVisible = ref(false)
+const visitFormLoading = ref(false)
+const visitFormData = ref({ visitTime: '', content: '' })
+
+const intentionDrawerVisible = ref(false)
+const intentionFormLoading = ref(false)
+const intentionFormData = ref({ productName: '', amount: '', stage: 'INITIAL', expectedAt: '' })
+
+const visitFormFields = [
+  {
+    key: 'visitTime',
+    label: '拜访时间',
+    type: 'text' as const,
+    required: true,
+    placeholder: '请选择拜访时间，如 2026-08-05 14:00',
+  },
+  {
+    key: 'content',
+    label: '拜访内容',
+    type: 'textarea' as const,
+    required: true,
+    placeholder: '请输入拜访内容',
+  },
+]
+
+const intentionFormFields = [
+  {
+    key: 'productName',
+    label: '意向产品',
+    type: 'text' as const,
+    required: true,
+    placeholder: '请输入意向产品',
+  },
+  { key: 'amount', label: '预计金额', type: 'text' as const, placeholder: '请输入预计金额' },
+  {
+    key: 'stage',
+    label: '所处阶段',
+    type: 'select' as const,
+    required: true,
+    options: [
+      { value: 'INITIAL', label: '初期接触' },
+      { value: 'NEGOTIATION', label: '方案谈判' },
+      { value: 'QUOTATION', label: '报价阶段' },
+      { value: 'CONTRACT', label: '合同签订' },
+    ],
+  },
+  { key: 'expectedAt', label: '预计成交时间', type: 'text' as const, placeholder: '如 2026-09-01' },
+]
+
+async function handleVisitSubmit(values: Record<string, unknown>): Promise<void> {
+  if (!detail.value) return
+  visitFormLoading.value = true
+  try {
+    detail.value.timeline.unshift({
+      time: String(values.visitTime || new Date().toLocaleString()),
+      title: '预约拜访',
+      content: String(values.content || ''),
+      operator: '当前用户',
+      eventType: 'visit',
+    })
+    visitDrawerVisible.value = false
+    visitFormData.value = { visitTime: '', content: '' }
+  } finally {
+    visitFormLoading.value = false
+  }
+}
+
+async function handleIntentionSubmit(values: Record<string, unknown>): Promise<void> {
+  if (!detail.value) return
+  intentionFormLoading.value = true
+  try {
+    detail.value.intentionCount += 1
+    detail.value.timeline.unshift({
+      time: new Date().toLocaleString(),
+      title: '新建意向',
+      content: `${values.productName}，预计金额 ¥${values.amount || 0}，阶段：${values.stage}`,
+      operator: '当前用户',
+      eventType: 'intention',
+    })
+    intentionDrawerVisible.value = false
+    intentionFormData.value = { productName: '', amount: '', stage: 'INITIAL', expectedAt: '' }
+  } finally {
+    intentionFormLoading.value = false
+  }
+}
 </script>
 
 <template>
@@ -163,11 +250,11 @@ function healthColor(score: number): string {
           <span>最近交互：{{ detail.lastContactTime || '暂无' }}</span>
         </div>
         <div class="flex items-center gap-2 mt-3 ml-11">
-          <button class="btn btn-primary">
+          <button class="btn btn-primary" @click="visitDrawerVisible = true">
             <XqIcon name="calendar" size="14" />
             预约拜访
           </button>
-          <button class="btn btn-ghost">
+          <button class="btn btn-ghost" @click="intentionDrawerVisible = true">
             <XqIcon name="plus" size="14" />
             新建意向
           </button>
@@ -475,4 +562,26 @@ function healthColor(score: number): string {
       <XqEmptyState type="empty" title="客户不存在" description="该客户可能已被删除或您无权查看" />
     </div>
   </div>
+
+  <!-- 预约拜访抽屉 -->
+  <XqFormDrawer
+    :visible="visitDrawerVisible"
+    title="预约拜访"
+    :fields="visitFormFields"
+    :initial-values="visitFormData as unknown as Record<string, unknown>"
+    :loading="visitFormLoading"
+    @submit="handleVisitSubmit"
+    @cancel="visitDrawerVisible = false"
+  />
+
+  <!-- 新建意向抽屉 -->
+  <XqFormDrawer
+    :visible="intentionDrawerVisible"
+    title="新建意向"
+    :fields="intentionFormFields"
+    :initial-values="intentionFormData as unknown as Record<string, unknown>"
+    :loading="intentionFormLoading"
+    @submit="handleIntentionSubmit"
+    @cancel="intentionDrawerVisible = false"
+  />
 </template>

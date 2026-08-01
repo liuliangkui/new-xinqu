@@ -6,9 +6,9 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { NavTabItem, StatusMap } from '@/types/common'
-import type { Customer, CustomerListParams, CustomerStats } from './types'
+import type { Customer, CustomerForm, CustomerListParams, CustomerStats } from './types'
 import { CustomerLevel, HealthLevel, OrgType } from './types'
-import { getCustomerList } from './api'
+import { getCustomerList, createCustomer, updateCustomer, deleteCustomer } from './api'
 
 const router = useRouter()
 
@@ -48,6 +48,13 @@ const filterValues = ref<Record<string, unknown>>({
   healthLevel: '',
 })
 const pagination = ref({ page: 1, size: 12 })
+
+// 表单抽屉
+const formVisible = ref(false)
+const formMode = ref<'create' | 'edit'>('create')
+const formData = ref<CustomerForm>({} as CustomerForm)
+const formLoading = ref(false)
+const editingCustomerId = ref<number | null>(null)
 
 // ---- 枚举 ----
 const levelMap: StatusMap = {
@@ -123,7 +130,7 @@ const filterConfig = [
 ]
 
 const tableColumns = [
-  { title: '医院名称', dataIndex: 'customerName', width: '220px' },
+  { title: '医院名称', dataIndex: 'customerName', width: '200px' },
   { title: '等级', dataIndex: 'customerLevel', width: '70px' },
   { title: '区域', dataIndex: 'regionName', width: '70px', mobileHidden: true },
   { title: '健康度', dataIndex: 'healthScore', width: '90px' },
@@ -132,7 +139,85 @@ const tableColumns = [
   { title: '意向', dataIndex: 'intentionCount', width: '60px' },
   { title: '负责人', dataIndex: 'ownerName', width: '80px', mobileHidden: true },
   { title: '最近交互', dataIndex: 'lastContactTime', width: '100px' },
+  { title: '操作', dataIndex: 'actions', width: '120px', fixed: 'right' as const },
 ]
+
+// ---- 表单字段 ----
+const formFields = [
+  { key: 'customerName', label: '医院名称', required: true, placeholder: '请输入医院名称' },
+  {
+    key: 'customerLevel',
+    label: '医院等级',
+    type: 'select' as const,
+    required: true,
+    placeholder: '请选择医院等级',
+    options: [
+      { value: '1', label: '三甲' },
+      { value: '2', label: '三乙' },
+      { value: '3', label: '二甲' },
+      { value: '4', label: '二乙' },
+      { value: '5', label: '一级' },
+      { value: '6', label: '基层' },
+      { value: '7', label: '民营' },
+    ],
+  },
+  {
+    key: 'orgType',
+    label: '机构类型',
+    type: 'select' as const,
+    required: true,
+    placeholder: '请选择机构类型',
+    options: [
+      { value: '1', label: '综合医院' },
+      { value: '2', label: '专科医院' },
+      { value: '3', label: '妇幼保健院' },
+      { value: '4', label: '中医院' },
+      { value: '5', label: 'ICL' },
+      { value: '6', label: '民营医院' },
+      { value: '7', label: '其他' },
+    ],
+  },
+  {
+    key: 'regionCode',
+    label: '所属区域',
+    type: 'select' as const,
+    required: true,
+    placeholder: '请选择所属区域',
+    options: [
+      { value: '5301', label: '昆明' },
+      { value: '5302', label: '曲靖' },
+      { value: '5303', label: '玉溪' },
+      { value: '5304', label: '红河' },
+      { value: '5305', label: '昭通' },
+      { value: '5306', label: '文山' },
+      { value: '5307', label: '普洱' },
+      { value: '5308', label: '保山' },
+    ],
+  },
+  { key: 'bedCount', label: '床位数', type: 'tel' as const, placeholder: '请输入床位数' },
+  {
+    key: 'healthScore',
+    label: '健康评分',
+    type: 'tel' as const,
+    placeholder: '请输入 0-100 的健康评分',
+  },
+  { key: 'ownerName', label: '负责人', placeholder: '请输入负责人姓名' },
+]
+
+function emptyForm(): CustomerForm {
+  return {
+    customerName: '',
+    customerLevel: CustomerLevel.三甲,
+    orgType: OrgType.综合医院,
+    regionCode: '5301',
+    regionName: '昆明',
+    bedCount: 0,
+    ownerId: 1,
+    ownerName: '张三',
+    healthScore: 60,
+    healthLevel: HealthLevel.ATTENTION,
+  }
+}
 
 // ---- 数据 ----
 async function fetchList(): Promise<void> {
@@ -205,12 +290,74 @@ function healthColor(score: number): string {
   if (score >= 60) return 'var(--warning)'
   return 'var(--danger)'
 }
+
+// ---- 表单操作 ----
+function openCreate(): void {
+  formMode.value = 'create'
+  editingCustomerId.value = null
+  formData.value = emptyForm()
+  formVisible.value = true
+}
+
+function openEdit(record: Customer): void {
+  formMode.value = 'edit'
+  editingCustomerId.value = record.customerId
+  formData.value = {
+    customerName: record.customerName,
+    customerLevel: record.customerLevel,
+    orgType: record.orgType,
+    regionCode: record.regionCode,
+    regionName: record.regionName,
+    bedCount: record.bedCount,
+    ownerId: record.ownerId,
+    ownerName: record.ownerName,
+    healthScore: record.healthScore,
+    healthLevel: record.healthLevel,
+  }
+  formVisible.value = true
+}
+
+async function handleFormSubmit(values: Record<string, unknown>): Promise<void> {
+  formLoading.value = true
+  try {
+    const data: CustomerForm = {
+      customerName: String(values.customerName || ''),
+      customerLevel: Number(values.customerLevel) as CustomerLevel,
+      orgType: Number(values.orgType) as OrgType,
+      regionCode: String(values.regionCode || ''),
+      regionName: String(values.regionName || ''),
+      bedCount: Number(values.bedCount) || 0,
+      ownerId: Number(values.ownerId) || 1,
+      ownerName: String(values.ownerName || ''),
+      healthScore: Number(values.healthScore) || 60,
+      healthLevel: HealthLevel.ATTENTION,
+    }
+
+    if (formMode.value === 'create') {
+      await createCustomer(data)
+    } else if (editingCustomerId.value !== null) {
+      await updateCustomer(editingCustomerId.value, data)
+    }
+
+    formVisible.value = false
+    fetchList()
+  } finally {
+    formLoading.value = false
+  }
+}
+
+async function handleDelete(record: Customer): Promise<void> {
+  // eslint-disable-next-line no-alert
+  if (!window.confirm(`确定删除客户「${record.customerName}」吗？`)) return
+  await deleteCustomer(record.customerId)
+  fetchList()
+}
 </script>
 
 <template>
   <XqPageLayout title="客户 360°">
     <template #actions>
-      <XqButton type="primary">
+      <XqButton type="primary" @click="openCreate">
         <XqIcon name="plus" size="14" />
         新建客户
       </XqButton>
@@ -283,6 +430,19 @@ function healthColor(score: number): string {
             value
           }}</span>
           <span v-else class="text-[var(--placeholder)]">-</span>
+        </template>
+        <template #actions="{ record }">
+          <div class="flex items-center gap-2" @click.stop>
+            <button class="text-sm text-[var(--primary)] hover:underline" @click="openEdit(record)">
+              编辑
+            </button>
+            <button
+              class="text-sm text-[var(--danger)] hover:underline"
+              @click="handleDelete(record)"
+            >
+              删除
+            </button>
+          </div>
         </template>
       </XqDataTable>
 
@@ -368,8 +528,20 @@ function healthColor(score: number): string {
   <div v-if="isMobile" class="fixed bottom-5 right-5 z-50">
     <button
       class="w-14 h-14 rounded-full bg-[var(--primary)] text-white shadow-lg flex items-center justify-center"
+      @click="openCreate"
     >
       <XqIcon name="plus" size="24" />
     </button>
   </div>
+
+  <!-- 新建/编辑客户抽屉 -->
+  <XqFormDrawer
+    :visible="formVisible"
+    :title="formMode === 'create' ? '新建客户' : '编辑客户'"
+    :fields="formFields"
+    :initial-values="formData as unknown as Record<string, unknown>"
+    :loading="formLoading"
+    @submit="handleFormSubmit"
+    @cancel="formVisible = false"
+  />
 </template>

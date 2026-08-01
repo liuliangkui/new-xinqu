@@ -1,7 +1,18 @@
 import { http, HttpResponse } from 'msw'
 import type { ApiResponse, PageResult } from '@/types/common'
-import { generateCustomerList, generateCustomerDetail } from '@/views/customer/mock'
-import type { CustomerListResult, CustomerDetail } from '@/views/customer/types'
+import {
+  generateCustomerList,
+  generateCustomerDetail,
+  createCustomerInMock,
+  updateCustomerInMock,
+  deleteCustomerFromMock,
+} from '@/views/customer/mock'
+import type {
+  CustomerListResult,
+  CustomerDetail,
+  Customer,
+  CustomerForm,
+} from '@/views/customer/types'
 
 const ok = <T>(data: T): ApiResponse<T> => ({
   success: true,
@@ -80,6 +91,37 @@ export const handlers = [
       )
     }
     return HttpResponse.json(ok<CustomerDetail>(detail))
+  }),
+
+  http.post('/api/v1/customers', async ({ request }) => {
+    const body = (await request.json()) as Partial<CustomerForm>
+    const customer = createCustomerInMock(body)
+    return HttpResponse.json(ok<Customer>(customer), { status: 201 })
+  }),
+
+  http.put('/api/v1/customers/:id', async ({ request, params }) => {
+    const id = Number(params.id)
+    const body = (await request.json()) as Partial<CustomerForm>
+    const customer = updateCustomerInMock(id, body)
+    if (!customer) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '客户不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Customer>(customer))
+  }),
+
+  http.delete('/api/v1/customers/:id', ({ params }) => {
+    const id = Number(params.id)
+    const success = deleteCustomerFromMock(id)
+    if (!success) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '客户不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok({ success: true }))
   }),
 
   http.get('/api/v1/leads', () =>
