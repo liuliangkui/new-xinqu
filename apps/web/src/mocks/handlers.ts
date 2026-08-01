@@ -75,6 +75,8 @@ import { generateWorkbenchData } from '@/views/workbench/mock'
 import type { WorkbenchData } from '@/views/workbench/types'
 import { generatePerformanceOverview, generatePerformanceList } from '@/views/performance/mock'
 import type { PerformanceListResult, PerformanceOverview } from '@/views/performance/types'
+import { generateDashboardOverview } from '@/views/dashboard/mock'
+import type { DashboardOverview, DashboardPeriod } from '@/views/dashboard/types'
 import {
   generateCalendarEventList,
   generateCalendarMonthDots,
@@ -739,5 +741,13 @@ export const handlers = [
     const queryDate = url.searchParams.get('queryDate') || dayjs().format('YYYY-MM-DD')
     const result = generateCalendarStats(queryDate)
     return HttpResponse.json(ok<CalendarStatsResult>(result))
+  }),
+
+  http.get('/api/v1/dashboard/overview', ({ request }) => {
+    const url = new URL(request.url)
+    const period = (url.searchParams.get('period') as DashboardPeriod) ?? 'month'
+    const regionCode = url.searchParams.get('regionCode') ?? undefined
+    const result = generateDashboardOverview({ period, regionCode })
+    return HttpResponse.json(ok<DashboardOverview>(result))
   }),
 ]
