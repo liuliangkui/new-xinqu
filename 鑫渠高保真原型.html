@@ -6406,42 +6406,98 @@
           <div class="card mb-5 p-4">
             <div class="flex items-center justify-between mb-4">
               <h3 class="font-semibold text-ink">维保与保修预警</h3>
-              <button class="btn btn-outline btn-sm" onclick="showToast('查看维保日历')">维保日历</button>
+              <button class="btn btn-outline btn-sm" onclick="openMaintenanceCalendarModal()">维保日历</button>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
-              <div class="p-3 rounded-xl bg-danger-bg text-center">
-                <div class="text-xl font-bold text-danger">3</div>
-                <div class="text-xs text-sub">已超时</div>
+
+            <!-- 保修到期预警：同类指标统一一行 -->
+            <div class="mb-4">
+              <div class="flex items-center gap-2 mb-2">
+                <svg class="icon icon-sm text-danger"><use href="#icon-warning"/></svg>
+                <span class="text-sm font-medium text-ink">保修到期预警</span>
               </div>
-              <div class="p-3 rounded-xl bg-warning-bg text-center">
-                <div class="text-xl font-bold text-warning">5</div>
-                <div class="text-xs text-sub">7 天内到期</div>
-              </div>
-              <div class="p-3 rounded-xl bg-warning-bg text-center">
-                <div class="text-xl font-bold text-warning">8</div>
-                <div class="text-xs text-sub">30 天内到期</div>
-              </div>
-              <div class="p-3 rounded-xl bg-info-bg text-center">
-                <div class="text-xl font-bold text-info">12</div>
-                <div class="text-xs text-sub">60 天内到期</div>
-              </div>
-              <div class="p-3 rounded-xl bg-gray-bg text-center">
-                <div class="text-xl font-bold text-ink">18</div>
-                <div class="text-xs text-sub">90 天内到期</div>
+              <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                <div class="p-3 rounded-xl bg-danger-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByWarranty('overdue')">
+                  <div class="text-xl font-bold text-danger">3</div>
+                  <div class="text-xs text-sub">已超时</div>
+                </div>
+                <div class="p-3 rounded-xl bg-warning-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByWarranty('7')">
+                  <div class="text-xl font-bold text-warning">5</div>
+                  <div class="text-xs text-sub">7 天内到期</div>
+                </div>
+                <div class="p-3 rounded-xl bg-warning-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByWarranty('30')">
+                  <div class="text-xl font-bold text-warning">8</div>
+                  <div class="text-xs text-sub">30 天内到期</div>
+                </div>
+                <div class="p-3 rounded-xl bg-info-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByWarranty('60')">
+                  <div class="text-xl font-bold text-info">12</div>
+                  <div class="text-xs text-sub">60 天内到期</div>
+                </div>
+                <div class="p-3 rounded-xl bg-gray-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByWarranty('90')">
+                  <div class="text-xl font-bold text-ink">18</div>
+                  <div class="text-xs text-sub">90 天内到期</div>
+                </div>
               </div>
             </div>
+
+            <!-- 维保计划预警：同类指标统一一行 -->
+            <div class="mb-4">
+              <div class="flex items-center gap-2 mb-2">
+                <svg class="icon icon-sm text-primary"><use href="#icon-equipment"/></svg>
+                <span class="text-sm font-medium text-ink">维保计划预警</span>
+              </div>
+              <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                <div class="p-3 rounded-xl bg-danger-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByMaintenance('overdue')">
+                  <div class="text-xl font-bold text-danger">2</div>
+                  <div class="text-xs text-sub">已逾期</div>
+                </div>
+                <div class="p-3 rounded-xl bg-warning-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByMaintenance('7')">
+                  <div class="text-xl font-bold text-warning">4</div>
+                  <div class="text-xs text-sub">7 天内到期</div>
+                </div>
+                <div class="p-3 rounded-xl bg-warning-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByMaintenance('30')">
+                  <div class="text-xl font-bold text-warning">9</div>
+                  <div class="text-xs text-sub">30 天内到期</div>
+                </div>
+                <div class="p-3 rounded-xl bg-info-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByMaintenance('quarter')">
+                  <div class="text-xl font-bold text-info">15</div>
+                  <div class="text-xs text-sub">本季度待维保</div>
+                </div>
+                <div class="p-3 rounded-xl bg-gray-bg text-center cursor-pointer hover:shadow-hover transition-all" onclick="filterEquipmentByMaintenance('year')">
+                  <div class="text-xl font-bold text-ink">38</div>
+                  <div class="text-xs text-sub">本年度待维保</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 即将到期 / 待维保设备 -->
             <div class="p-3 rounded-lg bg-panel">
-              <div class="text-sm font-medium text-ink mb-2">即将到期设备</div>
+              <div class="text-sm font-medium text-ink mb-2">即将到期 / 待维保设备</div>
               <div class="space-y-2">
-                <div class="flex items-center justify-between text-sm"><span class="text-sub">希森美康 XN-550 · 云南省肿瘤医院</span><span class="text-danger font-medium">剩余 5 天</span></div>
-                <div class="flex items-center justify-between text-sm"><span class="text-sub">伯腾 ELx800 · 昆明博奥</span><span class="text-warning font-medium">剩余 12 天</span></div>
-                <div class="flex items-center justify-between text-sm"><span class="text-sub">滴宝 CS-1200 · 大理州人民医院</span><span class="text-warning font-medium">剩余 25 天</span></div>
+                <div class="flex items-center justify-between text-sm">
+                  <span class="text-sub">希森美康 XN-550 · 云南省肿瘤医院</span>
+                  <span class="text-danger font-medium">保修剩余 5 天</span>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                  <span class="text-sub">伯腾 ELx800 · 大理州人民医院</span>
+                  <span class="text-danger font-medium">保修剩余 12 天</span>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                  <span class="text-sub">酒井康复训练仪 · 西双版纳傣族自治州医院</span>
+                  <span class="text-danger font-medium">保修剩余 8 天</span>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                  <span class="text-sub">希森美康 CS-1300 · 昆明医科大学第一附属医院</span>
+                  <span class="text-warning font-medium">维保计划 3 天内到期</span>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                  <span class="text-sub">滴宝生化试剂盘 · 曲靖市第一人民医院</span>
+                  <span class="text-warning font-medium">维保计划 12 天内到期</span>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Tabs + search -->
-          <div class="card mb-4">
           <div class="card mb-4">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4">
               <div class="flex flex-wrap gap-2" id="equipment-tabs">
@@ -6771,6 +6827,53 @@
               <div class="intention-modal-footer">
                 <button class="btn btn-ghost" onclick="closeEquipmentCreate()">取消</button>
                 <button class="btn btn-primary" onclick="showToast('设备建档成功');closeEquipmentCreate()">保存并提交</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 维保计划预警列表弹窗 -->
+          <div id="maintenance-warning-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeMaintenanceWarningModal()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div>
+                  <h3 class="text-lg font-bold text-ink" id="maintenance-warning-title">维保计划预警</h3>
+                  <p class="text-sub text-sm mt-1">按计划周期筛选的待维保设备清单</p>
+                </div>
+                <button class="btn btn-ghost" onclick="closeMaintenanceWarningModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div class="space-y-3" id="maintenance-warning-list"></div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeMaintenanceWarningModal()">关闭</button>
+                <button class="btn btn-primary" onclick="showToast('已导出维保计划');closeMaintenanceWarningModal()">导出计划</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 维保日历弹窗 -->
+          <div id="maintenance-calendar-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeMaintenanceCalendarModal()">
+            <div class="intention-modal" onclick="event.stopPropagation()">
+              <div class="intention-modal-header">
+                <div>
+                  <h3 class="text-lg font-bold text-ink">维保日历</h3>
+                  <p class="text-sub text-sm mt-1">2026 年 8 月 · 共 6 台设备待维保</p>
+                </div>
+                <button class="btn btn-ghost" onclick="closeMaintenanceCalendarModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+              </div>
+              <div class="intention-modal-body">
+                <div id="maintenance-calendar-body"></div>
+                <div class="mt-4 p-3 rounded-lg bg-panel">
+                  <div class="text-sm font-medium text-ink mb-2">图例</div>
+                  <div class="flex items-center gap-4 text-xs text-sub">
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-danger"></span>已逾期</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-warning"></span>7 天内到期</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-info"></span>本月计划</span>
+                  </div>
+                </div>
+              </div>
+              <div class="intention-modal-footer">
+                <button class="btn btn-ghost" onclick="closeMaintenanceCalendarModal()">关闭</button>
               </div>
             </div>
           </div>
@@ -17386,13 +17489,16 @@ Content-Type: application/json
     renderScheduleDay();
     initDealroomCountdown();
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') { closeIntentionModal(); closeCustomerModal(); closeCustomerGroupModal(); closeCustomerReagentModal(); closeLeadModal(); closeLeadCreate(); closeIntentionCreate(); closeIntentionConflict(); closeIntentionArbitrate(); closeEquipmentModal(); closeEquipmentCreate(); closeReagentModal(); closeReagentCreate(); closeComplianceModal(); closeComplianceCreate(); closePerformanceModal(); closePerformanceCreate(); closeBrandModal(); closeBrandCreate(); closeChannelSubDealerForm(); closeChannelRuleForm(); closeChannelRebateForm(); closeChannelTransferForm(); closeDealroomModal(); closeDrillDownModal(); closeAiQaModal(); closeFavoritesManageDrawer(); closeSettingsUserModal(); closeSettingsRoleDrawer(); closeSettingsDictDrawer(); closeSettingsLogModal(); closeSettingsIntegrationDrawer(); closeFlowInstanceModal(); closeFlowNodeConfigModal(); }
+      if (e.key === 'Escape') { closeIntentionModal(); closeCustomerModal(); closeCustomerGroupModal(); closeCustomerReagentModal(); closeLeadModal(); closeLeadCreate(); closeIntentionCreate(); closeIntentionConflict(); closeIntentionArbitrate(); closeEquipmentModal(); closeEquipmentCreate(); closeReagentModal(); closeReagentCreate(); closeComplianceModal(); closeComplianceCreate(); closePerformanceModal(); closePerformanceCreate(); closeBrandModal(); closeBrandCreate(); closeChannelSubDealerForm(); closeChannelRuleForm(); closeChannelRebateForm(); closeChannelTransferForm(); closeDealroomModal(); closeDrillDownModal(); closeAiQaModal(); closeFavoritesManageDrawer(); closeSettingsUserModal(); closeSettingsRoleDrawer(); closeSettingsDictDrawer(); closeSettingsLogModal(); closeSettingsIntegrationDrawer(); closeFlowInstanceModal(); closeFlowNodeConfigModal(); closeMaintenanceWarningModal(); closeMaintenanceCalendarModal(); }
     });
 
     /* ===== Equipment tabs / view / filter ===== */
+    let equipmentWarrantyFilter = null;
+
     function switchEquipmentTab(btn) {
       btn.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
+      equipmentWarrantyFilter = null;
       filterEquipment();
     }
 
@@ -17457,7 +17563,18 @@ Content-Type: application/json
         const deptMatch = !dept || elDept === dept;
         const statusMatch = !statusFilter || elStatusText === statusFilter;
 
-        const show = tabMatch && keywordMatch && brandMatch && modelMatch && deptMatch && statusMatch;
+        let warrantyMatch = true;
+        if (equipmentWarrantyFilter) {
+          const days = parseInt(el.dataset.warrantyDays, 10);
+          if (equipmentWarrantyFilter === 'overdue') {
+            warrantyMatch = !isNaN(days) && days < 0;
+          } else {
+            const maxDays = parseInt(equipmentWarrantyFilter, 10);
+            warrantyMatch = !isNaN(days) && days >= 0 && days <= maxDays;
+          }
+        }
+
+        const show = tabMatch && keywordMatch && brandMatch && modelMatch && deptMatch && statusMatch && warrantyMatch;
         el.classList.toggle('hidden', !show);
         if (show) visible++;
       });
@@ -17465,6 +17582,76 @@ Content-Type: application/json
       document.getElementById('equipment-total').textContent = visible;
       const empty = document.getElementById('equipment-empty');
       if (empty) empty.classList.toggle('hidden', visible > 0);
+    }
+
+    function filterEquipmentByWarranty(type) {
+      equipmentWarrantyFilter = type;
+      // 激活全部 tab，避免与其他 tab 条件叠加导致无结果
+      document.querySelectorAll('#equipment-tabs .tab').forEach(t => t.classList.remove('active'));
+      const allTab = document.querySelector('#equipment-tabs [data-eqtab="all"]');
+      if (allTab) allTab.classList.add('active');
+      filterEquipment();
+      const gridEl = document.getElementById('equipment-grid');
+      if (gridEl && gridEl.scrollIntoView) gridEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const labelMap = { 'overdue': '已超时', '7': '7 天内到期', '30': '30 天内到期', '60': '60 天内到期', '90': '90 天内到期' };
+      showToast('已筛选：保修' + (labelMap[type] || type));
+    }
+
+    function filterEquipmentByMaintenance(type) {
+      const labelMap = { 'overdue': '已逾期', '7': '7 天内到期', '30': '30 天内到期', 'quarter': '本季度待维保', 'year': '本年度待维保' };
+      openMaintenanceWarningModal(type, labelMap[type] || type);
+    }
+
+    function openMaintenanceWarningModal(type, title) {
+      const list = document.getElementById('maintenance-warning-list');
+      if (!list) return;
+      const items = [
+        { name: '希森美康 CS-1300', customer: '昆明医科大学第一附属医院', dept: '检验科', due: '2026-08-03', type: '季度保养' },
+        { name: '滴宝生化试剂盘', customer: '曲靖市第一人民医院', dept: '检验科', due: '2026-08-12', type: '半年保养' },
+        { name: 'BioTek ELx800', customer: '大理州人民医院', dept: '检验科', due: '2026-08-15', type: '年度保养' },
+        { name: '希森美康 XN-550', customer: '云南省肿瘤医院', dept: '检验科', due: '2026-08-18', type: '季度保养' }
+      ];
+      let html = '';
+      items.forEach((it, idx) => {
+        html += '<div class="flex items-center justify-between p-3 rounded-lg bg-card border border-line">' +
+          '<div><div class="font-medium text-ink">' + it.name + '</div><div class="text-xs text-sub">' + it.customer + ' · ' + it.dept + '</div></div>' +
+          '<div class="text-right"><div class="text-sm font-medium text-warning">' + it.type + '</div><div class="text-xs text-sub">到期：' + it.due + '</div></div>' +
+        '</div>';
+      });
+      list.innerHTML = html || '<div class="text-sub text-sm text-center py-6">暂无符合条件的维保计划</div>';
+      document.getElementById('maintenance-warning-title').textContent = '维保计划预警 · ' + title;
+      document.getElementById('maintenance-warning-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMaintenanceWarningModal() {
+      document.getElementById('maintenance-warning-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openMaintenanceCalendarModal() {
+      const body = document.getElementById('maintenance-calendar-body');
+      if (body) {
+        body.innerHTML = '<div class="grid grid-cols-7 gap-1 text-center text-xs text-sub mb-2">' +
+          '<div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>' +
+          '</div><div class="grid grid-cols-7 gap-1 text-center text-sm" id="maintenance-calendar-grid"></div>';
+        const grid = document.getElementById('maintenance-calendar-grid');
+        let html = '';
+        for (let i = 1; i <= 31; i++) {
+          const hasEvent = [3, 12, 15, 18, 22, 28].includes(i);
+          html += '<div class="aspect-square flex flex-col items-center justify-center rounded-lg border border-line ' + (hasEvent ? 'bg-warning-bg text-warning' : 'bg-card text-ink') + '">' +
+            '<span>' + i + '</span>' + (hasEvent ? '<span class="w-1.5 h-1.5 rounded-full bg-warning mt-0.5"></span>' : '') +
+          '</div>';
+        }
+        grid.innerHTML = html;
+      }
+      document.getElementById('maintenance-calendar-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMaintenanceCalendarModal() {
+      document.getElementById('maintenance-calendar-overlay').classList.remove('open');
+      document.body.style.overflow = '';
     }
 
     /* ===== Equipment detail modal ===== */
