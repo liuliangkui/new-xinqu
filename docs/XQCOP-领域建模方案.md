@@ -2044,6 +2044,139 @@ sequenceDiagram
 - R57：超管可以查看全部数据，但操作日志必须记录。
 - R58：数据权限变更后，历史数据可见性不追溯变更。
 
+### 10.14 业务规则配置化设计
+
+> 本章所有带数值的业务规则（如 7 天掉公海、2 小时 SLA、20% 闲置阈值）均为**默认值**，实际实现时必须通过配置表读取，禁止硬编码。
+
+#### 10.14.1 设计原则
+
+- **可配置**：所有业务策略参数必须可在线调整，不依赖发版。
+- **可追踪**：每次配置变更记录操作人、原因、生效时间。
+- **可回滚**：保留配置历史版本，支持快速回滚。
+- **可验证**：配置变更后在测试环境验证，再同步到生产。
+- **最小影响**：变更尽量不追溯历史数据，避免大规模重算。
+
+#### 10.14.2 配置模型
+
+```prisma
+model SystemConfig {
+  id          String   @id @default(cuid())
+  module      String   // lead / ticket / equipment / dealer / qualification / customer
+  key         String   // fallback_to_public_pool_days
+  value       String   // 配置值，统一按字符串存储
+  valueType   String   // NUMBER / STRING / BOOLEAN / JSON
+  description String   // 配置项说明
+  status      String   @default("ACTIVE")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([module, key])
+}
+
+model SystemConfigHistory {
+  id         String   @id @default(cuid())
+  configId   String
+  module     String
+  key        String
+  oldValue   String
+  newValue   String
+  reason     String
+  operatorId UserId
+  createdAt  DateTime @default(now())
+}
+```
+
+#### 10.14.3 关键配置项清单
+
+| 模块 | key | 默认值 | 值类型 | 说明 |
+|---|---|---|---|---|
+| lead | `fallback_to_public_pool_days` | 7 | NUMBER | 线索超过 N 天未跟进掉入公海 |
+| lead | `duplicate_lead_phone_days` | 30 | NUMBER | 手机号 N 天内不能重复录入 |
+| intention | `stalled_warning_days` | 30 | NUMBER | 意向停滞 N 天触发预警 |
+| ticket | `urgent_sla_response_hours` | 2 | NUMBER | 高优先级工单 N 小时内响应 |
+| ticket | `auto_complete_after_days` | 3 | NUMBER | 工单完成后 N 天自动完成 |
+| ticket | `repeat_repair_warning_days` | 30 | NUMBER | 重复报修统计窗口天数 |
+| ticket | `repeat_repair_warning_count` | 3 | NUMBER | 重复报修触发阈值次数 |
+| equipment | `idle_utilization_threshold` | 20 | NUMBER | 设备利用率低于 N% 标记闲置 |
+| equipment | `warranty_expiry_warning_days` | 30 | NUMBER | 质保到期前 N 天预警 |
+| equipment | `maintenance_due_warning_days` | 7 | NUMBER | 维保到期前 N 天生成任务 |
+| dealer | `auth_expiry_warning_days` | 30 | NUMBER | 授权到期前 N 天预警 |
+| customer | `health_score_warning_threshold` | 60 | NUMBER | 健康度低于 N 分重点关注 |
+| qualification | `expiry_warning_days` | 30 | NUMBER | 资质到期前 N 天预警 |
+| rebate | `default_settlement_cycle` | quarter | STRING | 返利默认结算周期 |
+| dealroom | `min_deal_amount` | 1000000 | NUMBER | 大单金额阈值（元） |
+
+#### 10.14.4 代码使用示例
+
+```typescript
+// ConfigService 封装
+class ConfigService {
+  async getNumber(module: string, key: string, defaultValue: number): Promise<number> {
+    const config = await prisma.systemConfig.findUnique({
+      where: { module_key: { module, key } }
+    })
+    if (!config || config.status !== 'ACTIVE') return defaultValue
+    return Number(config.value)
+  }
+
+  async getString(module: string, key: string, defaultValue: string): Promise<string> {
+    const config = await prisma.systemConfig.findUnique({
+      where: { module_key: { module, key } }
+    })
+    if (!config || config.status !== 'ACTIVE') return defaultValue
+    return config.value
+  }
+}
+
+// 业务规则中使用
+class LeadDomainService {
+  async checkAndReturnToPublicPool(lead: Lead): Promise<void> {
+    const fallbackDays = await configService.getNumber(
+      'lead', 'fallback_to_public_pool_days', 7
+    )
+
+    if (lead.daysSinceLastFollow() > fallbackDays) {
+      lead.returnToPublicPool()
+    }
+  }
+}
+```
+
+#### 10.14.5 配置变更流程
+
+```
+业务方提出变更需求
+    ↓
+产品经理评估影响范围和历史数据是否需要补偿
+    ↓
+开发在测试环境修改配置并验证
+    ↓
+测试确认相关功能正常
+    ↓
+记录变更原因，更新生产环境配置
+    ↓
+观察关键指标变化（如掉公海数量、预警数量）
+    ↓
+如异常，立即回滚并分析
+```
+
+#### 10.14.6 配置变更影响矩阵
+
+| 配置项 | 是否影响历史数据 | 是否需要重算 | 风险等级 |
+|---|---|---|---|
+| 线索掉公海天数 | 否 | 否 | 低 |
+| 手机号查重天数 | 否 | 否 | 低 |
+| 意向停滞预警天数 | 否 | 是（当前进行中的意向） | 中 |
+| 工单 SLA 响应时间 | 是（进行中工单） | 是 | 高 |
+| 工单自动完成天数 | 否 | 否 | 低 |
+| 设备闲置阈值 | 否 | 是（建议夜间重算） | 中 |
+| 质保/维保到期预警天数 | 否 | 是（即将到期的记录） | 中 |
+| 客户健康度阈值 | 否 | 是（建议夜间重算） | 中 |
+| 返利结算周期 | 是（未结算周期） | 是 | 高 |
+| 大单金额阈值 | 否 | 是（重算大单标签） | 中 |
+
+> **高风险的变更**（如工单 SLA、返利结算周期）必须发版说明，并提前通知相关业务方。
+
 ---
 
 ## 11. 领域服务与应用服务
@@ -2588,7 +2721,7 @@ P2 阶段扩展：AI Agent、效益中心、数据洞察、大单作战室、定
 |---|---|---|---|
 | v1.0 | - | - | 初始版本，建立 XQCOP 完整领域模型 |
 | v1.1 | - | - | 基于原型扫描结果对齐：新增 AI Agent、资质管理、效益中心、数据洞察、大单作战室、定制项目、渠道秩序、返利与佣金 8 个限界上下文；修正线索/设备/工单枚举和字段；补充客户 360° 科室、决策链、健康度；业务规则标注 [待确认] 项 |
-| v1.2 | - | - | 确认所有 [待确认] 业务规则数值，模型定稿 |
+| v1.2 | - | - | 确认所有 [待确认] 业务规则数值；补充业务规则配置化设计（SystemConfig、配置项清单、变更流程、影响矩阵），模型定稿 |
 
 ---
 
