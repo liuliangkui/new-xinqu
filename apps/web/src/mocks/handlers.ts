@@ -37,6 +37,14 @@ import {
   allEquipments,
 } from '@/views/equipment/mock'
 import type { EquipmentListResult, Equipment, EquipmentForm } from '@/views/equipment/types'
+import {
+  generateTicketList,
+  createTicketInMock,
+  updateTicketInMock,
+  deleteTicketFromMock,
+  allTickets,
+} from '@/views/ticket/mock'
+import type { TicketListResult, Ticket, TicketForm } from '@/views/ticket/types'
 
 const ok = <T>(data: T): ApiResponse<T> => ({
   success: true,
@@ -49,7 +57,7 @@ export const handlers = [
   http.post('/api/v1/auth/login', async () =>
     HttpResponse.json(
       ok({
-        token: 'mock-jwt-token',
+        accessToken: 'mock-jwt-token',
         user: {
           id: '1',
           name: '管理员',
@@ -69,9 +77,8 @@ export const handlers = [
         id: '1',
         name: '管理员',
         username: 'admin',
-        deptId: '1',
-        deptName: '销售部',
-        roles: ['admin'],
+        departmentId: '1',
+        roleIds: ['admin'],
         permissions: ['*'],
       }),
     ),
@@ -333,6 +340,71 @@ export const handlers = [
     if (!success) {
       return HttpResponse.json(
         { success: false, code: 404, message: '设备不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok({ success: true }))
+  }),
+
+  http.get('/api/v1/tickets', ({ request }) => {
+    const url = new URL(request.url)
+    const page = Number(url.searchParams.get('page') ?? '1')
+    const size = Number(url.searchParams.get('size') ?? '20')
+    const keyword = url.searchParams.get('keyword') ?? undefined
+    const status = url.searchParams.get('status') ?? undefined
+    const priority = url.searchParams.get('priority') ?? undefined
+    const type = url.searchParams.get('type') ?? undefined
+    const tabType = url.searchParams.get('tabType') ?? undefined
+
+    const result = generateTicketList({
+      pageNum: page,
+      pageSize: size,
+      keyword,
+      status,
+      priority,
+      type,
+      tabType,
+    })
+    return HttpResponse.json(ok<TicketListResult>(result))
+  }),
+
+  http.get('/api/v1/tickets/:id', ({ params }) => {
+    const id = Number(params.id)
+    const ticket = allTickets.find((t) => t.ticketId === id) || null
+    if (!ticket) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '工单不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Ticket>(ticket))
+  }),
+
+  http.post('/api/v1/tickets', async ({ request }) => {
+    const body = (await request.json()) as Partial<TicketForm>
+    const ticket = createTicketInMock(body)
+    return HttpResponse.json(ok<Ticket>(ticket), { status: 201 })
+  }),
+
+  http.put('/api/v1/tickets/:id', async ({ request, params }) => {
+    const id = Number(params.id)
+    const body = (await request.json()) as Partial<TicketForm>
+    const ticket = updateTicketInMock(id, body)
+    if (!ticket) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '工单不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Ticket>(ticket))
+  }),
+
+  http.delete('/api/v1/tickets/:id', ({ params }) => {
+    const id = Number(params.id)
+    const success = deleteTicketFromMock(id)
+    if (!success) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '工单不存在', data: null },
         { status: 404 },
       )
     }

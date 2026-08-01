@@ -287,6 +287,43 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/tickets': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询工单列表 */
+    get: operations['TicketController_findAll']
+    put?: never
+    /** 创建工单 */
+    post: operations['TicketController_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/tickets/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询工单详情 */
+    get: operations['TicketController_findOne']
+    /** 更新工单 */
+    put: operations['TicketController_update']
+    post?: never
+    /** 删除工单（软删除） */
+    delete: operations['TicketController_remove']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -574,6 +611,73 @@ export interface components {
       status?: 'RUNNING' | 'MAINTAINING' | 'SCRAPPED'
       /** @description 负责人ID */
       ownerId?: string
+    }
+    CreateTicketDto: {
+      /** @description 工单标题 */
+      title: string
+      /**
+       * @description 工单类型
+       * @enum {string}
+       */
+      type?: 'REPAIR' | 'MAINTENANCE' | 'CONSULT' | 'COMPLAINT'
+      /**
+       * @description 优先级
+       * @enum {string}
+       */
+      priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
+      /** @description 客户ID */
+      customerId?: string
+      /** @description 联系人ID */
+      contactId?: string
+      /** @description 设备ID */
+      equipmentId?: string
+      /** @description 报单人ID */
+      reporterId: string
+      /** @description 处理人ID */
+      assigneeId?: string
+      /**
+       * @description 来源
+       * @enum {string}
+       */
+      source?: 'PHONE' | 'WECHAT' | 'APP' | 'AGENT'
+      /** @description 工单内容 */
+      content: string
+    }
+    UpdateTicketDto: {
+      /** @description 工单标题 */
+      title?: string
+      /**
+       * @description 工单类型
+       * @enum {string}
+       */
+      type?: 'REPAIR' | 'MAINTENANCE' | 'CONSULT' | 'COMPLAINT'
+      /**
+       * @description 优先级
+       * @enum {string}
+       */
+      priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
+      /**
+       * @description 状态
+       * @enum {string}
+       */
+      status?: 'PENDING' | 'PROCESSING' | 'WAITING' | 'RESOLVED' | 'CLOSED'
+      /** @description 客户ID */
+      customerId?: string
+      /** @description 联系人ID */
+      contactId?: string
+      /** @description 设备ID */
+      equipmentId?: string
+      /** @description 处理人ID */
+      assigneeId?: string
+      /**
+       * @description 来源
+       * @enum {string}
+       */
+      source?: 'PHONE' | 'WECHAT' | 'APP' | 'AGENT'
+      /** @description 工单内容 */
+      content?: string
+      /** @description 解决方案 */
+      solution?: string
     }
   }
   responses: never
@@ -1250,6 +1354,127 @@ export interface operations {
     }
   }
   EquipmentController_remove: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 删除成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  TicketController_findAll: {
+    parameters: {
+      query?: {
+        /** @description 页码 */
+        page?: number
+        /** @description 每页条数 */
+        pageSize?: number
+        /** @description 关键字（标题/内容） */
+        keyword?: string
+        /** @description 客户ID */
+        customerId?: string
+        /** @description 处理人ID */
+        assigneeId?: string
+        /** @description 状态 */
+        status?: 'PENDING' | 'PROCESSING' | 'WAITING' | 'RESOLVED' | 'CLOSED'
+        /** @description 优先级 */
+        priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
+        /** @description 类型 */
+        type?: 'REPAIR' | 'MAINTENANCE' | 'CONSULT' | 'COMPLAINT'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 返回分页工单列表 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  TicketController_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateTicketDto']
+      }
+    }
+    responses: {
+      /** @description 创建成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  TicketController_findOne: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 返回工单详情及处理记录 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  TicketController_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateTicketDto']
+      }
+    }
+    responses: {
+      /** @description 更新成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  TicketController_remove: {
     parameters: {
       query?: never
       header?: never

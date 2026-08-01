@@ -1128,6 +1128,241 @@
           "设备管理"
         ]
       }
+    },
+    "/tickets": {
+      "get": {
+        "operationId": "TicketController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "页码",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "每页条数",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "关键字（标题/内容）",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "required": false,
+            "in": "query",
+            "description": "客户ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "assigneeId",
+            "required": false,
+            "in": "query",
+            "description": "处理人ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "PROCESSING",
+                "WAITING",
+                "RESOLVED",
+                "CLOSED"
+              ]
+            }
+          },
+          {
+            "name": "priority",
+            "required": false,
+            "in": "query",
+            "description": "优先级",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "URGENT"
+              ]
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "类型",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "REPAIR",
+                "MAINTENANCE",
+                "CONSULT",
+                "COMPLAINT"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "返回分页工单列表"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询工单列表",
+        "tags": [
+          "工单管理"
+        ]
+      },
+      "post": {
+        "operationId": "TicketController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTicketDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "创建成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "创建工单",
+        "tags": [
+          "工单管理"
+        ]
+      }
+    },
+    "/tickets/{id}": {
+      "get": {
+        "operationId": "TicketController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "返回工单详情及处理记录"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询工单详情",
+        "tags": [
+          "工单管理"
+        ]
+      },
+      "put": {
+        "operationId": "TicketController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTicketDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "更新工单",
+        "tags": [
+          "工单管理"
+        ]
+      },
+      "delete": {
+        "operationId": "TicketController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "删除成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "删除工单（软删除）",
+        "tags": [
+          "工单管理"
+        ]
+      }
     }
   },
   "info": {
@@ -1748,6 +1983,148 @@
           "ownerId": {
             "type": "string",
             "description": "负责人ID"
+          }
+        }
+      },
+      "CreateTicketDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "工单标题"
+          },
+          "type": {
+            "type": "string",
+            "description": "工单类型",
+            "enum": [
+              "REPAIR",
+              "MAINTENANCE",
+              "CONSULT",
+              "COMPLAINT"
+            ]
+          },
+          "priority": {
+            "type": "string",
+            "description": "优先级",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "URGENT"
+            ]
+          },
+          "customerId": {
+            "type": "string",
+            "description": "客户ID"
+          },
+          "contactId": {
+            "type": "string",
+            "description": "联系人ID"
+          },
+          "equipmentId": {
+            "type": "string",
+            "description": "设备ID"
+          },
+          "reporterId": {
+            "type": "string",
+            "description": "报单人ID"
+          },
+          "assigneeId": {
+            "type": "string",
+            "description": "处理人ID"
+          },
+          "source": {
+            "type": "string",
+            "description": "来源",
+            "enum": [
+              "PHONE",
+              "WECHAT",
+              "APP",
+              "AGENT"
+            ]
+          },
+          "content": {
+            "type": "string",
+            "description": "工单内容"
+          }
+        },
+        "required": [
+          "title",
+          "reporterId",
+          "content"
+        ]
+      },
+      "UpdateTicketDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "工单标题"
+          },
+          "type": {
+            "type": "string",
+            "description": "工单类型",
+            "enum": [
+              "REPAIR",
+              "MAINTENANCE",
+              "CONSULT",
+              "COMPLAINT"
+            ]
+          },
+          "priority": {
+            "type": "string",
+            "description": "优先级",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "URGENT"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "enum": [
+              "PENDING",
+              "PROCESSING",
+              "WAITING",
+              "RESOLVED",
+              "CLOSED"
+            ]
+          },
+          "customerId": {
+            "type": "string",
+            "description": "客户ID"
+          },
+          "contactId": {
+            "type": "string",
+            "description": "联系人ID"
+          },
+          "equipmentId": {
+            "type": "string",
+            "description": "设备ID"
+          },
+          "assigneeId": {
+            "type": "string",
+            "description": "处理人ID"
+          },
+          "source": {
+            "type": "string",
+            "description": "来源",
+            "enum": [
+              "PHONE",
+              "WECHAT",
+              "APP",
+              "AGENT"
+            ]
+          },
+          "content": {
+            "type": "string",
+            "description": "工单内容"
+          },
+          "solution": {
+            "type": "string",
+            "description": "解决方案"
           }
         }
       }
