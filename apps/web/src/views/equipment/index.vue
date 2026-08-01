@@ -388,11 +388,11 @@ function handleTicket(): void {
     </button>
   </div>
 
-  <!-- 详情抽屉 -->
-  <XqDrawer
+  <!-- 详情弹窗 -->
+  <XqModal
     :visible="detailVisible"
     :title="detailEquipment?.equipmentName || '设备详情'"
-    :width="isMobile ? '100%' : '720px'"
+    width="720px"
     @close="detailVisible = false"
   >
     <div v-if="detailEquipment" class="flex flex-col gap-5">
@@ -452,7 +452,7 @@ function handleTicket(): void {
         <XqIcon name="ticket" size="14" />报修工单
       </button>
     </template>
-  </XqDrawer>
+  </XqModal>
 
   <!-- 新建/编辑设备抽屉 -->
   <XqFormDrawer

@@ -453,11 +453,11 @@ function handleConvert(): void {
     </button>
   </div>
 
-  <!-- 详情抽屉 -->
-  <XqDrawer
+  <!-- 详情弹窗 -->
+  <XqModal
     :visible="detailVisible"
     :title="detailLead?.customerName || '线索详情'"
-    :width="isMobile ? '100%' : '720px'"
+    width="720px"
     @close="detailVisible = false"
   >
     <div v-if="detailLead" class="flex flex-col gap-5">
@@ -524,7 +524,7 @@ function handleConvert(): void {
         <XqIcon name="opportunity" size="14" />转意向
       </button>
     </template>
-  </XqDrawer>
+  </XqModal>
 
   <!-- 新建/编辑线索抽屉 -->
   <XqFormDrawer

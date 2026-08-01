@@ -465,11 +465,11 @@ async function handleDelete(task: Task): Promise<void> {
     </button>
   </div>
 
-  <!-- 详情抽屉 -->
-  <XqDrawer
+  <!-- 详情弹窗 -->
+  <XqModal
     :visible="detailVisible"
     :title="detailTask?.title || '任务详情'"
-    :width="isMobile ? '100%' : '720px'"
+    width="720px"
     @close="detailVisible = false"
   >
     <div v-if="detailTask" class="flex flex-col gap-5">
@@ -536,7 +536,7 @@ async function handleDelete(task: Task): Promise<void> {
         <XqIcon name="check" size="14" />知道了
       </button>
     </template>
-  </XqDrawer>
+  </XqModal>
 
   <!-- 新建/编辑任务抽屉 -->
   <XqFormDrawer

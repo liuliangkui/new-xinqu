@@ -435,11 +435,11 @@ function handleReject(): void {
     </button>
   </div>
 
-  <!-- 详情抽屉 -->
-  <XqDrawer
+  <!-- 详情弹窗 -->
+  <XqModal
     :visible="detailVisible"
     :title="detailApproval?.title || '审批详情'"
-    :width="isMobile ? '100%' : '720px'"
+    width="720px"
     @close="detailVisible = false"
   >
     <div v-if="detailApproval" class="flex flex-col gap-5">
@@ -542,7 +542,7 @@ function handleReject(): void {
         <XqIcon name="check" size="14" />通过
       </button>
     </template>
-  </XqDrawer>
+  </XqModal>
 
   <!-- 新建/编辑审批抽屉 -->
   <XqFormDrawer

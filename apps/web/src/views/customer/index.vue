@@ -49,6 +49,20 @@ const filterValues = ref<Record<string, unknown>>({
 })
 const pagination = ref({ page: 1, size: 12 })
 
+// 详情弹窗
+const detailVisible = ref(false)
+const detailCustomer = ref<Customer | null>(null)
+
+function openDetail(customer: Customer): void {
+  detailCustomer.value = customer
+  detailVisible.value = true
+}
+
+function closeDetail(): void {
+  detailVisible.value = false
+  detailCustomer.value = null
+}
+
 // 表单抽屉
 const formVisible = ref(false)
 const formMode = ref<'create' | 'edit'>('create')
@@ -407,12 +421,12 @@ async function handleDelete(record: Customer): Promise<void> {
         :data-source="customers"
         :loading="loading"
         row-key="customerId"
-        @row-click="(c: Customer) => goDetail(c.customerId)"
+        @row-click="(c: Customer) => openDetail(c)"
       >
         <template #customerName="{ value, record }">
           <span
             class="text-[var(--primary)] cursor-pointer hover:underline"
-            @click.stop="goDetail(record.customerId)"
+            @click.stop="openDetail(record)"
           >
             {{ value }}
           </span>
@@ -452,7 +466,7 @@ async function handleDelete(record: Customer): Promise<void> {
         :data-source="customers"
         :columns="4"
         :loading="loading"
-        @item-click="(c: Customer) => goDetail(c.customerId)"
+        @item-click="(c: Customer) => openDetail(c)"
       >
         <template #item="{ record }">
           <div class="card card-hover cursor-pointer">
@@ -533,6 +547,89 @@ async function handleDelete(record: Customer): Promise<void> {
       <XqIcon name="plus" size="24" />
     </button>
   </div>
+
+  <!-- 客户概览弹窗 -->
+  <XqModal
+    :visible="detailVisible"
+    :title="detailCustomer?.customerName || '客户详情'"
+    width="720px"
+    @close="closeDetail"
+  >
+    <div v-if="detailCustomer" class="flex flex-col gap-5">
+      <div class="card">
+        <div class="flex items-start gap-4">
+          <div
+            class="w-16 h-16 rounded-xl bg-[var(--primary-light)] text-[var(--primary)] flex items-center justify-center text-2xl font-semibold flex-shrink-0"
+          >
+            {{ detailCustomer.customerName.charAt(0) }}
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="text-lg font-semibold text-[var(--ink)]">
+                {{ detailCustomer.customerName }}
+              </h3>
+              <XqStatusBadge
+                :status="detailCustomer.customerLevel"
+                :status-map="levelMap"
+                size="small"
+              />
+              <XqStatusBadge
+                :status="detailCustomer.healthLevel"
+                :status-map="healthMap"
+                size="small"
+              />
+            </div>
+            <div class="text-sm text-[var(--sub)] mb-2">
+              {{ orgTypeMap[detailCustomer.orgType] }} · {{ detailCustomer.regionName }} ·
+              {{ detailCustomer.bedCount }} 床
+            </div>
+            <div class="flex flex-wrap gap-x-6 gap-y-1 text-sm">
+              <span class="text-[var(--sub)]">负责人：{{ detailCustomer.ownerName }}</span>
+              <span class="text-[var(--sub)]"
+                >健康评分：<span
+                  class="font-semibold"
+                  :style="{ color: healthColor(detailCustomer.healthScore) }"
+                  >{{ detailCustomer.healthScore }}</span
+                ></span
+              >
+              <span class="text-[var(--sub)]"
+                >最近交互：{{ detailCustomer.lastContactTime || '暂无' }}</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h4 class="font-semibold text-[var(--ink)] mb-3">客户资产</h4>
+        <div class="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <div class="text-xl font-bold text-[var(--primary)]">
+              {{ detailCustomer.deptCount }}
+            </div>
+            <div class="text-xs text-[var(--sub)]">科室</div>
+          </div>
+          <div>
+            <div class="text-xl font-bold text-[var(--primary)]">
+              {{ detailCustomer.equipmentCount }}
+            </div>
+            <div class="text-xs text-[var(--sub)]">装机</div>
+          </div>
+          <div>
+            <div class="text-xl font-bold text-[var(--primary)]">
+              {{ detailCustomer.intentionCount }}
+            </div>
+            <div class="text-xs text-[var(--sub)]">意向</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <template #footer>
+      <button class="btn btn-ghost flex-1" @click="closeDetail">关闭</button>
+      <button class="btn btn-primary flex-1" @click="goDetail(detailCustomer!.customerId)">
+        <XqIcon name="customer" size="14" />查看完整档案
+      </button>
+    </template>
+  </XqModal>
 
   <!-- 新建/编辑客户抽屉 -->
   <XqFormDrawer

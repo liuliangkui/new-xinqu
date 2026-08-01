@@ -471,11 +471,11 @@ function handleResolve(): void {
     </button>
   </div>
 
-  <!-- 详情抽屉 -->
-  <XqDrawer
+  <!-- 详情弹窗 -->
+  <XqModal
     :visible="detailVisible"
     :title="detailTicket?.title || '工单详情'"
-    :width="isMobile ? '100%' : '720px'"
+    width="720px"
     @close="detailVisible = false"
   >
     <div v-if="detailTicket" class="flex flex-col gap-5">
@@ -549,7 +549,7 @@ function handleResolve(): void {
         <XqIcon name="check" size="14" />结单
       </button>
     </template>
-  </XqDrawer>
+  </XqModal>
 
   <!-- 新建/编辑工单抽屉 -->
   <XqFormDrawer

@@ -14,7 +14,13 @@ import {
   type ContactListParams,
   type TabType,
 } from './types'
-import { mockGetContactList, mockGetContactDetail, mockCreateContact, mockUpdateContact, mockDeleteContact } from './mock'
+import {
+  mockGetContactList,
+  mockGetContactDetail,
+  mockCreateContact,
+  mockUpdateContact,
+  mockDeleteContact,
+} from './mock'
 import type { ContactStats } from './types'
 
 const router = useRouter()
@@ -148,7 +154,13 @@ const formFields = [
   { key: 'contactName', label: '姓名', required: true, placeholder: '请输入联系人姓名' },
   { key: 'customerId', label: '所属客户 ID', required: true, placeholder: '请输入客户ID' },
   { key: 'jobTitle', label: '职务', required: true, placeholder: '请输入职务' },
-  { key: 'mobilePhone', label: '手机号', type: 'tel' as const, required: true, placeholder: '请输入手机号' },
+  {
+    key: 'mobilePhone',
+    label: '手机号',
+    type: 'tel' as const,
+    required: true,
+    placeholder: '请输入手机号',
+  },
   { key: 'email', label: '邮箱', type: 'email' as const },
   {
     key: 'contactRole',
@@ -213,9 +225,15 @@ async function fetchList(): Promise<void> {
       pageNum: pagination.value.page,
       pageSize: pagination.value.size,
       ...(keyword.value ? { keyword: keyword.value } : {}),
-      ...(filterValues.value.regionCode ? { regionCode: String(filterValues.value.regionCode) } : {}),
-      ...(filterValues.value.contactRole ? { contactRole: Number(filterValues.value.contactRole) } : {}),
-      ...(filterValues.value.contactType ? { contactType: Number(filterValues.value.contactType) } : {}),
+      ...(filterValues.value.regionCode
+        ? { regionCode: String(filterValues.value.regionCode) }
+        : {}),
+      ...(filterValues.value.contactRole
+        ? { contactRole: Number(filterValues.value.contactRole) }
+        : {}),
+      ...(filterValues.value.contactType
+        ? { contactType: Number(filterValues.value.contactType) }
+        : {}),
       ...(activeTab.value !== 'all' ? { tabType: activeTab.value } : {}),
     }
     const result = await mockGetContactList(params)
@@ -391,40 +409,17 @@ function maskPhone(phone: string): string {
     <!-- 统计卡片 -->
     <template #stats>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 overflow-x-auto">
-        <XqKpiCard
-          title="总联系人"
-          :value="stats.contactTotalCount"
-          color="primary"
-        />
-        <XqKpiCard
-          title="决策者"
-          :value="stats.decisionMakerCount"
-          color="primary"
-        />
-        <XqKpiCard
-          title="影响者"
-          :value="stats.influencerCount"
-          color="warning"
-        />
-        <XqKpiCard
-          title="经办人"
-          :value="stats.handlerCount"
-          color="ink"
-        />
+        <XqKpiCard title="总联系人" :value="stats.contactTotalCount" color="primary" />
+        <XqKpiCard title="决策者" :value="stats.decisionMakerCount" color="primary" />
+        <XqKpiCard title="影响者" :value="stats.influencerCount" color="warning" />
+        <XqKpiCard title="经办人" :value="stats.handlerCount" color="ink" />
       </div>
     </template>
 
     <!-- Tab + 视图切换 -->
     <template #operation>
-      <XqNavTabs
-        :tabs="tabs"
-        :active-key="activeTab"
-        @change="handleTabChange"
-      />
-      <XqViewSwitch
-        :value="viewMode"
-        @change="handleViewChange"
-      />
+      <XqNavTabs :tabs="tabs" :active-key="activeTab" @change="handleTabChange" />
+      <XqViewSwitch :value="viewMode" @change="handleViewChange" />
     </template>
 
     <!-- 搜索 + 筛选 -->
@@ -460,10 +455,7 @@ function maskPhone(phone: string): string {
         @row-click="handleRowClick"
       >
         <template #contactRole="{ value }">
-          <XqStatusBadge
-            :status="value"
-            :status-map="contactRoleMap"
-          />
+          <XqStatusBadge :status="value" :status-map="contactRoleMap" />
         </template>
         <template #actions="{ record }">
           <div class="flex items-center gap-2" @click.stop>
@@ -475,7 +467,10 @@ function maskPhone(phone: string): string {
             </button>
             <button
               class="text-sm text-[var(--sub)] hover:underline"
-              @click="handleRowClick(record); openEditFromDetail()"
+              @click="
+                handleRowClick(record)
+                openEditFromDetail()
+              "
             >
               编辑
             </button>
@@ -495,7 +490,9 @@ function maskPhone(phone: string): string {
           <div class="card card-hover cursor-pointer">
             <div class="flex items-start gap-3">
               <!-- 头像 -->
-              <div class="w-10 h-10 rounded-full bg-[var(--primary-light)] text-[var(--primary)] flex items-center justify-center font-semibold text-md flex-shrink-0">
+              <div
+                class="w-10 h-10 rounded-full bg-[var(--primary-light)] text-[var(--primary)] flex items-center justify-center font-semibold text-md flex-shrink-0"
+              >
                 {{ record.contactName.charAt(0) }}
               </div>
               <div class="min-w-0 flex-1">
@@ -515,14 +512,13 @@ function maskPhone(phone: string): string {
                 <div class="text-sm text-[var(--sub)] truncate mt-0.5">
                   {{ record.customerName }}
                 </div>
-                <div class="flex items-center justify-between mt-2 pt-2 border-t border-[var(--line-light)]">
+                <div
+                  class="flex items-center justify-between mt-2 pt-2 border-t border-[var(--line-light)]"
+                >
                   <span class="text-xs text-[var(--placeholder)]">
                     {{ record.regionName }}
                   </span>
-                  <span
-                    v-if="record.lastContactTime"
-                    class="text-xs text-[var(--placeholder)]"
-                  >
+                  <span v-if="record.lastContactTime" class="text-xs text-[var(--placeholder)]">
                     {{ record.lastContactTime }}
                   </span>
                 </div>
@@ -536,7 +532,10 @@ function maskPhone(phone: string): string {
     <!-- 分页 -->
     <template #footer>
       <div class="flex items-center justify-between text-sm text-[var(--sub)]">
-        <span>{{ pagination.page }} / {{ Math.ceil(total / pagination.size) }} 页，共 {{ total }} 条</span>
+        <span
+          >{{ pagination.page }} / {{ Math.ceil(total / pagination.size) }} 页，共
+          {{ total }} 条</span
+        >
         <div class="flex items-center gap-2">
           <button
             class="btn btn-ghost text-sm"
@@ -558,10 +557,7 @@ function maskPhone(phone: string): string {
   </XqPageLayout>
 
   <!-- 移动端底部悬浮按钮 -->
-  <div
-    v-if="isMobile"
-    class="fixed bottom-5 right-5 z-50"
-  >
+  <div v-if="isMobile" class="fixed bottom-5 right-5 z-50">
     <button
       class="w-14 h-14 rounded-full bg-[var(--primary)] text-white shadow-lg flex items-center justify-center"
       @click="openCreate"
@@ -570,18 +566,20 @@ function maskPhone(phone: string): string {
     </button>
   </div>
 
-  <!-- 联系人详情抽屉 -->
-  <XqDrawer
+  <!-- 联系人详情弹窗 -->
+  <XqModal
     :visible="detailVisible"
     :title="detailContact?.contactName || '联系人详情'"
-    :width="isMobile ? '100%' : '720px'"
+    width="720px"
     @close="detailVisible = false"
   >
     <div v-if="detailContact" class="flex flex-col gap-5">
       <!-- 基本信息卡片 -->
       <div class="card">
         <div class="flex items-start gap-4">
-          <div class="w-14 h-14 rounded-full bg-[var(--primary-light)] text-[var(--primary)] flex items-center justify-center text-xl font-semibold flex-shrink-0">
+          <div
+            class="w-14 h-14 rounded-full bg-[var(--primary-light)] text-[var(--primary)] flex items-center justify-center text-xl font-semibold flex-shrink-0"
+          >
             {{ detailContact.contactName.charAt(0) }}
           </div>
           <div class="min-w-0 flex-1">
@@ -589,10 +587,7 @@ function maskPhone(phone: string): string {
               <h3 class="text-lg font-semibold text-[var(--ink)]">
                 {{ detailContact.contactName }}
               </h3>
-              <XqStatusBadge
-                :status="detailContact.contactRole"
-                :status-map="contactRoleMap"
-              />
+              <XqStatusBadge :status="detailContact.contactRole" :status-map="contactRoleMap" />
               <XqStatusBadge
                 v-if="detailContact.attitude"
                 :status="detailContact.attitude"
@@ -606,25 +601,20 @@ function maskPhone(phone: string): string {
               <span class="text-[var(--sub)]">
                 科室：{{ detailContact.department || '未填写' }}
               </span>
-              <span class="text-[var(--sub)]">
-                医院：{{ detailContact.customerName }}
-              </span>
+              <span class="text-[var(--sub)]"> 医院：{{ detailContact.customerName }} </span>
             </div>
             <div class="flex flex-wrap gap-x-6 gap-y-1 text-sm mt-1">
               <span class="text-[var(--sub)]">
                 手机：{{ maskPhone(detailContact.mobilePhone) }}
               </span>
-              <span
-                v-if="detailContact.email"
-                class="text-[var(--sub)]"
-              >
+              <span v-if="detailContact.email" class="text-[var(--sub)]">
                 邮箱：{{ detailContact.email }}
               </span>
             </div>
             <div class="text-xs text-[var(--placeholder)] mt-2">
-              最近接触：{{ detailContact.lastContactTime || '暂无' }}
-              ·
-              负责人：{{ detailContact.ownerName }}
+              最近接触：{{ detailContact.lastContactTime || '暂无' }} · 负责人：{{
+                detailContact.ownerName
+              }}
             </div>
           </div>
         </div>
@@ -632,17 +622,13 @@ function maskPhone(phone: string): string {
 
       <!-- 最近互动 -->
       <div v-if="detailContact.recentInteractions?.length">
-        <h4 class="text-md font-semibold text-[var(--ink)] mb-3">
-          最近互动
-        </h4>
+        <h4 class="text-md font-semibold text-[var(--ink)] mb-3">最近互动</h4>
         <XqTimeline :data="detailContact.recentInteractions" />
       </div>
 
       <!-- 备注 -->
       <div v-if="detailContact.remark" class="card">
-        <div class="text-xs text-[var(--placeholder)] mb-1">
-          备注
-        </div>
+        <div class="text-xs text-[var(--placeholder)] mb-1">备注</div>
         <div class="text-sm text-[var(--ink)]">
           {{ detailContact.remark }}
         </div>
@@ -663,7 +649,7 @@ function maskPhone(phone: string): string {
         编辑
       </button>
     </template>
-  </XqDrawer>
+  </XqModal>
 
   <!-- 新建/编辑表单抽屉 -->
   <XqFormDrawer

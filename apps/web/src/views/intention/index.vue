@@ -440,11 +440,11 @@ function handleFollow(): void {
     </button>
   </div>
 
-  <!-- 详情抽屉 -->
-  <XqDrawer
+  <!-- 详情弹窗 -->
+  <XqModal
     :visible="detailVisible"
     :title="detailIntention?.customerName || '意向详情'"
-    :width="isMobile ? '100%' : '720px'"
+    width="720px"
     @close="detailVisible = false"
   >
     <div v-if="detailIntention" class="flex flex-col gap-5">
@@ -517,7 +517,7 @@ function handleFollow(): void {
         <XqIcon name="edit" size="14" />跟进
       </button>
     </template>
-  </XqDrawer>
+  </XqModal>
 
   <!-- 新建/编辑意向抽屉 -->
   <XqFormDrawer
