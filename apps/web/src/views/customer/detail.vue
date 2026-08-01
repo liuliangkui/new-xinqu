@@ -7,8 +7,18 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { NavTabItem, StatusMap } from '@/types/common'
 import type { CustomerDetail } from './types'
-import { HealthLevel, CooperationStatus, RelationLevel, ContactAttitudeEnum, RoleType, DeployMode, EquipmentStatus, ConsumptionTrend, StockStatus } from './types'
-import { mockGetCustomerDetail } from './mock'
+import {
+  HealthLevel,
+  CooperationStatus,
+  RelationLevel,
+  ContactAttitudeEnum,
+  RoleType,
+  DeployMode,
+  EquipmentStatus,
+  ConsumptionTrend,
+  StockStatus,
+} from './types'
+import { getCustomerDetail } from './api'
 
 const route = useRoute()
 const router = useRouter()
@@ -35,8 +45,8 @@ onUnmounted(() => {
 
 async function loadDetail(): Promise<void> {
   loading.value = true
-  const id = Number(route.params.id)
-  detail.value = await mockGetCustomerDetail(id)
+  const id = route.params.id as string
+  detail.value = await getCustomerDetail(id)
   loading.value = false
 }
 
@@ -139,7 +149,11 @@ function healthColor(score: number): string {
           <h1 class="text-xl font-semibold text-[var(--ink)]">
             {{ detail.customerName }}
           </h1>
-          <XqStatusBadge v-if="detail.customerLevel" :status="detail.customerLevel" :status-map="levelMap" />
+          <XqStatusBadge
+            v-if="detail.customerLevel"
+            :status="detail.customerLevel"
+            :status-map="levelMap"
+          />
           <XqStatusBadge :status="detail.healthLevel" :status-map="healthMap" />
         </div>
         <div class="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm text-[var(--sub)] ml-11">
@@ -175,7 +189,10 @@ function healthColor(score: number): string {
             <div class="card flex items-center gap-6">
               <div
                 class="w-24 h-24 rounded-full border-[6px] flex items-center justify-center text-2xl font-bold flex-shrink-0"
-                :style="{ borderColor: healthColor(detail.healthScore), color: healthColor(detail.healthScore) }"
+                :style="{
+                  borderColor: healthColor(detail.healthScore),
+                  color: healthColor(detail.healthScore),
+                }"
               >
                 {{ detail.healthScore }}
               </div>
@@ -184,7 +201,9 @@ function healthColor(score: number): string {
                   <span class="text-lg font-semibold text-[var(--ink)]">健康度评分</span>
                   <XqStatusBadge :status="detail.healthLevel" :status-map="healthMap" />
                 </div>
-                <p class="text-sm text-[var(--sub)]">基于设备活跃、试剂消耗、关系维护、商业贡献、服务体验综合计算</p>
+                <p class="text-sm text-[var(--sub)]">
+                  基于设备活跃、试剂消耗、关系维护、商业贡献、服务体验综合计算
+                </p>
               </div>
             </div>
 
@@ -195,11 +214,15 @@ function healthColor(score: number): string {
                 <div class="text-xs text-[var(--sub)] mt-1">科室数</div>
               </div>
               <div class="text-center">
-                <div class="text-2xl font-bold text-[var(--primary)]">{{ detail.equipmentCount }}</div>
+                <div class="text-2xl font-bold text-[var(--primary)]">
+                  {{ detail.equipmentCount }}
+                </div>
                 <div class="text-xs text-[var(--sub)] mt-1">装机数</div>
               </div>
               <div class="text-center">
-                <div class="text-2xl font-bold text-[var(--primary)]">{{ detail.intentionCount }}</div>
+                <div class="text-2xl font-bold text-[var(--primary)]">
+                  {{ detail.intentionCount }}
+                </div>
                 <div class="text-xs text-[var(--sub)] mt-1">在跟意向</div>
               </div>
             </div>
@@ -210,13 +233,22 @@ function healthColor(score: number): string {
             <!-- 预警 -->
             <div class="card">
               <h3 class="text-md font-semibold text-[var(--ink)] mb-3">待办 / 预警</h3>
-              <div v-if="!detail.alerts?.length" class="text-sm text-[var(--placeholder)] py-4 text-center">暂无预警</div>
+              <div
+                v-if="!detail.alerts?.length"
+                class="text-sm text-[var(--placeholder)] py-4 text-center"
+              >
+                暂无预警
+              </div>
               <div v-else class="space-y-2">
                 <div
                   v-for="(alert, idx) in detail.alerts"
                   :key="idx"
                   class="flex items-start gap-2 p-2.5 rounded-lg text-sm"
-                  :class="alert.severity === 'danger' ? 'bg-[var(--danger-bg)] text-[var(--danger)]' : 'bg-[var(--warning-bg)] text-[var(--warning)]'"
+                  :class="
+                    alert.severity === 'danger'
+                      ? 'bg-[var(--danger-bg)] text-[var(--danger)]'
+                      : 'bg-[var(--warning-bg)] text-[var(--warning)]'
+                  "
                 >
                   <XqIcon name="bell" size="14" class="mt-0.5 flex-shrink-0" />
                   <span>{{ alert.message }}</span>
@@ -227,7 +259,12 @@ function healthColor(score: number): string {
             <!-- 交叉销售机会 -->
             <div class="card">
               <h3 class="text-md font-semibold text-[var(--ink)] mb-3">交叉销售机会</h3>
-              <div v-if="!detail.crossSellOpportunities?.length" class="text-sm text-[var(--placeholder)] py-4 text-center">暂无推荐</div>
+              <div
+                v-if="!detail.crossSellOpportunities?.length"
+                class="text-sm text-[var(--placeholder)] py-4 text-center"
+              >
+                暂无推荐
+              </div>
               <div v-else class="space-y-3">
                 <div
                   v-for="(opp, idx) in detail.crossSellOpportunities"
@@ -237,7 +274,11 @@ function healthColor(score: number): string {
                   <div class="flex items-center gap-2 mb-1">
                     <span
                       class="px-1.5 py-0.5 rounded text-xs font-medium"
-                      :class="opp.matchLevel === 'high' ? 'bg-[var(--success-bg)] text-[var(--success)]' : 'bg-[var(--gray-bg)] text-[var(--sub)]'"
+                      :class="
+                        opp.matchLevel === 'high'
+                          ? 'bg-[var(--success-bg)] text-[var(--success)]'
+                          : 'bg-[var(--gray-bg)] text-[var(--sub)]'
+                      "
                     >
                       {{ opp.matchLevel === 'high' ? '高匹配' : '中匹配' }}
                     </span>
@@ -253,37 +294,46 @@ function healthColor(score: number): string {
           <div class="card">
             <h3 class="text-md font-semibold text-[var(--ink)] mb-3">最近动态</h3>
             <XqTimeline
-              :data="detail.timeline.slice(0, 5).map((t) => ({
-                time: t.time,
-                title: t.title,
-                content: t.content,
-                operator: t.operator,
-              }))"
+              :data="
+                detail.timeline.slice(0, 5).map((t) => ({
+                  time: t.time,
+                  title: t.title,
+                  content: t.content,
+                  operator: t.operator,
+                }))
+              "
             />
           </div>
         </div>
 
         <!-- 科室 -->
         <div v-if="activeTab === 'departments'" class="space-y-4">
-          <div
-            v-for="dept in detail.departments"
-            :key="dept.deptId"
-            class="card card-hover"
-          >
+          <div v-for="dept in detail.departments" :key="dept.deptId" class="card card-hover">
             <div class="flex items-start justify-between mb-3">
               <div>
                 <h4 class="text-md font-semibold text-[var(--ink)]">
                   {{ dept.deptName }}
-                  <span class="text-sm font-normal text-[var(--sub)] ml-2">负责人：{{ dept.deptHead || '未知' }}</span>
+                  <span class="text-sm font-normal text-[var(--sub)] ml-2"
+                    >负责人：{{ dept.deptHead || '未知' }}</span
+                  >
                 </h4>
-                <XqStatusBadge :status="dept.cooperationStatus" :status-map="cooperationMap" size="small" class="mt-1" />
+                <XqStatusBadge
+                  :status="dept.cooperationStatus"
+                  :status-map="cooperationMap"
+                  size="small"
+                  class="mt-1"
+                />
               </div>
-              <span class="text-sm text-[var(--sub)]">月标本量：{{ dept.monthlySampleQty.toLocaleString() }}</span>
+              <span class="text-sm text-[var(--sub)]"
+                >月标本量：{{ dept.monthlySampleQty.toLocaleString() }}</span
+              >
             </div>
             <div class="flex flex-wrap gap-x-6 gap-y-1 text-sm text-[var(--sub)]">
               <span>我方设备：{{ dept.ourEquipment || '无' }}</span>
               <span>竞品设备：{{ dept.competitorEquipment || '无' }}</span>
-              <span v-if="dept.monthlyReagentAmount > 0">试剂月均 ¥{{ (dept.monthlyReagentAmount / 10000).toFixed(1) }}万</span>
+              <span v-if="dept.monthlyReagentAmount > 0"
+                >试剂月均 ¥{{ (dept.monthlyReagentAmount / 10000).toFixed(1) }}万</span
+              >
               <span>最近拜访：{{ dept.lastVisitTime || '暂无' }}</span>
             </div>
           </div>
@@ -320,9 +370,15 @@ function healthColor(score: number): string {
                   {{ { high: '紧密', medium: '一般', low: '疏远' }[c.relationLevel] }}
                 </td>
                 <td class="py-2.5 px-3 text-[var(--sub)]">
-                  {{ { support: '支持', neutral: '中立', oppose: '反对', unknown: '未知' }[c.attitude] }}
+                  {{
+                    { support: '支持', neutral: '中立', oppose: '反对', unknown: '未知' }[
+                      c.attitude
+                    ]
+                  }}
                 </td>
-                <td class="py-2.5 px-3 text-[var(--placeholder)] text-xs">{{ c.lastContactTime || '-' }}</td>
+                <td class="py-2.5 px-3 text-[var(--placeholder)] text-xs">
+                  {{ c.lastContactTime || '-' }}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -330,17 +386,17 @@ function healthColor(score: number): string {
 
         <!-- 设备地图 -->
         <div v-if="activeTab === 'equipment'" class="space-y-4">
-          <div
-            v-for="eq in detail.equipments"
-            :key="eq.equipmentId"
-            class="card card-hover"
-          >
+          <div v-for="eq in detail.equipments" :key="eq.equipmentId" class="card card-hover">
             <div class="flex items-start justify-between mb-3">
               <div>
                 <h4 class="text-md font-semibold text-[var(--ink)]">{{ eq.equipmentName }}</h4>
                 <div class="flex items-center gap-2 mt-1">
                   <XqStatusBadge :status="eq.deployMode" :status-map="deployMap" size="small" />
-                  <XqStatusBadge :status="eq.status" :status-map="equipmentStatusMap" size="small" />
+                  <XqStatusBadge
+                    :status="eq.status"
+                    :status-map="equipmentStatusMap"
+                    size="small"
+                  />
                 </div>
               </div>
               <div class="text-right text-sm">
@@ -381,10 +437,18 @@ function healthColor(score: number): string {
                 <td class="py-2.5 px-3 font-medium text-[var(--ink)]">{{ r.reagentName }}</td>
                 <td class="py-2.5 px-3 text-[var(--sub)]">{{ r.applicableEquipment }}</td>
                 <td class="py-2.5 px-3 text-[var(--sub)]">{{ r.deptName }}</td>
-                <td class="py-2.5 px-3 font-medium text-[var(--ink)]">¥{{ (r.last3MonthAmount / 10000).toFixed(1) }}万</td>
-                <td class="py-2.5 px-3"><XqStatusBadge :status="r.consumptionTrend" :status-map="trendMap" size="small" /></td>
-                <td class="py-2.5 px-3 text-[var(--sub)]">{{ r.currentStock }} / {{ r.safetyStock }}</td>
-                <td class="py-2.5 px-3"><XqStatusBadge :status="r.stockStatus" :status-map="stockMap" size="small" /></td>
+                <td class="py-2.5 px-3 font-medium text-[var(--ink)]">
+                  ¥{{ (r.last3MonthAmount / 10000).toFixed(1) }}万
+                </td>
+                <td class="py-2.5 px-3">
+                  <XqStatusBadge :status="r.consumptionTrend" :status-map="trendMap" size="small" />
+                </td>
+                <td class="py-2.5 px-3 text-[var(--sub)]">
+                  {{ r.currentStock }} / {{ r.safetyStock }}
+                </td>
+                <td class="py-2.5 px-3">
+                  <XqStatusBadge :status="r.stockStatus" :status-map="stockMap" size="small" />
+                </td>
               </tr>
             </tbody>
           </table>
@@ -393,12 +457,14 @@ function healthColor(score: number): string {
         <!-- 时间线 -->
         <div v-if="activeTab === 'timeline'">
           <XqTimeline
-            :data="detail.timeline.map((t) => ({
-              time: t.time,
-              title: t.title,
-              content: t.content,
-              operator: t.operator,
-            }))"
+            :data="
+              detail.timeline.map((t) => ({
+                time: t.time,
+                title: t.title,
+                content: t.content,
+                operator: t.operator,
+              }))
+            "
           />
         </div>
       </div>

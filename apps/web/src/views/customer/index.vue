@@ -8,7 +8,7 @@ import { useRouter } from 'vue-router'
 import type { NavTabItem, StatusMap } from '@/types/common'
 import type { Customer, CustomerListParams, CustomerStats } from './types'
 import { CustomerLevel, HealthLevel, OrgType } from './types'
-import { mockGetCustomerList } from './mock'
+import { getCustomerList } from './api'
 
 const router = useRouter()
 
@@ -33,11 +33,20 @@ const viewMode = ref<'card' | 'list'>(isMobile.value ? 'card' : 'card')
 const customers = ref<Customer[]>([])
 const total = ref(0)
 const loading = ref(false)
-const stats = ref<CustomerStats>({ customerTotalCount: 0, healthyCount: 0, riskCount: 0, pendingVisitCount: 0 })
+const stats = ref<CustomerStats>({
+  customerTotalCount: 0,
+  healthyCount: 0,
+  riskCount: 0,
+  pendingVisitCount: 0,
+})
 const keyword = ref('')
 const searchTimer = ref<ReturnType<typeof setTimeout> | null>(null)
 const activeTab = ref<string>('all')
-const filterValues = ref<Record<string, unknown>>({ regionCode: '', customerLevel: '', healthLevel: '' })
+const filterValues = ref<Record<string, unknown>>({
+  regionCode: '',
+  customerLevel: '',
+  healthLevel: '',
+})
 const pagination = ref({ page: 1, size: 12 })
 
 // ---- 枚举 ----
@@ -59,7 +68,13 @@ const healthMap: StatusMap = {
 }
 
 const orgTypeMap: Record<number, string> = {
-  1: '综合医院', 2: '专科医院', 3: '妇幼保健院', 4: '中医院', 5: 'ICL', 6: '民营医院', 7: '其他',
+  1: '综合医院',
+  2: '专科医院',
+  3: '妇幼保健院',
+  4: '中医院',
+  5: 'ICL',
+  6: '民营医院',
+  7: '其他',
 }
 
 // ---- Tabs ----
@@ -74,7 +89,8 @@ const tabs: NavTabItem[] = [
 // ---- 筛选 ----
 const filterConfig = [
   {
-    key: 'regionCode', label: '区域',
+    key: 'regionCode',
+    label: '区域',
     options: [
       { value: '', label: '全部区域' },
       { value: '5301', label: '昆明' },
@@ -84,7 +100,8 @@ const filterConfig = [
     ],
   },
   {
-    key: 'customerLevel', label: '等级',
+    key: 'customerLevel',
+    label: '等级',
     options: [
       { value: '', label: '全部等级' },
       { value: '1', label: '三甲' },
@@ -93,7 +110,8 @@ const filterConfig = [
     ],
   },
   {
-    key: 'healthLevel', label: '健康度',
+    key: 'healthLevel',
+    label: '健康度',
     options: [
       { value: '', label: '全部' },
       { value: 'health', label: '健康' },
@@ -125,11 +143,17 @@ async function fetchList(): Promise<void> {
       pageSize: pagination.value.size,
       ...(keyword.value ? { keyword: keyword.value } : {}),
       ...(activeTab.value !== 'all' ? { tabType: activeTab.value as any } : {}),
-      ...(filterValues.value.regionCode ? { regionCode: String(filterValues.value.regionCode) } : {}),
-      ...(filterValues.value.customerLevel ? { customerLevel: Number(filterValues.value.customerLevel) } : {}),
-      ...(filterValues.value.healthLevel ? { healthLevel: String(filterValues.value.healthLevel) } : {}),
+      ...(filterValues.value.regionCode
+        ? { regionCode: String(filterValues.value.regionCode) }
+        : {}),
+      ...(filterValues.value.customerLevel
+        ? { customerLevel: Number(filterValues.value.customerLevel) }
+        : {}),
+      ...(filterValues.value.healthLevel
+        ? { healthLevel: String(filterValues.value.healthLevel) }
+        : {}),
     }
-    const result = await mockGetCustomerList(params)
+    const result = await getCustomerList(params)
     customers.value = result.list
     total.value = result.total
     stats.value = result.stats
@@ -239,7 +263,10 @@ function healthColor(score: number): string {
         @row-click="(c: Customer) => goDetail(c.customerId)"
       >
         <template #customerName="{ value, record }">
-          <span class="text-[var(--primary)] cursor-pointer hover:underline" @click.stop="goDetail(record.customerId)">
+          <span
+            class="text-[var(--primary)] cursor-pointer hover:underline"
+            @click.stop="goDetail(record.customerId)"
+          >
             {{ value }}
           </span>
         </template>
@@ -247,10 +274,14 @@ function healthColor(score: number): string {
           <XqStatusBadge :status="value" :status-map="levelMap" size="small" />
         </template>
         <template #healthScore="{ value }">
-          <span class="font-semibold" :style="{ color: healthColor(Number(value)) }">{{ value }}</span>
+          <span class="font-semibold" :style="{ color: healthColor(Number(value)) }">{{
+            value
+          }}</span>
         </template>
         <template #intentionCount="{ value }">
-          <span v-if="Number(value) > 0" class="text-[var(--primary)] font-medium">{{ value }}</span>
+          <span v-if="Number(value) > 0" class="text-[var(--primary)] font-medium">{{
+            value
+          }}</span>
           <span v-else class="text-[var(--placeholder)]">-</span>
         </template>
       </XqDataTable>
@@ -273,7 +304,9 @@ function healthColor(score: number): string {
             </div>
             <div class="flex flex-wrap gap-2 mb-3">
               <XqStatusBadge :status="record.customerLevel" :status-map="levelMap" size="small" />
-              <span class="badge badge-gray text-[0.714rem]">{{ orgTypeMap[record.orgType] || '' }}</span>
+              <span class="badge badge-gray text-[0.714rem]">{{
+                orgTypeMap[record.orgType] || ''
+              }}</span>
             </div>
             <div class="flex items-center gap-4 text-sm text-[var(--sub)] mb-3">
               <span>{{ record.regionName }}</span>
@@ -281,9 +314,19 @@ function healthColor(score: number): string {
             </div>
             <div class="flex items-center justify-between pt-3 border-t border-[var(--line-light)]">
               <div class="flex items-center gap-4 text-sm">
-                <span class="text-[var(--sub)]">科室 <span class="text-[var(--ink)] font-medium">{{ record.deptCount }}</span></span>
-                <span class="text-[var(--sub)]">装机 <span class="text-[var(--ink)] font-medium">{{ record.equipmentCount }}</span></span>
-                <span v-if="record.intentionCount" class="text-[var(--primary)] font-medium">{{ record.intentionCount }} 个意向</span>
+                <span class="text-[var(--sub)]"
+                  >科室
+                  <span class="text-[var(--ink)] font-medium">{{ record.deptCount }}</span></span
+                >
+                <span class="text-[var(--sub)]"
+                  >装机
+                  <span class="text-[var(--ink)] font-medium">{{
+                    record.equipmentCount
+                  }}</span></span
+                >
+                <span v-if="record.intentionCount" class="text-[var(--primary)] font-medium"
+                  >{{ record.intentionCount }} 个意向</span
+                >
               </div>
               <span class="text-xs text-[var(--placeholder)]">
                 {{ record.lastContactTime || '暂无交互' }}
@@ -297,12 +340,23 @@ function healthColor(score: number): string {
     <!-- 分页 -->
     <template #footer>
       <div class="flex items-center justify-between text-sm text-[var(--sub)]">
-        <span>{{ pagination.page }} / {{ Math.ceil(total / pagination.size) }} 页，共 {{ total }} 条</span>
+        <span
+          >{{ pagination.page }} / {{ Math.ceil(total / pagination.size) }} 页，共
+          {{ total }} 条</span
+        >
         <div class="flex items-center gap-2">
-          <button class="btn btn-ghost text-sm" :disabled="pagination.page <= 1" @click="pageChange(pagination.page - 1)">
+          <button
+            class="btn btn-ghost text-sm"
+            :disabled="pagination.page <= 1"
+            @click="pageChange(pagination.page - 1)"
+          >
             上一页
           </button>
-          <button class="btn btn-ghost text-sm" :disabled="!hasMore" @click="pageChange(pagination.page + 1)">
+          <button
+            class="btn btn-ghost text-sm"
+            :disabled="!hasMore"
+            @click="pageChange(pagination.page + 1)"
+          >
             下一页
           </button>
         </div>
@@ -312,7 +366,9 @@ function healthColor(score: number): string {
 
   <!-- 移动端悬浮按钮 -->
   <div v-if="isMobile" class="fixed bottom-5 right-5 z-50">
-    <button class="w-14 h-14 rounded-full bg-[var(--primary)] text-white shadow-lg flex items-center justify-center">
+    <button
+      class="w-14 h-14 rounded-full bg-[var(--primary)] text-white shadow-lg flex items-center justify-center"
+    >
       <XqIcon name="plus" size="24" />
     </button>
   </div>

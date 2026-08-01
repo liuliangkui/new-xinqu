@@ -32,6 +32,11 @@ export class UpdateCustomerDto {
   @IsString()
   region?: string
 
+  @ApiPropertyOptional({ description: '区域ID' })
+  @IsOptional()
+  @IsString()
+  regionId?: string
+
   @ApiPropertyOptional({ description: '地址信息', type: Object })
   @IsOptional()
   @IsObject()

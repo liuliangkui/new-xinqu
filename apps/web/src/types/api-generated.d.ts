@@ -169,7 +169,7 @@ export interface paths {
     /** 更新客户 */
     put: operations['CustomerController_update']
     post?: never
-    /** 删除客户 */
+    /** 删除客户（软删除） */
     delete: operations['CustomerController_remove']
     options?: never
     head?: never
@@ -279,6 +279,8 @@ export interface components {
       healthScore?: number
       /** @description 所属区域 */
       region: string
+      /** @description 区域ID */
+      regionId?: string
       /** @description 地址信息 */
       address?: Record<string, never>
       /** @description 负责人ID */
@@ -309,6 +311,8 @@ export interface components {
       healthScore?: number
       /** @description 所属区域 */
       region?: string
+      /** @description 区域ID */
+      regionId?: string
       /** @description 地址信息 */
       address?: Record<string, never>
       /** @description 负责人ID */
@@ -619,12 +623,21 @@ export interface operations {
   }
   CustomerController_findAll: {
     parameters: {
-      query: {
-        page: number
-        pageSize: number
-        keyword: string
-        status: string
-        level: string
+      query?: {
+        /** @description 页码 */
+        page?: number
+        /** @description 每页条数 */
+        pageSize?: number
+        /** @description 关键字（名称/标签） */
+        keyword?: string
+        /** @description 状态 */
+        status?: 'POTENTIAL' | 'COOPERATING' | 'LOST'
+        /** @description 客户级别 */
+        level?: 'STRATEGIC' | 'NORMAL'
+        /** @description 区域ID */
+        regionId?: string
+        /** @description 负责人ID */
+        ownerId?: string
       }
       header?: never
       path?: never
@@ -632,6 +645,7 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description 返回分页客户列表 */
       200: {
         headers: {
           [name: string]: unknown
@@ -653,7 +667,8 @@ export interface operations {
       }
     }
     responses: {
-      201: {
+      /** @description 创建成功 */
+      200: {
         headers: {
           [name: string]: unknown
         }
@@ -672,6 +687,7 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description 返回客户详情及关联数据 */
       200: {
         headers: {
           [name: string]: unknown
@@ -695,6 +711,7 @@ export interface operations {
       }
     }
     responses: {
+      /** @description 更新成功 */
       200: {
         headers: {
           [name: string]: unknown
@@ -714,6 +731,7 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description 删除成功 */
       200: {
         headers: {
           [name: string]: unknown

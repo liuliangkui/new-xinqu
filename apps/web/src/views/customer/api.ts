@@ -1,10 +1,13 @@
 /**
  * 客户 360° 模块 — API 层
+ * 对接后端 /customers REST 接口；开发环境由 MSW 拦截并返回完整视图模型数据。
  */
-import { get, post } from '@/api/request'
+import { get, post, put, del } from '@/api/request'
+import type { PageResult } from '@/types/common'
 import type {
   Customer,
   CustomerDetail,
+  CustomerForm,
   CustomerListParams,
   CustomerListResult,
 } from './types'
@@ -13,17 +16,38 @@ const BASE = '/customers'
 
 /** 获取客户列表 */
 export function getCustomerList(params: CustomerListParams): Promise<CustomerListResult> {
-  return post<CustomerListResult>(`${BASE}/list`, params)
+  return get<CustomerListResult>(BASE, {
+    page: params.pageNum,
+    size: params.pageSize,
+    keyword: params.keyword,
+    regionCode: params.regionCode,
+    customerLevel: params.customerLevel,
+    healthLevel: params.healthLevel,
+    status: params.status,
+    ownerId: params.ownerId,
+    tabType: params.tabType,
+  })
 }
 
 /** 获取客户详情 */
-export function getCustomerDetail(customerId: number): Promise<CustomerDetail> {
+export function getCustomerDetail(customerId: string | number): Promise<CustomerDetail> {
   return get<CustomerDetail>(`${BASE}/${customerId}`)
 }
 
 /** 新建客户 */
-export function createCustomer(
-  data: Partial<Customer>,
-): Promise<{ customerId: number; customerCode: string }> {
-  return post<{ customerId: number; customerCode: string }>(BASE, data)
+export function createCustomer(data: CustomerForm): Promise<Customer> {
+  return post<Customer>(BASE, data)
+}
+
+/** 更新客户 */
+export function updateCustomer(
+  customerId: string | number,
+  data: Partial<CustomerForm>,
+): Promise<Customer> {
+  return put<Customer>(`${BASE}/${customerId}`, data)
+}
+
+/** 删除客户 */
+export function deleteCustomer(customerId: string | number): Promise<unknown> {
+  return del<unknown>(`${BASE}/${customerId}`)
 }

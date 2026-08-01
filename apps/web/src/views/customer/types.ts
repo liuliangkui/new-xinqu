@@ -228,6 +228,7 @@ export interface CustomerListParams {
   regionCode?: string
   customerLevel?: number
   healthLevel?: string
+  status?: string
   ownerId?: number
   tabType?: 'all' | 'my' | 'risk' | 'pending' | 'attention'
 }
@@ -238,6 +239,23 @@ export interface CustomerStats {
   healthyCount: number
   riskCount: number
   pendingVisitCount: number
+}
+
+// ---- 表单 ----
+export interface CustomerForm {
+  customerName: string
+  customerLevel: CustomerLevel
+  orgType: OrgType
+  regionCode: string
+  regionName: string
+  bedCount?: number
+  ownerId?: number
+  ownerName?: string
+  healthScore?: number
+  healthLevel?: HealthLevel
+  status?: string
+  tags?: string[]
+  source?: string
 }
 
 // ---- 列表响应 ----
