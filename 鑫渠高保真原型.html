@@ -6127,56 +6127,87 @@
             </div>
           </div>
           <div id="db-panel-dealer" class="db-panel hidden">
-            <div class="card p-4 mb-5">
-              <div class="font-semibold text-ink mb-3">经销商销售额 TOP5</div>
-              <div class="space-y-2">
-                <div class="flex items-center justify-between p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('dealer','昆明瑞康医疗器械有限公司')"><div><div class="text-sm font-medium text-ink">昆明瑞康医疗器械有限公司</div><div class="text-xs text-sub">西南 · 云南</div></div><div class="text-right"><div class="text-sm font-bold text-ink">¥520万</div><div class="text-xs text-success">达成 104%</div></div></div>
-                <div class="flex items-center justify-between p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('dealer','南京恒达医学设备有限公司')"><div><div class="text-sm font-medium text-ink">南京恒达医学设备有限公司</div><div class="text-xs text-sub">华东 · 江苏</div></div><div class="text-right"><div class="text-sm font-bold text-ink">¥480万</div><div class="text-xs text-success">达成 96%</div></div></div>
-                <div class="flex items-center justify-between p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('dealer','广州迈瑞达生物科技')"><div><div class="text-sm font-medium text-ink">广州迈瑞达生物科技</div><div class="text-xs text-sub">华南 · 广东</div></div><div class="text-right"><div class="text-sm font-bold text-ink">¥390万</div><div class="text-xs text-warning">达成 78%</div></div></div>
-                <div class="flex items-center justify-between p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('dealer','北京中科检验仪器')"><div><div class="text-sm font-medium text-ink">北京中科检验仪器</div><div class="text-xs text-sub">华北 · 北京</div></div><div class="text-right"><div class="text-sm font-bold text-ink">¥350万</div><div class="text-xs text-success">达成 88%</div></div></div>
-                <div class="flex items-center justify-between p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('dealer','成都博奥医疗器械')"><div><div class="text-sm font-medium text-ink">成都博奥医疗器械</div><div class="text-xs text-sub">西南 · 四川</div></div><div class="text-right"><div class="text-sm font-bold text-ink">¥280万</div><div class="text-xs text-danger">达成 56%</div></div></div>
+            <!-- 第一层：渠道核心指标 -->
+            <div class="kpi-grid mb-5">
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">经销商总数</div><svg class="icon icon-md text-primary"><use href="#icon-building"/></svg></div>
+                <div class="text-2xl font-bold text-primary">63</div>
+                <div class="text-xs text-sub mt-1">A 级 12 / B 级 28 / C 级 18 / D 级 5</div>
+              </div>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">A 级核心伙伴</div><svg class="icon icon-md text-success"><use href="#icon-check"/></svg></div>
+                <div class="text-2xl font-bold text-success">12</div>
+                <div class="text-xs text-success mt-1">贡献业绩占比 62%</div>
+              </div>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">冲突待裁决</div><svg class="icon icon-md text-warning"><use href="#icon-warning"/></svg></div>
+                <div class="text-2xl font-bold text-warning">3</div>
+                <div class="text-xs text-warning mt-1">越权报备 2 条</div>
+              </div>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">返利结算准确率</div><svg class="icon icon-md text-info"><use href="#icon-info"/></svg></div>
+                <div class="text-2xl font-bold text-info">94%</div>
+                <div class="text-xs text-sub mt-1">待复核 ¥12万</div>
+              </div>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">渠道库存周转</div><svg class="icon icon-md text-primary"><use href="#icon-chart"/></svg></div>
+                <div class="text-2xl font-bold text-primary">38 天</div>
+                <div class="text-xs text-success mt-1">环比 -3 天</div>
               </div>
             </div>
 
-            <!-- 渠道体检 -->
-            <div class="card p-4 mb-5">
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="font-semibold text-ink">渠道体检</h3>
-                <button class="btn btn-outline btn-sm" onclick="showToast('生成渠道体检报告')">生成报告</button>
-              </div>
-              <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                <div class="p-3 rounded-xl bg-success-bg text-center">
-                  <div class="text-2xl font-bold text-success">86</div>
-                  <div class="text-xs text-sub">渠道健康度</div>
-                </div>
-                <div class="p-3 rounded-xl bg-warning-bg text-center">
-                  <div class="text-2xl font-bold text-warning">3</div>
-                  <div class="text-xs text-sub">冲突待裁决</div>
-                </div>
-                <div class="p-3 rounded-xl bg-danger-bg text-center">
-                  <div class="text-2xl font-bold text-danger">2</div>
-                  <div class="text-xs text-sub">越权报备</div>
-                </div>
-                <div class="p-3 rounded-xl bg-info-bg text-center">
-                  <div class="text-2xl font-bold text-info">94%</div>
-                  <div class="text-xs text-sub">返利结算准确率</div>
-                </div>
-              </div>
-              <div class="p-3 rounded-lg bg-panel">
-                <div class="text-sm font-medium text-ink mb-2">经销商评级</div>
+            <!-- 第二层：经销商 TOP5 + 渠道体检 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
+              <div class="card p-4">
+                <div class="font-semibold text-ink mb-3">经销商销售额 TOP5</div>
                 <div class="space-y-2">
-                  <div class="flex items-center justify-between text-sm"><span class="text-sub">A 级经销商（核心伙伴）</span><span class="font-medium text-success">12 家</span></div>
-                  <div class="flex items-center justify-between text-sm"><span class="text-sub">B 级经销商（稳定合作）</span><span class="font-medium text-primary">28 家</span></div>
-                  <div class="flex items-center justify-between text-sm"><span class="text-sub">C 级经销商（观察培育）</span><span class="font-medium text-warning">18 家</span></div>
-                  <div class="flex items-center justify-between text-sm"><span class="text-sub">D 级经销商（预警整改）</span><span class="font-medium text-danger">5 家</span></div>
+                  <div class="flex items-center justify-between p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('dealer','昆明瑞康医疗器械有限公司')"><div><div class="text-sm font-medium text-ink">昆明瑞康医疗器械有限公司</div><div class="text-xs text-sub">西南 · 云南</div></div><div class="text-right"><div class="text-sm font-bold text-ink">¥520万</div><div class="text-xs text-success">达成 104%</div></div></div>
+                  <div class="flex items-center justify-between p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('dealer','南京恒达医学设备有限公司')"><div><div class="text-sm font-medium text-ink">南京恒达医学设备有限公司</div><div class="text-xs text-sub">华东 · 江苏</div></div><div class="text-right"><div class="text-sm font-bold text-ink">¥480万</div><div class="text-xs text-success">达成 96%</div></div></div>
+                  <div class="flex items-center justify-between p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('dealer','广州迈瑞达生物科技')"><div><div class="text-sm font-medium text-ink">广州迈瑞达生物科技</div><div class="text-xs text-sub">华南 · 广东</div></div><div class="text-right"><div class="text-sm font-bold text-ink">¥390万</div><div class="text-xs text-warning">达成 78%</div></div></div>
+                  <div class="flex items-center justify-between p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('dealer','北京中科检验仪器')"><div><div class="text-sm font-medium text-ink">北京中科检验仪器</div><div class="text-xs text-sub">华北 · 北京</div></div><div class="text-right"><div class="text-sm font-bold text-ink">¥350万</div><div class="text-xs text-success">达成 88%</div></div></div>
+                  <div class="flex items-center justify-between p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('dealer','成都博奥医疗器械')"><div><div class="text-sm font-medium text-ink">成都博奥医疗器械</div><div class="text-xs text-sub">西南 · 四川</div></div><div class="text-right"><div class="text-sm font-bold text-ink">¥280万</div><div class="text-xs text-danger">达成 56%</div></div></div>
+                </div>
+              </div>
+
+              <div class="card p-4">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="font-semibold text-ink">渠道体检</h3>
+                  <button class="btn btn-outline btn-sm" onclick="showToast('生成渠道体检报告')">生成报告</button>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                  <div class="p-3 rounded-xl bg-success-bg text-center">
+                    <div class="text-2xl font-bold text-success">86</div>
+                    <div class="text-xs text-sub">渠道健康度</div>
+                  </div>
+                  <div class="p-3 rounded-xl bg-warning-bg text-center">
+                    <div class="text-2xl font-bold text-warning">3</div>
+                    <div class="text-xs text-sub">冲突待裁决</div>
+                  </div>
+                  <div class="p-3 rounded-xl bg-danger-bg text-center">
+                    <div class="text-2xl font-bold text-danger">2</div>
+                    <div class="text-xs text-sub">越权报备</div>
+                  </div>
+                  <div class="p-3 rounded-xl bg-info-bg text-center">
+                    <div class="text-2xl font-bold text-info">94%</div>
+                    <div class="text-xs text-sub">返利准确率</div>
+                  </div>
+                </div>
+                <div class="p-3 rounded-lg bg-panel">
+                  <div class="text-sm font-medium text-ink mb-2">经销商评级</div>
+                  <div class="space-y-2">
+                    <div class="flex items-center justify-between text-sm"><span class="text-sub">A 级经销商（核心伙伴）</span><span class="font-medium text-success">12 家</span></div>
+                    <div class="flex items-center justify-between text-sm"><span class="text-sub">B 级经销商（稳定合作）</span><span class="font-medium text-primary">28 家</span></div>
+                    <div class="flex items-center justify-between text-sm"><span class="text-sub">C 级经销商（观察培育）</span><span class="font-medium text-warning">18 家</span></div>
+                    <div class="flex items-center justify-between text-sm"><span class="text-sub">D 级经销商（预警整改）</span><span class="font-medium text-danger">5 家</span></div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <!-- 提成核算与复购返佣分析 -->
+            <!-- 第三层：返利与佣金分析 -->
             <div class="card p-4 mb-5">
               <div class="flex items-center justify-between mb-4">
-                <h3 class="font-semibold text-ink">提成核算与复购返佣分析</h3>
+                <h3 class="font-semibold text-ink">经销商返利与佣金分析</h3>
                 <div class="flex items-center gap-2">
                   <span class="text-xs text-sub">核算周期</span>
                   <select class="input text-xs py-1"><option>2026 Q3</option><option>2026 Q2</option></select>
@@ -6209,6 +6240,32 @@
                     <tr><td class="py-2">李丽</td><td class="text-right py-2">¥480万</td><td class="text-right py-2">¥420万</td><td class="text-right py-2">¥7.1万</td><td class="text-right py-2">¥1.8万</td><td class="text-right py-2 font-medium">¥8.9万</td></tr>
                   </tbody>
                 </table>
+              </div>
+            </div>
+
+            <!-- AI 分析结论 -->
+            <div class="card p-4 mb-5">
+              <div class="flex items-center gap-2 mb-4">
+                <svg class="icon icon-md text-primary"><use href="#icon-ai"/></svg>
+                <h3 class="font-semibold text-ink">AI 分析结论</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="p-4 rounded-lg bg-success-bg">
+                  <div class="text-sm font-medium text-success mb-1">头部经销商贡献稳定</div>
+                  <div class="text-xs text-sub">TOP5 经销商贡献销售额 ¥2,020万，占总经销渠道 38%，其中 3 家达成率超 90%。</div>
+                </div>
+                <div class="p-4 rounded-lg bg-danger-bg">
+                  <div class="text-sm font-medium text-danger mb-1">渠道冲突风险上升</div>
+                  <div class="text-xs text-sub">当前 3 条冲突待裁决、2 条越权报备，若不及时处理可能影响经销商积极性。</div>
+                </div>
+                <div class="p-4 rounded-lg bg-warning-bg">
+                  <div class="text-sm font-medium text-warning mb-1">返利复核有误差</div>
+                  <div class="text-xs text-sub">返利结算准确率 94%，待复核 ¥12万，建议核对阶梯返利规则与出库数据。</div>
+                </div>
+              </div>
+              <div class="p-3 rounded-lg bg-panel">
+                <div class="text-sm font-medium text-ink mb-2">经营建议</div>
+                <div class="text-sm text-sub">1. 48 小时内完成 3 条冲突裁决并公示结果；2. 针对 D 级经销商制定整改或汰换计划；3. 优化返利计算引擎，减少人工复核误差。</div>
               </div>
             </div>
           </div>
