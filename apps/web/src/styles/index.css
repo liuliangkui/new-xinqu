@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* ============================================
    鑫渠全局设计系统 - CSS Variables
@@ -10,39 +10,44 @@
   --font-family-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
 
   /* 品牌色 */
-  --primary: #3370FF;
-  --primary-hover: #2E63E8;
-  --primary-light: #E9EFFF;
-  --primary-dark: #1E4ECC;
+  --primary: #3370ff;
+  --primary-hover: #2e63e8;
+  --primary-light: #e9efff;
+  --primary-dark: #1e4ecc;
 
   /* 功能色 */
-  --success: #34C724;
-  --success-bg: #E9F7E8;
-  --success-hover: #2DB21A;
+  --success: #34c724;
+  --success-bg: #e9f7e8;
+  --success-hover: #2db21a;
 
-  --warning: #FF8800;
-  --warning-bg: #FFF3E5;
-  --warning-hover: #E67A00;
+  --warning: #ff8800;
+  --warning-bg: #fff3e5;
+  --warning-hover: #e67a00;
 
-  --danger: #F54A45;
-  --danger-bg: #FDECEA;
-  --danger-hover: #DC3F3A;
+  --danger: #f54a45;
+  --danger-bg: #fdecea;
+  --danger-hover: #dc3f3a;
 
-  --info: #3370FF;
-  --info-bg: #E9EFFF;
+  --info: #3370ff;
+  --info-bg: #e9efff;
 
   /* 中性色 */
-  --bg: #F5F6F7;
-  --card: #FFFFFF;
-  --panel: #FAFBFC;
-  --ink: #1A1D21;
-  --sub: #6B7280;
-  --placeholder: #9CA3AF;
-  --line: #E5E7EB;
-  --line-light: #F3F4F6;
-  --gray-bg: #EEEFF2;
-  --disabled: #C4C4C4;
-  --disabled-bg: #F3F4F6;
+  --bg: #f5f6f7;
+  --card: #ffffff;
+  --panel: #fafbfc;
+  --ink: #1a1d21;
+  --sub: #6b7280;
+  --placeholder: #9ca3af;
+  --line: #e5e7eb;
+  --line-light: #f3f4f6;
+  --gray-bg: #eeeff2;
+  --disabled: #c4c4c4;
+  --disabled-bg: #f3f4f6;
+
+  /* 布局尺寸 */
+  --sidebar-width: 220px;
+  --sidebar-collapsed-width: 64px;
+  --topbar-height: 56px;
 
   /* 阴影 */
   --shadow-card: 0 1px 2px rgba(31, 35, 41, 0.04), 0 4px 16px rgba(31, 35, 41, 0.06);
@@ -54,26 +59,26 @@
 /* 深色主题：系统偏好 */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1A1D21;
-    --card: #23272F;
-    --panel: #2A2E37;
-    --ink: #F5F6F7;
-    --sub: #9CA3AF;
-    --placeholder: #6B7280;
+    --bg: #1a1d21;
+    --card: #23272f;
+    --panel: #2a2e37;
+    --ink: #f5f6f7;
+    --sub: #9ca3af;
+    --placeholder: #6b7280;
     --line: #374151;
-    --line-light: #2A2E37;
-    --gray-bg: #2A2E37;
-    --disabled: #4B5563;
-    --disabled-bg: #2A2E37;
+    --line-light: #2a2e37;
+    --gray-bg: #2a2e37;
+    --disabled: #4b5563;
+    --disabled-bg: #2a2e37;
 
-    --primary: #4C88FF;
-    --primary-hover: #5A94FF;
-    --primary-light: #1E3A66;
+    --primary: #4c88ff;
+    --primary-hover: #5a94ff;
+    --primary-light: #1e3a66;
 
-    --success-bg: #1A3D17;
-    --warning-bg: #4D2E00;
-    --danger-bg: #4D1A18;
-    --info-bg: #1E3A66;
+    --success-bg: #1a3d17;
+    --warning-bg: #4d2e00;
+    --danger-bg: #4d1a18;
+    --info-bg: #1e3a66;
 
     --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.3);
     --shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
@@ -81,27 +86,27 @@
 }
 
 /* 深色主题：手动切换 */
-html[data-theme="dark"] {
-  --bg: #1A1D21;
-  --card: #23272F;
-  --panel: #2A2E37;
-  --ink: #F5F6F7;
-  --sub: #9CA3AF;
-  --placeholder: #6B7280;
+html[data-theme='dark'] {
+  --bg: #1a1d21;
+  --card: #23272f;
+  --panel: #2a2e37;
+  --ink: #f5f6f7;
+  --sub: #9ca3af;
+  --placeholder: #6b7280;
   --line: #374151;
-  --line-light: #2A2E37;
-  --gray-bg: #2A2E37;
-  --disabled: #4B5563;
-  --disabled-bg: #2A2E37;
+  --line-light: #2a2e37;
+  --gray-bg: #2a2e37;
+  --disabled: #4b5563;
+  --disabled-bg: #2a2e37;
 
-  --primary: #4C88FF;
-  --primary-hover: #5A94FF;
-  --primary-light: #1E3A66;
+  --primary: #4c88ff;
+  --primary-hover: #5a94ff;
+  --primary-light: #1e3a66;
 
-  --success-bg: #1A3D17;
-  --warning-bg: #4D2E00;
-  --danger-bg: #4D1A18;
-  --info-bg: #1E3A66;
+  --success-bg: #1a3d17;
+  --warning-bg: #4d2e00;
+  --danger-bg: #4d1a18;
+  --info-bg: #1e3a66;
 
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.3);
   --shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
@@ -254,10 +259,10 @@ body {
 
 .badge-purple {
   background: rgba(147, 112, 219, 0.12);
-  color: #9370DB;
+  color: #9370db;
 }
 
-html[data-theme="dark"] .badge-purple {
+html[data-theme='dark'] .badge-purple {
   background: rgba(147, 112, 219, 0.2);
 }
 
@@ -305,12 +310,24 @@ html[data-theme="dark"] .badge-purple {
   vertical-align: middle;
 }
 
-.icon-xs { font-size: 12px; }
-.icon-sm { font-size: 14px; }
-.icon-md { font-size: 16px; }
-.icon-lg { font-size: 20px; }
-.icon-xl { font-size: 24px; }
-.icon-2xl { font-size: 32px; }
+.icon-xs {
+  font-size: 12px;
+}
+.icon-sm {
+  font-size: 14px;
+}
+.icon-md {
+  font-size: 16px;
+}
+.icon-lg {
+  font-size: 20px;
+}
+.icon-xl {
+  font-size: 24px;
+}
+.icon-2xl {
+  font-size: 32px;
+}
 
 /* 滚动条 */
 ::-webkit-scrollbar {

@@ -114,7 +114,7 @@ function handleLogout(): void {
 
     <!-- 侧边栏 -->
     <aside
-      class="fixed lg:relative z-50 h-full flex flex-col bg-[var(--sidebar-bg)] border-r border-[var(--line)] transition-all duration-300 ease-in-out shadow-[var(--shadow-card)]"
+      class="fixed md:relative z-50 h-full flex flex-col bg-[var(--sidebar-bg)] border-r border-[var(--line)] transition-all duration-300 ease-in-out shadow-[var(--shadow-card)]"
       :class="{
         'w-[var(--sidebar-width)]': !collapsed && !isMobile,
         'w-[var(--sidebar-collapsed-width)]': collapsed && !isMobile,
