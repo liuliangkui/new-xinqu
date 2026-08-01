@@ -206,7 +206,7 @@ export interface paths {
     /** 更新线索 */
     put: operations['LeadController_update']
     post?: never
-    /** 删除线索 */
+    /** 删除线索（软删除） */
     delete: operations['LeadController_remove']
     options?: never
     head?: never
@@ -742,12 +742,21 @@ export interface operations {
   }
   LeadController_findAll: {
     parameters: {
-      query: {
-        page: number
-        pageSize: number
-        keyword: string
-        status: string
-        poolType: string
+      query?: {
+        /** @description 页码 */
+        page?: number
+        /** @description 每页条数 */
+        pageSize?: number
+        /** @description 关键字（名称/联系人/电话/公司） */
+        keyword?: string
+        /** @description 状态 */
+        status?: 'PENDING' | 'FOLLOWING' | 'CONVERTED' | 'INVALID'
+        /** @description 线索池类型 */
+        poolType?: 'MINE' | 'PUBLIC' | 'TEAM'
+        /** @description 负责人ID */
+        ownerId?: string
+        /** @description 所属区域 */
+        region?: string
       }
       header?: never
       path?: never
@@ -755,6 +764,7 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description 返回分页线索列表 */
       200: {
         headers: {
           [name: string]: unknown
@@ -776,7 +786,8 @@ export interface operations {
       }
     }
     responses: {
-      201: {
+      /** @description 创建成功 */
+      200: {
         headers: {
           [name: string]: unknown
         }
@@ -795,6 +806,7 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description 返回线索详情及跟进记录 */
       200: {
         headers: {
           [name: string]: unknown
@@ -818,6 +830,7 @@ export interface operations {
       }
     }
     responses: {
+      /** @description 更新成功 */
       200: {
         headers: {
           [name: string]: unknown
@@ -837,6 +850,7 @@ export interface operations {
     }
     requestBody?: never
     responses: {
+      /** @description 删除成功 */
       200: {
         headers: {
           [name: string]: unknown

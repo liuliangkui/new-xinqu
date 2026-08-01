@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import type { ApiResponse, PageResult } from '@/types/common'
+import type { ApiResponse } from '@/types/common'
 import {
   generateCustomerList,
   generateCustomerDetail,
@@ -13,6 +13,14 @@ import type {
   Customer,
   CustomerForm,
 } from '@/views/customer/types'
+import {
+  generateLeadList,
+  createLeadInMock,
+  updateLeadInMock,
+  deleteLeadFromMock,
+  allLeads,
+} from '@/views/lead/mock'
+import type { LeadListResult, Lead, LeadForm } from '@/views/lead/types'
 
 const ok = <T>(data: T): ApiResponse<T> => ({
   success: true,
@@ -124,25 +132,68 @@ export const handlers = [
     return HttpResponse.json(ok({ success: true }))
   }),
 
-  http.get('/api/v1/leads', () =>
-    HttpResponse.json(
-      ok<PageResult<Record<string, unknown>>>({
-        list: [
-          {
-            id: 'l1',
-            name: '某三甲设备采购',
-            source: '展会',
-            status: 'FOLLOWING',
-            poolType: 'PUBLIC',
-            region: '华北',
-            createdAt: new Date().toISOString(),
-          },
-        ],
-        total: 1,
-        page: 1,
-        size: 20,
-        pages: 1,
-      }),
-    ),
-  ),
+  http.get('/api/v1/leads', ({ request }) => {
+    const url = new URL(request.url)
+    const page = Number(url.searchParams.get('page') ?? '1')
+    const size = Number(url.searchParams.get('size') ?? '20')
+    const keyword = url.searchParams.get('keyword') ?? undefined
+    const sourceType = url.searchParams.get('sourceType')
+      ? Number(url.searchParams.get('sourceType'))
+      : undefined
+    const status = url.searchParams.get('status') ?? undefined
+    const tabType = url.searchParams.get('tabType') ?? undefined
+
+    const result = generateLeadList({
+      pageNum: page,
+      pageSize: size,
+      keyword,
+      sourceType,
+      status,
+      tabType,
+    })
+    return HttpResponse.json(ok<LeadListResult>(result))
+  }),
+
+  http.get('/api/v1/leads/:id', ({ params }) => {
+    const id = Number(params.id)
+    const lead = allLeads.find((l) => l.leadId === id) || null
+    if (!lead) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '线索不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Lead>(lead))
+  }),
+
+  http.post('/api/v1/leads', async ({ request }) => {
+    const body = (await request.json()) as Partial<LeadForm>
+    const lead = createLeadInMock(body)
+    return HttpResponse.json(ok<Lead>(lead), { status: 201 })
+  }),
+
+  http.put('/api/v1/leads/:id', async ({ request, params }) => {
+    const id = Number(params.id)
+    const body = (await request.json()) as Partial<LeadForm>
+    const lead = updateLeadInMock(id, body)
+    if (!lead) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '线索不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Lead>(lead))
+  }),
+
+  http.delete('/api/v1/leads/:id', ({ params }) => {
+    const id = Number(params.id)
+    const success = deleteLeadFromMock(id)
+    if (!success) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '线索不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok({ success: true }))
+  }),
 ]

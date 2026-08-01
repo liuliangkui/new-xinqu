@@ -68,6 +68,21 @@ export interface LeadListParams {
   tabType?: 'all' | 'my' | 'pool' | 'team'
 }
 
+export interface LeadForm {
+  customerName: string
+  department?: string
+  productLine: string
+  leadSummary: string
+  sourceType: LeadSource
+  status?: LeadStatus
+  amount?: number
+  decisionDate?: string
+  assigneeId?: number
+  assigneeName?: string
+  followDeadline?: string
+  remark?: string
+}
+
 export interface LeadListResult {
   list: Lead[]
   total: number

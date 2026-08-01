@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsEnum } from 'class-validator'
+import { IsString, IsNotEmpty, IsOptional, IsEnum, IsNumber } from 'class-validator'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
 export class CreateLeadDto {
@@ -59,6 +59,7 @@ export class CreateLeadDto {
 
   @ApiPropertyOptional({ description: '预计金额' })
   @IsOptional()
+  @IsNumber()
   estimatedAmount?: number
 
   @ApiPropertyOptional({ description: '意向等级', enum: ['HIGH', 'MEDIUM', 'LOW'] })

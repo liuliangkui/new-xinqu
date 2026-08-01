@@ -485,40 +485,76 @@
         "parameters": [
           {
             "name": "page",
-            "required": true,
+            "required": false,
             "in": "query",
+            "description": "页码",
             "schema": {
+              "default": 1,
               "type": "number"
             }
           },
           {
             "name": "pageSize",
-            "required": true,
+            "required": false,
             "in": "query",
+            "description": "每页条数",
             "schema": {
+              "default": 20,
               "type": "number"
             }
           },
           {
             "name": "keyword",
-            "required": true,
+            "required": false,
             "in": "query",
+            "description": "关键字（名称/联系人/电话/公司）",
             "schema": {
               "type": "string"
             }
           },
           {
             "name": "status",
-            "required": true,
+            "required": false,
             "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "FOLLOWING",
+                "CONVERTED",
+                "INVALID"
+              ]
+            }
+          },
+          {
+            "name": "poolType",
+            "required": false,
+            "in": "query",
+            "description": "线索池类型",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "MINE",
+                "PUBLIC",
+                "TEAM"
+              ]
+            }
+          },
+          {
+            "name": "ownerId",
+            "required": false,
+            "in": "query",
+            "description": "负责人ID",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "poolType",
-            "required": true,
+            "name": "region",
+            "required": false,
             "in": "query",
+            "description": "所属区域",
             "schema": {
               "type": "string"
             }
@@ -526,7 +562,7 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "返回分页线索列表"
           }
         },
         "security": [
@@ -553,8 +589,8 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "创建成功"
           }
         },
         "security": [
@@ -583,7 +619,7 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "返回线索详情及跟进记录"
           }
         },
         "security": [
@@ -620,7 +656,7 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "更新成功"
           }
         },
         "security": [
@@ -647,7 +683,7 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "删除成功"
           }
         },
         "security": [
@@ -655,7 +691,7 @@
             "bearer": []
           }
         ],
-        "summary": "删除线索",
+        "summary": "删除线索（软删除）",
         "tags": [
           "线索管理"
         ]

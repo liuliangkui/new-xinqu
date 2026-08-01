@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEnum } from 'class-validator'
+import { IsString, IsOptional, IsEnum, IsNumber } from 'class-validator'
 import { ApiPropertyOptional } from '@nestjs/swagger'
 
 export class UpdateLeadDto {
@@ -59,6 +59,7 @@ export class UpdateLeadDto {
 
   @ApiPropertyOptional({ description: '预计金额' })
   @IsOptional()
+  @IsNumber()
   estimatedAmount?: number
 
   @ApiPropertyOptional({ description: '意向等级', enum: ['HIGH', 'MEDIUM', 'LOW'] })
