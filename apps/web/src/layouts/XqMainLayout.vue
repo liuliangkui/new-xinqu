@@ -4,6 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useAppStore } from '@/stores/app'
 import { useThemeStore } from '@/stores/theme'
 import { useAuthStore } from '@/stores/auth'
+import { RouterView } from 'vue-router'
 import XqSidebar from '@/components/xq/XqSidebar/index.vue'
 import type { MenuItem } from '@/components/xq/XqSidebar/index.vue'
 
@@ -122,9 +123,13 @@ function handleLogout(): void {
       }"
     >
       <!-- Logo 区 -->
-      <div class="flex items-center h-[var(--topbar-height)] px-4 border-b border-[var(--line)] flex-shrink-0">
+      <div
+        class="flex items-center h-[var(--topbar-height)] px-4 border-b border-[var(--line)] flex-shrink-0"
+      >
         <div class="flex items-center gap-2.5">
-          <span class="w-7 h-7 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+          <span
+            class="w-7 h-7 rounded-lg bg-[var(--primary)] flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+          >
             鑫
           </span>
           <span
@@ -145,11 +150,7 @@ function handleLogout(): void {
       </div>
 
       <!-- 导航菜单 -->
-      <XqSidebar
-        :menus="menus"
-        :collapsed="collapsed && !isMobile"
-        @nav-click="handleNavClick"
-      />
+      <XqSidebar :menus="menus" :collapsed="collapsed && !isMobile" @nav-click="handleNavClick" />
 
       <!-- 底部操作区 -->
       <div class="p-3 border-t border-[var(--line)] flex-shrink-0">
@@ -173,20 +174,15 @@ function handleLogout(): void {
         v-if="isMobile"
         class="flex items-center gap-3 h-[var(--topbar-height)] px-4 bg-[var(--topbar-bg)] border-b border-[var(--line)] flex-shrink-0"
       >
-        <button
-          class="p-1.5 rounded-md text-[var(--sub)]"
-          @click="appStore.openMobileSidebar"
-        >
+        <button class="p-1.5 rounded-md text-[var(--sub)]" @click="appStore.openMobileSidebar">
           <XqIcon name="list" size="20" />
         </button>
-        <span class="font-semibold text-[15px] text-[var(--ink)] truncate">
-          鑫渠 CRM
-        </span>
+        <span class="font-semibold text-[15px] text-[var(--ink)] truncate"> 鑫渠 CRM </span>
       </header>
 
       <!-- 页面内容 -->
       <main class="flex-1 overflow-auto">
-        <slot />
+        <RouterView />
       </main>
     </div>
   </div>
