@@ -51,8 +51,8 @@ import {
   updateTaskInMock,
   deleteTaskFromMock,
   allTasks,
-} from '@/views/task/mock'
-import type { TaskListResult, Task, TaskForm } from '@/views/task/types'
+} from '@/views/tasks/mock'
+import type { TaskListResult, Task, TaskForm } from '@/views/tasks/types'
 
 const ok = <T>(data: T): ApiResponse<T> => ({
   success: true,
