@@ -916,6 +916,218 @@
           "意向管理"
         ]
       }
+    },
+    "/equipment": {
+      "get": {
+        "operationId": "EquipmentController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "页码",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "每页条数",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "关键字（设备名称/编码/序列号）",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "required": false,
+            "in": "query",
+            "description": "客户ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": false,
+            "in": "query",
+            "description": "产品ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ownerId",
+            "required": false,
+            "in": "query",
+            "description": "负责人ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "RUNNING",
+                "MAINTAINING",
+                "SCRAPPED"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "返回分页设备列表"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询设备列表",
+        "tags": [
+          "设备管理"
+        ]
+      },
+      "post": {
+        "operationId": "EquipmentController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEquipmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "创建成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "创建设备",
+        "tags": [
+          "设备管理"
+        ]
+      }
+    },
+    "/equipment/{id}": {
+      "get": {
+        "operationId": "EquipmentController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "返回设备详情"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询设备详情",
+        "tags": [
+          "设备管理"
+        ]
+      },
+      "put": {
+        "operationId": "EquipmentController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEquipmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "更新设备",
+        "tags": [
+          "设备管理"
+        ]
+      },
+      "delete": {
+        "operationId": "EquipmentController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "删除成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "删除设备（软删除）",
+        "tags": [
+          "设备管理"
+        ]
+      }
     }
   },
   "info": {
@@ -1440,6 +1652,102 @@
           "lostReason": {
             "type": "string",
             "description": "输单原因"
+          }
+        }
+      },
+      "CreateEquipmentDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "设备编码"
+          },
+          "name": {
+            "type": "string",
+            "description": "设备名称"
+          },
+          "productId": {
+            "type": "string",
+            "description": "产品ID"
+          },
+          "customerId": {
+            "type": "string",
+            "description": "客户ID"
+          },
+          "serialNo": {
+            "type": "string",
+            "description": "序列号"
+          },
+          "installDate": {
+            "type": "string",
+            "description": "装机日期"
+          },
+          "warrantyExpire": {
+            "type": "string",
+            "description": "保修到期日"
+          },
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "enum": [
+              "RUNNING",
+              "MAINTAINING",
+              "SCRAPPED"
+            ]
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "负责人ID"
+          }
+        },
+        "required": [
+          "code",
+          "name"
+        ]
+      },
+      "UpdateEquipmentDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "设备编码"
+          },
+          "name": {
+            "type": "string",
+            "description": "设备名称"
+          },
+          "productId": {
+            "type": "string",
+            "description": "产品ID"
+          },
+          "customerId": {
+            "type": "string",
+            "description": "客户ID"
+          },
+          "serialNo": {
+            "type": "string",
+            "description": "序列号"
+          },
+          "installDate": {
+            "type": "string",
+            "description": "装机日期"
+          },
+          "warrantyExpire": {
+            "type": "string",
+            "description": "保修到期日"
+          },
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "enum": [
+              "RUNNING",
+              "MAINTAINING",
+              "SCRAPPED"
+            ]
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "负责人ID"
           }
         }
       }

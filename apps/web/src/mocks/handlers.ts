@@ -29,6 +29,14 @@ import {
   allIntentions,
 } from '@/views/intention/mock'
 import type { IntentionListResult, Intention, IntentionForm } from '@/views/intention/types'
+import {
+  generateEquipmentList,
+  createEquipmentInMock,
+  updateEquipmentInMock,
+  deleteEquipmentFromMock,
+  allEquipments,
+} from '@/views/equipment/mock'
+import type { EquipmentListResult, Equipment, EquipmentForm } from '@/views/equipment/types'
 
 const ok = <T>(data: T): ApiResponse<T> => ({
   success: true,
@@ -264,6 +272,67 @@ export const handlers = [
     if (!success) {
       return HttpResponse.json(
         { success: false, code: 404, message: '意向不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok({ success: true }))
+  }),
+
+  http.get('/api/v1/equipment', ({ request }) => {
+    const url = new URL(request.url)
+    const page = Number(url.searchParams.get('page') ?? '1')
+    const size = Number(url.searchParams.get('size') ?? '20')
+    const keyword = url.searchParams.get('keyword') ?? undefined
+    const status = url.searchParams.get('status') ?? undefined
+    const tabType = url.searchParams.get('tabType') ?? undefined
+
+    const result = generateEquipmentList({
+      pageNum: page,
+      pageSize: size,
+      keyword,
+      status,
+      tabType,
+    })
+    return HttpResponse.json(ok<EquipmentListResult>(result))
+  }),
+
+  http.get('/api/v1/equipment/:id', ({ params }) => {
+    const id = Number(params.id)
+    const equipment = allEquipments.find((e) => e.equipmentId === id) || null
+    if (!equipment) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '设备不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Equipment>(equipment))
+  }),
+
+  http.post('/api/v1/equipment', async ({ request }) => {
+    const body = (await request.json()) as Partial<EquipmentForm>
+    const equipment = createEquipmentInMock(body)
+    return HttpResponse.json(ok<Equipment>(equipment), { status: 201 })
+  }),
+
+  http.put('/api/v1/equipment/:id', async ({ request, params }) => {
+    const id = Number(params.id)
+    const body = (await request.json()) as Partial<EquipmentForm>
+    const equipment = updateEquipmentInMock(id, body)
+    if (!equipment) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '设备不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Equipment>(equipment))
+  }),
+
+  http.delete('/api/v1/equipment/:id', ({ params }) => {
+    const id = Number(params.id)
+    const success = deleteEquipmentFromMock(id)
+    if (!success) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '设备不存在', data: null },
         { status: 404 },
       )
     }

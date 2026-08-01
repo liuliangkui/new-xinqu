@@ -19,6 +19,7 @@ import { UserModule } from './modules/user/user.module'
 import { CustomerModule } from './modules/customer/customer.module'
 import { LeadModule } from './modules/lead/lead.module'
 import { IntentionModule } from './modules/intention/intention.module'
+import { EquipmentModule } from './modules/equipment/equipment.module'
 import { SystemConfigModule } from './modules/system-config/system-config.module'
 import { HealthModule } from './modules/health/health.module'
 import { UploadModule } from './upload/upload.module'
@@ -57,6 +58,7 @@ import { SchedulerModule } from './scheduler/scheduler.module'
     CustomerModule,
     LeadModule,
     IntentionModule,
+    EquipmentModule,
   ],
   controllers: [AppController],
   providers: [
