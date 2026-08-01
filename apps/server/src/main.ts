@@ -1,12 +1,15 @@
 import { NestFactory } from '@nestjs/core'
-import { ValidationPipe, VersioningType } from '@nestjs/common'
+import { ValidationPipe, VersioningType, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import helmet from 'helmet'
+import * as express from 'express'
+import { join } from 'path'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+  const logger = new Logger('Bootstrap')
   const configService = app.get(ConfigService)
 
   // 全局前缀
@@ -49,11 +52,14 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig)
   SwaggerModule.setup('api/docs', app, document)
 
+  // 静态文件服务（上传文件）
+  app.use('/uploads', express.static(join(process.cwd(), 'uploads')))
+
   const port = configService.get('PORT', 3000)
   await app.listen(port)
 
-  console.log(`Application is running on: http://localhost:${port}/api`)
-  console.log(`Swagger docs: http://localhost:${port}/api/docs`)
+  logger.log(`Application is running on: http://localhost:${port}/api`)
+  logger.log(`Swagger docs: http://localhost:${port}/api/docs`)
 }
 
 bootstrap()

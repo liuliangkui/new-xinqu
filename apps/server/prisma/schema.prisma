@@ -14,31 +14,35 @@ datasource db {
 // 系统配置
 // ======================
 model SystemConfig {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   module      String
   key         String
   value       String
-  valueType   String   @default("STRING") // NUMBER / STRING / BOOLEAN / JSON
+  valueType   String    @default("STRING") // NUMBER / STRING / BOOLEAN / JSON
   description String?
-  status      String   @default("ACTIVE")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  status      String    @default("ACTIVE")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 
   @@unique([module, key])
+  @@index([deletedAt])
   @@map("system_configs")
 }
 
 model SystemConfigHistory {
-  id        String   @id @default(cuid())
-  configId  String
-  module    String
-  key       String
-  oldValue  String
-  newValue  String
-  reason    String
+  id         String    @id @default(cuid())
+  configId   String
+  module     String
+  key        String
+  oldValue   String
+  newValue   String
+  reason     String
   operatorId String
-  createdAt DateTime @default(now())
+  createdAt  DateTime  @default(now())
+  deletedAt  DateTime?
 
+  @@index([deletedAt])
   @@map("system_config_histories")
 }
 
@@ -58,7 +62,9 @@ model User {
   lastLoginAt   DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
 
+  @@index([deletedAt])
   @@map("users")
 }
 
@@ -72,20 +78,24 @@ model Department {
   status    String    @default("ACTIVE")
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
+  @@index([deletedAt])
   @@map("departments")
 }
 
 model Role {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   name        String
-  code        String   @unique
-  permissions Json?    // [{ resource, action }]
-  dataScope   String   @default("SELF") // SELF / DEPT / DEPT_AND_CHILD / REGION / ALL
-  status      String   @default("ACTIVE")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  code        String    @unique
+  permissions Json? // [{ resource, action }]
+  dataScope   String    @default("SELF") // SELF / DEPT / DEPT_AND_CHILD / REGION / ALL
+  status      String    @default("ACTIVE")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 
+  @@index([deletedAt])
   @@map("roles")
 }
 
@@ -93,20 +103,21 @@ model Role {
 // 客户管理
 // ======================
 model Customer {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String
-  type          String   // 综合医院 / 肿瘤专科 / 妇幼医院等
-  hospitalLevel String?  // 三级甲等 / 三级乙等 / 二级医院等
-  level         String   @default("NORMAL") // STRATEGIC / NORMAL
+  type          String // 综合医院 / 肿瘤专科 / 妇幼医院等
+  hospitalLevel String? // 三级甲等 / 三级乙等 / 二级医院等
+  level         String    @default("NORMAL") // STRATEGIC / NORMAL
   healthScore   Int?
   region        String
   address       Json?
   ownerId       String
-  status        String   @default("POTENTIAL") // POTENTIAL / COOPERATING / LOST
+  status        String    @default("POTENTIAL") // POTENTIAL / COOPERATING / LOST
   tags          String[]
   source        String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
 
   contacts      Contact[]
   departments   CustomerDepartment[]
@@ -119,44 +130,49 @@ model Customer {
   @@index([status])
   @@index([type])
   @@index([level])
+  @@index([deletedAt])
   @@map("customers")
 }
 
 model Contact {
-  id           String  @id @default(cuid())
+  id           String    @id @default(cuid())
   customerId   String
   name         String
   phone        String
   email        String?
   position     String?
   departmentId String?
-  decisionRole String   @default("USER") // DECISION_MAKER / INFLUENCER / USER / GATEKEEPER
-  isPrimary    Boolean @default(false)
-  status       String  @default("ACTIVE")
-  createdAt    DateTime @default(now())
+  decisionRole String    @default("USER") // DECISION_MAKER / INFLUENCER / USER / GATEKEEPER
+  isPrimary    Boolean   @default(false)
+  status       String    @default("ACTIVE")
+  createdAt    DateTime  @default(now())
+  deletedAt    DateTime?
 
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 
   @@index([customerId])
+  @@index([deletedAt])
   @@map("contacts")
 }
 
 model CustomerDepartment {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   customerId String
   name       String
   bedCount   Int?
   remark     String?
-  createdAt  DateTime @default(now())
+  createdAt  DateTime  @default(now())
+  deletedAt  DateTime?
 
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 
   @@index([customerId])
+  @@index([deletedAt])
   @@map("customer_departments")
 }
 
 model VisitRecord {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   customerId  String
   visitorId   String
   visitType   String
@@ -164,12 +180,14 @@ model VisitRecord {
   content     String
   location    String?
   attachments Json?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
+  deletedAt   DateTime?
 
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 
   @@index([customerId])
   @@index([visitTime])
+  @@index([deletedAt])
   @@map("visit_records")
 }
 
@@ -179,7 +197,7 @@ model VisitRecord {
 model Lead {
   id                  String    @id @default(cuid())
   name                String
-  source              String    // 官网注册 / 展会 / 转介绍 / 400电话 / 代理商推荐 / 学术活动
+  source              String // 官网注册 / 展会 / 转介绍 / 400电话 / 代理商推荐 / 学术活动
   sourceDetail        String?
   status              String    @default("PENDING") // PENDING / FOLLOWING / CONVERTED / INVALID
   poolType            String    @default("PUBLIC") // MINE / PUBLIC / TEAM
@@ -190,12 +208,13 @@ model Lead {
   companyName         String?
   demand              String?
   estimatedAmount     Decimal?
-  intentionLevel      String?   // HIGH / MEDIUM / LOW
+  intentionLevel      String? // HIGH / MEDIUM / LOW
   followCount         Int       @default(0)
   lastFollowAt        DateTime?
   convertedCustomerId String?
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime?
 
   customer      Customer? @relation(fields: [convertedCustomerId], references: [id])
   followRecords LeadFollowRecord[]
@@ -204,6 +223,7 @@ model Lead {
   @@index([status])
   @@index([poolType])
   @@index([source])
+  @@index([deletedAt])
   @@map("leads")
 }
 
@@ -211,14 +231,16 @@ model LeadFollowRecord {
   id           String    @id @default(cuid())
   leadId       String
   followerId   String
-  followType   String    // PHONE / WECHAT / EMAIL / VISIT / MEETING
+  followType   String // PHONE / WECHAT / EMAIL / VISIT / MEETING
   content      String
   nextFollowAt DateTime?
   createdAt    DateTime  @default(now())
+  deletedAt    DateTime?
 
   lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
 
   @@index([leadId])
+  @@index([deletedAt])
   @@map("lead_follow_records")
 }
 
@@ -237,6 +259,7 @@ model Intention {
   status      String    @default("ACTIVE") // ACTIVE / WON / LOST / STALLED
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 
   customer     Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
   stageRecords IntentionStageRecord[]
@@ -244,21 +267,24 @@ model Intention {
   @@index([customerId])
   @@index([ownerId])
   @@index([status])
+  @@index([deletedAt])
   @@map("intentions")
 }
 
 model IntentionStageRecord {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   intentionId String
   fromStage   String
   toStage     String
   probability Int
   operatorId  String
   remark      String?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
+  deletedAt   DateTime?
 
   intention Intention @relation(fields: [intentionId], references: [id], onDelete: Cascade)
 
   @@index([intentionId])
+  @@index([deletedAt])
   @@map("intention_stage_records")
 }
