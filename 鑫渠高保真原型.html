@@ -16879,9 +16879,9 @@ Content-Type: application/json
       document.getElementById('modal-equipment-sn2').textContent = d.sn || '';
       document.getElementById('modal-equipment-brand').textContent = d.brand || '';
       document.getElementById('modal-equipment-model').textContent = d.model || '';
-      document.getElementById('modal-equipment-customer').textContent = [d.customer, d.dept].filter(function(v){ return v && v !== '-'; }).join(' · ') || '-';
-      document.getElementById('modal-equipment-customer-dept').textContent = [d.customer, d.dept].filter(function(v){ return v && v !== '-'; }).join(' · ') || '-';
-      document.getElementById('modal-equipment-brand-model').textContent = [d.brand, d.model].filter(function(v){ return v && v !== '-'; }).join(' ') || '-';
+      document.getElementById('modal-equipment-customer').textContent = [d.customer, d.dept].filter(function(v){ return v && v !== '-'; }).join(' · ') || '未填写';
+      document.getElementById('modal-equipment-customer-dept').textContent = [d.customer, d.dept].filter(function(v){ return v && v !== '-'; }).join(' · ') || '未填写';
+      document.getElementById('modal-equipment-brand-model').textContent = [d.brand, d.model].filter(function(v){ return v && v !== '-'; }).join(' ') || '未填写';
       document.getElementById('modal-equipment-install').textContent = d.install || '-';
       document.getElementById('modal-equipment-warranty').textContent = d.warranty ? (d.warranty + '（剩余 ' + d.warrantyDays + ' 天）') : '-';
       document.getElementById('modal-equipment-mode').textContent = d.businessMode || '-';
@@ -16992,8 +16992,8 @@ Content-Type: application/json
       document.getElementById('modal-reagent-spec').textContent = d.spec || '-';
       document.getElementById('modal-reagent-brand2').textContent = d.brand || '';
       document.getElementById('modal-reagent-device').textContent = d.device || '';
-      document.getElementById('modal-reagent-customer').textContent = [d.customer, d.dept].filter(function(v){ return v && v !== '-'; }).join(' · ') || '-';
-      document.getElementById('modal-reagent-customer-dept').textContent = [d.customer, d.dept].filter(function(v){ return v && v !== '-'; }).join(' · ') || '-';
+      document.getElementById('modal-reagent-customer').textContent = [d.customer, d.dept].filter(function(v){ return v && v !== '-'; }).join(' · ') || '未填写';
+      document.getElementById('modal-reagent-customer-dept').textContent = [d.customer, d.dept].filter(function(v){ return v && v !== '-'; }).join(' · ') || '未填写';
       document.getElementById('modal-reagent-owner').textContent = d.owner || '-';
       const uplift = parseFloat(d.uplift || 0);
       document.getElementById('modal-reagent-contract').textContent = uplift > 0 ? Math.round((100 / uplift) * 1000).toLocaleString() : '-';
@@ -17092,8 +17092,8 @@ Content-Type: application/json
       document.getElementById('modal-compliance-subtitle').textContent = d.title ? d.title.split(' ')[0] : '';
       document.getElementById('modal-compliance-status').innerHTML = '<span class="badge ' + (d.statusClass || 'badge-gray') + '">' + (d.statusText || '') + '</span>';
       document.getElementById('modal-compliance-title').textContent = d.title || '';
-      document.getElementById('modal-compliance-customer').textContent = [d.customer, d.dept].filter(function(v){ return v && v !== '-'; }).join(' · ') || '-';
-      document.getElementById('modal-compliance-customer2').textContent = [d.customer, d.dept].filter(function(v){ return v && v !== '-'; }).join(' · ') || '-';
+      document.getElementById('modal-compliance-customer').textContent = [d.customer, d.dept].filter(function(v){ return v && v !== '-'; }).join(' · ') || '未填写';
+      document.getElementById('modal-compliance-customer2').textContent = [d.customer, d.dept].filter(function(v){ return v && v !== '-'; }).join(' · ') || '未填写';
       document.getElementById('modal-compliance-owner').textContent = d.owner || '-';
       document.getElementById('modal-compliance-time').textContent = d.time || '-';
       document.getElementById('modal-compliance-status2').textContent = d.statusText || '-';
