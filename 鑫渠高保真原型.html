@@ -20960,26 +20960,84 @@ Content-Type: application/json
 
     function renderDealerKpis() {
       const all = dealerData;
-      const core = all.filter(d => d.level === '核心').length;
-      const validAuth = all.filter(d => getDealerStatusText(d).includes('有效')).length;
-      const warnings = all.filter(d => d.warning && d.warning.trim() !== '').length;
-      const conflicts = 3; // keep consistent with channel-order panel
-      document.getElementById('dealer-kpi-total').textContent = all.length;
-      document.getElementById('dealer-kpi-core').textContent = core;
-      document.getElementById('dealer-kpi-auth').textContent = validAuth;
-      document.getElementById('dealer-kpi-new').textContent = 1;
-      document.getElementById('dealer-kpi-conflict').textContent = conflicts;
-      document.getElementById('dealer-kpi-warning').textContent = warnings;
+      const grid = document.getElementById('dealer-kpi-grid');
+      if (!grid) return;
+
+      const today = new Date();
+      const card = (label, value, sub, colorClass) =>
+        '<div class="card card-hover"><div class="text-sub text-xs mb-1">' + label + '</div><div class="text-2xl font-bold ' + (colorClass || 'text-ink') + '">' + value + '</div><div class="text-xs ' + (sub && sub.color ? sub.color : 'text-sub') + ' mt-1">' + (sub && sub.text ? sub.text : '') + '</div></div>';
+
+      if (dealerTab === 'core') {
+        const coreList = all.filter(d => d.level === '核心');
+        const totalTarget = coreList.reduce((s, d) => s + (d.annualTarget || 0), 0);
+        const totalAchieved = coreList.reduce((s, d) => s + (d.annualAchieved || 0), 0);
+        const rate = totalTarget ? Math.round(totalAchieved / totalTarget * 100) : 0;
+        const pendingRebate = coreList.reduce((s, d) => s + (d.rebateList || []).filter(r => r.status !== '已结算').length, 0);
+        grid.innerHTML =
+          card('核心代理商数', coreList.length, { text: '占全部 ' + Math.round(coreList.length / all.length * 100) + '%', color: 'text-sub' }, 'text-ink') +
+          card('年度任务合计', '¥' + totalTarget + '万', { text: '核心代理商年度目标', color: 'text-sub' }, 'text-primary') +
+          card('年度达成率', rate + '%', { text: '已达成 ¥' + totalAchieved + '万', color: rate >= 70 ? 'text-success' : 'text-warning' }, rate >= 70 ? 'text-success' : 'text-warning') +
+          card('返利待结算', pendingRebate + ' 笔', { text: '含审批中 / 待结算', color: 'text-warning' }, 'text-warning');
+      } else if (dealerTab === 'auth') {
+        const expiring30 = all.filter(d => { const days = getDaysToEnd(d.authEnd); return days !== null && days > 0 && days <= 30; }).length;
+        const expired = all.filter(d => { const days = getDaysToEnd(d.authEnd); return days !== null && days <= 0; }).length;
+        const expiring90 = all.filter(d => { const days = getDaysToEnd(d.authEnd); return days !== null && days > 30 && days <= 90; }).length;
+        grid.innerHTML =
+          card('30 天内到期', expiring30, { text: '需尽快续签', color: 'text-danger' }, 'text-danger') +
+          card('已过期', expired, { text: '已暂停合作', color: 'text-danger' }, 'text-danger') +
+          card('90 天内到期', expiring90, { text: '提前准备续签', color: 'text-warning' }, 'text-warning') +
+          card('本月续签', 1, { text: '续签率目标 100%', color: 'text-success' }, 'text-success');
+      } else if (dealerTab === 'warning') {
+        let shortage = 0, low = 0, overstock = 0, nearExpiry = 0;
+        all.forEach(d => {
+          (d.inventoryList || []).forEach(item => {
+            if (item.status === '缺货') shortage++;
+            else if (item.status === '偏低') low++;
+            else if (item.status === '积压') overstock++;
+            else if (item.status === '近效期') nearExpiry++;
+          });
+        });
+        grid.innerHTML =
+          card('缺货预警', shortage, { text: '当前库存 < 安全库存 50%', color: 'text-danger' }, 'text-danger') +
+          card('偏低预警', low, { text: '当前库存低于安全库存', color: 'text-warning' }, 'text-warning') +
+          card('积压预警', overstock, { text: '当前库存 > 安全库存 2 倍', color: 'text-warning' }, 'text-warning') +
+          card('近效期预警', nearExpiry, { text: '效期 ≤ 90 天', color: 'text-sub' }, 'text-sub');
+      } else {
+        const core = all.filter(d => d.level === '核心').length;
+        const validAuth = all.filter(d => getDealerStatusText(d).includes('有效')).length;
+        const warnings = all.filter(d => d.warning && d.warning.trim() !== '').length;
+        const conflicts = 3;
+        grid.innerHTML =
+          card('合作代理商', all.length, { text: '其中核心 ' + core + ' 家', color: 'text-sub' }, 'text-ink') +
+          card('有效授权', validAuth, { text: '本月新增 1', color: 'text-sub' }, 'text-success') +
+          card('区域保护冲突', conflicts, { text: '待处理', color: 'text-danger' }, 'text-danger') +
+          card('库存预警', warnings, { text: '需关注', color: 'text-warning' }, 'text-warning');
+      }
     }
 
     function renderDealerList() {
+      const container = document.getElementById('dealer-content-area');
+      if (!container) return;
+
+      if (dealerTab === 'core') {
+        renderDealerCorePanel(container);
+        return;
+      }
+      if (dealerTab === 'auth') {
+        renderDealerAuthPanel(container);
+        return;
+      }
+      if (dealerTab === 'warning') {
+        renderDealerWarningPanel(container);
+        return;
+      }
+
       const filtered = getFilteredDealers();
       const total = filtered.length;
       const pageSize = dealerPageSize[dealerViewMode] || 8;
       renderDealerPagination(total);
       const start = (dealerPage - 1) * pageSize;
       const pageData = filtered.slice(start, start + pageSize);
-      const container = document.getElementById('dealer-content-area');
 
       if (total === 0) {
         container.innerHTML = '<div class="card p-8 text-center"><div class="text-sub text-sm mb-3">暂无符合条件的代理商</div><button class="btn btn-primary" onclick="openDealerCreateDrawer()">新建代理商</button></div>';
@@ -21035,6 +21093,148 @@ Content-Type: application/json
         html += '</tbody></table></div>';
         container.innerHTML = html;
       }
+    }
+
+    function renderDealerCorePanel(container) {
+      const filtered = dealerData.filter(d => d.level === '核心');
+      const total = filtered.length;
+      const pageSize = 6;
+      renderDealerPagination(total);
+      const start = (dealerPage - 1) * pageSize;
+      const pageData = filtered.slice(start, start + pageSize);
+
+      if (total === 0) {
+        container.innerHTML = '<div class="card p-8 text-center"><div class="text-sub text-sm mb-3">暂无核心代理商</div></div>';
+        return;
+      }
+
+      let html = '<div class="card mb-4"><div class="overflow-x-auto"><table class="data-table min-w-[900px]"><thead><tr><th>代理商名称</th><th>等级</th><th>授权区域</th><th>年度任务</th><th>年度达成</th><th>达成率</th><th>负责人</th><th>操作</th></tr></thead><tbody>';
+      pageData.forEach(d => {
+        const rate = d.annualTarget ? Math.round((d.annualAchieved || 0) / d.annualTarget * 100) : 0;
+        const rateClass = rate >= 70 ? 'text-success' : (rate >= 50 ? 'text-warning' : 'text-danger');
+        html += '<tr class="cursor-pointer hover:bg-line-light" onclick="openDealerDetail(\'' + d.id + '\')">' +
+          '<td class="font-medium text-ink">' + escapeHtml(d.name) + '</td>' +
+          '<td><span class="badge badge-success">核心</span></td>' +
+          '<td>' + escapeHtml(d.region) + '</td>' +
+          '<td>¥ ' + (d.annualTarget || 0) + '万</td>' +
+          '<td>¥ ' + (d.annualAchieved || 0) + '万</td>' +
+          '<td><span class="font-semibold ' + rateClass + '">' + rate + '%</span><div class="w-24 h-1.5 bg-line rounded-full mt-1"><div class="h-1.5 rounded-full bg-current" style="width:' + Math.min(rate, 100) + '%"></div></div></td>' +
+          '<td>' + escapeHtml(d.manager) + '<div class="text-xs text-sub">' + escapeHtml(d.phone) + '</div></td>' +
+          '<td>' +
+            '<div class="flex gap-1">' +
+              '<button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openDealerDetail(\'' + d.id + '\')">查看</button>' +
+              '<button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast(\'已下发任务：\' + escapeHtml(' + JSON.stringify(d.name) + '))">下发任务</button>' +
+            '</div>' +
+          '</td>' +
+        '</tr>';
+      });
+      html += '</tbody></table></div></div>';
+
+      const totalTarget = filtered.reduce((s, d) => s + (d.annualTarget || 0), 0);
+      const totalAchieved = filtered.reduce((s, d) => s + (d.annualAchieved || 0), 0);
+      const avgRate = totalTarget ? Math.round(totalAchieved / totalTarget * 100) : 0;
+      html += '<div class="card p-4"><div class="text-sm font-medium text-ink mb-2">AI 分析结论</div><div class="text-sm text-sub">核心代理商共 ' + total + ' 家，年度任务合计 ¥' + totalTarget + '万，已达成 ¥' + totalAchieved + '万，整体达成率 ' + avgRate + '%。达成率超过 70% 的核心代理商 ' + filtered.filter(d => d.annualTarget && d.annualAchieved / d.annualTarget >= 0.7).length + ' 家，建议对低于 50% 的代理商加大协同拜访与任务下发力度，确保年度目标按期完成。</div></div>';
+      container.innerHTML = html;
+    }
+
+    function renderDealerAuthPanel(container) {
+      const today = new Date();
+      const filtered = dealerData.filter(d => d.authEnd && getDaysToEnd(d.authEnd) !== null && getDaysToEnd(d.authEnd) <= 90).sort((a, b) => getDaysToEnd(a.authEnd) - getDaysToEnd(b.authEnd));
+      const total = filtered.length;
+      const pageSize = 6;
+      renderDealerPagination(total);
+      const start = (dealerPage - 1) * pageSize;
+      const pageData = filtered.slice(start, start + pageSize);
+
+      if (total === 0) {
+        container.innerHTML = '<div class="card p-8 text-center"><div class="text-sub text-sm mb-3">暂无即将到期的授权</div></div>';
+        return;
+      }
+
+      let html = '<div class="card mb-4"><div class="overflow-x-auto"><table class="data-table min-w-[800px]"><thead><tr><th>代理商名称</th><th>授权到期日</th><th>剩余天数</th><th>到期状态</th><th>负责人</th><th>操作</th></tr></thead><tbody>';
+      pageData.forEach(d => {
+        const days = getDaysToEnd(d.authEnd);
+        let statusText = '授权有效';
+        let statusClass = 'badge-success';
+        if (days <= 0) { statusText = '已过期'; statusClass = 'badge-danger'; }
+        else if (days <= 30) { statusText = '30 天内到期'; statusClass = 'badge-danger'; }
+        else { statusText = '90 天内到期'; statusClass = 'badge-warning'; }
+        html += '<tr class="cursor-pointer hover:bg-line-light" onclick="openDealerDetail(\'' + d.id + '\')">' +
+          '<td class="font-medium text-ink">' + escapeHtml(d.name) + '</td>' +
+          '<td>' + escapeHtml(d.authEnd) + '</td>' +
+          '<td><span class="font-semibold ' + (days <= 30 ? 'text-danger' : 'text-warning') + '">' + (days <= 0 ? '已过期' : days + ' 天') + '</span></td>' +
+          '<td><span class="badge ' + statusClass + '">' + statusText + '</span></td>' +
+          '<td>' + escapeHtml(d.manager) + '<div class="text-xs text-sub">' + escapeHtml(d.phone) + '</div></td>' +
+          '<td>' +
+            '<div class="flex gap-1">' +
+              '<button class="btn btn-primary text-xs" onclick="event.stopPropagation();openDealerAuthDrawerFor(\'' + d.id + '\')">立即续签</button>' +
+              '<button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openDealerDetail(\'' + d.id + '\')">查看授权</button>' +
+            '</div>' +
+          '</td>' +
+        '</tr>';
+      });
+      html += '</tbody></table></div></div>';
+
+      const expired = filtered.filter(d => getDaysToEnd(d.authEnd) <= 0).length;
+      const expiring30 = filtered.filter(d => { const days = getDaysToEnd(d.authEnd); return days > 0 && days <= 30; }).length;
+      html += '<div class="card p-4"><div class="text-sm font-medium text-ink mb-2">AI 分析结论</div><div class="text-sm text-sub">未来 90 天内共有 ' + total + ' 家代理商授权到期，其中已过期 ' + expired + ' 家、30 天内到期 ' + expiring30 + ' 家。建议优先处理已过期代理商的续签或清退，避免无授权开展业务；对 30 天内到期的代理商提前 2 周启动续签流程，并同步更新授权产品线与区域。</div></div>';
+      container.innerHTML = html;
+    }
+
+    function renderDealerWarningPanel(container) {
+      const warnings = [];
+      dealerData.forEach(d => {
+        (d.inventoryList || []).forEach(item => {
+          if (item.status === '充足' || item.status === '正常') return;
+          const gap = item.qty - item.safety;
+          warnings.push({
+            dealer: d,
+            product: item.product,
+            qty: item.qty,
+            unit: item.unit,
+            safety: item.safety,
+            gap: gap,
+            status: item.status
+          });
+        });
+      });
+      const total = warnings.length;
+      const pageSize = 6;
+      renderDealerPagination(total);
+      const start = (dealerPage - 1) * pageSize;
+      const pageData = warnings.slice(start, start + pageSize);
+
+      if (total === 0) {
+        container.innerHTML = '<div class="card p-8 text-center"><div class="text-sub text-sm mb-3">暂无库存预警</div></div>';
+        return;
+      }
+
+      let html = '<div class="card mb-4"><div class="overflow-x-auto"><table class="data-table min-w-[900px]"><thead><tr><th>代理商</th><th>产品</th><th>当前库存</th><th>安全库存</th><th>缺口 /  surplus</th><th>预警类型</th><th>操作</th></tr></thead><tbody>';
+      pageData.forEach(w => {
+        const statusClass = getInventoryStatusClass(w.status);
+        const gapText = w.gap >= 0 ? '+' + w.gap + ' ' + w.unit : w.gap + ' ' + w.unit;
+        const gapClass = w.gap >= 0 ? 'text-danger' : 'text-warning';
+        html += '<tr>' +
+          '<td class="font-medium text-ink">' + escapeHtml(w.dealer.name) + '</td>' +
+          '<td>' + escapeHtml(w.product) + '</td>' +
+          '<td>' + w.qty + ' ' + w.unit + '</td>' +
+          '<td>' + w.safety + ' ' + w.unit + '</td>' +
+          '<td><span class="font-semibold ' + gapClass + '">' + gapText + '</span></td>' +
+          '<td><span class="badge ' + statusClass + '">' + escapeHtml(w.status) + '</span></td>' +
+          '<td>' +
+            '<div class="flex gap-1">' +
+              '<button class="btn btn-primary text-xs" onclick="event.stopPropagation();openChannelTransferForm()">发起调拨</button>' +
+              '<button class="btn btn-ghost text-xs" onclick="event.stopPropagation();showToast(\'已生成补货建议单\')">补货建议</button>' +
+            '</div>' +
+          '</td>' +
+        '</tr>';
+      });
+      html += '</tbody></table></div></div>';
+
+      const shortage = warnings.filter(w => w.status === '缺货' || w.status === '偏低').length;
+      const overstock = warnings.filter(w => w.status === '积压').length;
+      html += '<div class="card p-4"><div class="text-sm font-medium text-ink mb-2">AI 分析结论</div><div class="text-sm text-sub">当前渠道库存共有 ' + total + ' 条预警，其中缺货 / 偏低 ' + shortage + ' 条、积压 ' + overstock + ' 条。缺货预警可能导致终端断货，建议优先发起调拨或补货；积压预警可推动经销商间库存调拨，降低渠道整体资金占用。</div></div>';
+      container.innerHTML = html;
     }
 
     function setDealerView(mode) {
@@ -21342,6 +21542,10 @@ Content-Type: application/json
       document.getElementById('drawer-dealer-auth-form').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
+    function openDealerAuthDrawerFor(id) {
+      currentDealerId = id;
+      openDealerAuthDrawer();
+    }
     function closeDealerAuthDrawer() {
       document.getElementById('drawer-dealer-auth-form').classList.remove('open');
       document.body.style.overflow = '';
@@ -21485,6 +21689,7 @@ Content-Type: application/json
         orderPanel.classList.add('hidden');
         if (createBtn) createBtn.classList.remove('hidden');
         if (filterBar) filterBar.classList.remove('hidden');
+        renderDealerKpis();
         renderDealerList();
       }
     }
