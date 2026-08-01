@@ -1,5 +1,5 @@
 import { get, post, put, del, getPage } from './request'
-import type { PageParams, PageResult } from '@/types/common'
+import type { PageParams } from '@/types/common'
 
 export interface UserItem {
   id: string

@@ -11,7 +11,7 @@ const password = ref('')
 const loading = ref(false)
 const errorMsg = ref('')
 
-async function handleLogin(): void {
+async function handleLogin(): Promise<void> {
   if (!username.value || !password.value) {
     errorMsg.value = '请输入用户名和密码'
     return

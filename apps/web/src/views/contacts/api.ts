@@ -9,8 +9,6 @@ import type {
   ContactListResult,
   ContactFormData,
 } from './types'
-import { API_BASE_URL } from '@/config/constants'
-
 const BASE = '/contacts'
 
 /** 获取联系人列表 */

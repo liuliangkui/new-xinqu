@@ -1,64 +1,25 @@
 {
-  "name": "xinqu-scaffold",
-  "version": "0.0.0",
+  "name": "xqcop",
+  "version": "0.0.1",
   "private": true,
+  "description": "鑫渠业务协同运营平台（XQCOP）",
   "type": "module",
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "start": "vite --host 0.0.0.0",
-    "build": "run-p type-check \"build-only {@}\" --",
-    "preview": "vite preview",
-    "test:unit": "vitest",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --build",
-    "api:types": "openapi-typescript http://localhost:3000/api/docs-json -o src/types/api-generated.d.ts",
-    "lint": "run-s \"lint:*\"",
-    "lint:oxlint": "oxlint . --fix",
-    "lint:eslint": "eslint . --fix --cache",
-    "format": "prettier --write --experimental-cli src/"
-  },
-  "dependencies": {
-    "@ant-design/icons-vue": "^7.0.1",
-    "@tailwindcss/vite": "^4.3.3",
-    "@types/mockjs": "^1.0.10",
-    "ant-design-vue": "^4.2.6",
-    "axios": "^1.18.1",
-    "dayjs": "^1.11.21",
-    "mockjs": "^1.1.0",
-    "msw": "^2.15.0",
-    "pinia": "^4.0.2",
-    "tailwindcss": "^4.3.3",
-    "vue": "^3.5.40",
-    "vue-router": "^5.2.0"
-  },
-  "devDependencies": {
-    "@tsconfig/node24": "^24.0.4",
-    "@types/jsdom": "^28.0.3",
-    "@types/node": "^24.13.3",
-    "@vitejs/plugin-vue": "^6.0.8",
-    "@vitejs/plugin-vue-jsx": "^5.1.6",
-    "@vitest/eslint-plugin": "^1.6.23",
-    "@vue/eslint-config-typescript": "^14.9.0",
-    "@vue/test-utils": "^2.4.11",
-    "@vue/tsconfig": "^0.9.1",
-    "eslint": "^10.7.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-oxlint": "~1.73.0",
-    "eslint-plugin-vue": "~10.9.2",
-    "jiti": "^2.7.0",
-    "jsdom": "^29.1.1",
-    "npm-run-all2": "^9.0.2",
-    "openapi-typescript": "^7.13.0",
-    "oxlint": "~1.73.0",
-    "prettier": "3.9.5",
-    "typescript": "~6.0.0",
-    "vite": "^8.1.5",
-    "vite-plugin-vue-devtools": "^8.1.5",
-    "vitest": "^4.1.10",
-    "vue-eslint-parser": "^10.4.1",
-    "vue-tsc": "^3.3.7"
+    "dev:web": "npm run dev -w apps/web",
+    "dev:server": "npm run start:dev -w apps/server",
+    "build:web": "npm run build -w apps/web",
+    "build:server": "npm run build -w apps/server",
+    "lint:web": "npm run lint -w apps/web",
+    "lint:server": "npm run lint -w apps/server",
+    "db:migrate": "npm run db:migrate -w apps/server",
+    "db:generate": "npm run db:generate -w apps/server",
+    "db:seed": "npm run db:seed -w apps/server",
+    "api:types": "npm run api:types -w apps/web"
   },
   "engines": {
-    "node": "^22.18.0 || >=24.12.0"
+    "node": ">=22.0.0"
   }
 }

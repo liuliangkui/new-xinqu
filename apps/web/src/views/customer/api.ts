@@ -7,11 +7,6 @@ import type {
   CustomerDetail,
   CustomerListParams,
   CustomerListResult,
-  Department,
-  DecisionContact,
-  CustomerEquipment,
-  CustomerReagent,
-  TimelineItem,
 } from './types'
 
 const BASE = '/customers'

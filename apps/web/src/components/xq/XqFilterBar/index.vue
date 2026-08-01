@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 interface FilterOption {
   key: string
@@ -142,7 +142,3 @@ function handleReset(): void {
     </button>
   </div>
 </template>
-
-<script lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-</script>

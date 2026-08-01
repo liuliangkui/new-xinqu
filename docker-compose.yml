@@ -33,7 +33,7 @@ services:
 
   server:
     build:
-      context: ./server
+      context: ./apps/server
       dockerfile: Dockerfile
     container_name: xqcop-server
     restart: unless-stopped
@@ -53,7 +53,7 @@ services:
     ports:
       - "${SERVER_PORT:-3000}:3000"
     volumes:
-      - ./server/prisma:/app/prisma:ro
+      - ./apps/server/prisma:/app/prisma:ro
     command: >
       sh -c "npx prisma migrate deploy && node dist/main"
 

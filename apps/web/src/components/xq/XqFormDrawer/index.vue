@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 
 interface Field {
   key: string
@@ -192,7 +192,3 @@ function handleClose(): void {
     </template>
   </XqDrawer>
 </template>
-
-<script lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-</script>

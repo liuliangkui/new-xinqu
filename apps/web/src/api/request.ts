@@ -53,7 +53,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    ...((rest.headers as Record<string, string>) || {}),
+    ...(rest.headers as Record<string, string>),
   }
 
   const response = await fetchWithTimeout(url, {

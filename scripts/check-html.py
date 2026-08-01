@@ -8,7 +8,7 @@ import sys
 from html.parser import HTMLParser
 from pathlib import Path
 
-HTML_FILE = Path(__file__).resolve().parent.parent / "鑫渠高保真原型.html"
+HTML_FILE = Path(__file__).resolve().parent.parent / "prototype" / "鑫渠高保真原型.html"
 
 VOID_TAGS = {
     "area", "base", "br", "col", "embed", "hr", "img", "input",
