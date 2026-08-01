@@ -536,10 +536,10 @@ function openExport(): void {
   </XqPageLayout>
 
   <!-- 绩效详情弹窗 -->
-  <XqDrawer
+  <XqModal
     :visible="detailVisible"
     :title="detailItem?.name || '绩效详情'"
-    :width="isMobile ? '100%' : '560px'"
+    width="560px"
     @close="closeDetail"
   >
     <div v-if="detailItem" class="flex flex-col gap-5">
@@ -629,5 +629,5 @@ function openExport(): void {
         </p>
       </div>
     </div>
-  </XqDrawer>
+  </XqModal>
 </template>

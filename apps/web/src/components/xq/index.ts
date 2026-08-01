@@ -12,6 +12,7 @@ import XqFilterBar from './XqFilterBar/index.vue'
 import XqFormDrawer from './XqFormDrawer/index.vue'
 import XqIcon from './XqIcon/index.vue'
 import XqKpiCard from './XqKpiCard/index.vue'
+import XqModal from './XqModal/index.vue'
 import XqNavTabs from './XqNavTabs/index.vue'
 import XqPageLayout from './XqPageLayout/index.vue'
 import XqSearchBar from './XqSearchBar/index.vue'
@@ -30,6 +31,7 @@ export {
   XqFormDrawer,
   XqIcon,
   XqKpiCard,
+  XqModal,
   XqNavTabs,
   XqPageLayout,
   XqSearchBar,
@@ -49,6 +51,7 @@ const componentRegistry: Record<string, any> = {
   XqFormDrawer,
   XqIcon,
   XqKpiCard,
+  XqModal,
   XqNavTabs,
   XqPageLayout,
   XqSearchBar,
