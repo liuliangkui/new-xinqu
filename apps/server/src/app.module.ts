@@ -25,6 +25,7 @@ import { TaskModule } from './modules/task/task.module'
 import { ApprovalModule } from './modules/approval/approval.module'
 import { AppCenterModule } from './modules/app/app.module'
 import { WorkbenchModule } from './modules/workbench/workbench.module'
+import { PerformanceModule } from './modules/performance/performance.module'
 import { SystemConfigModule } from './modules/system-config/system-config.module'
 import { HealthModule } from './modules/health/health.module'
 import { UploadModule } from './upload/upload.module'
@@ -69,6 +70,7 @@ import { SchedulerModule } from './scheduler/scheduler.module'
     ApprovalModule,
     AppCenterModule,
     WorkbenchModule,
+    PerformanceModule,
   ],
   controllers: [AppController],
   providers: [

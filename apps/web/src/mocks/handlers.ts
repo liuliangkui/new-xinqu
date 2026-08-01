@@ -72,6 +72,8 @@ import {
 import type { AppListResult, AppItem, AppForm } from '@/views/apps/types'
 import { generateWorkbenchData } from '@/views/workbench/mock'
 import type { WorkbenchData } from '@/views/workbench/types'
+import { generatePerformanceOverview, generatePerformanceList } from '@/views/performance/mock'
+import type { PerformanceListResult, PerformanceOverview } from '@/views/performance/types'
 
 const ok = <T>(data: T): ApiResponse<T> => ({
   success: true,
@@ -637,5 +639,23 @@ export const handlers = [
   http.get('/api/v1/workbench', () => {
     const result = generateWorkbenchData()
     return HttpResponse.json(ok<WorkbenchData>(result))
+  }),
+
+  http.get('/api/v1/performance/overview', ({ request }) => {
+    const url = new URL(request.url)
+    const period = url.searchParams.get('period') ?? 'month'
+    const indicator = url.searchParams.get('indicator') ?? 'revenue'
+    const result = generatePerformanceOverview(period, indicator)
+    return HttpResponse.json(ok<PerformanceOverview>(result))
+  }),
+
+  http.get('/api/v1/performance/list', ({ request }) => {
+    const url = new URL(request.url)
+    const tabType = url.searchParams.get('tabType') ?? 'team'
+    const period = url.searchParams.get('period') ?? 'month'
+    const indicator = url.searchParams.get('indicator') ?? 'revenue'
+    const keyword = url.searchParams.get('keyword') ?? undefined
+    const result = generatePerformanceList(tabType, period, indicator, keyword)
+    return HttpResponse.json(ok<PerformanceListResult>(result))
   }),
 ]
