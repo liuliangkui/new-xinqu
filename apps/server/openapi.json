@@ -1813,6 +1813,206 @@
           "审批中心"
         ]
       }
+    },
+    "/apps": {
+      "get": {
+        "operationId": "AppController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "页码",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "每页条数",
+            "schema": {
+              "default": 100,
+              "type": "number"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "关键字（应用名称/编码）",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "description": "分类",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PLATFORM",
+                "BUSINESS",
+                "PROCESS",
+                "ANALYSIS",
+                "SYSTEM"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ACTIVE",
+                "INACTIVE"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "返回应用列表"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询应用列表",
+        "tags": [
+          "应用中心"
+        ]
+      },
+      "post": {
+        "operationId": "AppController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAppDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "创建成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "创建应用",
+        "tags": [
+          "应用中心"
+        ]
+      }
+    },
+    "/apps/{id}": {
+      "get": {
+        "operationId": "AppController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "返回应用详情"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询应用详情",
+        "tags": [
+          "应用中心"
+        ]
+      },
+      "put": {
+        "operationId": "AppController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAppDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "更新应用",
+        "tags": [
+          "应用中心"
+        ]
+      },
+      "delete": {
+        "operationId": "AppController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "删除成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "删除应用（软删除）",
+        "tags": [
+          "应用中心"
+        ]
+      }
     }
   },
   "info": {
@@ -2827,6 +3027,112 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "CreateAppDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "应用编码"
+          },
+          "name": {
+            "type": "string",
+            "description": "应用名称"
+          },
+          "icon": {
+            "type": "string",
+            "description": "图标"
+          },
+          "route": {
+            "type": "string",
+            "description": "路由路径"
+          },
+          "category": {
+            "type": "string",
+            "description": "分类",
+            "enum": [
+              "PLATFORM",
+              "BUSINESS",
+              "PROCESS",
+              "ANALYSIS",
+              "SYSTEM"
+            ]
+          },
+          "permissions": {
+            "description": "权限列表",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sortOrder": {
+            "type": "number",
+            "description": "排序"
+          },
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "enum": [
+              "ACTIVE",
+              "INACTIVE"
+            ]
+          }
+        },
+        "required": [
+          "code",
+          "name"
+        ]
+      },
+      "UpdateAppDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "应用编码"
+          },
+          "name": {
+            "type": "string",
+            "description": "应用名称"
+          },
+          "icon": {
+            "type": "string",
+            "description": "图标"
+          },
+          "route": {
+            "type": "string",
+            "description": "路由路径"
+          },
+          "category": {
+            "type": "string",
+            "description": "分类",
+            "enum": [
+              "PLATFORM",
+              "BUSINESS",
+              "PROCESS",
+              "ANALYSIS",
+              "SYSTEM"
+            ]
+          },
+          "permissions": {
+            "description": "权限列表",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sortOrder": {
+            "type": "number",
+            "description": "排序"
+          },
+          "status": {
+            "type": "string",
+            "description": "状态",
+            "enum": [
+              "ACTIVE",
+              "INACTIVE"
+            ]
           }
         }
       }

@@ -23,6 +23,7 @@ import { EquipmentModule } from './modules/equipment/equipment.module'
 import { TicketModule } from './modules/ticket/ticket.module'
 import { TaskModule } from './modules/task/task.module'
 import { ApprovalModule } from './modules/approval/approval.module'
+import { AppCenterModule } from './modules/app/app.module'
 import { SystemConfigModule } from './modules/system-config/system-config.module'
 import { HealthModule } from './modules/health/health.module'
 import { UploadModule } from './upload/upload.module'
@@ -65,6 +66,7 @@ import { SchedulerModule } from './scheduler/scheduler.module'
     TicketModule,
     TaskModule,
     ApprovalModule,
+    AppCenterModule,
   ],
   controllers: [AppController],
   providers: [

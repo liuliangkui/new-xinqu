@@ -398,6 +398,43 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/apps': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询应用列表 */
+    get: operations['AppController_findAll']
+    put?: never
+    /** 创建应用 */
+    post: operations['AppController_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/apps/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询应用详情 */
+    get: operations['AppController_findOne']
+    /** 更新应用 */
+    put: operations['AppController_update']
+    post?: never
+    /** 删除应用（软删除） */
+    delete: operations['AppController_remove']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -862,6 +899,54 @@ export interface components {
       payload?: Record<string, never>
       /** @description 抄送人ID列表 */
       ccUserIds?: string[]
+    }
+    CreateAppDto: {
+      /** @description 应用编码 */
+      code: string
+      /** @description 应用名称 */
+      name: string
+      /** @description 图标 */
+      icon?: string
+      /** @description 路由路径 */
+      route?: string
+      /**
+       * @description 分类
+       * @enum {string}
+       */
+      category?: 'PLATFORM' | 'BUSINESS' | 'PROCESS' | 'ANALYSIS' | 'SYSTEM'
+      /** @description 权限列表 */
+      permissions?: string[]
+      /** @description 排序 */
+      sortOrder?: number
+      /**
+       * @description 状态
+       * @enum {string}
+       */
+      status?: 'ACTIVE' | 'INACTIVE'
+    }
+    UpdateAppDto: {
+      /** @description 应用编码 */
+      code?: string
+      /** @description 应用名称 */
+      name?: string
+      /** @description 图标 */
+      icon?: string
+      /** @description 路由路径 */
+      route?: string
+      /**
+       * @description 分类
+       * @enum {string}
+       */
+      category?: 'PLATFORM' | 'BUSINESS' | 'PROCESS' | 'ANALYSIS' | 'SYSTEM'
+      /** @description 权限列表 */
+      permissions?: string[]
+      /** @description 排序 */
+      sortOrder?: number
+      /**
+       * @description 状态
+       * @enum {string}
+       */
+      status?: 'ACTIVE' | 'INACTIVE'
     }
   }
   responses: never
@@ -1895,6 +1980,121 @@ export interface operations {
     }
   }
   ApprovalController_remove: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 删除成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AppController_findAll: {
+    parameters: {
+      query?: {
+        /** @description 页码 */
+        page?: number
+        /** @description 每页条数 */
+        pageSize?: number
+        /** @description 关键字（应用名称/编码） */
+        keyword?: string
+        /** @description 分类 */
+        category?: 'PLATFORM' | 'BUSINESS' | 'PROCESS' | 'ANALYSIS' | 'SYSTEM'
+        /** @description 状态 */
+        status?: 'ACTIVE' | 'INACTIVE'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 返回应用列表 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AppController_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateAppDto']
+      }
+    }
+    responses: {
+      /** @description 创建成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AppController_findOne: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 返回应用详情 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AppController_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAppDto']
+      }
+    }
+    responses: {
+      /** @description 更新成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  AppController_remove: {
     parameters: {
       query?: never
       header?: never
