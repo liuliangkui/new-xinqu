@@ -645,6 +645,44 @@ model ScheduleReminder {
 }
 
 // ======================
+// 日历 / 日程事件（面向日历视图组件）
+// ======================
+model CalendarEvent {
+  id              String    @id @default(cuid())
+  eventCode       String    @unique
+  eventType       Int // 1:客户拜访 2:意向跟进 3:会议/学术 4:任务截止 5:关键节点
+  eventStatus     Int       @default(1) // 0:草稿 1:待进行 2:已完成 9:已取消
+  subject         String
+  startTime       DateTime
+  endTime         DateTime
+  customerId      String?
+  customerName    String?
+  intentionId     String?
+  intentionName   String?
+  attendeeIds     String[]
+  attendeeNames   String?
+  remark          String?
+  sourceType      Int       @default(1) // 1:手工创建 2:意向管理 3:任务系统 4:售后工单 5:学术活动
+  ownerId         String
+  ownerName       String
+  signInTime      DateTime?
+  signInLocation  String?
+  longitude       Float?
+  latitude        Float?
+  completedTime   DateTime?
+  reminderFlag    Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  @@index([ownerId])
+  @@index([startTime])
+  @@index([eventStatus])
+  @@index([deletedAt])
+  @@map("calendar_events")
+}
+
+// ======================
 // 审批中心
 // ======================
 model ApprovalTemplate {

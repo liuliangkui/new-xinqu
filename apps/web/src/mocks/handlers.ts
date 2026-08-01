@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw'
+import dayjs from 'dayjs'
 import type { ApiResponse } from '@/types/common'
 import {
   generateCustomerList,
@@ -74,6 +75,18 @@ import { generateWorkbenchData } from '@/views/workbench/mock'
 import type { WorkbenchData } from '@/views/workbench/types'
 import { generatePerformanceOverview, generatePerformanceList } from '@/views/performance/mock'
 import type { PerformanceListResult, PerformanceOverview } from '@/views/performance/types'
+import {
+  generateCalendarEventList,
+  generateCalendarMonthDots,
+  generateCalendarStats,
+  getCalendarEventById,
+  createCalendarEventInMock,
+  updateCalendarEventInMock,
+  deleteCalendarEventFromMock,
+  checkInCalendarEventInMock,
+  completeCalendarEventInMock,
+} from '@/views/calendar/mock'
+import type { CalendarEvent, CalendarEventForm, CalendarEventListResult, CalendarMonthDotsResult, CalendarStatsResult } from '@/views/calendar/types'
 
 const ok = <T>(data: T): ApiResponse<T> => ({
   success: true,
@@ -657,5 +670,74 @@ export const handlers = [
     const keyword = url.searchParams.get('keyword') ?? undefined
     const result = generatePerformanceList(tabType, period, indicator, keyword)
     return HttpResponse.json(ok<PerformanceListResult>(result))
+  }),
+
+  http.post('/api/v1/calendar/event/list', async ({ request }) => {
+    const body = (await request.json()) as { queryDate?: string }
+    const result = generateCalendarEventList(body.queryDate || dayjs().format('YYYY-MM-DD'))
+    return HttpResponse.json(ok<CalendarEventListResult>(result))
+  }),
+
+  http.post('/api/v1/calendar/event/month-dots', async ({ request }) => {
+    const body = (await request.json()) as { yearMonth?: string }
+    const result = generateCalendarMonthDots(body.yearMonth || dayjs().format('YYYY-MM'))
+    return HttpResponse.json(ok<CalendarMonthDotsResult>(result))
+  }),
+
+  http.post('/api/v1/calendar/event/save', async ({ request }) => {
+    const body = (await request.json()) as Partial<CalendarEventForm>
+    const event = body.id
+      ? updateCalendarEventInMock(body.id, body)
+      : createCalendarEventInMock(body)
+    if (!event) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '日程不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<{ id: string; eventCode: string }>({ id: event.id, eventCode: event.eventCode }))
+  }),
+
+  http.post('/api/v1/calendar/event/delete/:id', ({ params }) => {
+    const id = String(params.id)
+    const success = deleteCalendarEventFromMock(id)
+    if (!success) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '日程不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok({ success: true }))
+  }),
+
+  http.get('/api/v1/calendar/event/detail/:id', ({ params }) => {
+    const id = String(params.id)
+    const event = getCalendarEventById(id)
+    if (!event) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '日程不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<CalendarEvent>(event))
+  }),
+
+  http.post('/api/v1/calendar/event/check-in/:id', ({ params }) => {
+    const id = String(params.id)
+    const result = checkInCalendarEventInMock(id)
+    return HttpResponse.json(ok(result))
+  }),
+
+  http.post('/api/v1/calendar/event/complete/:id', ({ params }) => {
+    const id = String(params.id)
+    const result = completeCalendarEventInMock(id)
+    return HttpResponse.json(ok(result))
+  }),
+
+  http.get('/api/v1/calendar/stats', ({ request }) => {
+    const url = new URL(request.url)
+    const queryDate = url.searchParams.get('queryDate') || dayjs().format('YYYY-MM-DD')
+    const result = generateCalendarStats(queryDate)
+    return HttpResponse.json(ok<CalendarStatsResult>(result))
   }),
 ]

@@ -467,10 +467,7 @@ function maskPhone(phone: string): string {
             </button>
             <button
               class="text-sm text-[var(--sub)] hover:underline"
-              @click="
-                handleRowClick(record)
-                openEditFromDetail()
-              "
+              @click="handleRowClick(record); openEditFromDetail()"
             >
               编辑
             </button>
