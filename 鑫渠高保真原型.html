@@ -8757,7 +8757,8 @@
                 <div class="text-xs text-sub mt-1">3 个停滞重点意向</div>
               </div>
             </div>
-            
+          </div>
+
           <div class="card mb-4">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4">
               <div class="flex flex-wrap gap-2" id="performance-tabs">
@@ -8917,6 +8918,7 @@
           <!-- Performance grid view -->
           <div id="performance-panel-grid" class="performance-panel hidden">
             <div id="performance-grid" class="card-grid mb-4">
+              <!-- 我的绩效 -->
               <div class="card card-hover p-4 cursor-pointer pf-card" data-type="mine" onclick="openPerformanceModal(this)" data-name="张经理" data-target="8000000" data-done="5120000" data-rate="64" data-gap="2880000" data-yoy="+12">
                 <div class="flex items-start justify-between mb-3">
                   <div class="flex items-center gap-3">
@@ -8940,6 +8942,53 @@
                   <button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast('目标调整申请已打开')">调整</button>
                 </div>
               </div>
+              <div class="card card-hover p-4 cursor-pointer pf-card" data-type="mine" onclick="openPerformanceModal(this)" data-name="李经理" data-target="12000000" data-done="7200000" data-rate="60" data-gap="4800000" data-yoy="+5">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary-light text-primary flex items-center justify-center font-bold">李</div>
+                    <div>
+                      <div class="font-semibold text-ink">李经理</div>
+                      <div class="text-xs text-sub">销售代表 · 华东区</div>
+                    </div>
+                  </div>
+                  <span class="badge badge-primary">我的</span>
+                </div>
+                <div class="space-y-2 mb-3">
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">目标</span><span class="font-medium text-ink">¥12,000,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">完成</span><span class="font-medium text-warning">¥7,200,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">缺口</span><span class="font-medium text-danger">¥4,800,000</span></div>
+                  <div class="flex items-center gap-2"><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:60%"></div></div><span class="text-xs text-sub w-10">60%</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">同比</span><span class="font-medium text-success">+5%</span></div>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();showToast('已打开详情')">详情</button>
+                  <button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast('目标调整申请已打开')">调整</button>
+                </div>
+              </div>
+              <div class="card card-hover p-4 cursor-pointer pf-card" data-type="mine" onclick="openPerformanceModal(this)" data-name="王强" data-target="6000000" data-done="4200000" data-rate="70" data-gap="1800000" data-yoy="+18">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary-light text-primary flex items-center justify-center font-bold">王</div>
+                    <div>
+                      <div class="font-semibold text-ink">王强</div>
+                      <div class="text-xs text-sub">销售代表 · 西南区</div>
+                    </div>
+                  </div>
+                  <span class="badge badge-primary">我的</span>
+                </div>
+                <div class="space-y-2 mb-3">
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">目标</span><span class="font-medium text-ink">¥6,000,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">完成</span><span class="font-medium text-primary">¥4,200,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">缺口</span><span class="font-medium text-warning">¥1,800,000</span></div>
+                  <div class="flex items-center gap-2"><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:70%"></div></div><span class="text-xs text-sub w-10">70%</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">同比</span><span class="font-medium text-success">+18%</span></div>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();showToast('已打开详情')">详情</button>
+                  <button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast('目标调整申请已打开')">调整</button>
+                </div>
+              </div>
+              <!-- 团队绩效 -->
               <div class="card card-hover p-4 cursor-pointer pf-card" data-type="team" onclick="openPerformanceModal(this)" data-name="华东销售团队" data-target="20000000" data-done="15600000" data-rate="78" data-gap="4400000" data-yoy="+15">
                 <div class="flex items-start justify-between mb-3">
                   <div class="flex items-center gap-3">
@@ -8961,6 +9010,76 @@
                 <div class="flex items-center justify-between pt-3 border-t border-line">
                   <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();showToast('已打开详情')">详情</button>
                   <button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast('团队下钻已打开')">下钻</button>
+                </div>
+              </div>
+              <div class="card card-hover p-4 cursor-pointer pf-card" data-type="team" onclick="openPerformanceModal(this)" data-name="华南销售团队" data-target="15000000" data-done="9750000" data-rate="65" data-gap="5250000" data-yoy="+8">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-success-bg text-success flex items-center justify-center font-bold">团</div>
+                    <div>
+                      <div class="font-semibold text-ink">华南销售团队</div>
+                      <div class="text-xs text-sub">团队 · 6 人</div>
+                    </div>
+                  </div>
+                  <span class="badge badge-success">团队</span>
+                </div>
+                <div class="space-y-2 mb-3">
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">目标</span><span class="font-medium text-ink">¥15,000,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">完成</span><span class="font-medium text-warning">¥9,750,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">缺口</span><span class="font-medium text-danger">¥5,250,000</span></div>
+                  <div class="flex items-center gap-2"><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:65%"></div></div><span class="text-xs text-sub w-10">65%</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">同比</span><span class="font-medium text-success">+8%</span></div>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();showToast('已打开详情')">详情</button>
+                  <button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast('团队下钻已打开')">下钻</button>
+                </div>
+              </div>
+              <div class="card card-hover p-4 cursor-pointer pf-card" data-type="team" onclick="openPerformanceModal(this)" data-name="西南销售团队" data-target="10000000" data-done="5800000" data-rate="58" data-gap="4200000" data-yoy="+3">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-success-bg text-success flex items-center justify-center font-bold">团</div>
+                    <div>
+                      <div class="font-semibold text-ink">西南销售团队</div>
+                      <div class="text-xs text-sub">团队 · 5 人</div>
+                    </div>
+                  </div>
+                  <span class="badge badge-success">团队</span>
+                </div>
+                <div class="space-y-2 mb-3">
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">目标</span><span class="font-medium text-ink">¥10,000,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">完成</span><span class="font-medium text-warning">¥5,800,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">缺口</span><span class="font-medium text-danger">¥4,200,000</span></div>
+                  <div class="flex items-center gap-2"><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:58%"></div></div><span class="text-xs text-sub w-10">58%</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">同比</span><span class="font-medium text-success">+3%</span></div>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();showToast('已打开详情')">详情</button>
+                  <button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast('团队下钻已打开')">下钻</button>
+                </div>
+              </div>
+              <!-- 区域绩效 -->
+              <div class="card card-hover p-4 cursor-pointer pf-card" data-type="region" onclick="openPerformanceModal(this)" data-name="华东区" data-target="20000000" data-done="15600000" data-rate="78" data-gap="4400000" data-yoy="+15">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-warning-bg text-warning flex items-center justify-center font-bold">区</div>
+                    <div>
+                      <div class="font-semibold text-ink">华东区</div>
+                      <div class="text-xs text-sub">区域 · 12 个城市</div>
+                    </div>
+                  </div>
+                  <span class="badge badge-warning">区域</span>
+                </div>
+                <div class="space-y-2 mb-3">
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">目标</span><span class="font-medium text-ink">¥20,000,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">完成</span><span class="font-medium text-success">¥15,600,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">缺口</span><span class="font-medium text-warning">¥4,400,000</span></div>
+                  <div class="flex items-center gap-2"><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-success rounded-full" style="width:78%"></div></div><span class="text-xs text-sub w-10">78%</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">同比</span><span class="font-medium text-success">+15%</span></div>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();showToast('已打开详情')">详情</button>
+                  <button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast('区域下钻已打开')">下钻</button>
                 </div>
               </div>
               <div class="card card-hover p-4 cursor-pointer pf-card" data-type="region" onclick="openPerformanceModal(this)" data-name="西南区" data-target="15000000" data-done="9750000" data-rate="65" data-gap="5250000" data-yoy="+8">
@@ -8986,6 +9105,30 @@
                   <button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast('区域下钻已打开')">下钻</button>
                 </div>
               </div>
+              <div class="card card-hover p-4 cursor-pointer pf-card" data-type="region" onclick="openPerformanceModal(this)" data-name="华南区" data-target="12000000" data-done="7800000" data-rate="65" data-gap="4200000" data-yoy="+6">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-warning-bg text-warning flex items-center justify-center font-bold">区</div>
+                    <div>
+                      <div class="font-semibold text-ink">华南区</div>
+                      <div class="text-xs text-sub">区域 · 8 个城市</div>
+                    </div>
+                  </div>
+                  <span class="badge badge-warning">区域</span>
+                </div>
+                <div class="space-y-2 mb-3">
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">目标</span><span class="font-medium text-ink">¥12,000,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">完成</span><span class="font-medium text-warning">¥7,800,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">缺口</span><span class="font-medium text-danger">¥4,200,000</span></div>
+                  <div class="flex items-center gap-2"><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:65%"></div></div><span class="text-xs text-sub w-10">65%</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">同比</span><span class="font-medium text-success">+6%</span></div>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();showToast('已打开详情')">详情</button>
+                  <button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast('区域下钻已打开')">下钻</button>
+                </div>
+              </div>
+              <!-- 产品绩效 -->
               <div class="card card-hover p-4 cursor-pointer pf-card" data-type="product" onclick="openPerformanceModal(this)" data-name="希森美康血球产品线" data-target="25000000" data-done="16250000" data-rate="65" data-gap="8750000" data-yoy="+10">
                 <div class="flex items-start justify-between mb-3">
                   <div class="flex items-center gap-3">
@@ -9009,6 +9152,122 @@
                   <button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast('产品下钻已打开')">下钻</button>
                 </div>
               </div>
+              <div class="card card-hover p-4 cursor-pointer pf-card" data-type="product" onclick="openPerformanceModal(this)" data-name="生化产品线" data-target="15000000" data-done="9750000" data-rate="65" data-gap="5250000" data-yoy="+7">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-info-bg text-info flex items-center justify-center font-bold">产</div>
+                    <div>
+                      <div class="font-semibold text-ink">生化产品线</div>
+                      <div class="text-xs text-sub">产品线 · 仪器+试剂</div>
+                    </div>
+                  </div>
+                  <span class="badge badge-info">产品</span>
+                </div>
+                <div class="space-y-2 mb-3">
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">目标</span><span class="font-medium text-ink">¥15,000,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">完成</span><span class="font-medium text-warning">¥9,750,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">缺口</span><span class="font-medium text-danger">¥5,250,000</span></div>
+                  <div class="flex items-center gap-2"><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:65%"></div></div><span class="text-xs text-sub w-10">65%</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">同比</span><span class="font-medium text-success">+7%</span></div>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();showToast('已打开详情')">详情</button>
+                  <button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast('产品下钻已打开')">下钻</button>
+                </div>
+              </div>
+              <div class="card card-hover p-4 cursor-pointer pf-card" data-type="product" onclick="openPerformanceModal(this)" data-name="免疫产品线" data-target="10000000" data-done="5300000" data-rate="53" data-gap="4700000" data-yoy="+2">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-info-bg text-info flex items-center justify-center font-bold">产</div>
+                    <div>
+                      <div class="font-semibold text-ink">免疫产品线</div>
+                      <div class="text-xs text-sub">产品线 · 仪器+试剂</div>
+                    </div>
+                  </div>
+                  <span class="badge badge-info">产品</span>
+                </div>
+                <div class="space-y-2 mb-3">
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">目标</span><span class="font-medium text-ink">¥10,000,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">完成</span><span class="font-medium text-warning">¥5,300,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">缺口</span><span class="font-medium text-danger">¥4,700,000</span></div>
+                  <div class="flex items-center gap-2"><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:53%"></div></div><span class="text-xs text-sub w-10">53%</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">同比</span><span class="font-medium text-success">+2%</span></div>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();showToast('已打开详情')">详情</button>
+                  <button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast('产品下钻已打开')">下钻</button>
+                </div>
+              </div>
+              <!-- 渠道绩效 -->
+              <div class="card card-hover p-4 cursor-pointer pf-card" data-type="channel" onclick="openPerformanceModal(this)" data-name="昆明博奥生物技术有限公司" data-target="12000000" data-done="8160000" data-rate="68" data-gap="3840000" data-yoy="+11">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-purple-bg text-purple flex items-center justify-center font-bold">渠</div>
+                    <div>
+                      <div class="font-semibold text-ink">昆明博奥生物技术</div>
+                      <div class="text-xs text-sub">核心经销商 · 昆明</div>
+                    </div>
+                  </div>
+                  <span class="badge badge-purple">渠道</span>
+                </div>
+                <div class="space-y-2 mb-3">
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">销售目标</span><span class="font-medium text-ink">¥12,000,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">完成</span><span class="font-medium text-primary">¥8,160,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">缺口</span><span class="font-medium text-warning">¥3,840,000</span></div>
+                  <div class="flex items-center gap-2"><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:68%"></div></div><span class="text-xs text-sub w-10">68%</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">返利达标率</span><span class="font-medium text-success">92%</span></div>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();showToast('已打开详情')">详情</button>
+                  <button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast('渠道下钻已打开')">下钻</button>
+                </div>
+              </div>
+              <div class="card card-hover p-4 cursor-pointer pf-card" data-type="channel" onclick="openPerformanceModal(this)" data-name="红河州博爱医疗器械有限公司" data-target="8000000" data-done="4800000" data-rate="60" data-gap="3200000" data-yoy="+5">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-purple-bg text-purple flex items-center justify-center font-bold">渠</div>
+                    <div>
+                      <div class="font-semibold text-ink">红河州博爱医疗器械</div>
+                      <div class="text-xs text-sub">核心经销商 · 红河</div>
+                    </div>
+                  </div>
+                  <span class="badge badge-purple">渠道</span>
+                </div>
+                <div class="space-y-2 mb-3">
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">销售目标</span><span class="font-medium text-ink">¥8,000,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">完成</span><span class="font-medium text-warning">¥4,800,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">缺口</span><span class="font-medium text-danger">¥3,200,000</span></div>
+                  <div class="flex items-center gap-2"><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:60%"></div></div><span class="text-xs text-sub w-10">60%</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">返利达标率</span><span class="font-medium text-warning">78%</span></div>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();showToast('已打开详情')">详情</button>
+                  <button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast('渠道下钻已打开')">下钻</button>
+                </div>
+              </div>
+              <div class="card card-hover p-4 cursor-pointer pf-card" data-type="channel" onclick="openPerformanceModal(this)" data-name="大理康盛医疗器械有限公司" data-target="5000000" data-done="3250000" data-rate="65" data-gap="1750000" data-yoy="+9">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-purple-bg text-purple flex items-center justify-center font-bold">渠</div>
+                    <div>
+                      <div class="font-semibold text-ink">大理康盛医疗器械</div>
+                      <div class="text-xs text-sub">一般经销商 · 大理</div>
+                    </div>
+                  </div>
+                  <span class="badge badge-purple">渠道</span>
+                </div>
+                <div class="space-y-2 mb-3">
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">销售目标</span><span class="font-medium text-ink">¥5,000,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">完成</span><span class="font-medium text-warning">¥3,250,000</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">缺口</span><span class="font-medium text-warning">¥1,750,000</span></div>
+                  <div class="flex items-center gap-2"><div class="flex-1 h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:65%"></div></div><span class="text-xs text-sub w-10">65%</span></div>
+                  <div class="flex items-center justify-between text-xs"><span class="text-sub">返利达标率</span><span class="font-medium text-success">85%</span></div>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-line">
+                  <button class="btn btn-ghost text-xs" onclick="event.stopPropagation();showToast('已打开详情')">详情</button>
+                  <button class="btn btn-primary text-xs" onclick="event.stopPropagation();showToast('渠道下钻已打开')">下钻</button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -9018,10 +9277,21 @@
               <table class="data-table">
                 <thead><tr><th>对象</th><th>类型</th><th>目标值</th><th>完成值</th><th>达成率</th><th>缺口</th><th>同比</th><th>环比</th><th>状态</th><th>操作</th></tr></thead>
                 <tbody>
-                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-name="张经理" data-target="8000000" data-done="5120000" data-rate="64" data-gap="2880000" data-yoy="+12"><td>张经理</td><td>销售代表</td><td>¥8,000,000</td><td class="text-primary">¥5,120,000</td><td>64%</td><td class="text-danger">¥2,880,000</td><td class="text-success">+12%</td><td class="text-success">+5%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
-                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-name="华东销售团队" data-target="20000000" data-done="15600000" data-rate="78" data-gap="4400000" data-yoy="+15"><td>华东销售团队</td><td>团队</td><td>¥20,000,000</td><td class="text-success">¥15,600,000</td><td>78%</td><td class="text-warning">¥4,400,000</td><td class="text-success">+15%</td><td class="text-success">+8%</td><td><span class="badge badge-success">正常</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
-                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-name="西南区" data-target="15000000" data-done="9750000" data-rate="65" data-gap="5250000" data-yoy="+8"><td>西南区</td><td>区域</td><td>¥15,000,000</td><td class="text-warning">¥9,750,000</td><td>65%</td><td class="text-danger">¥5,250,000</td><td class="text-success">+8%</td><td class="text-danger">-3%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
-                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-name="希森美康血球产品线" data-target="25000000" data-done="16250000" data-rate="65" data-gap="8750000" data-yoy="+10"><td>希森美康血球</td><td>产品线</td><td>¥25,000,000</td><td class="text-primary">¥16,250,000</td><td>65%</td><td class="text-danger">¥8,750,000</td><td class="text-success">+10%</td><td class="text-success">+2%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
+                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-type="mine" data-name="张经理" data-target="8000000" data-done="5120000" data-rate="64" data-gap="2880000" data-yoy="+12"><td>张经理</td><td>销售代表</td><td>¥8,000,000</td><td class="text-primary">¥5,120,000</td><td>64%</td><td class="text-danger">¥2,880,000</td><td class="text-success">+12%</td><td class="text-success">+5%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
+                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-type="mine" data-name="李经理" data-target="12000000" data-done="7200000" data-rate="60" data-gap="4800000" data-yoy="+5"><td>李经理</td><td>销售代表</td><td>¥12,000,000</td><td class="text-warning">¥7,200,000</td><td>60%</td><td class="text-danger">¥4,800,000</td><td class="text-success">+5%</td><td class="text-danger">-2%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
+                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-type="mine" data-name="王强" data-target="6000000" data-done="4200000" data-rate="70" data-gap="1800000" data-yoy="+18"><td>王强</td><td>销售代表</td><td>¥6,000,000</td><td class="text-primary">¥4,200,000</td><td>70%</td><td class="text-warning">¥1,800,000</td><td class="text-success">+18%</td><td class="text-success">+4%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
+                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-type="team" data-name="华东销售团队" data-target="20000000" data-done="15600000" data-rate="78" data-gap="4400000" data-yoy="+15"><td>华东销售团队</td><td>团队</td><td>¥20,000,000</td><td class="text-success">¥15,600,000</td><td>78%</td><td class="text-warning">¥4,400,000</td><td class="text-success">+15%</td><td class="text-success">+8%</td><td><span class="badge badge-success">正常</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
+                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-type="team" data-name="华南销售团队" data-target="15000000" data-done="9750000" data-rate="65" data-gap="5250000" data-yoy="+8"><td>华南销售团队</td><td>团队</td><td>¥15,000,000</td><td class="text-warning">¥9,750,000</td><td>65%</td><td class="text-danger">¥5,250,000</td><td class="text-success">+8%</td><td class="text-success">+3%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
+                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-type="team" data-name="西南销售团队" data-target="10000000" data-done="5800000" data-rate="58" data-gap="4200000" data-yoy="+3"><td>西南销售团队</td><td>团队</td><td>¥10,000,000</td><td class="text-warning">¥5,800,000</td><td>58%</td><td class="text-danger">¥4,200,000</td><td class="text-success">+3%</td><td class="text-danger">-5%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
+                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-type="region" data-name="华东区" data-target="20000000" data-done="15600000" data-rate="78" data-gap="4400000" data-yoy="+15"><td>华东区</td><td>区域</td><td>¥20,000,000</td><td class="text-success">¥15,600,000</td><td>78%</td><td class="text-warning">¥4,400,000</td><td class="text-success">+15%</td><td class="text-success">+8%</td><td><span class="badge badge-success">正常</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
+                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-type="region" data-name="西南区" data-target="15000000" data-done="9750000" data-rate="65" data-gap="5250000" data-yoy="+8"><td>西南区</td><td>区域</td><td>¥15,000,000</td><td class="text-warning">¥9,750,000</td><td>65%</td><td class="text-danger">¥5,250,000</td><td class="text-success">+8%</td><td class="text-danger">-3%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
+                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-type="region" data-name="华南区" data-target="12000000" data-done="7800000" data-rate="65" data-gap="4200000" data-yoy="+6"><td>华南区</td><td>区域</td><td>¥12,000,000</td><td class="text-warning">¥7,800,000</td><td>65%</td><td class="text-danger">¥4,200,000</td><td class="text-success">+6%</td><td class="text-success">+1%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
+                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-type="product" data-name="希森美康血球产品线" data-target="25000000" data-done="16250000" data-rate="65" data-gap="8750000" data-yoy="+10"><td>希森美康血球</td><td>产品线</td><td>¥25,000,000</td><td class="text-primary">¥16,250,000</td><td>65%</td><td class="text-danger">¥8,750,000</td><td class="text-success">+10%</td><td class="text-success">+2%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
+                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-type="product" data-name="生化产品线" data-target="15000000" data-done="9750000" data-rate="65" data-gap="5250000" data-yoy="+7"><td>生化产品线</td><td>产品线</td><td>¥15,000,000</td><td class="text-warning">¥9,750,000</td><td>65%</td><td class="text-danger">¥5,250,000</td><td class="text-success">+7%</td><td class="text-success">+2%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
+                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-type="product" data-name="免疫产品线" data-target="10000000" data-done="5300000" data-rate="53" data-gap="4700000" data-yoy="+2"><td>免疫产品线</td><td>产品线</td><td>¥10,000,000</td><td class="text-warning">¥5,300,000</td><td>53%</td><td class="text-danger">¥4,700,000</td><td class="text-success">+2%</td><td class="text-danger">-4%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
+                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-type="channel" data-name="昆明博奥生物技术有限公司" data-target="12000000" data-done="8160000" data-rate="68" data-gap="3840000" data-yoy="+11"><td>昆明博奥生物技术</td><td>渠道</td><td>¥12,000,000</td><td class="text-primary">¥8,160,000</td><td>68%</td><td class="text-warning">¥3,840,000</td><td class="text-success">+11%</td><td class="text-success">+6%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
+                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-type="channel" data-name="红河州博爱医疗器械有限公司" data-target="8000000" data-done="4800000" data-rate="60" data-gap="3200000" data-yoy="+5"><td>红河州博爱医疗器械</td><td>渠道</td><td>¥8,000,000</td><td class="text-warning">¥4,800,000</td><td>60%</td><td class="text-danger">¥3,200,000</td><td class="text-success">+5%</td><td class="text-success">+1%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
+                  <tr class="pf-row cursor-pointer" onclick="openPerformanceModal(this)" data-type="channel" data-name="大理康盛医疗器械有限公司" data-target="5000000" data-done="3250000" data-rate="65" data-gap="1750000" data-yoy="+9"><td>大理康盛医疗器械</td><td>渠道</td><td>¥5,000,000</td><td class="text-warning">¥3,250,000</td><td>65%</td><td class="text-warning">¥1,750,000</td><td class="text-success">+9%</td><td class="text-success">+3%</td><td><span class="badge badge-warning">落后进度</span></td><td><button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">详情</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -9222,6 +9492,17 @@
             <div class="p-3 rounded-lg bg-panel">
               <div class="text-sm font-medium text-ink mb-2">达成路径</div>
               <div class="text-sm text-sub">若要补足 ¥720 万缺口，需：1. 确保 3 个停滞重点意向在 8 月签约；2. 新增 2-3 个血球流水线项目进入投标阶段；3. 西南区每周召开缺口追赶会议。</div>
+            </div>
+          </div>
+
+          <!-- AI 分析结论 -->
+          <div id="performance-analysis" class="card mb-5 p-4 border-l-4 border-info">
+            <div class="flex items-start gap-3">
+              <svg class="icon icon-md text-info flex-shrink-0 mt-0.5"><use href="#icon-ai"/></svg>
+              <div>
+                <div class="font-semibold text-ink mb-1">AI 分析结论</div>
+                <div class="text-sm text-sub leading-relaxed">正在分析绩效数据...</div>
+              </div>
             </div>
           </div>
 </section>
@@ -18919,11 +19200,16 @@ Content-Type: application/json
 
     function filterPerformance() {
       const keyword = document.getElementById('performance-search').value.trim().toLowerCase();
+      const activeTabBtn = document.querySelector('#performance-tabs .tab.active');
+      const tab = activeTabBtn ? (activeTabBtn.dataset.pftab || 'mine') : 'mine';
       let visible = 0;
       document.querySelectorAll('.pf-card, .pf-row').forEach(el => {
+        const type = el.dataset.type || '';
         const name = (el.dataset.name || '').toLowerCase();
         const text = (el.innerText || '').toLowerCase();
-        const show = !keyword || name.includes(keyword) || text.includes(keyword);
+        const matchTab = tab === 'all' || type === tab;
+        const matchKeyword = !keyword || name.includes(keyword) || text.includes(keyword);
+        const show = matchTab && matchKeyword;
         el.classList.toggle('hidden', !show);
         if (show) visible++;
       });
@@ -18931,6 +19217,26 @@ Content-Type: application/json
       if (totalEl) totalEl.textContent = visible;
       const empty = document.getElementById('performance-empty');
       if (empty) empty.classList.toggle('hidden', visible > 0);
+      updatePerformanceAnalysis();
+    }
+
+    function updatePerformanceAnalysis() {
+      const activeTabBtn = document.querySelector('#performance-tabs .tab.active');
+      const tab = activeTabBtn ? (activeTabBtn.dataset.pftab || 'mine') : 'mine';
+      const items = Array.from(document.querySelectorAll('.pf-card:not(.hidden), .pf-row:not(.hidden)'));
+      const total = items.length;
+      const avgRate = total ? Math.round(items.reduce((s, el) => s + parseInt(el.dataset.rate || 0), 0) / total) : 0;
+      const behind = items.filter(el => parseInt(el.dataset.rate || 0) < 66).length;
+      const el = document.getElementById('performance-analysis');
+      if (!el) return;
+      const tabLabel = { mine: '人员绩效', team: '团队绩效', region: '区域绩效', product: '产品绩效', channel: '渠道绩效' };
+      let text = '';
+      if (tab === 'mine') text = '当前展示 ' + total + ' 位销售代表的绩效，平均达成率 ' + avgRate + '%，其中 ' + behind + ' 人低于时间进度（66%）。建议销售经理对落后成员进行一对一辅导，重点推进高优先级意向与回款。';
+      else if (tab === 'team') text = '当前展示 ' + total + ' 个销售团队的绩效，平均达成率 ' + avgRate + '%。团队间差距明显，建议借鉴华东销售团队经验，对西南销售团队加大资源倾斜与协同支持。';
+      else if (tab === 'region') text = '当前展示 ' + total + ' 个销售区域的绩效，平均达成率 ' + avgRate + '%。华东区表现最优，华南区与西南区缺口较大，建议结合区域客户分布与竞品动态调整区域资源投入。';
+      else if (tab === 'product') text = '当前展示 ' + total + ' 条产品线的绩效，平均达成率 ' + avgRate + '%。免疫产品线达成率最低，需分析是否受竞品冲击或线索质量下降影响，并制定专项上量方案。';
+      else if (tab === 'channel') text = '当前展示 ' + total + ' 家经销商的渠道绩效，平均达成率 ' + avgRate + '%。昆明博奥生物技术达成率领先，红河州博爱医疗器械缺口最大，建议跟进其重点项目与库存周转情况，确保返利达标。';
+      el.querySelector('.text-sub').textContent = text;
     }
 
     function openPerformanceModal(el) {
