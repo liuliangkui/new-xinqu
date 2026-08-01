@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const { t } = useI18n()
 
 const username = ref('')
 const password = ref('')
@@ -13,7 +15,7 @@ const errorMsg = ref('')
 
 async function handleLogin(): Promise<void> {
   if (!username.value || !password.value) {
-    errorMsg.value = '请输入用户名和密码'
+    errorMsg.value = t('login.error')
     return
   }
   loading.value = true
@@ -43,58 +45,55 @@ async function handleLogin(): Promise<void> {
   <div class="min-h-screen flex items-center justify-center bg-[var(--bg)] p-5">
     <div class="card w-full max-w-[400px] p-8">
       <div class="text-center mb-8">
-        <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[var(--primary)] text-white text-xl font-bold mb-4">
+        <span
+          class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[var(--primary)] text-white text-xl font-bold mb-4"
+        >
           鑫
         </span>
-        <h1 class="text-xl font-semibold text-[var(--ink)]">鑫渠 CRM</h1>
-        <p class="text-sm text-[var(--sub)] mt-1">企业级客户关系管理平台</p>
+        <h1 class="text-xl font-semibold text-[var(--ink)]">{{ t('login.title') }}</h1>
+        <p class="text-sm text-[var(--sub)] mt-1">{{ t('login.subtitle') }}</p>
       </div>
 
       <form class="flex flex-col gap-4" @submit.prevent="handleLogin">
         <div>
-          <label class="block text-sm text-[var(--ink)] mb-1.5">用户名</label>
+          <label class="block text-sm text-[var(--ink)] mb-1.5">{{ t('login.username') }}</label>
           <input
             v-model="username"
             type="text"
             class="input"
-            placeholder="请输入用户名"
+            :placeholder="t('login.username')"
             autocomplete="username"
-          >
+          />
         </div>
 
         <div>
-          <label class="block text-sm text-[var(--ink)] mb-1.5">密码</label>
+          <label class="block text-sm text-[var(--ink)] mb-1.5">{{ t('login.password') }}</label>
           <input
             v-model="password"
             type="password"
             class="input"
-            placeholder="请输入密码"
+            :placeholder="t('login.password')"
             autocomplete="current-password"
-          >
+          />
         </div>
 
-        <p
-          v-if="errorMsg"
-          class="text-xs text-[var(--danger)]"
-        >
+        <p v-if="errorMsg" class="text-xs text-[var(--danger)]">
           {{ errorMsg }}
         </p>
 
-        <button
-          type="submit"
-          class="btn btn-primary w-full mt-2"
-          :disabled="loading"
-        >
+        <button type="submit" class="btn btn-primary w-full mt-2" :disabled="loading">
           <span v-if="loading" class="icon icon-sm animate-spin mr-2">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" /></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path
+                d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
+              />
+            </svg>
           </span>
-          {{ loading ? '登录中…' : '登 录' }}
+          {{ loading ? t('common.loading') : t('login.submit') }}
         </button>
       </form>
 
-      <p class="text-xs text-[var(--placeholder)] text-center mt-6">
-        鑫渠 CRM v1.0.0
-      </p>
+      <p class="text-xs text-[var(--placeholder)] text-center mt-6">鑫渠 CRM v1.0.0</p>
     </div>
   </div>
 </template>

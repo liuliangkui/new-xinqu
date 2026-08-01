@@ -20,6 +20,8 @@
     "api:types": "npm run api:types -w apps/web",
     "test:server": "npm test -w apps/server",
     "test:web": "npm run test:unit -w apps/web",
+    "test:e2e": "playwright test --config e2e/playwright.config.ts",
+    "test:e2e:ui": "playwright test --config e2e/playwright.config.ts --ui",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -36,5 +38,8 @@
   },
   "engines": {
     "node": ">=22.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
   }
 }
