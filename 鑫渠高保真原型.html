@@ -15410,7 +15410,14 @@ Content-Type: application/json
       { id: 'tag-workorder', name: '工单', color: '#34C724', builtin: true },
       { id: 'tag-event', name: '活动', color: '#F54A45', builtin: true }
     ];
-    let customCalendarTags = JSON.parse(localStorage.getItem('xqCalendarTags') || '[]');
+    let customCalendarTags = [];
+    try {
+      const stored = localStorage.getItem('xqCalendarTags');
+      customCalendarTags = stored ? JSON.parse(stored) : [];
+      if (!Array.isArray(customCalendarTags)) customCalendarTags = [];
+    } catch (e) {
+      customCalendarTags = [];
+    }
     let activeCalendarTag = 'all';
 
     function getCalendarTagColorClasses(hex) {
