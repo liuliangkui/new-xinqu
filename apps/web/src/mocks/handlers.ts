@@ -70,6 +70,8 @@ import {
   allApps,
 } from '@/views/apps/mock'
 import type { AppListResult, AppItem, AppForm } from '@/views/apps/types'
+import { generateWorkbenchData } from '@/views/workbench/mock'
+import type { WorkbenchData } from '@/views/workbench/types'
 
 const ok = <T>(data: T): ApiResponse<T> => ({
   success: true,
@@ -630,5 +632,10 @@ export const handlers = [
     const body = (await request.json()) as { isFavorite?: boolean }
     toggleFavoriteInMock(id, body.isFavorite ?? true)
     return HttpResponse.json(ok({ success: true }))
+  }),
+
+  http.get('/api/v1/workbench', () => {
+    const result = generateWorkbenchData()
+    return HttpResponse.json(ok<WorkbenchData>(result))
   }),
 ]

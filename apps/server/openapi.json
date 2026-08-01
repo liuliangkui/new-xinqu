@@ -2013,6 +2013,26 @@
           "应用中心"
         ]
       }
+    },
+    "/workbench": {
+      "get": {
+        "operationId": "WorkbenchController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "返回工作台数据"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "获取工作台聚合数据",
+        "tags": [
+          "工作台"
+        ]
+      }
     }
   },
   "info": {

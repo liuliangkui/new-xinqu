@@ -435,6 +435,23 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/workbench': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 获取工作台聚合数据 */
+    get: operations['WorkbenchController_findAll']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -2106,6 +2123,24 @@ export interface operations {
     requestBody?: never
     responses: {
       /** @description 删除成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  WorkbenchController_findAll: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 返回工作台数据 */
       200: {
         headers: {
           [name: string]: unknown
