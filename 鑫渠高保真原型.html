@@ -3657,98 +3657,91 @@
 
         <!-- 8. 代理商管理 Agent Management -->
         <section class="view" id="view-dealers">
-          <div class="mb-5">
-            <h1 class="text-2xl font-bold text-ink mb-1">代理商管理</h1>
-            <p class="text-sub text-sm">代理商档案、授权、区域保护、返利、库存协同管理。</p>
+          <!-- 第1层：页面标题 + 新建按钮 -->
+          <div class="mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h1 class="text-2xl font-bold text-ink mb-1">代理商管理</h1>
+              <p class="text-sub text-sm">代理商档案、授权、区域保护、返利、库存协同管理。</p>
+            </div>
+            <button class="btn btn-primary" id="btn-create-dealer" onclick="openDealerCreateDrawer()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建代理商</button>
           </div>
 
+          <!-- 第2层：Tab 标签 + 视图切换 -->
           <div class="card mb-4">
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-4">
-              <div class="flex flex-wrap gap-2">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+              <div class="flex flex-wrap gap-2" id="dealer-tabs">
                 <button class="tab active" data-dealertab="all" onclick="switchDealerTab(this)">全部代理商</button>
                 <button class="tab" data-dealertab="core" onclick="switchDealerTab(this)">核心代理商</button>
                 <button class="tab" data-dealertab="auth" onclick="switchDealerTab(this)">授权到期</button>
                 <button class="tab" data-dealertab="warning" onclick="switchDealerTab(this)">库存预警</button>
                 <button class="tab" data-dealertab="channel-order" onclick="switchDealerTab(this)">渠道秩序</button>
               </div>
-              <button class="btn btn-primary" id="btn-create-dealer" onclick="openChannelSubDealerForm(); showToast(`打开新建代理商`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建代理商</button>
+              <div class="flex items-center gap-2" id="dealer-view-switch">
+                <button class="btn btn-primary" id="dealer-view-card" onclick="setDealerView('card')"><svg class="icon icon-sm"><use href="#icon-grid"/></svg> 卡片</button>
+                <button class="btn btn-ghost" id="dealer-view-list" onclick="setDealerView('list')"><svg class="icon icon-sm"><use href="#icon-list"/></svg> 列表</button>
+              </div>
             </div>
           </div>
 
-          <!-- 全部代理商 / 核心代理商 / 授权到期 / 库存预警 面板 -->
+          <!-- 第3层：搜索 + 筛选 -->
+          <div class="card mb-4" id="dealer-filter-bar">
+            <div class="flex flex-wrap gap-3">
+              <div class="relative flex-1 min-w-[200px] max-w-sm">
+                <svg class="icon icon-md absolute left-3 top-1/2 -translate-y-1/2 text-placeholder"><use href="#icon-search"/></svg>
+                <input type="text" class="input pl-10" id="dealer-search-input" placeholder="搜索代理商名称、编码、区域" oninput="onDealerSearch(this.value)">
+              </div>
+              <select class="input w-auto" id="dealer-region-filter" onchange="onDealerRegionFilter(this.value)">
+                <option value="">全部区域</option>
+                <option value="云南-昆明">云南-昆明</option>
+                <option value="云南-大理">云南-大理</option>
+                <option value="云南-曲靖">云南-曲靖</option>
+                <option value="云南-红河">云南-红河</option>
+                <option value="云南-玉溪">云南-玉溪</option>
+                <option value="云南-楚雄">云南-楚雄</option>
+                <option value="云南-昭通">云南-昭通</option>
+                <option value="云南-普洱">云南-普洱</option>
+                <option value="云南-临沧">云南-临沧</option>
+                <option value="云南-丽江">云南-丽江</option>
+                <option value="云南-西双版纳">云南-西双版纳</option>
+                <option value="云南-保山">云南-保山</option>
+              </select>
+              <select class="input w-auto" id="dealer-level-filter" onchange="onDealerLevelFilter(this.value)">
+                <option value="">全部等级</option>
+                <option value="核心">核心</option>
+                <option value="一般">一般</option>
+                <option value="潜在">潜在</option>
+              </select>
+              <select class="input w-auto" id="dealer-status-filter" onchange="onDealerStatusFilter(this.value)">
+                <option value="">全部状态</option>
+                <option value="授权有效">授权有效</option>
+                <option value="授权 30 天后到期">授权 30 天后到期</option>
+                <option value="已暂停">已暂停</option>
+                <option value="待准入">待准入</option>
+              </select>
+              <button class="btn btn-ghost" onclick="resetDealerFilters()"><svg class="icon icon-sm"><use href="#icon-filter"/></svg> 重置筛选</button>
+            </div>
+          </div>
+
+          <!-- 第4层：代理商列表面板 -->
           <div id="dealer-panel-list" class="dealer-panel">
-            <!-- KPI -->
-            <div class="kpi-grid mb-5">
-              <div class="card card-hover"><div class="text-sub text-xs mb-1">合作代理商</div><div class="text-2xl font-bold text-ink">86</div><div class="text-xs text-sub mt-1">其中核心 12 家</div></div>
-              <div class="card card-hover"><div class="text-sub text-xs mb-1">有效授权</div><div class="text-2xl font-bold text-success">214</div><div class="text-xs text-sub mt-1">本月新增 8</div></div>
-              <div class="card card-hover"><div class="text-sub text-xs mb-1">区域保护冲突</div><div class="text-2xl font-bold text-danger">3</div><div class="text-xs text-danger mt-1">待处理</div></div>
-              <div class="card card-hover"><div class="text-sub text-xs mb-1">待结算返利</div><div class="text-2xl font-bold text-warning">¥ 142万</div><div class="text-xs text-warning mt-1">5 笔待审批</div></div>
+            <!-- KPI 统计 -->
+            <div class="kpi-grid mb-5" id="dealer-kpi-grid">
+              <div class="card card-hover"><div class="text-sub text-xs mb-1">合作代理商</div><div class="text-2xl font-bold text-ink" id="dealer-kpi-total">0</div><div class="text-xs text-sub mt-1">其中核心 <span id="dealer-kpi-core">0</span> 家</div></div>
+              <div class="card card-hover"><div class="text-sub text-xs mb-1">有效授权</div><div class="text-2xl font-bold text-success" id="dealer-kpi-auth">0</div><div class="text-xs text-sub mt-1">本月新增 <span id="dealer-kpi-new">0</span></div></div>
+              <div class="card card-hover"><div class="text-sub text-xs mb-1">区域保护冲突</div><div class="text-2xl font-bold text-danger" id="dealer-kpi-conflict">0</div><div class="text-xs text-danger mt-1">待处理</div></div>
+              <div class="card card-hover"><div class="text-sub text-xs mb-1">库存预警</div><div class="text-2xl font-bold text-warning" id="dealer-kpi-warning">0</div><div class="text-xs text-warning mt-1">需关注</div></div>
             </div>
 
-            <div class="card mb-4">
-              <div class="flex flex-wrap gap-3">
-                <div class="relative flex-1 min-w-[200px] max-w-sm">
-                  <svg class="icon icon-md absolute left-3 top-1/2 -translate-y-1/2 text-placeholder"><use href="#icon-search"/></svg>
-                  <input type="text" class="input pl-10" placeholder="搜索代理商名称、授权区域">
-                </div>
-                <select class="input w-auto"><option>全部区域</option><option>云南-昆明</option><option>云南-大理</option><option>云南-曲靖</option></select>
-                <select class="input w-auto"><option>全部等级</option><option>核心</option><option>一般</option><option>潜在</option></select>
-                <button class="btn btn-ghost" onclick="showToast(`打开高级筛选`)"><svg class="icon icon-sm"><use href="#icon-filter"/></svg> 更多筛选</button>
-              </div>
+            <!-- 内容区：卡片 / 表格 -->
+            <div id="dealer-content-area">
+              <!-- 动态渲染 -->
             </div>
 
-            <div class="card-grid mb-4">
-              <div class="card card-hover p-4" onclick="switchView('dealer-detail')" data-dealer-id="DL-2024001" data-dealer-name="昆明博奥生物技术有限公司" data-dealer-level="核心" data-dealer-region="云南-昆明、玉溪" data-dealer-status="授权有效" data-dealer-amount="680">
-                <div class="flex items-start justify-between mb-3">
-                  <span class="badge badge-success">核心</span>
-                  <button class="text-sub hover:text-primary" onclick="showToast(`功能按钮`)"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
-                </div>
-                <div class="font-semibold text-ink mb-1">昆明博奥生物技术有限公司</div>
-                <div class="text-sub text-sm mb-2">负责人：陈总 · 132****8888</div>
-                <div class="text-xs text-sub mb-3">授权区域：云南-昆明、玉溪 · 主营：血球、生化</div>
-                <div class="flex items-center justify-between pt-3 border-t border-line">
-                  <span class="text-xs text-placeholder">库存金额：¥ 680万</span>
-                  <span class="text-xs text-success">授权有效</span>
-                </div>
-              </div>
-              <div class="card card-hover p-4" data-dealer-id="DL-2024002" data-dealer-name="大理康盛医疗器械有限公司" data-dealer-level="一般" data-dealer-region="云南-大理、丽江" data-dealer-status="授权有效" data-dealer-warning="血球试剂库存不足">
-                <div class="flex items-start justify-between mb-3">
-                  <span class="badge badge-primary">一般</span>
-                  <button class="text-sub hover:text-primary" onclick="showToast(`功能按钮`)"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
-                </div>
-                <div class="font-semibold text-ink mb-1">大理康盛医疗器械有限公司</div>
-                <div class="text-sub text-sm mb-2">负责人：杨经理 · 139****6666</div>
-                <div class="text-xs text-sub mb-3">授权区域：云南-大理、丽江 · 主营：试剂</div>
-                <div class="flex items-center justify-between pt-3 border-t border-line">
-                  <span class="text-xs text-danger">血球试剂库存不足</span>
-                  <span class="text-xs text-success">授权有效</span>
-                </div>
-              </div>
-              <div class="card card-hover p-4" data-dealer-id="DL-2024003" data-dealer-name="曲靖瑞康医疗设备有限公司" data-dealer-level="潜在" data-dealer-region="云南-曲靖" data-dealer-status="授权 30 天后到期" data-dealer-amount="120">
-                <div class="flex items-start justify-between mb-3">
-                  <span class="badge badge-warning">潜在</span>
-                  <button class="text-sub hover:text-primary" onclick="showToast(`功能按钮`)"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
-                </div>
-                <div class="font-semibold text-ink mb-1">曲靖瑞康医疗设备有限公司</div>
-                <div class="text-sub text-sm mb-2">负责人：周总 · 137****5555</div>
-                <div class="text-xs text-sub mb-3">授权区域：云南-曲靖 · 主营：POCT</div>
-                <div class="flex items-center justify-between pt-3 border-t border-line">
-                  <span class="text-xs text-placeholder">库存金额：¥ 120万</span>
-                  <span class="text-xs text-warning">授权 30 天后到期</span>
-                </div>
-              </div>
-              <div class="card card-hover p-4" data-dealer-id="DL-2024004" data-dealer-name="红河州博爱医疗器械有限公司" data-dealer-level="核心" data-dealer-region="云南-红河" data-dealer-status="授权有效" data-dealer-amount="420">
-                <div class="flex items-start justify-between mb-3">
-                  <span class="badge badge-success">核心</span>
-                  <button class="text-sub hover:text-primary" onclick="showToast(`功能按钮`)"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>
-                </div>
-                <div class="font-semibold text-ink mb-1">红河州博爱医疗器械有限公司</div>
-                <div class="text-sub text-sm mb-2">负责人：马总 · 138****9999</div>
-                <div class="text-xs text-sub mb-3">授权区域：云南-红河 · 主营：免疫、凝血</div>
-                <div class="flex items-center justify-between pt-3 border-t border-line">
-                  <span class="text-xs text-placeholder">库存金额：¥ 420万</span>
-                  <span class="text-xs text-success">授权有效</span>
-                </div>
+            <!-- 第5层：分页 -->
+            <div class="flex items-center justify-between mt-4" id="dealer-pagination">
+              <div class="text-sub text-sm" id="dealer-page-info">共 0 条</div>
+              <div class="pagination" id="dealer-page-buttons">
+                <!-- 动态渲染 -->
               </div>
             </div>
           </div>
@@ -3787,50 +3780,50 @@
                     </tr>
                   </thead>
                   <tbody id="channel-sub-dealer-tbody">
-                    <tr data-sub-dealer-id="SD-2026073101" data-sub-dealer-status="已通过">
+                    <tr data-sub-dealer-id="SD-2026073101" data-sub-dealer-name="玉溪润达医疗器械有限公司" data-sub-dealer-master="昆明博奥生物技术有限公司" data-sub-dealer-region="云南-玉溪" data-sub-dealer-brand="血球、生化" data-sub-dealer-time="2026-07-28" data-sub-dealer-status="已通过">
                       <td class="font-medium text-ink">玉溪润达医疗器械有限公司</td>
                       <td>昆明博奥生物技术有限公司</td>
                       <td>云南-玉溪</td>
                       <td>血球、生化</td>
                       <td>2026-07-28</td>
                       <td><span class="badge badge-success">已通过</span></td>
-                      <td><button class="btn btn-ghost text-xs" onclick="showToast('查看详情')">查看</button></td>
+                      <td><button class="btn btn-ghost text-xs" onclick="openChannelSubDealerDetailModal(this)">查看</button></td>
                     </tr>
-                    <tr data-sub-dealer-id="SD-2026073102" data-sub-dealer-status="待审">
+                    <tr data-sub-dealer-id="SD-2026073102" data-sub-dealer-name="楚雄康明医疗设备商行" data-sub-dealer-master="昆明博奥生物技术有限公司" data-sub-dealer-region="云南-楚雄" data-sub-dealer-brand="POCT" data-sub-dealer-time="2026-07-30" data-sub-dealer-status="待审">
                       <td class="font-medium text-ink">楚雄康明医疗设备商行</td>
                       <td>昆明博奥生物技术有限公司</td>
                       <td>云南-楚雄</td>
                       <td>POCT</td>
                       <td>2026-07-30</td>
                       <td><span class="badge badge-warning">待审</span></td>
-                      <td><button class="btn btn-ghost text-xs" onclick="showToast('查看详情')">查看</button></td>
+                      <td><button class="btn btn-ghost text-xs" onclick="openChannelSubDealerDetailModal(this)">查看</button></td>
                     </tr>
-                    <tr data-sub-dealer-id="SD-2026073103" data-sub-dealer-status="已通过">
+                    <tr data-sub-dealer-id="SD-2026073103" data-sub-dealer-name="昭通瑞康医疗器械有限公司" data-sub-dealer-master="红河州博爱医疗器械有限公司" data-sub-dealer-region="云南-昭通" data-sub-dealer-brand="免疫、凝血" data-sub-dealer-time="2026-07-25" data-sub-dealer-status="已通过">
                       <td class="font-medium text-ink">昭通瑞康医疗器械有限公司</td>
                       <td>红河州博爱医疗器械有限公司</td>
                       <td>云南-昭通</td>
                       <td>免疫、凝血</td>
                       <td>2026-07-25</td>
                       <td><span class="badge badge-success">已通过</span></td>
-                      <td><button class="btn btn-ghost text-xs" onclick="showToast('查看详情')">查看</button></td>
+                      <td><button class="btn btn-ghost text-xs" onclick="openChannelSubDealerDetailModal(this)">查看</button></td>
                     </tr>
-                    <tr data-sub-dealer-id="SD-2026073104" data-sub-dealer-status="驳回">
+                    <tr data-sub-dealer-id="SD-2026073104" data-sub-dealer-name="普洱盛达商贸有限公司" data-sub-dealer-master="大理康盛医疗器械有限公司" data-sub-dealer-region="云南-普洱" data-sub-dealer-brand="试剂" data-sub-dealer-time="2026-07-26" data-sub-dealer-status="驳回">
                       <td class="font-medium text-ink">普洱盛达商贸有限公司</td>
                       <td>大理康盛医疗器械有限公司</td>
                       <td>云南-普洱</td>
                       <td>试剂</td>
                       <td>2026-07-26</td>
                       <td><span class="badge badge-danger">驳回</span></td>
-                      <td><button class="btn btn-ghost text-xs" onclick="showToast('查看详情')">查看</button></td>
+                      <td><button class="btn btn-ghost text-xs" onclick="openChannelSubDealerDetailModal(this)">查看</button></td>
                     </tr>
-                    <tr data-sub-dealer-id="SD-2026073105" data-sub-dealer-status="待审">
+                    <tr data-sub-dealer-id="SD-2026073105" data-sub-dealer-name="临沧博兴医疗科技" data-sub-dealer-master="红河州博爱医疗器械有限公司" data-sub-dealer-region="云南-临沧" data-sub-dealer-brand="血球" data-sub-dealer-time="2026-07-31" data-sub-dealer-status="待审">
                       <td class="font-medium text-ink">临沧博兴医疗科技</td>
                       <td>红河州博爱医疗器械有限公司</td>
                       <td>云南-临沧</td>
                       <td>血球</td>
                       <td>2026-07-31</td>
                       <td><span class="badge badge-warning">待审</span></td>
-                      <td><button class="btn btn-ghost text-xs" onclick="showToast('查看详情')">查看</button></td>
+                      <td><button class="btn btn-ghost text-xs" onclick="openChannelSubDealerDetailModal(this)">查看</button></td>
                     </tr>
                   </tbody>
                 </table>
@@ -3873,7 +3866,7 @@
                       <td><span class="badge badge-warning">待处理</span></td>
                       <td>
                         <div class="flex gap-1">
-                          <button class="btn btn-ghost text-xs" onclick="showToast('查看预警详情')">详情</button>
+                          <button class="btn btn-ghost text-xs" onclick="openChannelCrossDetailModal(this)">详情</button>
                           <button class="btn btn-primary text-xs" onclick="event.stopPropagation();openDealerActionModal('处理', this.closest('tr').children[1].innerText)">处理</button>
                           <button class="btn btn-danger text-xs" onclick="event.stopPropagation();openDealerActionModal('拦截', this.closest('tr').children[1].innerText)">拦截</button>
                         </div>
@@ -3890,7 +3883,7 @@
                       <td><span class="badge badge-warning">待处理</span></td>
                       <td>
                         <div class="flex gap-1">
-                          <button class="btn btn-ghost text-xs" onclick="showToast('查看预警详情')">详情</button>
+                          <button class="btn btn-ghost text-xs" onclick="openChannelCrossDetailModal(this)">详情</button>
                           <button class="btn btn-primary text-xs" onclick="event.stopPropagation();openDealerActionModal('处理', this.closest('tr').children[1].innerText)">处理</button>
                           <button class="btn btn-danger text-xs" onclick="event.stopPropagation();openDealerActionModal('拦截', this.closest('tr').children[1].innerText)">拦截</button>
                         </div>
@@ -3907,7 +3900,7 @@
                       <td><span class="badge badge-success">已放行</span></td>
                       <td>
                         <div class="flex gap-1">
-                          <button class="btn btn-ghost text-xs" onclick="showToast('查看预警详情')">详情</button>
+                          <button class="btn btn-ghost text-xs" onclick="openChannelCrossDetailModal(this)">详情</button>
                           <button class="btn btn-ghost text-xs" disabled onclick="event.stopPropagation();openDealerActionModal('处理', this.closest('tr').children[1].innerText)">处理</button>
                           <button class="btn btn-ghost text-xs" disabled onclick="event.stopPropagation();openDealerActionModal('拦截', this.closest('tr').children[1].innerText)">拦截</button>
                         </div>
@@ -3928,7 +3921,7 @@
                 <button class="btn btn-primary" onclick="openChannelRebateForm()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新增返利政策</button>
               </div>
               <div class="card-grid mb-4" id="channel-rebate-policy-grid">
-                <div class="card p-4" data-policy-id="RP-2026001" data-policy-status="生效中">
+                <div class="card p-4 cursor-pointer hover:shadow-hover transition-shadow" data-policy-id="RP-2026001" data-policy-name="血球线季度返利" data-policy-status="生效中" onclick="openChannelRebateDetailModal(this.querySelector('.btn-ghost'))">
                   <div class="flex items-start justify-between mb-3">
                     <div class="font-semibold text-ink">血球线季度返利</div>
                     <span class="badge badge-success">生效中</span>
@@ -3940,8 +3933,9 @@
                     <div class="flex justify-between"><span class="text-sub">生效时间</span><span class="text-ink">2026-01-01 ~ 2026-12-31</span></div>
                     <div class="flex justify-between"><span class="text-sub">适用区域</span><span class="text-ink">云南全省</span></div>
                   </div>
+                  <div class="mt-3 pt-3 border-t border-line flex justify-end"><button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openChannelRebateDetailModal(this)">查看</button></div>
                 </div>
-                <div class="card p-4" data-policy-id="RP-2026002" data-policy-status="生效中">
+                <div class="card p-4 cursor-pointer hover:shadow-hover transition-shadow" data-policy-id="RP-2026002" data-policy-name="生化线上量激励" data-policy-status="生效中" onclick="openChannelRebateDetailModal(this.querySelector('.btn-ghost'))">
                   <div class="flex items-start justify-between mb-3">
                     <div class="font-semibold text-ink">生化线上量激励</div>
                     <span class="badge badge-success">生效中</span>
@@ -3953,8 +3947,9 @@
                     <div class="flex justify-between"><span class="text-sub">生效时间</span><span class="text-ink">2026-04-01 ~ 2026-09-30</span></div>
                     <div class="flex justify-between"><span class="text-sub">适用区域</span><span class="text-ink">云南-昆明、曲靖</span></div>
                   </div>
+                  <div class="mt-3 pt-3 border-t border-line flex justify-end"><button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openChannelRebateDetailModal(this)">查看</button></div>
                 </div>
-                <div class="card p-4" data-policy-id="RP-2026003" data-policy-status="待生效">
+                <div class="card p-4 cursor-pointer hover:shadow-hover transition-shadow" data-policy-id="RP-2026003" data-policy-name="免疫线回款奖励" data-policy-status="待生效" onclick="openChannelRebateDetailModal(this.querySelector('.btn-ghost'))">
                   <div class="flex items-start justify-between mb-3">
                     <div class="font-semibold text-ink">免疫线回款奖励</div>
                     <span class="badge badge-warning">待生效</span>
@@ -3966,6 +3961,7 @@
                     <div class="flex justify-between"><span class="text-sub">生效时间</span><span class="text-ink">2026-08-01 ~ 2026-12-31</span></div>
                     <div class="flex justify-between"><span class="text-sub">适用区域</span><span class="text-ink">云南-红河、大理</span></div>
                   </div>
+                  <div class="mt-3 pt-3 border-t border-line flex justify-end"><button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openChannelRebateDetailModal(this)">查看</button></div>
                 </div>
               </div>
             </div>
@@ -4000,7 +3996,7 @@
                       <td>血球试剂 5 分类</td>
                       <td>50 盒</td>
                       <td><span class="badge badge-warning">待审</span></td>
-                      <td><button class="btn btn-ghost text-xs" onclick="showToast('查看调拨详情')">查看</button></td>
+                      <td><button class="btn btn-ghost text-xs" onclick="openChannelTransferDetailModal(this)">查看</button></td>
                     </tr>
                     <tr data-transfer-id="TR-2026073102" data-transfer-status="已通过">
                       <td class="font-medium text-ink">TR-2026073102</td>
@@ -4009,7 +4005,7 @@
                       <td>生化清洗液</td>
                       <td>30 瓶</td>
                       <td><span class="badge badge-success">已通过</span></td>
-                      <td><button class="btn btn-ghost text-xs" onclick="showToast('查看调拨详情')">查看</button></td>
+                      <td><button class="btn btn-ghost text-xs" onclick="openChannelTransferDetailModal(this)">查看</button></td>
                     </tr>
                     <tr data-transfer-id="TR-2026073103" data-transfer-status="已驳回">
                       <td class="font-medium text-ink">TR-2026073103</td>
@@ -4018,17 +4014,14 @@
                       <td>免疫发光试剂 A</td>
                       <td>20 盒</td>
                       <td><span class="badge badge-danger">已驳回</span></td>
-                      <td><button class="btn btn-ghost text-xs" onclick="showToast('查看调拨详情')">查看</button></td>
+                      <td><button class="btn btn-ghost text-xs" onclick="openChannelTransferDetailModal(this)">查看</button></td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
-
-          <!-- Dealer detail placeholder, actual view rendered below -->
         </section>
-
         <!-- 渠道秩序抽屉：新增二级报备 -->
         <div id="drawer-channel-sub-dealer-form" class="drawer-overlay" onclick="if(event.target===this) closeChannelSubDealerForm()">
           <div class="drawer" onclick="event.stopPropagation()">
@@ -4149,27 +4142,8 @@
         <!-- 8b. 代理商详情 Agent Detail -->
         <section class="view" id="view-dealer-detail">
           <button class="btn btn-ghost mb-3" onclick="switchView('dealers')"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg> 返回代理商列表</button>
-            <div class="card mb-4">
-              <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                <div class="flex items-start gap-4">
-                  <div class="w-16 h-16 rounded-xl bg-info-bg text-info flex items-center justify-center text-2xl font-bold flex-shrink-0">博</div>
-                  <div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                      <h2 class="text-xl font-bold text-ink">昆明博奥生物技术有限公司</h2>
-                      <span class="badge badge-success">核心代理商</span>
-                    </div>
-                    <div class="text-sub text-sm mt-1 flex flex-wrap gap-3">
-                      <span class="flex items-center gap-1"><svg class="icon icon-xs"><use href="#icon-location"/></svg> 云南 · 昆明</span>
-                      <span class="flex items-center gap-1"><svg class="icon icon-xs"><use href="#icon-user"/></svg> 负责人：陈总</span>
-                      <span class="flex items-center gap-1"><svg class="icon icon-xs"><use href="#icon-phone"/></svg> 132****8888</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex gap-2">
-                  <button class="btn btn-ghost" onclick="event.stopPropagation();openDealerEditModal()"><svg class="icon icon-sm"><use href="#icon-edit"/></svg> 编辑</button>
-                  <button class="btn btn-primary" onclick="openDealerAuthorizeModal()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新增授权</button>
-                </div>
-              </div>
+            <div class="card mb-4" id="dealer-detail-header">
+              <!-- 动态渲染 -->
             </div>
 
             <div class="card mb-4">
@@ -4183,92 +4157,52 @@
                 <button class="tab" data-dtab="timeline" onclick="switchDealerDetailTab(this)">时间线</button>
               </div>
 
-              <div id="d-overview" class="d-panel mt-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
-                  <div class="p-4 rounded-xl bg-panel"><div class="text-sub text-xs">授权产品线</div><div class="text-2xl font-bold text-ink mt-1">6</div></div>
-                  <div class="p-4 rounded-xl bg-panel"><div class="text-sub text-xs">授权区域</div><div class="text-2xl font-bold text-ink mt-1">2</div></div>
-                  <div class="p-4 rounded-xl bg-panel"><div class="text-sub text-xs">年度任务</div><div class="text-2xl font-bold text-ink mt-1">¥ 5,000万</div></div>
-                  <div class="p-4 rounded-xl bg-panel"><div class="text-sub text-xs">年度达成</div><div class="text-2xl font-bold text-primary mt-1">62%</div></div>
-                </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                  <div class="card p-4">
-                    <h4 class="font-semibold text-ink mb-3">基本信息</h4>
-                    <div class="space-y-2 text-sm">
-                      <div class="flex justify-between"><span class="text-sub">统一社会信用代码</span><span class="text-ink">91530100MA6K*****</span></div>
-                      <div class="flex justify-between"><span class="text-sub">注册地址</span><span class="text-ink">昆明市高新区科医路 88 号</span></div>
-                      <div class="flex justify-between"><span class="text-sub">合作起始日</span><span class="text-ink">2020-05-18</span></div>
-                      <div class="flex justify-between"><span class="text-sub">结算账期</span><span class="text-ink">月结 60 天</span></div>
-                    </div>
-                  </div>
-                  <div class="card p-4">
-                    <h4 class="font-semibold text-ink mb-3">近期动态</h4>
-                    <div class="space-y-3">
-                      <div class="text-sm"><span class="text-primary">7月25日</span> <span class="text-ink">提交 Q2 返利申请 ¥86,000</span></div>
-                      <div class="text-sm"><span class="text-primary">7月18日</span> <span class="text-ink">血球试剂补货订单 ¥124,000</span></div>
-                      <div class="text-sm"><span class="text-primary">7月10日</span> <span class="text-ink">新增云南-玉溪授权区域</span></div>
-                    </div>
-                  </div>
+              <div id="d-overview" class="d-panel mt-4 dealer-detail-panel">
+                <div id="dealer-detail-overview">
+                  <!-- 动态渲染 -->
                 </div>
               </div>
 
-              <div id="d-auth" class="d-panel mt-4 hidden">
-                <table class="data-table">
-                  <thead><tr><th>产品线</th><th>授权区域</th><th>授权开始</th><th>授权结束</th><th>状态</th><th>操作</th></tr></thead>
-                  <tbody>
-                    <tr><td>血球分析</td><td>云南-昆明</td><td>2024-01-01</td><td>2026-12-31</td><td><span class="badge badge-success">有效</span></td><td><button class="btn btn-ghost text-xs" onclick="showToast('授权详情：血球分析 / 云南-昆明')">查看</button></td></tr>
-                    <tr><td>生化分析</td><td>云南-昆明</td><td>2024-01-01</td><td>2026-12-31</td><td><span class="badge badge-success">有效</span></td><td><button class="btn btn-ghost text-xs" onclick="showToast('授权详情：生化分析 / 云南-昆明')">查看</button></td></tr>
-                    <tr><td>血球试剂</td><td>云南-玉溪</td><td>2026-07-10</td><td>2027-07-09</td><td><span class="badge badge-success">有效</span></td><td><button class="btn btn-ghost text-xs" onclick="showToast('授权详情：血球试剂 / 云南-玉溪')">查看</button></td></tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div id="d-region" class="d-panel mt-4 hidden">
-                <div class="space-y-3">
-                  <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">云南-昆明</div><div class="text-xs text-sub">血球、生化独家授权</div></div><span class="badge badge-success">无冲突</span></div>
-                  <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">云南-玉溪</div><div class="text-xs text-sub">血球试剂独家授权</div></div><span class="badge badge-success">无冲突</span></div>
+              <div id="d-auth" class="d-panel mt-4 dealer-detail-panel hidden">
+                <div class="flex justify-end mb-3">
+                  <button class="btn btn-primary" onclick="openDealerAuthDrawer()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新增授权</button>
+                </div>
+                <div id="dealer-detail-auth">
+                  <!-- 动态渲染 -->
                 </div>
               </div>
 
-              <div id="d-rebate" class="d-panel mt-4 hidden">
-                <table class="data-table">
-                  <thead><tr><th>返利期间</th><th>计算基数</th><th>返利比例</th><th>返利金额</th><th>状态</th><th>操作</th></tr></thead>
-                  <tbody>
-                    <tr><td>2026 Q2</td><td>¥ 860万</td><td>1%</td><td>¥ 86,000</td><td><span class="badge badge-warning">审批中</span></td><td><button class="btn btn-ghost text-xs" onclick="openCommissionStatementModal(this)" data-dealer="昆明博奥生物技术有限公司" data-period="2026 Q2" data-base="¥860万" data-rate="1%" data-amount="¥86,000" data-status="审批中">查看</button></td></tr>
-                    <tr><td>2026 Q1</td><td>¥ 720万</td><td>1%</td><td>¥ 72,000</td><td><span class="badge badge-success">已结算</span></td><td><button class="btn btn-ghost text-xs" onclick="openCommissionStatementModal(this)" data-dealer="昆明博奥生物技术有限公司" data-period="2026 Q1" data-base="¥720万" data-rate="1%" data-amount="¥72,000" data-status="已结算">查看</button></td></tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div id="d-inventory" class="d-panel mt-4 hidden">
-                <table class="data-table">
-                  <thead><tr><th>产品</th><th>库存数量</th><th>库存金额</th><th>安全库存</th><th>状态</th></tr></thead>
-                  <tbody>
-                    <tr class="cursor-pointer" onclick="showToast('库存明细：血球试剂 5 分类')" data-product="血球试剂 5 分类" data-qty="156 盒" data-amount="¥46.8万"><td>血球试剂 5 分类</td><td>156 盒</td><td>¥ 46.8万</td><td>100 盒</td><td><span class="badge badge-success">充足</span></td></tr>
-                    <tr class="cursor-pointer" onclick="showToast('库存明细：生化清洗液')" data-product="生化清洗液" data-qty="80 瓶" data-amount="¥12万"><td>生化清洗液</td><td>80 瓶</td><td>¥ 12万</td><td>60 瓶</td><td><span class="badge badge-success">充足</span></td></tr>
-                    <tr class="cursor-pointer" onclick="showToast('库存明细：免疫发光试剂 A')" data-product="免疫发光试剂 A" data-qty="12 盒" data-amount="¥8.4万"><td>免疫发光试剂 A</td><td>12 盒</td><td>¥ 8.4万</td><td>20 盒</td><td><span class="badge badge-warning">偏低</span></td></tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div id="d-tasks" class="d-panel mt-4 hidden">
-                <div class="space-y-3">
-                  <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">2026 年度销售任务</div><div class="text-xs text-sub">目标 ¥5,000万 · 已达成 ¥3,100万</div></div><span class="text-primary font-semibold">62%</span></div>
-                  <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">血球产品线任务</div><div class="text-xs text-sub">目标 ¥2,000万 · 已达成 ¥1,480万</div></div><span class="text-primary font-semibold">74%</span></div>
-                  <div class="card p-3 flex items-center justify-between"><div><div class="font-medium text-ink">生化产品线任务</div><div class="text-xs text-sub">目标 ¥1,500万 · 已达成 ¥820万</div></div><span class="text-warning font-semibold">55%</span></div>
+              <div id="d-region" class="d-panel mt-4 dealer-detail-panel hidden">
+                <div id="dealer-detail-region">
+                  <!-- 动态渲染 -->
                 </div>
               </div>
 
-              <div id="d-timeline" class="d-panel mt-4 hidden">
-                <div class="timeline">
-                  <div class="timeline-item"><div class="timeline-dot bg-primary"></div><div class="card p-3"><div class="font-medium text-ink">提交 Q2 返利申请</div><div class="text-xs text-sub mt-1">陈总 · 2026-07-25 · 金额 ¥86,000</div></div></div>
-                  <div class="timeline-item"><div class="timeline-dot bg-success"></div><div class="card p-3"><div class="font-medium text-ink">血球试剂补货入库</div><div class="text-xs text-sub mt-1">仓库 · 2026-07-18 · 金额 ¥124,000</div></div></div>
-                  <div class="timeline-item"><div class="timeline-dot bg-info"></div><div class="card p-3"><div class="font-medium text-ink">新增玉溪授权区域</div><div class="text-xs text-sub mt-1">张经理 · 2026-07-10</div></div></div>
+              <div id="d-rebate" class="d-panel mt-4 dealer-detail-panel hidden">
+                <div id="dealer-detail-rebate">
+                  <!-- 动态渲染 -->
+                </div>
+              </div>
+
+              <div id="d-inventory" class="d-panel mt-4 dealer-detail-panel hidden">
+                <div id="dealer-detail-inventory">
+                  <!-- 动态渲染 -->
+                </div>
+              </div>
+
+              <div id="d-tasks" class="d-panel mt-4 dealer-detail-panel hidden">
+                <div id="dealer-detail-tasks">
+                  <!-- 动态渲染 -->
+                </div>
+              </div>
+
+              <div id="d-timeline" class="d-panel mt-4 dealer-detail-panel hidden">
+                <div id="dealer-detail-timeline">
+                  <!-- 动态渲染 -->
                 </div>
               </div>
             </div>
         </section>
-
-
         <!-- 9. 工单管理 Work Order Management -->
         <section class="view" id="view-workorders">
           <div class="mb-5">
@@ -13687,6 +13621,481 @@ Content-Type: application/json
   </div>
 
   <script>
+    /* ===== Dealer data & state ===== */
+    const dealerData = [
+      {
+        id: 'DL-2024001',
+        name: '昆明博奥生物技术有限公司',
+        level: '核心',
+        region: '云南-昆明、玉溪',
+        productLines: ['血球', '生化', '血球试剂', '生化试剂'],
+        status: '授权有效',
+        manager: '陈总',
+        phone: '132****8888',
+        amount: 680,
+        warning: '',
+        authEnd: '2026-12-31',
+        socialCode: '91530100MA6K*****',
+        address: '昆明市高新区科医路 88 号',
+        coopStart: '2020-05-18',
+        settlement: '月结 60 天',
+        annualTarget: 5000,
+        annualAchieved: 3100,
+        authList: [
+          { productLine: '血球分析', region: '云南-昆明', start: '2024-01-01', end: '2026-12-31', status: '有效' },
+          { productLine: '生化分析', region: '云南-昆明', start: '2024-01-01', end: '2026-12-31', status: '有效' },
+          { productLine: '血球试剂', region: '云南-玉溪', start: '2026-07-10', end: '2027-07-09', status: '有效' }
+        ],
+        rebateList: [
+          { period: '2026 Q2', base: '860万', rate: '1%', amount: '86,000', status: '审批中' },
+          { period: '2026 Q1', base: '720万', rate: '1%', amount: '72,000', status: '已结算' }
+        ],
+        inventoryList: [
+          { product: '血球试剂 5 分类', qty: 156, unit: '盒', amount: '46.8万', safety: 100, status: '充足' },
+          { product: '生化清洗液', qty: 80, unit: '瓶', amount: '12万', safety: 60, status: '充足' },
+          { product: '免疫发光试剂 A', qty: 12, unit: '盒', amount: '8.4万', safety: 20, status: '偏低' }
+        ],
+        taskList: [
+          { name: '2026 年度销售任务', target: 5000, achieved: 3100 },
+          { name: '血球产品线任务', target: 2000, achieved: 1480 },
+          { name: '生化产品线任务', target: 1500, achieved: 820 }
+        ],
+        timeline: [
+          { date: '2026-07-25', type: 'rebate', title: '提交 Q2 返利申请', desc: '金额 ¥86,000' },
+          { date: '2026-07-18', type: 'inventory', title: '血球试剂补货订单', desc: '金额 ¥124,000' },
+          { date: '2026-07-10', type: 'auth', title: '新增云南-玉溪授权区域', desc: '血球试剂独家授权' },
+          { date: '2026-06-01', type: 'task', title: '下发年度销售任务', desc: '目标 ¥5,000万' },
+          { date: '2020-05-18', type: 'coop', title: '建立合作关系', desc: '签约成为核心代理商' }
+        ]
+      },
+      {
+        id: 'DL-2024002',
+        name: '大理康盛医疗器械有限公司',
+        level: '一般',
+        region: '云南-大理、丽江',
+        productLines: ['试剂', 'POCT'],
+        status: '授权有效',
+        manager: '杨经理',
+        phone: '139****6666',
+        amount: 240,
+        warning: '血球试剂库存不足',
+        authEnd: '2026-10-15',
+        socialCode: '91532900MA6L*****',
+        address: '大理市下关镇苍山路 56 号',
+        coopStart: '2022-03-10',
+        settlement: '月结 45 天',
+        annualTarget: 1200,
+        annualAchieved: 680,
+        authList: [
+          { productLine: '试剂', region: '云南-大理', start: '2024-03-01', end: '2026-10-15', status: '有效' },
+          { productLine: 'POCT', region: '云南-丽江', start: '2024-03-01', end: '2026-10-15', status: '有效' }
+        ],
+        rebateList: [
+          { period: '2026 Q2', base: '240万', rate: '0.8%', amount: '19,200', status: '已结算' }
+        ],
+        inventoryList: [
+          { product: '血球试剂 5 分类', qty: 18, unit: '盒', amount: '5.4万', safety: 50, status: '缺货' },
+          { product: 'POCT 检测卡', qty: 120, unit: '盒', amount: '8.4万', safety: 80, status: '充足' }
+        ],
+        taskList: [
+          { name: '2026 年度销售任务', target: 1200, achieved: 680 },
+          { name: '试剂上量任务', target: 600, achieved: 420 }
+        ],
+        timeline: [
+          { date: '2026-07-20', type: 'warning', title: '血球试剂库存预警', desc: '当前库存 18 盒，低于安全库存' },
+          { date: '2026-06-15', type: 'inventory', title: '试剂到货入库', desc: '金额 ¥36,000' },
+          { date: '2022-03-10', type: 'coop', title: '建立合作关系', desc: '签约成为一般代理商' }
+        ]
+      },
+      {
+        id: 'DL-2024003',
+        name: '曲靖瑞康医疗设备有限公司',
+        level: '潜在',
+        region: '云南-曲靖',
+        productLines: ['POCT', '凝血'],
+        status: '授权 30 天后到期',
+        manager: '周总',
+        phone: '137****5555',
+        amount: 120,
+        warning: '',
+        authEnd: '2026-08-30',
+        socialCode: '91530300MA6M*****',
+        address: '曲靖市麒麟区麒麟南路 102 号',
+        coopStart: '2024-01-20',
+        settlement: '现款现货',
+        annualTarget: 600,
+        annualAchieved: 210,
+        authList: [
+          { productLine: 'POCT', region: '云南-曲靖', start: '2024-08-01', end: '2026-08-30', status: '即将到期' },
+          { productLine: '凝血', region: '云南-曲靖', start: '2024-08-01', end: '2026-08-30', status: '即将到期' }
+        ],
+        rebateList: [
+          { period: '2026 Q2', base: '120万', rate: '0.5%', amount: '6,000', status: '待结算' }
+        ],
+        inventoryList: [
+          { product: 'POCT 检测卡', qty: 80, unit: '盒', amount: '5.6万', safety: 60, status: '充足' },
+          { product: '凝血试剂', qty: 45, unit: '盒', amount: '3.2万', safety: 40, status: '正常' }
+        ],
+        taskList: [
+          { name: '2026 年度销售任务', target: 600, achieved: 210 },
+          { name: 'POCT 装机任务', target: 10, achieved: 3 }
+        ],
+        timeline: [
+          { date: '2026-07-28', type: 'warning', title: '授权即将到期提醒', desc: '授权到期日 2026-08-30' },
+          { date: '2026-05-20', type: 'inventory', title: 'POCT 设备入库', desc: '新到 5 台' },
+          { date: '2024-08-01', type: 'auth', title: '首次授权', desc: 'POCT、凝血产品线' }
+        ]
+      },
+      {
+        id: 'DL-2024004',
+        name: '红河州博爱医疗器械有限公司',
+        level: '核心',
+        region: '云南-红河',
+        productLines: ['免疫', '凝血'],
+        status: '授权有效',
+        manager: '马总',
+        phone: '138****9999',
+        amount: 420,
+        warning: '',
+        authEnd: '2027-06-30',
+        socialCode: '91532500MA6N*****',
+        address: '红河州蒙自市天马路 78 号',
+        coopStart: '2021-08-05',
+        settlement: '月结 60 天',
+        annualTarget: 2800,
+        annualAchieved: 1960,
+        authList: [
+          { productLine: '免疫分析', region: '云南-红河', start: '2024-01-01', end: '2027-06-30', status: '有效' },
+          { productLine: '凝血分析', region: '云南-红河', start: '2024-01-01', end: '2027-06-30', status: '有效' }
+        ],
+        rebateList: [
+          { period: '2026 Q2', base: '540万', rate: '1.2%', amount: '64,800', status: '已结算' },
+          { period: '2026 Q1', base: '480万', rate: '1.2%', amount: '57,600', status: '已结算' }
+        ],
+        inventoryList: [
+          { product: '免疫发光试剂 A', qty: 86, unit: '盒', amount: '60.2万', safety: 50, status: '充足' },
+          { product: '凝血试剂', qty: 64, unit: '盒', amount: '4.5万', safety: 40, status: '充足' }
+        ],
+        taskList: [
+          { name: '2026 年度销售任务', target: 2800, achieved: 1960 },
+          { name: '免疫产品线任务', target: 1600, achieved: 1280 },
+          { name: '凝血产品线任务', target: 800, achieved: 560 }
+        ],
+        timeline: [
+          { date: '2026-07-22', type: 'rebate', title: 'Q2 返利结算完成', desc: '金额 ¥64,800' },
+          { date: '2026-06-30', type: 'inventory', title: '免疫试剂补货', desc: '金额 ¥86,000' },
+          { date: '2021-08-05', type: 'coop', title: '建立合作关系', desc: '签约成为核心代理商' }
+        ]
+      },
+      {
+        id: 'DL-2024005',
+        name: '玉溪润达医疗器械有限公司',
+        level: '一般',
+        region: '云南-玉溪',
+        productLines: ['血球', '试剂'],
+        status: '授权有效',
+        manager: '赵经理',
+        phone: '135****7777',
+        amount: 180,
+        warning: '',
+        authEnd: '2026-11-20',
+        socialCode: '91530400MA6P*****',
+        address: '玉溪市红塔区东风中路 33 号',
+        coopStart: '2023-05-12',
+        settlement: '月结 30 天',
+        annualTarget: 900,
+        annualAchieved: 540,
+        authList: [
+          { productLine: '血球分析', region: '云南-玉溪', start: '2024-02-01', end: '2026-11-20', status: '有效' },
+          { productLine: '试剂', region: '云南-玉溪', start: '2024-02-01', end: '2026-11-20', status: '有效' }
+        ],
+        rebateList: [
+          { period: '2026 Q2', base: '180万', rate: '0.8%', amount: '14,400', status: '审批中' }
+        ],
+        inventoryList: [
+          { product: '血球试剂 5 分类', qty: 95, unit: '盒', amount: '28.5万', safety: 80, status: '充足' },
+          { product: '生化试剂', qty: 60, unit: '盒', amount: '4.2万', safety: 50, status: '正常' }
+        ],
+        taskList: [
+          { name: '2026 年度销售任务', target: 900, achieved: 540 },
+          { name: '血球产品线任务', target: 500, achieved: 350 }
+        ],
+        timeline: [
+          { date: '2026-07-15', type: 'rebate', title: '提交 Q2 返利申请', desc: '金额 ¥14,400' },
+          { date: '2026-04-10', type: 'auth', title: '续签授权', desc: '延长至 2026-11-20' }
+        ]
+      },
+      {
+        id: 'DL-2024006',
+        name: '楚雄康明医疗设备商行',
+        level: '潜在',
+        region: '云南-楚雄',
+        productLines: ['POCT'],
+        status: '待准入',
+        manager: '孙经理',
+        phone: '136****2222',
+        amount: 0,
+        warning: '',
+        authEnd: '',
+        socialCode: '91532300MA6Q*****',
+        address: '楚雄市鹿城镇永安路 19 号',
+        coopStart: '',
+        settlement: '现款现货',
+        annualTarget: 300,
+        annualAchieved: 0,
+        authList: [],
+        rebateList: [],
+        inventoryList: [],
+        taskList: [
+          { name: '2026 年度销售任务', target: 300, achieved: 0 }
+        ],
+        timeline: [
+          { date: '2026-07-30', type: 'auth', title: '提交准入申请', desc: 'POCT 产品线' },
+          { date: '2026-07-25', type: 'coop', title: '资质初审通过', desc: '待厂家经理复核' }
+        ]
+      },
+      {
+        id: 'DL-2024007',
+        name: '昭通瑞康医疗器械有限公司',
+        level: '一般',
+        region: '云南-昭通',
+        productLines: ['免疫', '凝血'],
+        status: '授权有效',
+        manager: '李总',
+        phone: '133****3333',
+        amount: 260,
+        warning: '',
+        authEnd: '2027-03-15',
+        socialCode: '91530600MA6R*****',
+        address: '昭通市昭阳区迎丰路 66 号',
+        coopStart: '2022-09-18',
+        settlement: '月结 45 天',
+        annualTarget: 1300,
+        annualAchieved: 910,
+        authList: [
+          { productLine: '免疫分析', region: '云南-昭通', start: '2024-04-01', end: '2027-03-15', status: '有效' },
+          { productLine: '凝血分析', region: '云南-昭通', start: '2024-04-01', end: '2027-03-15', status: '有效' }
+        ],
+        rebateList: [
+          { period: '2026 Q2', base: '260万', rate: '0.8%', amount: '20,800', status: '已结算' }
+        ],
+        inventoryList: [
+          { product: '免疫发光试剂 A', qty: 52, unit: '盒', amount: '36.4万', safety: 40, status: '充足' },
+          { product: '凝血试剂', qty: 38, unit: '盒', amount: '2.7万', safety: 30, status: '正常' }
+        ],
+        taskList: [
+          { name: '2026 年度销售任务', target: 1300, achieved: 910 },
+          { name: '免疫产品线任务', target: 800, achieved: 640 }
+        ],
+        timeline: [
+          { date: '2026-07-12', type: 'rebate', title: 'Q2 返利结算完成', desc: '金额 ¥20,800' },
+          { date: '2022-09-18', type: 'coop', title: '建立合作关系', desc: '签约成为一般代理商' }
+        ]
+      },
+      {
+        id: 'DL-2024008',
+        name: '普洱盛达商贸有限公司',
+        level: '潜在',
+        region: '云南-普洱',
+        productLines: ['试剂'],
+        status: '已暂停',
+        manager: '吴经理',
+        phone: '134****4444',
+        amount: 45,
+        warning: '资质过期未年审',
+        authEnd: '2026-06-30',
+        socialCode: '91530800MA6S*****',
+        address: '普洱市思茅区茶城大道 21 号',
+        coopStart: '2023-01-08',
+        settlement: '月结 30 天',
+        annualTarget: 500,
+        annualAchieved: 120,
+        authList: [
+          { productLine: '试剂', region: '云南-普洱', start: '2024-01-08', end: '2026-06-30', status: '已过期' }
+        ],
+        rebateList: [
+          { period: '2026 Q1', base: '80万', rate: '0.5%', amount: '4,000', status: '已暂停' }
+        ],
+        inventoryList: [
+          { product: '生化试剂', qty: 32, unit: '盒', amount: '2.2万', safety: 30, status: '正常' }
+        ],
+        taskList: [
+          { name: '2026 年度销售任务', target: 500, achieved: 120 }
+        ],
+        timeline: [
+          { date: '2026-07-01', type: 'warning', title: '授权到期暂停合作', desc: '资质过期未年审' },
+          { date: '2026-04-15', type: 'inventory', title: '试剂到货入库', desc: '金额 ¥12,000' }
+        ]
+      },
+      {
+        id: 'DL-2024009',
+        name: '临沧博兴医疗科技',
+        level: '一般',
+        region: '云南-临沧',
+        productLines: ['血球', 'POCT'],
+        status: '授权有效',
+        manager: '郑总',
+        phone: '131****5555',
+        amount: 150,
+        warning: '',
+        authEnd: '2027-01-10',
+        socialCode: '91530900MA6T*****',
+        address: '临沧市临翔区南天路 44 号',
+        coopStart: '2023-06-22',
+        settlement: '月结 30 天',
+        annualTarget: 750,
+        annualAchieved: 450,
+        authList: [
+          { productLine: '血球分析', region: '云南-临沧', start: '2024-01-10', end: '2027-01-10', status: '有效' },
+          { productLine: 'POCT', region: '云南-临沧', start: '2024-01-10', end: '2027-01-10', status: '有效' }
+        ],
+        rebateList: [
+          { period: '2026 Q2', base: '150万', rate: '0.8%', amount: '12,000', status: '待结算' }
+        ],
+        inventoryList: [
+          { product: '血球试剂 5 分类', qty: 72, unit: '盒', amount: '21.6万', safety: 60, status: '充足' },
+          { product: 'POCT 检测卡', qty: 45, unit: '盒', amount: '3.2万', safety: 40, status: '正常' }
+        ],
+        taskList: [
+          { name: '2026 年度销售任务', target: 750, achieved: 450 },
+          { name: '血球产品线任务', target: 450, achieved: 315 }
+        ],
+        timeline: [
+          { date: '2026-07-08', type: 'inventory', title: '血球试剂补货', desc: '金额 ¥28,000' },
+          { date: '2026-04-01', type: 'rebate', title: 'Q1 返利结算', desc: '金额 ¥8,000' }
+        ]
+      },
+      {
+        id: 'DL-2024010',
+        name: '丽江康泰医疗设备有限公司',
+        level: '潜在',
+        region: '云南-丽江',
+        productLines: ['生化', '试剂'],
+        status: '授权 30 天后到期',
+        manager: '钱经理',
+        phone: '130****6666',
+        amount: 90,
+        warning: '',
+        authEnd: '2026-09-10',
+        socialCode: '91530700MA6U*****',
+        address: '丽江市古城区香格里大道 9 号',
+        coopStart: '2023-09-30',
+        settlement: '现款现货',
+        annualTarget: 450,
+        annualAchieved: 180,
+        authList: [
+          { productLine: '生化分析', region: '云南-丽江', start: '2024-09-10', end: '2026-09-10', status: '即将到期' },
+          { productLine: '试剂', region: '云南-丽江', start: '2024-09-10', end: '2026-09-10', status: '即将到期' }
+        ],
+        rebateList: [
+          { period: '2026 Q2', base: '90万', rate: '0.5%', amount: '4,500', status: '待结算' }
+        ],
+        inventoryList: [
+          { product: '生化清洗液', qty: 28, unit: '瓶', amount: '4.2万', safety: 25, status: '正常' },
+          { product: '生化试剂', qty: 36, unit: '盒', amount: '2.5万', safety: 30, status: '正常' }
+        ],
+        taskList: [
+          { name: '2026 年度销售任务', target: 450, achieved: 180 },
+          { name: '生化产品线任务', target: 300, achieved: 120 }
+        ],
+        timeline: [
+          { date: '2026-07-28', type: 'warning', title: '授权即将到期提醒', desc: '授权到期日 2026-09-10' },
+          { date: '2026-05-15', type: 'inventory', title: '生化试剂入库', desc: '金额 ¥18,000' }
+        ]
+      },
+      {
+        id: 'DL-2024011',
+        name: '西双版纳恒信医疗器械有限公司',
+        level: '核心',
+        region: '云南-西双版纳',
+        productLines: ['血球', '免疫', 'POCT'],
+        status: '授权有效',
+        manager: '刘总',
+        phone: '129****7777',
+        amount: 380,
+        warning: '',
+        authEnd: '2027-12-31',
+        socialCode: '91532800MA6V*****',
+        address: '西双版纳景洪市勐泐大道 120 号',
+        coopStart: '2021-03-15',
+        settlement: '月结 60 天',
+        annualTarget: 2400,
+        annualAchieved: 1680,
+        authList: [
+          { productLine: '血球分析', region: '云南-西双版纳', start: '2024-01-01', end: '2027-12-31', status: '有效' },
+          { productLine: '免疫分析', region: '云南-西双版纳', start: '2024-01-01', end: '2027-12-31', status: '有效' },
+          { productLine: 'POCT', region: '云南-西双版纳', start: '2024-01-01', end: '2027-12-31', status: '有效' }
+        ],
+        rebateList: [
+          { period: '2026 Q2', base: '480万', rate: '1%', amount: '48,000', status: '已结算' },
+          { period: '2026 Q1', base: '420万', rate: '1%', amount: '42,000', status: '已结算' }
+        ],
+        inventoryList: [
+          { product: '血球试剂 5 分类', qty: 112, unit: '盒', amount: '33.6万', safety: 80, status: '充足' },
+          { product: '免疫发光试剂 A', qty: 68, unit: '盒', amount: '47.6万', safety: 50, status: '充足' },
+          { product: 'POCT 检测卡', qty: 95, unit: '盒', amount: '6.7万', safety: 70, status: '充足' }
+        ],
+        taskList: [
+          { name: '2026 年度销售任务', target: 2400, achieved: 1680 },
+          { name: '血球产品线任务', target: 1000, achieved: 750 },
+          { name: '免疫产品线任务', target: 800, achieved: 640 }
+        ],
+        timeline: [
+          { date: '2026-07-20', type: 'rebate', title: 'Q2 返利结算完成', desc: '金额 ¥48,000' },
+          { date: '2026-06-18', type: 'inventory', title: '免疫试剂补货', desc: '金额 ¥62,000' },
+          { date: '2021-03-15', type: 'coop', title: '建立合作关系', desc: '签约成为核心代理商' }
+        ]
+      },
+      {
+        id: 'DL-2024012',
+        name: '保山仁德医疗设备有限公司',
+        level: '一般',
+        region: '云南-保山',
+        productLines: ['生化', '凝血'],
+        status: '授权有效',
+        manager: '黄经理',
+        phone: '128****8888',
+        amount: 210,
+        warning: '生化清洗液库存积压',
+        authEnd: '2027-02-28',
+        socialCode: '91530500MA6W*****',
+        address: '保山市隆阳区正阳北路 71 号',
+        coopStart: '2022-11-11',
+        settlement: '月结 45 天',
+        annualTarget: 1050,
+        annualAchieved: 735,
+        authList: [
+          { productLine: '生化分析', region: '云南-保山', start: '2024-02-01', end: '2027-02-28', status: '有效' },
+          { productLine: '凝血分析', region: '云南-保山', start: '2024-02-01', end: '2027-02-28', status: '有效' }
+        ],
+        rebateList: [
+          { period: '2026 Q2', base: '210万', rate: '0.8%', amount: '16,800', status: '审批中' }
+        ],
+        inventoryList: [
+          { product: '生化清洗液', qty: 220, unit: '瓶', amount: '33万', safety: 80, status: '积压' },
+          { product: '凝血试剂', qty: 48, unit: '盒', amount: '3.4万', safety: 35, status: '正常' }
+        ],
+        taskList: [
+          { name: '2026 年度销售任务', target: 1050, achieved: 735 },
+          { name: '生化产品线任务', target: 600, achieved: 420 }
+        ],
+        timeline: [
+          { date: '2026-07-18', type: 'warning', title: '生化清洗液库存积压预警', desc: '当前库存 220 瓶' },
+          { date: '2026-06-20', type: 'inventory', title: '生化清洗液大批到货', desc: '金额 ¥48,000' }
+        ]
+      }
+    ];
+
+    let currentDealerId = null;
+    let dealerTab = 'all';
+    let dealerViewMode = 'card';
+    let dealerPage = 1;
+    let dealerSearch = '';
+    let dealerRegionFilter = '';
+    let dealerLevelFilter = '';
+    let dealerStatusFilter = '';
+    const dealerPageSize = { card: 8, list: 12 };
+
     /* ===== Theme management ===== */
     function initTheme() {
       const saved = localStorage.getItem('theme');
@@ -15770,22 +16179,7 @@ Content-Type: application/json
       document.body.style.overflow = '';
     }
 
-    /* ===== Dealer list tabs ===== */
-    function switchDealerTab(btn) {
-      btn.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      btn.classList.add('active');
-      const tab = btn.dataset.dealertab;
-      const createBtn = document.getElementById('btn-create-dealer');
-      if (tab === 'channel-order') {
-        document.getElementById('dealer-panel-list').classList.add('hidden');
-        document.getElementById('dealer-panel-channel-order').classList.remove('hidden');
-        if (createBtn) createBtn.classList.add('hidden');
-      } else {
-        document.getElementById('dealer-panel-list').classList.remove('hidden');
-        document.getElementById('dealer-panel-channel-order').classList.add('hidden');
-        if (createBtn) createBtn.classList.remove('hidden');
-      }
-    }
+    /* ===== Dealer list tabs ===== (overridden below) */
 
     /* ===== Dealer detail tabs ===== */
     function switchDealerDetailTab(btn) {
@@ -19401,6 +19795,642 @@ Content-Type: application/json
       document.getElementById('custom-project-full-detail-overlay').classList.remove('open');
       document.body.style.overflow = '';
     }
+
+    /* ===== Dealer list & detail dynamic rendering ===== */
+    function escapeHtml(str) {
+      if (str == null) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function getDealerStatusClass(status) {
+      if (!status) return 'badge-gray';
+      if (status.includes('有效')) return 'badge-success';
+      if (status.includes('到期')) return 'badge-warning';
+      if (status === '已暂停') return 'badge-danger';
+      if (status === '待准入') return 'badge-orange';
+      return 'badge-gray';
+    }
+
+    function getLevelBadgeClass(level) {
+      if (level === '核心') return 'badge-success';
+      if (level === '一般') return 'badge-primary';
+      if (level === '潜在') return 'badge-warning';
+      return 'badge-gray';
+    }
+
+    function getInventoryStatusClass(status) {
+      if (status === '充足') return 'badge-success';
+      if (status === '正常') return 'badge-primary';
+      if (status === '偏低' || status === '缺货') return 'badge-warning';
+      if (status === '积压' || status === '近效期' || status === '冻结') return 'badge-danger';
+      return 'badge-gray';
+    }
+
+    function getDaysToEnd(authEnd) {
+      if (!authEnd) return null;
+      const end = new Date(authEnd);
+      const now = new Date();
+      const diff = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
+      return diff;
+    }
+
+    function isAuthExpiringSoon(authEnd) {
+      const days = getDaysToEnd(authEnd);
+      return days !== null && days <= 90;
+    }
+
+    function getDealerStatusText(d) {
+      if (d.status === '授权 30 天后到期' || isAuthExpiringSoon(d.authEnd)) {
+        const days = getDaysToEnd(d.authEnd);
+        if (days !== null && days <= 0) return '已过期';
+        if (days !== null && days <= 30) return '授权 30 天后到期';
+        return '授权即将到期';
+      }
+      return d.status || '-';
+    }
+
+    function getFilteredDealers() {
+      let list = dealerData.slice();
+      // Tab filter
+      if (dealerTab === 'core') {
+        list = list.filter(d => d.level === '核心');
+      } else if (dealerTab === 'auth') {
+        list = list.filter(d => isAuthExpiringSoon(d.authEnd) || (d.status && d.status.includes('到期')));
+      } else if (dealerTab === 'warning') {
+        list = list.filter(d => d.warning && d.warning.trim() !== '');
+      }
+      // Search
+      if (dealerSearch.trim()) {
+        const kw = dealerSearch.trim().toLowerCase();
+        list = list.filter(d =>
+          (d.name && d.name.toLowerCase().includes(kw)) ||
+          (d.id && d.id.toLowerCase().includes(kw)) ||
+          (d.region && d.region.toLowerCase().includes(kw)) ||
+          (d.manager && d.manager.toLowerCase().includes(kw)) ||
+          (d.socialCode && d.socialCode.toLowerCase().includes(kw))
+        );
+      }
+      // Filters
+      if (dealerRegionFilter) {
+        list = list.filter(d => d.region && d.region.includes(dealerRegionFilter));
+      }
+      if (dealerLevelFilter) {
+        list = list.filter(d => d.level === dealerLevelFilter);
+      }
+      if (dealerStatusFilter) {
+        list = list.filter(d => getDealerStatusText(d) === dealerStatusFilter);
+      }
+      return list;
+    }
+
+    function renderDealerPagination(total) {
+      const pageSize = dealerPageSize[dealerViewMode] || 8;
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+      dealerPage = Math.min(dealerPage, totalPages);
+      const start = (dealerPage - 1) * pageSize + 1;
+      const end = Math.min(dealerPage * pageSize, total);
+      document.getElementById('dealer-page-info').textContent = total + ' 条 · ' + dealerPage + ' / ' + totalPages + ' 页';
+
+      let html = '';
+      html += '<button class="page-btn" ' + (dealerPage <= 1 ? 'disabled' : 'onclick="goDealerPage(' + (dealerPage - 1) + ')"') + '><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>';
+      for (let i = 1; i <= totalPages; i++) {
+        html += '<button class="page-btn ' + (i === dealerPage ? 'active' : '') + '" onclick="goDealerPage(' + i + ')">' + i + '</button>';
+      }
+      html += '<button class="page-btn" ' + (dealerPage >= totalPages ? 'disabled' : 'onclick="goDealerPage(' + (dealerPage + 1) + ')"') + '><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>';
+      document.getElementById('dealer-page-buttons').innerHTML = html;
+    }
+
+    function renderDealerKpis() {
+      const all = dealerData;
+      const core = all.filter(d => d.level === '核心').length;
+      const validAuth = all.filter(d => getDealerStatusText(d).includes('有效')).length;
+      const warnings = all.filter(d => d.warning && d.warning.trim() !== '').length;
+      const conflicts = 3; // keep consistent with channel-order panel
+      document.getElementById('dealer-kpi-total').textContent = all.length;
+      document.getElementById('dealer-kpi-core').textContent = core;
+      document.getElementById('dealer-kpi-auth').textContent = validAuth;
+      document.getElementById('dealer-kpi-new').textContent = 1;
+      document.getElementById('dealer-kpi-conflict').textContent = conflicts;
+      document.getElementById('dealer-kpi-warning').textContent = warnings;
+    }
+
+    function renderDealerList() {
+      const filtered = getFilteredDealers();
+      const total = filtered.length;
+      const pageSize = dealerPageSize[dealerViewMode] || 8;
+      renderDealerPagination(total);
+      const start = (dealerPage - 1) * pageSize;
+      const pageData = filtered.slice(start, start + pageSize);
+      const container = document.getElementById('dealer-content-area');
+
+      if (total === 0) {
+        container.innerHTML = '<div class="card p-8 text-center"><div class="text-sub text-sm mb-3">暂无符合条件的代理商</div><button class="btn btn-primary" onclick="openDealerCreateDrawer()">新建代理商</button></div>';
+        return;
+      }
+
+      if (dealerViewMode === 'card') {
+        let html = '<div class="card-grid">';
+        pageData.forEach(d => {
+          const statusText = getDealerStatusText(d);
+          const statusClass = getDealerStatusClass(statusText);
+          const levelClass = getLevelBadgeClass(d.level);
+          const warning = d.warning ? '<span class="text-xs text-danger">' + escapeHtml(d.warning) + '</span>' : '<span class="text-xs text-placeholder">库存金额：¥ ' + d.amount + '万</span>';
+          html += '<div class="card card-hover p-4 cursor-pointer" onclick="openDealerDetail(\'' + d.id + '\')">' +
+            '<div class="flex items-start justify-between mb-3">' +
+              '<span class="badge ' + levelClass + '">' + escapeHtml(d.level) + '</span>' +
+              '<button class="text-sub hover:text-primary" onclick="event.stopPropagation();openDealerActionModal(\'更多\', \'' + escapeHtml(d.name) + '\')"><svg class="icon icon-md"><use href="#icon-more"/></svg></button>' +
+            '</div>' +
+            '<div class="font-semibold text-ink mb-1">' + escapeHtml(d.name) + '</div>' +
+            '<div class="text-sub text-sm mb-2">负责人：' + escapeHtml(d.manager) + ' · ' + escapeHtml(d.phone) + '</div>' +
+            '<div class="text-xs text-sub mb-3">授权区域：' + escapeHtml(d.region) + ' · 主营：' + escapeHtml(d.productLines.join('、')) + '</div>' +
+            '<div class="flex items-center justify-between pt-3 border-t border-line">' +
+              warning +
+              '<span class="text-xs ' + (statusText.includes('到期') || statusText === '已暂停' ? 'text-warning' : 'text-success') + '">' + escapeHtml(statusText) + '</span>' +
+            '</div>' +
+          '</div>';
+        });
+        html += '</div>';
+        container.innerHTML = html;
+      } else {
+        let html = '<div class="overflow-x-auto"><table class="data-table min-w-[900px]"><thead><tr><th>代理商名称</th><th>等级</th><th>授权区域</th><th>授权产品线</th><th>负责人</th><th>合作状态</th><th>库存金额</th><th>操作</th></tr></thead><tbody>';
+        pageData.forEach(d => {
+          const statusText = getDealerStatusText(d);
+          const statusClass = getDealerStatusClass(statusText);
+          const levelClass = getLevelBadgeClass(d.level);
+          html += '<tr class="cursor-pointer hover:bg-line-light" onclick="openDealerDetail(\'' + d.id + '\')">' +
+            '<td class="font-medium text-ink">' + escapeHtml(d.name) + '</td>' +
+            '<td><span class="badge ' + levelClass + '">' + escapeHtml(d.level) + '</span></td>' +
+            '<td>' + escapeHtml(d.region) + '</td>' +
+            '<td>' + escapeHtml(d.productLines.join('、')) + '</td>' +
+            '<td>' + escapeHtml(d.manager) + '<div class="text-xs text-sub">' + escapeHtml(d.phone) + '</div></td>' +
+            '<td><span class="badge ' + statusClass + '">' + escapeHtml(statusText) + '</span></td>' +
+            '<td>¥ ' + d.amount + '万</td>' +
+            '<td>' +
+              '<div class="flex gap-1">' +
+                '<button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openDealerDetail(\'' + d.id + '\')">查看</button>' +
+                '<button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openDealerEditModal(\'' + d.id + '\')">编辑</button>' +
+                '<button class="btn btn-ghost text-xs" onclick="event.stopPropagation();openDealerActionModal(\'更多\', \'' + escapeHtml(d.name) + '\')">更多</button>' +
+              '</div>' +
+            '</td>' +
+          '</tr>';
+        });
+        html += '</tbody></table></div>';
+        container.innerHTML = html;
+      }
+    }
+
+    function setDealerView(mode) {
+      dealerViewMode = mode;
+      dealerPage = 1;
+      const cardBtn = document.getElementById('dealer-view-card');
+      const listBtn = document.getElementById('dealer-view-list');
+      if (mode === 'card') {
+        cardBtn.classList.add('btn-primary');
+        cardBtn.classList.remove('btn-ghost');
+        listBtn.classList.add('btn-ghost');
+        listBtn.classList.remove('btn-primary');
+      } else {
+        listBtn.classList.add('btn-primary');
+        listBtn.classList.remove('btn-ghost');
+        cardBtn.classList.add('btn-ghost');
+        cardBtn.classList.remove('btn-primary');
+      }
+      renderDealerList();
+    }
+
+    function onDealerSearch(value) {
+      dealerSearch = value;
+      dealerPage = 1;
+      renderDealerList();
+    }
+
+    function onDealerRegionFilter(value) {
+      dealerRegionFilter = value;
+      dealerPage = 1;
+      renderDealerList();
+    }
+
+    function onDealerLevelFilter(value) {
+      dealerLevelFilter = value;
+      dealerPage = 1;
+      renderDealerList();
+    }
+
+    function onDealerStatusFilter(value) {
+      dealerStatusFilter = value;
+      dealerPage = 1;
+      renderDealerList();
+    }
+
+    function resetDealerFilters() {
+      dealerSearch = '';
+      dealerRegionFilter = '';
+      dealerLevelFilter = '';
+      dealerStatusFilter = '';
+      dealerPage = 1;
+      document.getElementById('dealer-search-input').value = '';
+      document.getElementById('dealer-region-filter').value = '';
+      document.getElementById('dealer-level-filter').value = '';
+      document.getElementById('dealer-status-filter').value = '';
+      renderDealerList();
+    }
+
+    function goDealerPage(page) {
+      dealerPage = page;
+      renderDealerList();
+    }
+
+    function openDealerDetail(id) {
+      const d = dealerData.find(x => x.id === id);
+      if (!d) return;
+      currentDealerId = id;
+      switchView('dealer-detail');
+      renderDealerDetail(id);
+    }
+
+    function renderDealerDetail(id) {
+      const d = dealerData.find(x => x.id === id);
+      if (!d) return;
+      currentDealerId = id;
+
+      // Header
+      const avatar = d.name ? d.name.charAt(0) : '代';
+      const statusText = getDealerStatusText(d);
+      const statusClass = getDealerStatusClass(statusText);
+      document.getElementById('dealer-detail-header').innerHTML =
+        '<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">' +
+          '<div class="flex items-start gap-4">' +
+            '<div class="w-16 h-16 rounded-xl bg-info-bg text-info flex items-center justify-center text-2xl font-bold flex-shrink-0">' + escapeHtml(avatar) + '</div>' +
+            '<div>' +
+              '<div class="flex items-center gap-2 flex-wrap">' +
+                '<h2 class="text-xl font-bold text-ink">' + escapeHtml(d.name) + '</h2>' +
+                '<span class="badge ' + statusClass + '">' + escapeHtml(statusText) + '</span>' +
+                '<span class="badge ' + getLevelBadgeClass(d.level) + '">' + escapeHtml(d.level) + '</span>' +
+              '</div>' +
+              '<div class="text-sub text-sm mt-1 flex flex-wrap gap-3">' +
+                '<span class="flex items-center gap-1"><svg class="icon icon-xs"><use href="#icon-location"/></svg> ' + escapeHtml(d.region) + '</span>' +
+                '<span class="flex items-center gap-1"><svg class="icon icon-xs"><use href="#icon-user"/></svg> 负责人：' + escapeHtml(d.manager) + '</span>' +
+                '<span class="flex items-center gap-1"><svg class="icon icon-xs"><use href="#icon-phone"/></svg> ' + escapeHtml(d.phone) + '</span>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="flex gap-2">' +
+            '<button class="btn btn-ghost" onclick="openDealerEditModal(\'' + d.id + '\')"><svg class="icon icon-sm"><use href="#icon-edit"/></svg> 编辑</button>' +
+            '<button class="btn btn-primary" onclick="openDealerAuthDrawer()"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新增授权</button>' +
+          '</div>' +
+        '</div>';
+
+      // Overview
+      const authProductLines = new Set(d.authList.map(a => a.productLine));
+      const authRegions = new Set(d.authList.map(a => a.region));
+      const achievement = d.annualTarget ? Math.round((d.annualAchieved || 0) / d.annualTarget * 100) : 0;
+      const recentTimeline = d.timeline.slice(0, 4);
+      document.getElementById('dealer-detail-overview').innerHTML =
+        '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">' +
+          '<div class="p-4 rounded-xl bg-panel"><div class="text-sub text-xs">健康评分</div><div class="text-2xl font-bold text-ink mt-1">' + (d.status === '授权有效' ? '82' : (d.status === '已暂停' ? '45' : '68')) + '</div></div>' +
+          '<div class="p-4 rounded-xl bg-panel"><div class="text-sub text-xs">授权产品线数</div><div class="text-2xl font-bold text-ink mt-1">' + authProductLines.size + '</div></div>' +
+          '<div class="p-4 rounded-xl bg-panel"><div class="text-sub text-xs">授权区域数</div><div class="text-2xl font-bold text-ink mt-1">' + authRegions.size + '</div></div>' +
+          '<div class="p-4 rounded-xl bg-panel"><div class="text-sub text-xs">年度达成率</div><div class="text-2xl font-bold text-primary mt-1">' + achievement + '%</div></div>' +
+        '</div>' +
+        '<div class="grid grid-cols-1 lg:grid-cols-2 gap-5">' +
+          '<div class="card p-4">' +
+            '<h4 class="font-semibold text-ink mb-3">基本信息</h4>' +
+            '<div class="space-y-2 text-sm">' +
+              '<div class="flex justify-between"><span class="text-sub">代理商编码</span><span class="text-ink">' + escapeHtml(d.id) + '</span></div>' +
+              '<div class="flex justify-between"><span class="text-sub">统一社会信用代码</span><span class="text-ink">' + escapeHtml(d.socialCode || '-') + '</span></div>' +
+              '<div class="flex justify-between"><span class="text-sub">注册地址</span><span class="text-ink">' + escapeHtml(d.address || '-') + '</span></div>' +
+              '<div class="flex justify-between"><span class="text-sub">合作起始日</span><span class="text-ink">' + escapeHtml(d.coopStart || '-') + '</span></div>' +
+              '<div class="flex justify-between"><span class="text-sub">结算账期</span><span class="text-ink">' + escapeHtml(d.settlement || '-') + '</span></div>' +
+              '<div class="flex justify-between"><span class="text-sub">年度任务</span><span class="text-ink">¥ ' + (d.annualTarget || 0) + '万</span></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="card p-4">' +
+            '<h4 class="font-semibold text-ink mb-3">近期动态</h4>' +
+            '<div class="space-y-3">' +
+              recentTimeline.map(t => '<div class="text-sm"><span class="text-primary">' + escapeHtml(t.date) + '</span> <span class="text-ink">' + escapeHtml(t.title) + '</span><div class="text-xs text-sub">' + escapeHtml(t.desc) + '</div></div>').join('') +
+            '</div>' +
+          '</div>' +
+        '</div>';
+
+      // Auth
+      if (d.authList && d.authList.length) {
+        document.getElementById('dealer-detail-auth').innerHTML =
+          '<table class="data-table"><thead><tr><th>产品线</th><th>授权区域</th><th>授权开始</th><th>授权结束</th><th>状态</th><th>操作</th></tr></thead><tbody>' +
+          d.authList.map(a => {
+            const cls = a.status === '有效' ? 'badge-success' : (a.status === '即将到期' || a.status === '已过期' ? 'badge-warning' : 'badge-gray');
+            return '<tr><td>' + escapeHtml(a.productLine) + '</td><td>' + escapeHtml(a.region) + '</td><td>' + escapeHtml(a.start) + '</td><td>' + escapeHtml(a.end) + '</td><td><span class="badge ' + cls + '">' + escapeHtml(a.status) + '</span></td><td><button class="btn btn-ghost text-xs" onclick="showToast(\'授权详情：' + escapeHtml(a.productLine) + ' / ' + escapeHtml(a.region) + '\')">查看</button></td></tr>';
+          }).join('') +
+          '</tbody></table>';
+      } else {
+        document.getElementById('dealer-detail-auth').innerHTML = '<div class="text-center py-8 text-sub">暂无授权信息，请点击「新增授权」添加</div>';
+      }
+
+      // Region protection
+      const conflicts = [
+        { region: '云南-昆明', type: '完全撞单', dealerA: d.name, dealerB: '大理康盛医疗器械有限公司', status: '冲突待裁决' },
+        { region: '云南-玉溪', type: '区域交叉', dealerA: d.name, dealerB: '玉溪润达医疗器械有限公司', status: '无冲突' }
+      ].filter(c => d.region && d.region.includes(c.region.split('-')[1]));
+      const conflictHtml = conflicts.length ? conflicts.map(c => {
+        const cls = c.status === '无冲突' ? 'badge-success' : 'badge-danger';
+        return '<div class="card p-3 mb-3"><div class="flex items-center justify-between"><div><div class="font-medium text-ink">' + escapeHtml(c.region) + '</div><div class="text-xs text-sub">' + escapeHtml(c.type) + '</div></div><span class="badge ' + cls + '">' + escapeHtml(c.status) + '</span></div></div>';
+      }).join('') : '<div class="card p-3 mb-3"><div class="flex items-center justify-between"><div><div class="font-medium text-ink">' + escapeHtml(d.region.split('、')[0]) + '</div><div class="text-xs text-sub">授权区域保护中</div></div><span class="badge badge-success">无冲突</span></div></div>';
+      document.getElementById('dealer-detail-region').innerHTML =
+        '<div class="mb-4">' + conflictHtml + '</div>' +
+        '<h4 class="font-semibold text-ink mb-3">冲突记录</h4>' +
+        '<table class="data-table"><thead><tr><th>冲突区域</th><th>冲突类型</th><th>涉及代理商</th><th>状态</th></tr></thead><tbody>' +
+        '<tr><td>云南-昆明</td><td>完全撞单</td><td>昆明博奥生物技术有限公司 vs 大理康盛医疗器械有限公司</td><td><span class="badge badge-danger">冲突待裁决</span></td></tr>' +
+        '</tbody></table>';
+
+      // Rebate
+      if (d.rebateList && d.rebateList.length) {
+        document.getElementById('dealer-detail-rebate').innerHTML =
+          '<table class="data-table"><thead><tr><th>返利期间</th><th>计算基数</th><th>返利比例</th><th>返利金额</th><th>状态</th><th>操作</th></tr></thead><tbody>' +
+          d.rebateList.map(r => {
+            const cls = r.status === '已结算' ? 'badge-success' : (r.status === '审批中' ? 'badge-warning' : 'badge-primary');
+            return '<tr><td>' + escapeHtml(r.period) + '</td><td>¥ ' + escapeHtml(r.base) + '</td><td>' + escapeHtml(r.rate) + '</td><td>¥ ' + escapeHtml(r.amount) + '</td><td><span class="badge ' + cls + '">' + escapeHtml(r.status) + '</span></td><td><button class="btn btn-ghost text-xs" onclick="openCommissionStatementModalFromDealer(\'' + escapeHtml(r.period) + '\', \'' + escapeHtml(r.base) + '\', \'' + escapeHtml(r.rate) + '\', \'' + escapeHtml(r.amount) + '\', \'' + escapeHtml(r.status) + '\')">查看</button></td></tr>';
+          }).join('') +
+          '</tbody></table>';
+      } else {
+        document.getElementById('dealer-detail-rebate').innerHTML = '<div class="text-center py-8 text-sub">暂无返利记录</div>';
+      }
+
+      // Inventory
+      if (d.inventoryList && d.inventoryList.length) {
+        document.getElementById('dealer-detail-inventory').innerHTML =
+          '<table class="data-table"><thead><tr><th>产品</th><th>库存数量</th><th>库存金额</th><th>安全库存</th><th>状态</th><th>操作</th></tr></thead><tbody>' +
+          d.inventoryList.map(inv => {
+            const cls = getInventoryStatusClass(inv.status);
+            return '<tr><td>' + escapeHtml(inv.product) + '</td><td>' + inv.qty + ' ' + escapeHtml(inv.unit) + '</td><td>¥ ' + escapeHtml(inv.amount) + '</td><td>' + inv.safety + ' ' + escapeHtml(inv.unit) + '</td><td><span class="badge ' + cls + '">' + escapeHtml(inv.status) + '</span></td><td><button class="btn btn-ghost text-xs" onclick="openChannelTransferForm()">发起调拨</button></td></tr>';
+          }).join('') +
+          '</tbody></table>';
+      } else {
+        document.getElementById('dealer-detail-inventory').innerHTML = '<div class="text-center py-8 text-sub">暂无库存记录</div>';
+      }
+
+      // Tasks
+      if (d.taskList && d.taskList.length) {
+        document.getElementById('dealer-detail-tasks').innerHTML =
+          '<div class="space-y-3">' +
+          d.taskList.map(t => {
+            const pct = t.target ? Math.round((t.achieved || 0) / t.target * 100) : 0;
+            const color = pct >= 80 ? 'bg-success' : (pct >= 50 ? 'bg-primary' : 'bg-warning');
+            return '<div class="card p-3">' +
+              '<div class="flex items-center justify-between mb-2"><div><div class="font-medium text-ink">' + escapeHtml(t.name) + '</div><div class="text-xs text-sub">目标 ¥' + t.target + '万 · 已达成 ¥' + (t.achieved || 0) + '万</div></div><span class="text-primary font-semibold">' + pct + '%</span></div>' +
+              '<div class="progress-bar"><div class="progress-fill ' + color + '" style="width:' + pct + '%"></div></div>' +
+            '</div>';
+          }).join('') +
+          '</div>';
+      } else {
+        document.getElementById('dealer-detail-tasks').innerHTML = '<div class="text-center py-8 text-sub">暂无任务</div>';
+      }
+
+      // Timeline
+      document.getElementById('dealer-detail-timeline').innerHTML =
+        '<div class="timeline">' +
+        d.timeline.map(t => {
+          const dotColor = t.type === 'warning' ? 'bg-warning' : (t.type === 'rebate' ? 'bg-success' : (t.type === 'inventory' ? 'bg-info' : 'bg-primary'));
+          return '<div class="timeline-item"><div class="timeline-dot ' + dotColor + '"></div><div class="card p-3"><div class="font-medium text-ink">' + escapeHtml(t.title) + '</div><div class="text-xs text-sub mt-1">' + escapeHtml(t.date) + (t.desc ? ' · ' + escapeHtml(t.desc) : '') + '</div></div></div>';
+        }).join('') +
+        '</div>';
+    }
+
+    function openCommissionStatementModalFromDealer(period, base, rate, amount, status) {
+      const d = dealerData.find(x => x.id === currentDealerId) || {};
+      document.getElementById('commission-statement-modal-dealer').textContent = d.name || '-';
+      document.getElementById('commission-statement-modal-period').textContent = '结算周期：' + (period || '-');
+      document.getElementById('commission-statement-modal-base').textContent = '¥' + (base || '-');
+      document.getElementById('commission-statement-modal-rate').textContent = rate || '-';
+      document.getElementById('commission-statement-modal-amount').textContent = '¥' + (amount || '-');
+      const statusClass = status === '已结算' ? 'badge-success' : 'badge-warning';
+      document.getElementById('commission-statement-modal-status').innerHTML = '<span class="badge ' + statusClass + '">' + (status || '待审核') + '</span>';
+      document.getElementById('commission-statement-modal-payable').textContent = '¥' + (amount || '-');
+      document.getElementById('commission-statement-modal-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    /* ===== Dealer create drawer ===== */
+    function openDealerCreateDrawer() {
+      document.getElementById('drawer-dealer-create').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDealerCreateDrawer() {
+      document.getElementById('drawer-dealer-create').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function submitDealerCreate() {
+      const name = document.getElementById('dealer-create-name').value.trim();
+      if (!name) { showToast('请输入代理商名称'); return; }
+      const region = document.getElementById('dealer-create-region').value.trim() || '云南-昆明';
+      const level = document.getElementById('dealer-create-level').value || '一般';
+      const productLines = Array.from(document.querySelectorAll('input[name="dealer-create-product"]:checked')).map(cb => cb.value);
+      const authEnd = document.getElementById('dealer-create-auth-end').value || '2027-12-31';
+      const manager = document.getElementById('dealer-create-manager').value.trim() || '待定';
+      const phone = document.getElementById('dealer-create-phone').value.trim() || '-';
+      const newId = 'DL-' + (new Date().getFullYear()) + String(dealerData.length + 1).padStart(3, '0');
+      dealerData.push({
+        id: newId,
+        name: name,
+        level: level,
+        region: region,
+        productLines: productLines.length ? productLines : ['血球'],
+        status: '授权有效',
+        manager: manager,
+        phone: phone,
+        amount: 0,
+        warning: '',
+        authEnd: authEnd,
+        socialCode: document.getElementById('dealer-create-social').value.trim() || '-',
+        address: document.getElementById('dealer-create-address').value.trim() || '-',
+        coopStart: new Date().toISOString().slice(0, 10),
+        settlement: document.getElementById('dealer-create-settlement').value || '月结 30 天',
+        annualTarget: 500,
+        annualAchieved: 0,
+        authList: [{
+          productLine: productLines[0] || '血球',
+          region: document.getElementById('dealer-create-auth-region').value.trim() || region,
+          start: document.getElementById('dealer-create-auth-start').value || new Date().toISOString().slice(0, 10),
+          end: authEnd,
+          status: '有效'
+        }],
+        rebateList: [],
+        inventoryList: [],
+        taskList: [{ name: '2026 年度销售任务', target: 500, achieved: 0 }],
+        timeline: [{ date: new Date().toISOString().slice(0, 10), type: 'coop', title: '新建代理商档案', desc: '由系统创建' }]
+      });
+      showToast('代理商创建成功');
+      closeDealerCreateDrawer();
+      resetDealerCreateForm();
+      renderDealerKpis();
+      renderDealerList();
+    }
+    function resetDealerCreateForm() {
+      document.getElementById('dealer-create-name').value = '';
+      document.getElementById('dealer-create-social').value = '';
+      document.getElementById('dealer-create-region').value = '';
+      document.getElementById('dealer-create-level').selectedIndex = 0;
+      document.querySelectorAll('input[name="dealer-create-product"]').forEach(cb => cb.checked = false);
+      document.getElementById('dealer-create-auth-region').value = '';
+      document.getElementById('dealer-create-auth-start').value = '';
+      document.getElementById('dealer-create-auth-end').value = '';
+      document.getElementById('dealer-create-manager').value = '';
+      document.getElementById('dealer-create-phone').value = '';
+      document.getElementById('dealer-create-address').value = '';
+      document.getElementById('dealer-create-settlement').selectedIndex = 0;
+      document.getElementById('dealer-create-remark').value = '';
+    }
+
+    /* ===== Dealer auth drawer ===== */
+    function openDealerAuthDrawer() {
+      document.getElementById('drawer-dealer-auth-form').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDealerAuthDrawer() {
+      document.getElementById('drawer-dealer-auth-form').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function submitDealerAuth() {
+      const productLine = document.getElementById('dealer-auth-product').value.trim();
+      const region = document.getElementById('dealer-auth-region').value.trim();
+      const start = document.getElementById('dealer-auth-start').value;
+      const end = document.getElementById('dealer-auth-end').value;
+      const status = document.getElementById('dealer-auth-status').value || '有效';
+      if (!productLine || !region || !start || !end) { showToast('请填写完整授权信息'); return; }
+      const d = dealerData.find(x => x.id === currentDealerId);
+      if (!d) { showToast('未找到当前代理商'); return; }
+      d.authList.push({ productLine, region, start, end, status });
+      if (!d.productLines.includes(productLine)) d.productLines.push(productLine);
+      showToast('授权新增成功');
+      closeDealerAuthDrawer();
+      renderDealerDetail(currentDealerId);
+      renderDealerList();
+    }
+
+    /* ===== Dealer edit modal (dynamic) ===== */
+    function openDealerEditModal(id) {
+      const d = dealerData.find(x => x.id === id);
+      if (!d) return;
+      currentDealerId = id;
+      document.getElementById('dealer-edit-name').value = d.name || '';
+      document.getElementById('dealer-edit-credit').value = d.socialCode || '';
+      document.getElementById('dealer-edit-level').value = d.level || '一般';
+      document.getElementById('dealer-edit-region').value = d.region || '';
+      document.getElementById('dealer-edit-product').value = (d.productLines || []).join('、');
+      document.getElementById('dealer-edit-contact').value = d.manager || '';
+      document.getElementById('dealer-edit-phone').value = d.phone || '';
+      document.getElementById('dealer-edit-status').value = d.status || '合作中';
+      document.getElementById('dealer-edit-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function submitDealerEdit() {
+      const d = dealerData.find(x => x.id === currentDealerId);
+      if (!d) return;
+      d.name = document.getElementById('dealer-edit-name').value.trim() || d.name;
+      d.socialCode = document.getElementById('dealer-edit-credit').value.trim();
+      d.level = document.getElementById('dealer-edit-level').value;
+      d.region = document.getElementById('dealer-edit-region').value.trim();
+      const productStr = document.getElementById('dealer-edit-product').value.trim();
+      d.productLines = productStr ? productStr.split(/[,，、\s]+/) : d.productLines;
+      d.manager = document.getElementById('dealer-edit-contact').value.trim();
+      d.phone = document.getElementById('dealer-edit-phone').value.trim();
+      d.status = document.getElementById('dealer-edit-status').value;
+      showToast('保存成功');
+      closeDealerEditModal();
+      renderDealerDetail(currentDealerId);
+      renderDealerList();
+    }
+
+    /* ===== Channel order detail modals ===== */
+    function openChannelSubDealerDetailModal(el) {
+      const row = el.closest('tr');
+      const d = row ? row.dataset : {};
+      document.getElementById('channel-sub-dealer-detail-name').textContent = d.subDealerName || row.children[0].innerText;
+      document.getElementById('channel-sub-dealer-detail-master').textContent = d.subDealerMaster || row.children[1].innerText;
+      document.getElementById('channel-sub-dealer-detail-region').textContent = d.subDealerRegion || row.children[2].innerText;
+      document.getElementById('channel-sub-dealer-detail-brand').textContent = d.subDealerBrand || row.children[3].innerText;
+      document.getElementById('channel-sub-dealer-detail-time').textContent = d.subDealerTime || row.children[4].innerText;
+      document.getElementById('channel-sub-dealer-detail-status').innerHTML = row.children[5].innerHTML;
+      document.getElementById('modal-channel-sub-dealer-detail').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeChannelSubDealerDetailModal() {
+      document.getElementById('modal-channel-sub-dealer-detail').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openChannelCrossDetailModal(el) {
+      const row = el.closest('tr');
+      document.getElementById('channel-cross-detail-code').textContent = row.children[0].innerText;
+      document.getElementById('channel-cross-detail-shipper').textContent = row.children[1].innerText;
+      document.getElementById('channel-cross-detail-hospital').textContent = row.children[2].innerText;
+      document.getElementById('channel-cross-detail-hospital-region').textContent = row.children[3].innerText;
+      document.getElementById('channel-cross-detail-auth-region').textContent = row.children[4].innerText;
+      document.getElementById('channel-cross-detail-cross').innerHTML = row.children[5].innerHTML;
+      document.getElementById('channel-cross-detail-level').innerHTML = row.children[6].innerHTML;
+      document.getElementById('channel-cross-detail-status').innerHTML = row.children[7].innerHTML;
+      document.getElementById('modal-channel-cross-detail').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeChannelCrossDetailModal() {
+      document.getElementById('modal-channel-cross-detail').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openChannelRebateDetailModal(el) {
+      const card = el.closest('.card[data-policy-id]');
+      const d = card ? card.dataset : {};
+      document.getElementById('channel-rebate-detail-name').textContent = d.policyName || card.querySelector('.font-semibold').innerText;
+      document.getElementById('channel-rebate-detail-status').innerHTML = card.querySelector('.badge').outerHTML;
+      const items = card.querySelectorAll('.space-y-2 > div');
+      document.getElementById('channel-rebate-detail-body').innerHTML = Array.from(items).map(div => '<div class="flex justify-between text-sm"><span class="text-sub">' + div.children[0].innerText + '</span><span class="text-ink">' + div.children[1].innerText + '</span></div>').join('');
+      document.getElementById('modal-channel-rebate-detail').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeChannelRebateDetailModal() {
+      document.getElementById('modal-channel-rebate-detail').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function openChannelTransferDetailModal(el) {
+      const row = el.closest('tr');
+      document.getElementById('channel-transfer-detail-code').textContent = row.children[0].innerText;
+      document.getElementById('channel-transfer-detail-out').textContent = row.children[1].innerText;
+      document.getElementById('channel-transfer-detail-in').textContent = row.children[2].innerText;
+      document.getElementById('channel-transfer-detail-product').textContent = row.children[3].innerText;
+      document.getElementById('channel-transfer-detail-qty').textContent = row.children[4].innerText;
+      document.getElementById('channel-transfer-detail-status').innerHTML = row.children[5].innerHTML;
+      document.getElementById('modal-channel-transfer-detail').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeChannelTransferDetailModal() {
+      document.getElementById('modal-channel-transfer-detail').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    /* ===== Override switchDealerTab to support filtering ===== */
+    function switchDealerTab(btn) {
+      btn.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      dealerTab = btn.dataset.dealertab;
+      dealerPage = 1;
+      const createBtn = document.getElementById('btn-create-dealer');
+      const filterBar = document.getElementById('dealer-filter-bar');
+      const listPanel = document.getElementById('dealer-panel-list');
+      const orderPanel = document.getElementById('dealer-panel-channel-order');
+      if (dealerTab === 'channel-order') {
+        listPanel.classList.add('hidden');
+        orderPanel.classList.remove('hidden');
+        if (createBtn) createBtn.classList.add('hidden');
+        if (filterBar) filterBar.classList.add('hidden');
+      } else {
+        listPanel.classList.remove('hidden');
+        orderPanel.classList.add('hidden');
+        if (createBtn) createBtn.classList.remove('hidden');
+        if (filterBar) filterBar.classList.remove('hidden');
+        renderDealerList();
+      }
+    }
+
   </script>
 
   <!-- ===== 撞单裁决弹窗 ===== -->
@@ -20596,5 +21626,194 @@ Content-Type: application/json
     </div>
   </div>
 
+  <!-- 新建代理商抽屉 -->
+  <div id="drawer-dealer-create" class="drawer-overlay" onclick="if(event.target===this) closeDealerCreateDrawer()">
+    <div class="drawer" onclick="event.stopPropagation()">
+      <div class="drawer-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">新建代理商</h3>
+          <p class="text-sub text-sm mt-1">录入代理商档案、授权信息并提交准入。</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeDealerCreateDrawer()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="drawer-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group md:col-span-2"><label class="form-label">代理商名称 <span class="required">*</span></label><input type="text" class="input w-full" id="dealer-create-name" placeholder="请输入营业执照全称"></div>
+          <div class="form-group"><label class="form-label">统一社会信用代码</label><input type="text" class="input w-full" id="dealer-create-social" placeholder="18 位字母数字"></div>
+          <div class="form-group"><label class="form-label">所属区域 <span class="required">*</span></label><input type="text" class="input w-full" id="dealer-create-region" placeholder="如：云南-昆明"></div>
+          <div class="form-group"><label class="form-label">等级 <span class="required">*</span></label><select class="input w-full" id="dealer-create-level"><option value="核心">核心</option><option value="一般" selected>一般</option><option value="潜在">潜在</option></select></div>
+          <div class="form-group md:col-span-2">
+            <label class="form-label">授权产品线 <span class="required">*</span></label>
+            <div class="flex flex-wrap gap-3 p-3 border border-line rounded-lg">
+              <label class="inline-flex items-center gap-2 text-sm text-ink"><input type="checkbox" name="dealer-create-product" value="血球" class="rounded border-line text-primary focus:ring-primary"> 血球</label>
+              <label class="inline-flex items-center gap-2 text-sm text-ink"><input type="checkbox" name="dealer-create-product" value="生化" class="rounded border-line text-primary focus:ring-primary"> 生化</label>
+              <label class="inline-flex items-center gap-2 text-sm text-ink"><input type="checkbox" name="dealer-create-product" value="免疫" class="rounded border-line text-primary focus:ring-primary"> 免疫</label>
+              <label class="inline-flex items-center gap-2 text-sm text-ink"><input type="checkbox" name="dealer-create-product" value="凝血" class="rounded border-line text-primary focus:ring-primary"> 凝血</label>
+              <label class="inline-flex items-center gap-2 text-sm text-ink"><input type="checkbox" name="dealer-create-product" value="POCT" class="rounded border-line text-primary focus:ring-primary"> POCT</label>
+              <label class="inline-flex items-center gap-2 text-sm text-ink"><input type="checkbox" name="dealer-create-product" value="试剂" class="rounded border-line text-primary focus:ring-primary"> 试剂</label>
+            </div>
+          </div>
+          <div class="form-group md:col-span-2"><label class="form-label">授权区域</label><input type="text" class="input w-full" id="dealer-create-auth-region" placeholder="如：云南-昆明、玉溪"></div>
+          <div class="form-group"><label class="form-label">授权有效期起</label><input type="date" class="input w-full" id="dealer-create-auth-start"></div>
+          <div class="form-group"><label class="form-label">授权有效期止 <span class="required">*</span></label><input type="date" class="input w-full" id="dealer-create-auth-end" value="2027-12-31"></div>
+          <div class="form-group"><label class="form-label">负责人 <span class="required">*</span></label><input type="text" class="input w-full" id="dealer-create-manager" placeholder="请输入负责人姓名"></div>
+          <div class="form-group"><label class="form-label">联系电话</label><input type="text" class="input w-full" id="dealer-create-phone" placeholder="请输入联系电话"></div>
+          <div class="form-group md:col-span-2"><label class="form-label">注册地址</label><input type="text" class="input w-full" id="dealer-create-address" placeholder="请输入注册地址"></div>
+          <div class="form-group"><label class="form-label">结算账期</label><select class="input w-full" id="dealer-create-settlement"><option value="月结 30 天">月结 30 天</option><option value="月结 45 天">月结 45 天</option><option value="月结 60 天">月结 60 天</option><option value="现款现货">现款现货</option></select></div>
+          <div class="form-group md:col-span-2"><label class="form-label">备注</label><textarea class="input w-full" id="dealer-create-remark" rows="3" placeholder="补充说明合作背景、资质情况等"></textarea></div>
+        </div>
+      </div>
+      <div class="drawer-footer">
+        <button class="btn btn-ghost" onclick="closeDealerCreateDrawer()">取消</button>
+        <button class="btn btn-primary" onclick="submitDealerCreate()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新增/编辑授权抽屉 -->
+  <div id="drawer-dealer-auth-form" class="drawer-overlay" onclick="if(event.target===this) closeDealerAuthDrawer()">
+    <div class="drawer" onclick="event.stopPropagation()">
+      <div class="drawer-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">新增授权</h3>
+          <p class="text-sub text-sm mt-1">为当前代理商新增产品线或区域授权。</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeDealerAuthDrawer()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="drawer-body">
+        <div class="grid grid-cols-1 gap-4">
+          <div class="form-group"><label class="form-label">产品线 <span class="required">*</span></label><select class="input w-full" id="dealer-auth-product"><option value="">请选择产品线</option><option>血球分析</option><option>生化分析</option><option>免疫分析</option><option>凝血分析</option><option>POCT</option><option>血球试剂</option><option>生化试剂</option><option>免疫试剂</option></select></div>
+          <div class="form-group"><label class="form-label">授权区域 <span class="required">*</span></label><input type="text" class="input w-full" id="dealer-auth-region" placeholder="如：云南-昆明"></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group"><label class="form-label">授权开始 <span class="required">*</span></label><input type="date" class="input w-full" id="dealer-auth-start"></div>
+            <div class="form-group"><label class="form-label">授权结束 <span class="required">*</span></label><input type="date" class="input w-full" id="dealer-auth-end"></div>
+          </div>
+          <div class="form-group"><label class="form-label">状态 <span class="required">*</span></label><select class="input w-full" id="dealer-auth-status"><option value="有效">有效</option><option value="即将到期">即将到期</option><option value="已过期">已过期</option></select></div>
+        </div>
+      </div>
+      <div class="drawer-footer">
+        <button class="btn btn-ghost" onclick="closeDealerAuthDrawer()">取消</button>
+        <button class="btn btn-primary" onclick="submitDealerAuth()">保存授权</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 二级经销商报备详情弹窗 -->
+  <div id="modal-channel-sub-dealer-detail" class="intention-modal-overlay" onclick="if(event.target===this) closeChannelSubDealerDetailModal()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink" id="channel-sub-dealer-detail-name">-</h3>
+          <p class="text-sub text-sm mt-1">二级经销商 / 炒单商报备详情</p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeChannelSubDealerDetailModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="bg-panel rounded-xl p-4 space-y-2 text-sm">
+          <div class="flex justify-between"><span class="text-sub">所属主经销商</span><span class="text-ink" id="channel-sub-dealer-detail-master">-</span></div>
+          <div class="flex justify-between"><span class="text-sub">报备区域</span><span class="text-ink" id="channel-sub-dealer-detail-region">-</span></div>
+          <div class="flex justify-between"><span class="text-sub">主营品牌</span><span class="text-ink" id="channel-sub-dealer-detail-brand">-</span></div>
+          <div class="flex justify-between"><span class="text-sub">报备时间</span><span class="text-ink" id="channel-sub-dealer-detail-time">-</span></div>
+          <div class="flex justify-between"><span class="text-sub">状态</span><span id="channel-sub-dealer-detail-status">-</span></div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeChannelSubDealerDetailModal()">关闭</button>
+        <button class="btn btn-primary" onclick="showToast('已审批通过');closeChannelSubDealerDetailModal()">通过</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 窜货预警详情弹窗 -->
+  <div id="modal-channel-cross-detail" class="intention-modal-overlay" onclick="if(event.target===this) closeChannelCrossDetailModal()">
+    <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">窜货预警详情</h3>
+          <p class="text-sub text-sm mt-1">预警编号：<span id="channel-cross-detail-code">-</span></p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeChannelCrossDetailModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="bg-panel rounded-xl p-4 space-y-2 text-sm mb-4">
+          <div class="flex justify-between"><span class="text-sub">出货方</span><span class="text-ink" id="channel-cross-detail-shipper">-</span></div>
+          <div class="flex justify-between"><span class="text-sub">收货医院</span><span class="text-ink" id="channel-cross-detail-hospital">-</span></div>
+          <div class="flex justify-between"><span class="text-sub">医院所在区域</span><span class="text-ink" id="channel-cross-detail-hospital-region">-</span></div>
+          <div class="flex justify-between"><span class="text-sub">出货方授权区域</span><span class="text-ink" id="channel-cross-detail-auth-region">-</span></div>
+          <div class="flex justify-between"><span class="text-sub">是否跨区</span><span id="channel-cross-detail-cross">-</span></div>
+          <div class="flex justify-between"><span class="text-sub">预警等级</span><span id="channel-cross-detail-level">-</span></div>
+          <div class="flex justify-between"><span class="text-sub">状态</span><span id="channel-cross-detail-status">-</span></div>
+        </div>
+        <div class="bg-panel rounded-xl p-4">
+          <h4 class="font-semibold text-ink mb-3">处理记录</h4>
+          <div class="timeline">
+            <div class="timeline-item"><div class="timeline-dot bg-primary"></div><div class="text-sm text-ink font-medium">系统识别跨区出货</div><div class="text-xs text-sub">2026-07-31 · 规则引擎</div></div>
+            <div class="timeline-item"><div class="timeline-dot bg-warning"></div><div class="text-sm text-ink font-medium">推送预警给渠道管理员</div><div class="text-xs text-sub">2026-07-31 · 消息中心</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeChannelCrossDetailModal()">关闭</button>
+        <button class="btn btn-primary" onclick="showToast('已处理');closeChannelCrossDetailModal()">标记处理</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 返利政策详情弹窗 -->
+  <div id="modal-channel-rebate-detail" class="intention-modal-overlay" onclick="if(event.target===this) closeChannelRebateDetailModal()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink" id="channel-rebate-detail-name">-</h3>
+          <div class="text-sub text-sm mt-1" id="channel-rebate-detail-status">-</div>
+        </div>
+        <button class="btn btn-ghost" onclick="closeChannelRebateDetailModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="bg-panel rounded-xl p-4 space-y-2 text-sm" id="channel-rebate-detail-body">
+          <!-- 动态渲染 -->
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeChannelRebateDetailModal()">关闭</button>
+        <button class="btn btn-primary" onclick="showToast('已启用该政策');closeChannelRebateDetailModal()">启用</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 库存调拨详情弹窗 -->
+  <div id="modal-channel-transfer-detail" class="intention-modal-overlay" onclick="if(event.target===this) closeChannelTransferDetailModal()">
+    <div class="intention-modal" onclick="event.stopPropagation()">
+      <div class="intention-modal-header">
+        <div>
+          <h3 class="text-lg font-bold text-ink">调拨详情</h3>
+          <p class="text-sub text-sm mt-1">申请编号：<span id="channel-transfer-detail-code">-</span></p>
+        </div>
+        <button class="btn btn-ghost" onclick="closeChannelTransferDetailModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
+      </div>
+      <div class="intention-modal-body">
+        <div class="bg-panel rounded-xl p-4 space-y-2 text-sm">
+          <div class="flex justify-between"><span class="text-sub">调出方</span><span class="text-ink" id="channel-transfer-detail-out">-</span></div>
+          <div class="flex justify-between"><span class="text-sub">调入方</span><span class="text-ink" id="channel-transfer-detail-in">-</span></div>
+          <div class="flex justify-between"><span class="text-sub">产品</span><span class="text-ink" id="channel-transfer-detail-product">-</span></div>
+          <div class="flex justify-between"><span class="text-sub">数量</span><span class="text-ink" id="channel-transfer-detail-qty">-</span></div>
+          <div class="flex justify-between"><span class="text-sub">状态</span><span id="channel-transfer-detail-status">-</span></div>
+        </div>
+      </div>
+      <div class="intention-modal-footer">
+        <button class="btn btn-ghost" onclick="closeChannelTransferDetailModal()">关闭</button>
+        <button class="btn btn-primary" onclick="showToast('已审批通过');closeChannelTransferDetailModal()">通过</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (document.getElementById('view-dealers')) {
+        renderDealerKpis();
+        renderDealerList();
+      }
+    });
+  </script>
 </body>
 </html>
