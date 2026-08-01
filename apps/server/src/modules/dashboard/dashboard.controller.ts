@@ -6,6 +6,7 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagg
 import { Permissions } from '@/common/decorators/permissions.decorator'
 import { DashboardService } from './dashboard.service'
 import { DashboardOverviewQueryDto } from './dto/dashboard-query.dto'
+import { DashboardFunnelQueryDto } from './dto/dashboard-funnel-query.dto'
 import type { Request } from 'express'
 
 @ApiTags('经营驾驶舱')
@@ -26,5 +27,14 @@ export class DashboardController {
   getOverview(@Req() req: Request, @Query() query: DashboardOverviewQueryDto) {
     const user = this.getCurrentUser(req)
     return this.dashboardService.getOverview(user, query)
+  }
+
+  @Get('funnel')
+  @Permissions('dashboard:read')
+  @ApiOperation({ summary: '销售漏斗分析' })
+  @ApiResponse({ status: 200, description: '返回销售漏斗数据' })
+  getFunnel(@Req() req: Request, @Query() query: DashboardFunnelQueryDto) {
+    const user = this.getCurrentUser(req)
+    return this.dashboardService.getFunnel(user, query)
   }
 }

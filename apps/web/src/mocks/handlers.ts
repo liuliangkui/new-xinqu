@@ -75,8 +75,8 @@ import { generateWorkbenchData } from '@/views/workbench/mock'
 import type { WorkbenchData } from '@/views/workbench/types'
 import { generatePerformanceOverview, generatePerformanceList } from '@/views/performance/mock'
 import type { PerformanceListResult, PerformanceOverview } from '@/views/performance/types'
-import { generateDashboardOverview } from '@/views/dashboard/mock'
-import type { DashboardOverview, DashboardPeriod } from '@/views/dashboard/types'
+import { generateDashboardOverview, generateDashboardFunnel } from '@/views/dashboard/mock'
+import type { DashboardOverview, DashboardPeriod, DashboardFunnelResult } from '@/views/dashboard/types'
 import {
   generateCalendarEventList,
   generateCalendarMonthDots,
@@ -749,5 +749,13 @@ export const handlers = [
     const regionCode = url.searchParams.get('regionCode') ?? undefined
     const result = generateDashboardOverview({ period, regionCode })
     return HttpResponse.json(ok<DashboardOverview>(result))
+  }),
+
+  http.get('/api/v1/dashboard/funnel', ({ request }) => {
+    const url = new URL(request.url)
+    const period = (url.searchParams.get('period') as DashboardPeriod) ?? 'month'
+    const regionCode = url.searchParams.get('regionCode') ?? undefined
+    const result = generateDashboardFunnel({ period, regionCode })
+    return HttpResponse.json(ok<DashboardFunnelResult>(result))
   }),
 ]

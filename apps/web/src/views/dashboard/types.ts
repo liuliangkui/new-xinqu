@@ -41,3 +41,20 @@ export interface DashboardQueryParams extends Record<string, unknown> {
   period?: DashboardPeriod
   regionCode?: string
 }
+
+export interface DashboardFunnelStage {
+  stage: string
+  count: number
+  amount: number
+  conversionRate: number
+  widthPercent: number
+  color: string
+}
+
+export interface DashboardFunnelResult {
+  stages: DashboardFunnelStage[]
+  totalCount: number
+  totalAmount: number
+  winRate: number
+  avgDealAmount: number
+}

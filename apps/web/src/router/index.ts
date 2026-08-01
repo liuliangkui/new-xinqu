@@ -147,6 +147,12 @@ const moduleRoutes: RouteRecordRaw[] = [
     component: () => import('@/views/dashboard/index.vue'),
     meta: { title: '经营驾驶舱', icon: 'dashboard', permissions: ['dashboard:read'] },
   },
+  {
+    path: '/dashboard/funnel',
+    name: 'dashboard-funnel',
+    component: () => import('@/views/dashboard/funnel.vue'),
+    meta: { title: '销售漏斗', icon: 'dashboard', permissions: ['dashboard:read'] },
+  },
 
   // ---- 系统设置 ----
   {
