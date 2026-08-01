@@ -4953,7 +4953,7 @@
           </div>
 
           <div class="card mb-4">
-            <div class="flex flex-wrap gap-2 border-b border-line pb-3">
+            <div class="flex flex-wrap gap-2 border-b border-line pb-3" id="approval-tabs">
               <button class="tab active" data-apptab="pending" onclick="switchApprovalTab(this)">待我审批 <span class="badge badge-danger ml-1">13</span></button>
               <button class="tab" data-apptab="done" onclick="switchApprovalTab(this)">我已审批</button>
               <button class="tab" data-apptab="cc" onclick="switchApprovalTab(this)">抄送我的</button>
@@ -4986,7 +4986,7 @@
             </div>
 
             <div class="space-y-3" id="approval-list">
-              <div class="app-card card p-4" data-approval-type="arbitrate" data-approval-status="pending" data-current-node="厂家经理审批中" data-is-counter-sign="false">
+              <div class="app-card card p-4" data-approval-scope="pending" data-approval-type="arbitrate" data-approval-status="pending" data-current-node="厂家经理审批中" data-is-counter-sign="false">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-xl bg-warning-bg text-warning flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-warning"/></svg></div>
@@ -5003,7 +5003,7 @@
                 </div>
               </div>
 
-              <div class="app-card card p-4" data-approval-type="arbitrate" data-approval-status="pending" data-current-node="厂家负责人审批中" data-is-counter-sign="false">
+              <div class="app-card card p-4" data-approval-scope="pending" data-approval-type="arbitrate" data-approval-status="pending" data-current-node="厂家负责人审批中" data-is-counter-sign="false">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-xl bg-info-bg text-info flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-warning"/></svg></div>
@@ -5020,7 +5020,7 @@
                 </div>
               </div>
 
-              <div class="app-card card p-4" data-approval-type="rebate" data-approval-status="pending" data-current-node="区域总监审批" data-is-counter-sign="false">
+              <div class="app-card card p-4" data-approval-scope="pending" data-approval-type="rebate" data-approval-status="pending" data-current-node="区域总监审批" data-is-counter-sign="false">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-xl bg-danger-bg text-danger flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-dealer"/></svg></div>
@@ -5038,7 +5038,7 @@
                 </div>
               </div>
 
-              <div class="app-card card p-4" data-approval-type="intention" data-approval-status="pending" data-current-node="风控合规审批" data-is-counter-sign="true">
+              <div class="app-card card p-4" data-approval-scope="pending" data-approval-type="intention" data-approval-status="pending" data-current-node="风控合规审批" data-is-counter-sign="true">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-xl bg-warning-bg text-warning flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-opportunity"/></svg></div>
@@ -5056,7 +5056,7 @@
                 </div>
               </div>
 
-              <div class="app-card card p-4" data-approval-type="lead" data-approval-status="pending" data-current-node="销售经理审批" data-is-counter-sign="false">
+              <div class="app-card card p-4" data-approval-scope="pending" data-approval-type="lead" data-approval-status="pending" data-current-node="销售经理审批" data-is-counter-sign="false">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-xl bg-primary-light text-primary flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-lead"/></svg></div>
@@ -5074,7 +5074,7 @@
                 </div>
               </div>
 
-              <div class="app-card card p-4" data-approval-type="workorder" data-approval-status="pending" data-current-node="服务主管审批" data-is-counter-sign="false">
+              <div class="app-card card p-4" data-approval-scope="pending" data-approval-type="workorder" data-approval-status="pending" data-current-node="服务主管审批" data-is-counter-sign="false">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-xl bg-info-bg text-info flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-ticket"/></svg></div>
@@ -5093,7 +5093,7 @@
               </div>
 
               <!-- 渠道秩序相关审批记录 -->
-              <div class="app-card card p-4" data-approval-type="sub-dealer" data-approval-status="pending" data-current-node="渠道经理审批" data-is-counter-sign="true">
+              <div class="app-card card p-4" data-approval-scope="pending" data-approval-type="sub-dealer" data-approval-status="pending" data-current-node="渠道经理审批" data-is-counter-sign="true">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-xl bg-info-bg text-info flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-dealer"/></svg></div>
@@ -5111,7 +5111,7 @@
                 </div>
               </div>
 
-              <div class="app-card card p-4" data-approval-type="sub-dealer" data-approval-status="pending" data-current-node="渠道经理审批" data-is-counter-sign="true">
+              <div class="app-card card p-4" data-approval-scope="pending" data-approval-type="sub-dealer" data-approval-status="pending" data-current-node="渠道经理审批" data-is-counter-sign="true">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-xl bg-info-bg text-info flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-dealer"/></svg></div>
@@ -5129,7 +5129,7 @@
                 </div>
               </div>
 
-              <div class="app-card card p-4" data-approval-type="special-price" data-approval-status="pending" data-current-node="区域总监审批" data-is-counter-sign="false">
+              <div class="app-card card p-4" data-approval-scope="pending" data-approval-type="special-price" data-approval-status="pending" data-current-node="区域总监审批" data-is-counter-sign="false">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-xl bg-warning-bg text-warning flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-opportunity"/></svg></div>
@@ -5147,7 +5147,7 @@
                 </div>
               </div>
 
-              <div class="app-card card p-4" data-approval-type="special-price" data-approval-status="pending" data-current-node="销售总监审批" data-is-counter-sign="true">
+              <div class="app-card card p-4" data-approval-scope="pending" data-approval-type="special-price" data-approval-status="pending" data-current-node="销售总监审批" data-is-counter-sign="true">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-xl bg-warning-bg text-warning flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-opportunity"/></svg></div>
@@ -5165,7 +5165,7 @@
                 </div>
               </div>
 
-              <div class="app-card card p-4" data-approval-type="transfer" data-approval-status="pending" data-current-node="库存主管审批" data-is-counter-sign="false">
+              <div class="app-card card p-4" data-approval-scope="pending" data-approval-type="transfer" data-approval-status="pending" data-current-node="库存主管审批" data-is-counter-sign="false">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-xl bg-success-bg text-success flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-dealer"/></svg></div>
@@ -5183,7 +5183,7 @@
                 </div>
               </div>
 
-              <div class="app-card card p-4" data-approval-type="cross-ship" data-approval-status="pending" data-current-node="渠道合规审批" data-is-counter-sign="false">
+              <div class="app-card card p-4" data-approval-scope="pending" data-approval-type="cross-ship" data-approval-status="pending" data-current-node="渠道合规审批" data-is-counter-sign="false">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-xl bg-danger-bg text-danger flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-warning"/></svg></div>
@@ -5201,7 +5201,7 @@
                 </div>
               </div>
 
-              <div class="app-card card p-4" data-approval-type="special-price" data-approval-status="approved" data-current-node="已通过" data-is-counter-sign="false">
+              <div class="app-card card p-4" data-approval-scope="pending" data-approval-type="special-price" data-approval-status="approved" data-current-node="已通过" data-is-counter-sign="false">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div class="flex items-start gap-4">
                     <div class="w-12 h-12 rounded-xl bg-success-bg text-success flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-opportunity"/></svg></div>
@@ -5215,6 +5215,250 @@
                     <button class="btn btn-ghost text-xs" onclick="openApprovalDetail(this)">查看</button>
                   </div>
                 </div>
+              </div>
+
+              <!-- 我已审批 -->
+              <div class="app-card card p-4" data-approval-scope="done" data-approval-type="intention" data-approval-status="approved" data-current-node="已通过" data-is-counter-sign="false">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-success-bg text-success flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-opportunity"/></svg></div>
+                    <div>
+                      <div class="font-semibold text-ink">意向审批 · 云南省肿瘤医院生化流水线</div>
+                      <div class="text-sub text-sm mt-1">预计金额：¥320万 · 产品线：生化 · 授权区域：云南-昆明</div>
+                      <div class="text-placeholder text-xs mt-1">提交人：李丽 · 2026-07-26 09:30 · 审批人：我 · 2026-07-26 14:20 通过</div>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button class="btn btn-ghost text-xs" onclick="openApprovalDetail(this)">查看</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="app-card card p-4" data-approval-scope="done" data-approval-type="special-price" data-approval-status="approved" data-current-node="已通过" data-is-counter-sign="false">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-success-bg text-success flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-opportunity"/></svg></div>
+                    <div>
+                      <div class="font-semibold text-ink">特价申请 · 大理康盛血球试剂集采</div>
+                      <div class="text-sub text-sm mt-1">产品：血球试剂 5 分类 · 申请特价：¥ 1,150/盒 · 常规价：¥ 1,680/盒</div>
+                      <div class="text-placeholder text-xs mt-1">提交人：杨经理 · 2026-07-24 10:00 · 审批人：我 · 2026-07-24 16:00 通过</div>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button class="btn btn-ghost text-xs" onclick="openApprovalDetail(this)">查看</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="app-card card p-4" data-approval-scope="done" data-approval-type="rebate" data-approval-status="approved" data-current-node="已通过" data-is-counter-sign="false">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-success-bg text-success flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-dealer"/></svg></div>
+                    <div>
+                      <div class="font-semibold text-ink">代理商返利 · 红河州博爱医疗器械 Q2 返利</div>
+                      <div class="text-sub text-sm mt-1">返利期间：2026 Q2 · 计算基数：¥620万 · 返利金额：¥62,000</div>
+                      <div class="text-placeholder text-xs mt-1">提交人：陈总 · 2026-07-22 11:30 · 审批人：我 · 2026-07-22 15:10 通过</div>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button class="btn btn-ghost text-xs" onclick="openApprovalDetail(this)">查看</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="app-card card p-4" data-approval-scope="done" data-approval-type="lead" data-approval-status="rejected" data-current-node="已驳回" data-is-counter-sign="false">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-danger-bg text-danger flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-lead"/></svg></div>
+                    <div>
+                      <div class="font-semibold text-ink">线索分配申请 · 曲靖市第二人民医院凝血项目</div>
+                      <div class="text-sub text-sm mt-1">建议负责人：张鹏 · 客户等级：普通客户</div>
+                      <div class="text-placeholder text-xs mt-1">提交人：张经理 · 2026-07-20 16:00 · 审批人：我 · 2026-07-21 09:00 驳回</div>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button class="btn btn-ghost text-xs" onclick="openApprovalDetail(this)">查看</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="app-card card p-4" data-approval-scope="done" data-approval-type="workorder" data-approval-status="approved" data-current-node="已通过" data-is-counter-sign="false">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-success-bg text-success flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-ticket"/></svg></div>
+                    <div>
+                      <div class="font-semibold text-ink">工单转派申请 · WO-2026071802</div>
+                      <div class="text-sub text-sm mt-1">原工程师：李丽 · 转派给：王强 · 原因：技术专长匹配</div>
+                      <div class="text-placeholder text-xs mt-1">提交人：李丽 · 2026-07-18 10:20 · 审批人：我 · 2026-07-18 11:00 通过</div>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button class="btn btn-ghost text-xs" onclick="openApprovalDetail(this)">查看</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 抄送我的 -->
+              <div class="app-card card p-4" data-approval-scope="cc" data-approval-type="arbitrate" data-approval-status="pending" data-current-node="厂家负责人审批中" data-is-counter-sign="false">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-warning-bg text-warning flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-warning"/></svg></div>
+                    <div>
+                      <div class="font-semibold text-ink">撞单裁决 · 玉溪市人民医院血球流水线</div>
+                      <div class="text-sub text-sm mt-1">冲突双方：王强 vs 李娜 · 预计金额：¥220万 · 冲突原因：区域边界争议</div>
+                      <div class="text-placeholder text-xs mt-1">抄送人：陈总 · 2026-07-30 15:40 · 当前节点：厂家负责人审批中</div>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button class="btn btn-ghost text-xs" onclick="this.closest('.app-card').classList.add('opacity-60'); showToast('已标记为已读')">标记已读</button>
+                    <button class="btn btn-ghost text-xs" onclick="openApprovalDetail(this)">查看</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="app-card card p-4" data-approval-scope="cc" data-approval-type="intention" data-approval-status="approved" data-current-node="已通过" data-is-counter-sign="false">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-success-bg text-success flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-opportunity"/></svg></div>
+                    <div>
+                      <div class="font-semibold text-ink">意向审批 · 昆明市儿童医院 POCT 项目</div>
+                      <div class="text-sub text-sm mt-1">预计金额：¥180万 · 产品线：POCT · 授权区域：云南-昆明</div>
+                      <div class="text-placeholder text-xs mt-1">抄送人：张经理 · 2026-07-27 13:20 · 审批结果：已通过</div>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button class="btn btn-ghost text-xs" onclick="openApprovalDetail(this)">查看</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="app-card card p-4" data-approval-scope="cc" data-approval-type="special-price" data-approval-status="rejected" data-current-node="已驳回" data-is-counter-sign="false">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-danger-bg text-danger flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-opportunity"/></svg></div>
+                    <div>
+                      <div class="font-semibold text-ink">特价申请 · 西双版纳州医院生化试剂</div>
+                      <div class="text-sub text-sm mt-1">产品：生化试剂 · 申请特价：¥ 280/盒 · 常规价：¥ 450/盒</div>
+                      <div class="text-placeholder text-xs mt-1">抄送人：杨经理 · 2026-07-23 09:10 · 审批结果：已驳回</div>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button class="btn btn-ghost text-xs" onclick="openApprovalDetail(this)">查看</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="app-card card p-4" data-approval-scope="cc" data-approval-type="cross-ship" data-approval-status="pending" data-current-node="渠道合规审批" data-is-counter-sign="false">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-danger-bg text-danger flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-warning"/></svg></div>
+                    <div>
+                      <div class="font-semibold text-ink">窜货处理 · CW-2026072501</div>
+                      <div class="text-sub text-sm mt-1">出货方：红河州博爱 · 收货医院：文山州人民医院 · 预警等级：中</div>
+                      <div class="text-placeholder text-xs mt-1">抄送人：系统 · 2026-07-25 08:30 · 当前节点：渠道合规审批</div>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button class="btn btn-ghost text-xs" onclick="this.closest('.app-card').classList.add('opacity-60'); showToast('已标记为已读')">标记已读</button>
+                    <button class="btn btn-ghost text-xs" onclick="openApprovalDetail(this)">查看</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 我发起的 -->
+              <div class="app-card card p-4" data-approval-scope="started" data-approval-type="special-price" data-approval-status="pending" data-current-node="区域总监审批" data-is-counter-sign="false">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-warning-bg text-warning flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-opportunity"/></svg></div>
+                    <div>
+                      <div class="font-semibold text-ink">特价申请 · 昆明博奥血球试剂 Q3 促销</div>
+                      <div class="text-sub text-sm mt-1">产品：血球试剂 5 分类 · 申请特价：¥ 1,280/盒 · 常规价：¥ 1,680/盒</div>
+                      <div class="text-placeholder text-xs mt-1">提交人：我 · 2026-07-29 14:00 · 当前节点：区域总监审批</div>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button class="btn btn-ghost text-xs" onclick="showToast('已发送催办提醒')">催办</button>
+                    <button class="btn btn-ghost text-xs" onclick="openApprovalDetail(this)">查看</button>
+                    <button class="btn btn-danger text-xs" onclick="this.closest('.app-card').remove(); filterApprovalList(); showToast('已撤销申请')">撤销</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="app-card card p-4" data-approval-scope="started" data-approval-type="transfer" data-approval-status="pending" data-current-node="库存主管审批" data-is-counter-sign="false">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-success-bg text-success flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-dealer"/></svg></div>
+                    <div>
+                      <div class="font-semibold text-ink">库存调拨 · TR-2026072902</div>
+                      <div class="text-sub text-sm mt-1">调出方：昆明博奥 · 调入方：红河州博爱 · 产品：凝血试剂 · 数量：30 盒</div>
+                      <div class="text-placeholder text-xs mt-1">提交人：我 · 2026-07-29 11:20 · 当前节点：库存主管审批</div>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button class="btn btn-ghost text-xs" onclick="showToast('已发送催办提醒')">催办</button>
+                    <button class="btn btn-ghost text-xs" onclick="openApprovalDetail(this)">查看</button>
+                    <button class="btn btn-danger text-xs" onclick="this.closest('.app-card').remove(); filterApprovalList(); showToast('已撤销申请')">撤销</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="app-card card p-4" data-approval-scope="started" data-approval-type="intention" data-approval-status="approved" data-current-node="已通过" data-is-counter-sign="false">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-success-bg text-success flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-opportunity"/></svg></div>
+                    <div>
+                      <div class="font-semibold text-ink">意向审批 · 保山市人民医院血球流水线</div>
+                      <div class="text-sub text-sm mt-1">预计金额：¥260万 · 产品线：血液分析 · 授权区域：云南-保山</div>
+                      <div class="text-placeholder text-xs mt-1">提交人：我 · 2026-07-15 09:00 · 审批结果：已通过</div>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button class="btn btn-ghost text-xs" onclick="openApprovalDetail(this)">查看</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="app-card card p-4" data-approval-scope="started" data-approval-type="sub-dealer" data-approval-status="approved" data-current-node="已通过" data-is-counter-sign="false">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-success-bg text-success flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-dealer"/></svg></div>
+                    <div>
+                      <div class="font-semibold text-ink">二级经销商报备 · 普洱康泰医疗设备有限公司</div>
+                      <div class="text-sub text-sm mt-1">所属主经销商：昆明博奥 · 报备区域：云南-普洱 · 主营：血球</div>
+                      <div class="text-placeholder text-xs mt-1">提交人：我 · 2026-07-10 16:45 · 审批结果：已通过</div>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button class="btn btn-ghost text-xs" onclick="openApprovalDetail(this)">查看</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="app-card card p-4" data-approval-scope="started" data-approval-type="rebate" data-approval-status="rejected" data-current-node="已驳回" data-is-counter-sign="false">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-danger-bg text-danger flex items-center justify-center flex-shrink-0"><svg class="icon icon-xl"><use href="#icon-dealer"/></svg></div>
+                    <div>
+                      <div class="font-semibold text-ink">代理商返利 · 大理康盛 Q2 季度返利</div>
+                      <div class="text-sub text-sm mt-1">返利期间：2026 Q2 · 计算基数：¥420万 · 返利金额：¥42,000</div>
+                      <div class="text-placeholder text-xs mt-1">提交人：我 · 2026-07-05 10:30 · 审批结果：已驳回 · 原因：发票未补齐</div>
+                    </div>
+                  </div>
+                  <div class="flex gap-2 flex-shrink-0">
+                    <button class="btn btn-ghost text-xs" onclick="openApprovalDetail(this)">查看</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI 分析结论 -->
+          <div id="approval-analysis" class="card mb-4 p-4 border-l-4 border-info">
+            <div class="flex items-start gap-3">
+              <svg class="icon icon-md text-info flex-shrink-0 mt-0.5"><use href="#icon-ai"/></svg>
+              <div>
+                <div class="font-semibold text-ink mb-1">AI 分析结论</div>
+                <div class="text-sm text-sub leading-relaxed">正在分析审批数据...</div>
               </div>
             </div>
           </div>
@@ -17743,27 +17987,76 @@ Content-Type: application/json
     function switchApprovalTab(btn) {
       btn.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
+      filterApprovalList();
+    }
+
+    function getActiveApprovalScope() {
+      const active = document.querySelector('#approval-tabs .tab.active');
+      return active ? (active.dataset.apptab || 'pending') : 'pending';
     }
 
     function filterApprovalList() {
+      const scope = getActiveApprovalScope();
       const type = document.getElementById('approval-type-filter').value;
       const status = document.getElementById('approval-status-filter').value;
       const keyword = (document.getElementById('approval-keyword').value || '').trim().toLowerCase();
       const cards = document.querySelectorAll('#approval-list .app-card');
       let visible = 0;
       cards.forEach(card => {
+        const cardScope = card.dataset.approvalScope || '';
         const cardType = card.dataset.approvalType || '';
         const cardStatus = card.dataset.approvalStatus || '';
         const text = (card.innerText || '').toLowerCase();
+        const scopeMatch = cardScope === scope;
         const typeMatch = !type || cardType === type;
         const statusMatch = !status || cardStatus === status;
         const keywordMatch = !keyword || text.indexOf(keyword) !== -1;
-        const show = typeMatch && statusMatch && keywordMatch;
+        const show = scopeMatch && typeMatch && statusMatch && keywordMatch;
         card.classList.toggle('hidden', !show);
         if (show) visible++;
       });
       const summary = document.querySelector('#view-approvals .flex.items-center.justify-between .text-sub.text-sm');
-      if (summary) summary.textContent = '共 ' + visible + ' 条';
+      const scopeLabels = { pending: '待审批', done: '已审批', cc: '抄送', started: '发起' };
+      if (summary) summary.textContent = '共 ' + visible + ' 条' + (scopeLabels[scope] ? scopeLabels[scope] : '');
+      updateApprovalTabBadges();
+      updateApprovalAnalysis(scope, visible);
+    }
+
+    function updateApprovalTabBadges() {
+      const counts = { pending: 0, done: 0, cc: 0, started: 0 };
+      document.querySelectorAll('#approval-list .app-card').forEach(card => {
+        const s = card.dataset.approvalScope;
+        if (s && counts.hasOwnProperty(s)) counts[s]++;
+      });
+      document.querySelectorAll('#approval-tabs .tab').forEach(tab => {
+        const s = tab.dataset.apptab;
+        if (!s || !counts.hasOwnProperty(s)) return;
+        const badge = tab.querySelector('.badge');
+        if (badge) badge.textContent = counts[s];
+        else {
+          const span = document.createElement('span');
+          span.className = 'badge badge-primary ml-1';
+          span.textContent = counts[s];
+          tab.appendChild(span);
+        }
+      });
+    }
+
+    function updateApprovalAnalysis(scope, visible) {
+      const el = document.getElementById('approval-analysis');
+      if (!el) return;
+      const scopeNames = { pending: '待我审批', done: '我已审批', cc: '抄送我的', started: '我发起的' };
+      let text = '';
+      if (scope === 'pending') {
+        text = '当前有 ' + visible + ' 条待我审批事项，其中撞单裁决与窜货处理属于高优先级，建议优先处理；特价申请与返利审批集中在渠道业务，可批量审批提高效率。';
+      } else if (scope === 'done') {
+        text = '我已审批 ' + visible + ' 条事项，整体通过率为 80%，驳回主要集中在线索分配与特价申请，建议关注驳回原因并同步提交人优化材料。';
+      } else if (scope === 'cc') {
+        text = '抄送我的共 ' + visible + ' 条，其中 2 条仍在审批中，1 条已驳回；建议对撞单裁决与窜货处理保持关注，必要时介入协调。';
+      } else if (scope === 'started') {
+        text = '我发起的申请共 ' + visible + ' 条，2 条仍在审批中，建议对区域总监审批节点进行催办；1 条被驳回需补充发票材料后重新提交。';
+      }
+      el.querySelector('.text-sub').textContent = text;
     }
 
     /* ===== Approval detail / rules / transfer / add-sign ===== */
@@ -19840,9 +20133,11 @@ Content-Type: application/json
       switchReagentView('grid');
       switchComplianceView('grid');
       switchPerformanceView('chart');
+      filterPerformance();
       switchBrandView('grid');
       setTaskView('card');
       setContactView('card');
+      filterApprovalList();
     });
 
     // URL hash routing for screenshot/deeplink (run after DOM ready)
