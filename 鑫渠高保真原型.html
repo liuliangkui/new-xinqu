@@ -4259,6 +4259,7 @@
               <div class="flex items-center gap-2">
                 <button class="btn btn-primary" id="wo-view-kanban" onclick="setWoView('kanban')"><svg class="icon icon-sm"><use href="#icon-grid"/></svg></button>
                 <button class="btn btn-outline" id="wo-view-list" onclick="setWoView('list')"><svg class="icon icon-sm"><use href="#icon-list"/></svg></button>
+                <button class="btn btn-outline" id="wo-view-map" onclick="setWoView('map')"><svg class="icon icon-sm"><use href="#icon-location"/></svg></button>
                 <button class="btn btn-primary" onclick="openWorkorderModal({dataset:{}}); showToast(`打开新建工单`)"><svg class="icon icon-sm"><use href="#icon-plus"/></svg> 新建工单</button>
               </div>
             </div>
@@ -4310,35 +4311,46 @@
           <div id="wo-kanban" class="kanban mb-4">
             <div class="kanban-col">
               <div class="flex items-center justify-between mb-3"><span class="font-semibold text-ink">待处理</span><span class="badge badge-warning">28</span></div>
-              <div class="kanban-card cursor-pointer" data-wo="WO-2026072901" data-title="云南省肿瘤医院 BC-6800 报错" data-priority="紧急" data-customer="云南省肿瘤医院" data-engineer="张工" data-sla="剩余 2 小时超时" onclick="openWorkorderModal(this)" data-status="待处理">
+              <div class="kanban-card cursor-pointer" data-wo="WO-2026072901" data-title="云南省肿瘤医院 BC-6800 报错" data-priority="紧急" data-customer="云南省肿瘤医院" data-engineer="张工" data-owner="张工" data-sla="剩余 2 小时超时" onclick="openWorkorderModal(this)" data-status="待处理">
                 <div class="flex items-center justify-between mb-2"><span class="text-xs text-placeholder">WO-2026072901</span><span class="badge badge-danger">紧急</span></div>
                 <div class="font-medium text-ink text-sm">云南省肿瘤医院 BC-6800 报错</div>
                 <div class="text-xs text-sub mt-1">客户：云南省肿瘤医院 · 检验科</div>
                 <div class="text-xs text-danger mt-2">剩余 2 小时超时</div>
               </div>
-              <div class="kanban-card cursor-pointer" data-wo="WO-2026072902" data-title="大理州人民医院生化仪校准" data-priority="高" data-customer="大理州人民医院" data-engineer="" data-sla="剩余 4 小时" onclick="openWorkorderModal(this)" data-status="待处理">
+              <div class="kanban-card cursor-pointer" data-wo="WO-2026072902" data-title="大理州人民医院生化仪校准" data-priority="高" data-customer="大理州人民医院" data-engineer="" data-owner="待分配" data-sla="剩余 4 小时" onclick="openWorkorderModal(this)" data-status="待处理">
                 <div class="flex items-center justify-between mb-2"><span class="text-xs text-placeholder">WO-2026072902</span><span class="badge badge-warning">高</span></div>
                 <div class="font-medium text-ink text-sm">大理州人民医院生化仪校准</div>
                 <div class="text-xs text-sub mt-1">客户：大理州人民医院 · 检验科</div>
                 <div class="text-xs text-warning mt-2">剩余 4 小时</div>
               </div>
+              <div class="kanban-card cursor-pointer" data-wo="WO-2026072001" data-title="红河州医院血球仪故障" data-priority="高" data-customer="红河州医院" data-engineer="王强" data-owner="王强" data-sla="已超时 2 天" data-status="待处理" data-overdue="true" onclick="openWorkorderModal(this)">
+                <div class="flex items-center justify-between mb-2"><span class="text-xs text-placeholder">WO-2026072001</span><span class="badge badge-danger">高</span></div>
+                <div class="font-medium text-ink text-sm">红河州医院血球仪故障</div>
+                <div class="text-xs text-sub mt-1">工程师：王强 · 检验科</div>
+                <div class="text-xs text-danger mt-2">已超时 2 天</div>
+              </div>
             </div>
             <div class="kanban-col">
               <div class="flex items-center justify-between mb-3"><span class="font-semibold text-ink">处理中</span><span class="badge badge-primary">56</span></div>
-              <div class="kanban-card cursor-pointer" data-wo="WO-2026072803" data-title="昆明博奥设备年度保养" data-priority="中" data-customer="" data-engineer="王强" data-sla="" onclick="openWorkorderModal(this)" data-status="处理中">
+              <div class="kanban-card cursor-pointer" data-wo="WO-2026072803" data-title="昆明博奥设备年度保养" data-priority="中" data-customer="" data-engineer="王强" data-owner="王强" data-sla="" onclick="openWorkorderModal(this)" data-status="处理中">
                 <div class="flex items-center justify-between mb-2"><span class="text-xs text-placeholder">WO-2026072803</span><span class="badge badge-primary">中</span></div>
                 <div class="font-medium text-ink text-sm">昆明博奥设备年度保养</div>
                 <div class="text-xs text-sub mt-1">工程师：王强 · 预计 7/30 完工</div>
               </div>
-              <div class="kanban-card cursor-pointer" data-wo="WO-2026072805" data-title="西双版纳医院 POCT 培训" data-priority="中" data-customer="" data-engineer="李丽" data-sla="" onclick="openWorkorderModal(this)" data-status="处理中">
+              <div class="kanban-card cursor-pointer" data-wo="WO-2026072805" data-title="西双版纳医院 POCT 培训" data-priority="中" data-customer="" data-engineer="李丽" data-owner="李丽" data-sla="" onclick="openWorkorderModal(this)" data-status="处理中">
                 <div class="flex items-center justify-between mb-2"><span class="text-xs text-placeholder">WO-2026072805</span><span class="badge badge-primary">中</span></div>
                 <div class="font-medium text-ink text-sm">西双版纳医院 POCT 培训</div>
                 <div class="text-xs text-sub mt-1">工程师：李丽 · 预计 7/31 完工</div>
               </div>
+              <div class="kanban-card cursor-pointer" data-wo="WO-2026072102" data-title="保山市医院生化仪维修" data-priority="紧急" data-customer="保山市医院" data-engineer="王强" data-owner="王强" data-sla="已超时 1 天" data-status="处理中" data-overdue="true" onclick="openWorkorderModal(this)">
+                <div class="flex items-center justify-between mb-2"><span class="text-xs text-placeholder">WO-2026072102</span><span class="badge badge-danger">紧急</span></div>
+                <div class="font-medium text-ink text-sm">保山市医院生化仪维修</div>
+                <div class="text-xs text-sub mt-1">工程师：王强 · 已超时 1 天</div>
+              </div>
             </div>
             <div class="kanban-col">
               <div class="flex items-center justify-between mb-3"><span class="font-semibold text-ink">待确认</span><span class="badge badge-info">12</span></div>
-              <div class="kanban-card cursor-pointer" data-wo="WO-2026072701" data-title="曲靖市一院免疫仪保养" data-priority="低" data-customer="" data-engineer="王强" data-sla="" onclick="openWorkorderModal(this)" data-status="待确认">
+              <div class="kanban-card cursor-pointer" data-wo="WO-2026072701" data-title="曲靖市一院免疫仪保养" data-priority="低" data-customer="" data-engineer="王强" data-owner="王强" data-sla="" onclick="openWorkorderModal(this)" data-status="待确认">
                 <div class="flex items-center justify-between mb-2"><span class="text-xs text-placeholder">WO-2026072701</span><span class="badge badge-success">低</span></div>
                 <div class="font-medium text-ink text-sm">曲靖市一院免疫仪保养</div>
                 <div class="text-xs text-sub mt-1">工程师：王强 · 待客户确认</div>
@@ -4346,7 +4358,7 @@
             </div>
             <div class="kanban-col">
               <div class="flex items-center justify-between mb-3"><span class="font-semibold text-ink">已完工</span><span class="badge badge-success">216</span></div>
-              <div class="kanban-card cursor-pointer" data-wo="WO-2026072602" data-title="玉溪市人民医院血球仪安装" data-priority="低" data-customer="" data-engineer="张工" data-sla="" onclick="openWorkorderModal(this)" data-status="已完工">
+              <div class="kanban-card cursor-pointer" data-wo="WO-2026072602" data-title="玉溪市人民医院血球仪安装" data-priority="低" data-customer="" data-engineer="张工" data-owner="张工" data-sla="" onclick="openWorkorderModal(this)" data-status="已完工">
                 <div class="flex items-center justify-between mb-2"><span class="text-xs text-placeholder">WO-2026072602</span><span class="badge badge-success">低</span></div>
                 <div class="font-medium text-ink text-sm">玉溪市人民医院血球仪安装</div>
                 <div class="text-xs text-sub mt-1">工程师：张工 · 7/26 完工</div>
@@ -4359,12 +4371,52 @@
             <table class="data-table">
               <thead><tr><th>工单号</th><th>标题</th><th>客户</th><th>类型</th><th>优先级</th><th>工程师</th><th>状态</th><th>剩余 SLA</th></tr></thead>
               <tbody>
-                <tr class="cursor-pointer" onclick="openWorkorderModal(this)" data-wo="WO-2026072901" data-title="BC-6800 报错" data-priority="紧急" data-customer="云南省肿瘤医院" data-engineer="王强" data-status="待处理" data-sla="2h"><td>WO-2026072901</td><td>BC-6800 报错</td><td>云南省肿瘤医院</td><td>维修</td><td><span class="badge badge-danger">紧急</span></td><td>王强</td><td><span class="badge badge-warning">待处理</span></td><td class="text-danger">2h</td></tr>
-                <tr class="cursor-pointer" onclick="openWorkorderModal(this)" data-wo="WO-2026072902" data-title="生化仪校准" data-priority="高" data-customer="大理州人民医院" data-engineer="李丽" data-status="待处理" data-sla="4h"><td>WO-2026072902</td><td>生化仪校准</td><td>大理州人民医院</td><td>保养</td><td><span class="badge badge-warning">高</span></td><td>李丽</td><td><span class="badge badge-warning">待处理</span></td><td class="text-warning">4h</td></tr>
-                <tr class="cursor-pointer" onclick="openWorkorderModal(this)" data-wo="WO-2026072803" data-title="年度保养" data-priority="中" data-customer="昆明博奥" data-engineer="王强" data-status="处理中" data-sla="1d"><td>WO-2026072803</td><td>年度保养</td><td>昆明博奥</td><td>保养</td><td><span class="badge badge-primary">中</span></td><td>王强</td><td><span class="badge badge-primary">处理中</span></td><td>1d</td></tr>
-                <tr class="cursor-pointer" onclick="openWorkorderModal(this)" data-wo="WO-2026072805" data-title="POCT 培训" data-priority="中" data-customer="西双版纳医院" data-engineer="李丽" data-status="处理中" data-sla="2d"><td>WO-2026072805</td><td>POCT 培训</td><td>西双版纳医院</td><td>培训</td><td><span class="badge badge-primary">中</span></td><td>李丽</td><td><span class="badge badge-primary">处理中</span></td><td>2d</td></tr>
+                <tr class="cursor-pointer" onclick="openWorkorderModal(this)" data-wo="WO-2026072901" data-title="BC-6800 报错" data-priority="紧急" data-customer="云南省肿瘤医院" data-engineer="王强" data-owner="王强" data-status="待处理" data-sla="2h"><td>WO-2026072901</td><td>BC-6800 报错</td><td>云南省肿瘤医院</td><td>维修</td><td><span class="badge badge-danger">紧急</span></td><td>王强</td><td><span class="badge badge-warning">待处理</span></td><td class="text-danger">2h</td></tr>
+                <tr class="cursor-pointer" onclick="openWorkorderModal(this)" data-wo="WO-2026072902" data-title="生化仪校准" data-priority="高" data-customer="大理州人民医院" data-engineer="李丽" data-owner="李丽" data-status="待处理" data-sla="4h"><td>WO-2026072902</td><td>生化仪校准</td><td>大理州人民医院</td><td>保养</td><td><span class="badge badge-warning">高</span></td><td>李丽</td><td><span class="badge badge-warning">待处理</span></td><td class="text-warning">4h</td></tr>
+                <tr class="cursor-pointer" onclick="openWorkorderModal(this)" data-wo="WO-2026072803" data-title="年度保养" data-priority="中" data-customer="昆明博奥" data-engineer="王强" data-owner="王强" data-status="处理中" data-sla="1d"><td>WO-2026072803</td><td>年度保养</td><td>昆明博奥</td><td>保养</td><td><span class="badge badge-primary">中</span></td><td>王强</td><td><span class="badge badge-primary">处理中</span></td><td>1d</td></tr>
+                <tr class="cursor-pointer" onclick="openWorkorderModal(this)" data-wo="WO-2026072805" data-title="POCT 培训" data-priority="中" data-customer="西双版纳医院" data-engineer="李丽" data-owner="李丽" data-status="处理中" data-sla="2d"><td>WO-2026072805</td><td>POCT 培训</td><td>西双版纳医院</td><td>培训</td><td><span class="badge badge-primary">中</span></td><td>李丽</td><td><span class="badge badge-primary">处理中</span></td><td>2d</td></tr>
+                <tr class="cursor-pointer" onclick="openWorkorderModal(this)" data-wo="WO-2026072001" data-title="红河州医院血球仪故障" data-priority="高" data-customer="红河州医院" data-engineer="王强" data-owner="王强" data-status="待处理" data-sla="已超时 2 天" data-overdue="true"><td>WO-2026072001</td><td>红河州医院血球仪故障</td><td>红河州医院</td><td>维修</td><td><span class="badge badge-danger">高</span></td><td>王强</td><td><span class="badge badge-warning">待处理</span></td><td class="text-danger">已超时 2 天</td></tr>
+                <tr class="cursor-pointer" onclick="openWorkorderModal(this)" data-wo="WO-2026072102" data-title="保山市医院生化仪维修" data-priority="紧急" data-customer="保山市医院" data-engineer="王强" data-owner="王强" data-status="处理中" data-sla="已超时 1 天" data-overdue="true"><td>WO-2026072102</td><td>保山市医院生化仪维修</td><td>保山市医院</td><td>维修</td><td><span class="badge badge-danger">紧急</span></td><td>王强</td><td><span class="badge badge-primary">处理中</span></td><td class="text-danger">已超时 1 天</td></tr>
               </tbody>
             </table>
+          </div>
+
+          <!-- Map view -->
+          <div id="wo-map" class="card mb-4 hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div class="lg:col-span-2 p-4 rounded-xl bg-primary-light min-h-[320px] flex flex-col items-center justify-center relative overflow-hidden">
+                <svg class="icon icon-3xl text-primary mb-2"><use href="#icon-location"/></svg>
+                <div class="text-lg font-semibold text-ink">工程师派单地图</div>
+                <div class="text-sm text-sub mt-1">按工程师位置与工单位置智能推荐派单路径</div>
+                <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle, var(--color-primary) 1px, transparent 1px); background-size: 24px 24px;"></div>
+                <div class="absolute top-6 left-6 p-2 rounded-lg bg-white shadow-sm text-xs text-sub">昆明 · 12 单</div>
+                <div class="absolute top-6 right-6 p-2 rounded-lg bg-white shadow-sm text-xs text-sub">大理 · 5 单</div>
+                <div class="absolute bottom-6 left-1/2 -translate-x-1/2 p-2 rounded-lg bg-white shadow-sm text-xs text-sub">曲靖 · 4 单</div>
+              </div>
+              <div class="space-y-3">
+                <div class="card p-3">
+                  <div class="font-semibold text-ink text-sm mb-2">在线工程师</div>
+                  <div class="space-y-2">
+                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-success"></div><span class="text-sm text-ink">王强 · 处理中 3 单</span></div>
+                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-success"></div><span class="text-sm text-ink">李丽 · 处理中 2 单</span></div>
+                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-warning"></div><span class="text-sm text-ink">张工 · 待处理 1 单</span></div>
+                  </div>
+                </div>
+                <div class="card p-3">
+                  <div class="font-semibold text-ink text-sm mb-2">待上门工单</div>
+                  <div class="space-y-2 text-sm">
+                    <div class="p-2 rounded-lg bg-panel"><div class="font-medium text-ink">云南省肿瘤医院 BC-6800 报错</div><div class="text-xs text-sub mt-1">张工 · 距 8.5km · 紧急</div></div>
+                    <div class="p-2 rounded-lg bg-panel"><div class="font-medium text-ink">大理州人民医院生化仪校准</div><div class="text-xs text-sub mt-1">待分配 · 距 320km</div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SLA 分析结论 -->
+          <div id="wo-analysis" class="card p-4 mb-4">
+            <div class="text-sm font-medium text-ink mb-2">AI 服务分析结论</div>
+            <div class="text-sm text-sub">当前看板共展示 8 条示例工单，其中待处理 3 条、处理中 3 条（含 1 条已超时）、待确认 1 条、已完工 1 条。已超时工单 2 条，均归属王强，建议服务主管立即介入改派或催办；待处理工单中 1 条紧急、1 条高优先级，需优先派单。整体 SLA 达成率 96.8%，近 7 天平均响应时长 12 分钟。</div>
           </div>
 
           <div class="flex items-center justify-between">
@@ -17155,32 +17207,100 @@ Content-Type: application/json
     }
 
     /* ===== Work order tabs & view ===== */
+    let woTab = 'all';
+    let woViewMode = 'kanban';
+    const CURRENT_USER = '王强';
+
     function switchWoTab(btn) {
       btn.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
+      woTab = btn.dataset.wotab || 'all';
+      filterWorkorders(woTab);
+      updateWoAnalysis();
+    }
+
+    function filterWorkorders(tab) {
+      const kanbanCards = document.querySelectorAll('#wo-kanban .kanban-card');
+      const listRows = document.querySelectorAll('#wo-list tbody tr');
+      const kanbanCols = document.querySelectorAll('#wo-kanban .kanban-col');
+
+      kanbanCards.forEach(card => {
+        const owner = card.dataset.owner || '';
+        const status = card.dataset.status || '';
+        const overdue = card.dataset.overdue === 'true';
+        const show = matchWoFilter(tab, owner, status, overdue);
+        card.classList.toggle('hidden', !show);
+      });
+
+      listRows.forEach(row => {
+        const owner = row.dataset.owner || '';
+        const status = row.dataset.status || '';
+        const overdue = row.dataset.overdue === 'true';
+        const show = matchWoFilter(tab, owner, status, overdue);
+        row.classList.toggle('hidden', !show);
+      });
+
+      // 当按 Tab 过滤时，隐藏空列的列标题（保留列占位）
+      kanbanCols.forEach(col => {
+        const visibleCards = col.querySelectorAll('.kanban-card:not(.hidden)');
+        col.querySelectorAll('.kanban-card.hidden').forEach(c => c.style.display = 'none');
+        col.querySelectorAll('.kanban-card:not(.hidden)').forEach(c => c.style.display = '');
+      });
+    }
+
+    function matchWoFilter(tab, owner, status, overdue) {
+      if (tab === 'all') return true;
+      if (tab === 'mine') return owner === CURRENT_USER;
+      if (tab === 'pending') return status === '待处理';
+      if (tab === 'overdue') return overdue;
+      return true;
     }
 
     function setWoView(mode) {
+      woViewMode = mode;
       const gridEl = document.getElementById('wo-kanban');
       const listEl = document.getElementById('wo-list');
+      const mapEl = document.getElementById('wo-map');
       const gridBtn = document.getElementById('wo-view-kanban');
       const listBtn = document.getElementById('wo-view-list');
+      const mapBtn = document.getElementById('wo-view-map');
       if (!gridEl || !listEl || !gridBtn || !listBtn) return;
+
+      gridEl.classList.add('hidden');
+      listEl.classList.add('hidden');
+      if (mapEl) mapEl.classList.add('hidden');
+      [gridBtn, listBtn, mapBtn].forEach(b => { if (b) { b.classList.remove('btn-primary'); b.classList.add('btn-outline'); } });
+
       if (mode === 'kanban') {
         gridEl.classList.remove('hidden');
-        listEl.classList.add('hidden');
         gridBtn.classList.add('btn-primary');
         gridBtn.classList.remove('btn-outline');
-        listBtn.classList.add('btn-outline');
-        listBtn.classList.remove('btn-primary');
-      } else {
-        gridEl.classList.add('hidden');
+      } else if (mode === 'list') {
         listEl.classList.remove('hidden');
-        gridBtn.classList.add('btn-outline');
-        gridBtn.classList.remove('btn-primary');
         listBtn.classList.add('btn-primary');
         listBtn.classList.remove('btn-outline');
+      } else if (mode === 'map' && mapEl) {
+        mapEl.classList.remove('hidden');
+        mapBtn.classList.add('btn-primary');
+        mapBtn.classList.remove('btn-outline');
       }
+    }
+
+    function updateWoAnalysis() {
+      const cards = Array.from(document.querySelectorAll('#wo-kanban .kanban-card'));
+      const total = cards.length;
+      const pending = cards.filter(c => c.dataset.status === '待处理' && !c.classList.contains('hidden')).length;
+      const processing = cards.filter(c => c.dataset.status === '处理中' && !c.classList.contains('hidden')).length;
+      const overdue = cards.filter(c => c.dataset.overdue === 'true' && !c.classList.contains('hidden')).length;
+      const mine = cards.filter(c => (c.dataset.owner || '') === CURRENT_USER && !c.classList.contains('hidden')).length;
+      const el = document.getElementById('wo-analysis');
+      if (!el) return;
+      let text = '';
+      if (woTab === 'all') text = '当前看板共展示 ' + total + ' 条示例工单，其中待处理 ' + pending + ' 条、处理中 ' + processing + ' 条、已超时 ' + overdue + ' 条。整体 SLA 达成率 96.8%，近 7 天平均响应时长 12 分钟。建议优先处理已超时与紧急待处理工单，避免 SLA 进一步恶化。';
+      else if (woTab === 'mine') text = '当前登录工程师「' + CURRENT_USER + '」共有 ' + mine + ' 条工单，其中待处理 / 处理中 / 已超时合计需重点关注。建议按距离与优先级排序上门，已超时工单务必今日闭环。';
+      else if (woTab === 'pending') text = '当前待处理工单 ' + pending + ' 条，其中紧急 / 高优先级工单需立即派单。空闲工程师张工、待分配工单建议优先匹配技能与距离完成自动派单。';
+      else if (woTab === 'overdue') text = '当前已超时工单 ' + overdue + ' 条，均属于处理中或待处理状态。建议服务主管立即介入：确认工程师卡点、协调备件或改派，必要时升级至厂家技术支持。';
+      el.querySelector('.text-sub').textContent = text;
     }
 
     /* ===== Settings extensions: post / security / theme / grayscale ===== */
@@ -19408,6 +19528,8 @@ Content-Type: application/json
       setIntentionView('grid');
       setCustomerView('grid');
       setWoView('kanban');
+      filterWorkorders('all');
+      updateWoAnalysis();
       switchEquipmentView('grid');
       switchReagentView('grid');
       switchComplianceView('grid');
