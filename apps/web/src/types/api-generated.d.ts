@@ -361,6 +361,43 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/approvals': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询审批列表 */
+    get: operations['ApprovalController_findAll']
+    put?: never
+    /** 创建审批 */
+    post: operations['ApprovalController_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/approvals/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** 查询审批详情 */
+    get: operations['ApprovalController_findOne']
+    /** 更新审批/审批操作 */
+    put: operations['ApprovalController_update']
+    post?: never
+    /** 删除审批（软删除） */
+    delete: operations['ApprovalController_remove']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -791,6 +828,40 @@ export interface components {
       relatedId?: string
       /** @description 创建人ID */
       createdBy?: string
+    }
+    CreateApprovalDto: {
+      /** @description 审批标题 */
+      title: string
+      /** @description 业务关键字 */
+      businessKey?: string
+      /** @description 审批模板编码 */
+      templateCode?: string
+      /**
+       * @description 审批类型
+       * @enum {string}
+       */
+      module?: 'leave' | 'expense' | 'contract' | 'discount' | 'purchase' | 'other'
+      /** @description 表单数据 */
+      payload?: Record<string, never>
+      /** @description 抄送人ID列表 */
+      ccUserIds?: string[]
+    }
+    UpdateApprovalDto: {
+      /** @description 审批标题 */
+      title?: string
+      /** @description 业务关键字 */
+      businessKey?: string
+      /** @description 审批模板编码 */
+      templateCode?: string
+      /**
+       * @description 审批类型
+       * @enum {string}
+       */
+      module?: 'leave' | 'expense' | 'contract' | 'discount' | 'purchase' | 'other'
+      /** @description 表单数据 */
+      payload?: Record<string, never>
+      /** @description 抄送人ID列表 */
+      ccUserIds?: string[]
     }
   }
   responses: never
@@ -1707,6 +1778,123 @@ export interface operations {
     }
   }
   TaskController_remove: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 删除成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ApprovalController_findAll: {
+    parameters: {
+      query?: {
+        /** @description 页码 */
+        page?: number
+        /** @description 每页条数 */
+        pageSize?: number
+        /** @description 关键字（标题/业务关键字） */
+        keyword?: string
+        /** @description 审批类型 */
+        module?: 'leave' | 'expense' | 'contract' | 'discount' | 'purchase' | 'other'
+        /** @description 状态 */
+        status?: 'pending' | 'approved' | 'rejected' | 'withdrawn'
+        /** @description 标签页类型 */
+        tabType?: 'all' | 'pending' | 'approved' | 'cc' | 'initiated'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 返回分页审批列表 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ApprovalController_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateApprovalDto']
+      }
+    }
+    responses: {
+      /** @description 创建成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ApprovalController_findOne: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description 返回审批详情 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ApprovalController_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateApprovalDto']
+      }
+    }
+    responses: {
+      /** @description 更新成功 */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  ApprovalController_remove: {
     parameters: {
       query?: never
       header?: never

@@ -1,0 +1,40 @@
+/**
+ * 审批中心 — API 层
+ * 对接后端 /approvals REST 接口；开发环境由 MSW 拦截并返回视图模型数据。
+ */
+import { get, post, put, del } from '@/api/request'
+import type { Approval, ApprovalForm, ApprovalListParams, ApprovalListResult } from './types'
+
+const BASE = '/approvals'
+
+/** 获取审批列表 */
+export function getApprovalList(params: ApprovalListParams): Promise<ApprovalListResult> {
+  return get<ApprovalListResult>(BASE, {
+    page: params.pageNum,
+    size: params.pageSize,
+    keyword: params.keyword,
+    module: params.module,
+    status: params.status,
+    tabType: params.tabType,
+  })
+}
+
+/** 获取审批详情 */
+export function getApprovalDetail(approvalId: string): Promise<Approval> {
+  return get<Approval>(`${BASE}/${approvalId}`)
+}
+
+/** 创建审批 */
+export function createApproval(data: ApprovalForm): Promise<Approval> {
+  return post<Approval>(BASE, data)
+}
+
+/** 更新审批 */
+export function updateApproval(approvalId: string, data: Partial<ApprovalForm>): Promise<Approval> {
+  return put<Approval>(`${BASE}/${approvalId}`, data)
+}
+
+/** 删除审批 */
+export function deleteApproval(approvalId: string): Promise<unknown> {
+  return del<unknown>(`${BASE}/${approvalId}`)
+}

@@ -20,13 +20,14 @@ async function bootstrap() {
   const app = createApp(App)
 
   app.use(createPinia())
+
+  const authStore = useAuthStore()
+  await authStore.init()
+
   app.use(router)
   app.use(i18n)
   app.use(Antd)
   app.use({ install: installXqComponents })
-
-  const authStore = useAuthStore()
-  await authStore.init()
 
   initTheme()
 

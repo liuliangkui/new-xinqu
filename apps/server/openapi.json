@@ -1594,6 +1594,225 @@
           "任务管理"
         ]
       }
+    },
+    "/approvals": {
+      "get": {
+        "operationId": "ApprovalController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "页码",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "每页条数",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "关键字（标题/业务关键字）",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "module",
+            "required": false,
+            "in": "query",
+            "description": "审批类型",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "leave",
+                "expense",
+                "contract",
+                "discount",
+                "purchase",
+                "other"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "状态",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "approved",
+                "rejected",
+                "withdrawn"
+              ]
+            }
+          },
+          {
+            "name": "tabType",
+            "required": false,
+            "in": "query",
+            "description": "标签页类型",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "pending",
+                "approved",
+                "cc",
+                "initiated"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "返回分页审批列表"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询审批列表",
+        "tags": [
+          "审批中心"
+        ]
+      },
+      "post": {
+        "operationId": "ApprovalController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateApprovalDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "创建成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "创建审批",
+        "tags": [
+          "审批中心"
+        ]
+      }
+    },
+    "/approvals/{id}": {
+      "get": {
+        "operationId": "ApprovalController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "返回审批详情"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "查询审批详情",
+        "tags": [
+          "审批中心"
+        ]
+      },
+      "put": {
+        "operationId": "ApprovalController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateApprovalDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "更新审批/审批操作",
+        "tags": [
+          "审批中心"
+        ]
+      },
+      "delete": {
+        "operationId": "ApprovalController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "删除成功"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "删除审批（软删除）",
+        "tags": [
+          "审批中心"
+        ]
+      }
     }
   },
   "info": {
@@ -2525,6 +2744,89 @@
           "createdBy": {
             "type": "string",
             "description": "创建人ID"
+          }
+        }
+      },
+      "CreateApprovalDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "审批标题"
+          },
+          "businessKey": {
+            "type": "string",
+            "description": "业务关键字"
+          },
+          "templateCode": {
+            "type": "string",
+            "description": "审批模板编码"
+          },
+          "module": {
+            "type": "string",
+            "description": "审批类型",
+            "enum": [
+              "leave",
+              "expense",
+              "contract",
+              "discount",
+              "purchase",
+              "other"
+            ]
+          },
+          "payload": {
+            "type": "object",
+            "description": "表单数据"
+          },
+          "ccUserIds": {
+            "description": "抄送人ID列表",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "UpdateApprovalDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "审批标题"
+          },
+          "businessKey": {
+            "type": "string",
+            "description": "业务关键字"
+          },
+          "templateCode": {
+            "type": "string",
+            "description": "审批模板编码"
+          },
+          "module": {
+            "type": "string",
+            "description": "审批类型",
+            "enum": [
+              "leave",
+              "expense",
+              "contract",
+              "discount",
+              "purchase",
+              "other"
+            ]
+          },
+          "payload": {
+            "type": "object",
+            "description": "表单数据"
+          },
+          "ccUserIds": {
+            "description": "抄送人ID列表",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       }

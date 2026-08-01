@@ -22,6 +22,7 @@ import { IntentionModule } from './modules/intention/intention.module'
 import { EquipmentModule } from './modules/equipment/equipment.module'
 import { TicketModule } from './modules/ticket/ticket.module'
 import { TaskModule } from './modules/task/task.module'
+import { ApprovalModule } from './modules/approval/approval.module'
 import { SystemConfigModule } from './modules/system-config/system-config.module'
 import { HealthModule } from './modules/health/health.module'
 import { UploadModule } from './upload/upload.module'
@@ -63,6 +64,7 @@ import { SchedulerModule } from './scheduler/scheduler.module'
     EquipmentModule,
     TicketModule,
     TaskModule,
+    ApprovalModule,
   ],
   controllers: [AppController],
   providers: [
