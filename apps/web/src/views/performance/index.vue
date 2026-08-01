@@ -46,6 +46,20 @@ const keyword = ref('')
 const searchTimer = ref<ReturnType<typeof setTimeout> | null>(null)
 const pagination = ref({ page: 1, size: 12 })
 
+// 详情弹窗
+const detailVisible = ref(false)
+const detailItem = ref<PerformanceItem | null>(null)
+
+function openDetail(record: PerformanceItem): void {
+  detailItem.value = record
+  detailVisible.value = true
+}
+
+function closeDetail(): void {
+  detailVisible.value = false
+  detailItem.value = null
+}
+
 // ---- Tabs ----
 const tabs: NavTabItem[] = [
   { key: 'my', label: '我的绩效' },
@@ -205,6 +219,12 @@ function statusColor(rate: number): string {
   if (rate >= 80) return 'var(--success)'
   if (rate >= 50) return 'var(--warning)'
   return 'var(--danger)'
+}
+
+function statusBgColor(rate: number): string {
+  if (rate >= 80) return 'var(--success-bg)'
+  if (rate >= 50) return 'var(--warning-bg)'
+  return 'var(--danger-bg)'
 }
 
 // ---- 图表数据 ----
@@ -383,6 +403,7 @@ function openExport(): void {
         :data-source="items"
         :loading="loading"
         row-key="id"
+        @row-click="openDetail"
       >
         <template #rank="{ value }">
           <span
@@ -422,9 +443,15 @@ function openExport(): void {
         </template>
       </XqDataTable>
 
-      <XqCardGrid v-else :data-source="items" :columns="isMobile ? 1 : 4" :loading="loading">
+      <XqCardGrid
+        v-else
+        :data-source="items"
+        :columns="isMobile ? 1 : 4"
+        :loading="loading"
+        @item-click="openDetail"
+      >
         <template #item="{ record }">
-          <div class="card card-hover">
+          <div class="card card-hover cursor-pointer">
             <div class="flex items-start justify-between mb-3">
               <h3 class="text-md font-semibold text-[var(--ink)] truncate flex-1 min-w-0 pr-2">
                 {{ record.name }}
@@ -433,7 +460,7 @@ function openExport(): void {
                 class="text-xs font-semibold px-2 py-0.5 rounded-full"
                 :style="{
                   color: statusColor(record.achievementRate),
-                  backgroundColor: statusColor(record.achievementRate) + '1A',
+                  backgroundColor: statusBgColor(record.achievementRate),
                 }"
                 >{{ record.achievementRate.toFixed(1) }}%</span
               >
@@ -507,4 +534,100 @@ function openExport(): void {
       </div>
     </template>
   </XqPageLayout>
+
+  <!-- 绩效详情弹窗 -->
+  <XqDrawer
+    :visible="detailVisible"
+    :title="detailItem?.name || '绩效详情'"
+    :width="isMobile ? '100%' : '560px'"
+    @close="closeDetail"
+  >
+    <div v-if="detailItem" class="flex flex-col gap-5">
+      <div class="card">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-sm text-[var(--sub)]">达成率</span>
+          <span
+            class="text-xl font-bold"
+            :style="{ color: statusColor(detailItem.achievementRate) }"
+            >{{ detailItem.achievementRate.toFixed(1) }}%</span
+          >
+        </div>
+        <div class="h-2 w-full rounded-full bg-[var(--line-light)] overflow-hidden mb-2">
+          <div
+            class="h-full rounded-full transition-all duration-500"
+            :style="{
+              width: `${Math.min(detailItem.achievementRate, 100)}%`,
+              backgroundColor: statusColor(detailItem.achievementRate),
+            }"
+          />
+        </div>
+        <div class="flex items-center justify-between text-xs text-[var(--sub)]">
+          <span>排名 {{ detailItem.rank }}</span>
+          <XqStatusBadge :status="detailItem.status" :status-map="statusMap" size="small" />
+        </div>
+      </div>
+
+      <div class="card">
+        <h4 class="font-semibold text-[var(--ink)] mb-3">核心指标</h4>
+        <div class="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <span class="text-[var(--placeholder)]">目标值</span>
+            <div class="text-[var(--ink)] font-medium mt-0.5">
+              {{ formatAmount(detailItem.target) }}
+            </div>
+          </div>
+          <div>
+            <span class="text-[var(--placeholder)]">完成值</span>
+            <div class="text-[var(--ink)] font-medium mt-0.5">
+              {{ formatAmount(detailItem.actual) }}
+            </div>
+          </div>
+          <div>
+            <span class="text-[var(--placeholder)]">缺口</span>
+            <div class="text-[var(--danger)] font-medium mt-0.5">
+              {{ formatAmount(detailItem.gap) }}
+            </div>
+          </div>
+          <div>
+            <span class="text-[var(--placeholder)]">同比</span>
+            <div class="font-medium mt-0.5" :style="{ color: trendColor(detailItem.yoy) }">
+              {{ detailItem.yoy >= 0 ? '+' : '' }}{{ detailItem.yoy.toFixed(1) }}%
+            </div>
+          </div>
+          <div>
+            <span class="text-[var(--placeholder)]">环比</span>
+            <div class="font-medium mt-0.5" :style="{ color: trendColor(detailItem.mom) }">
+              {{ detailItem.mom >= 0 ? '+' : '' }}{{ detailItem.mom.toFixed(1) }}%
+            </div>
+          </div>
+          <div v-if="detailItem.ownerName">
+            <span class="text-[var(--placeholder)]">负责人</span>
+            <div class="text-[var(--ink)] font-medium mt-0.5">{{ detailItem.ownerName }}</div>
+          </div>
+          <div v-if="detailItem.regionName">
+            <span class="text-[var(--placeholder)]">区域</span>
+            <div class="text-[var(--ink)] font-medium mt-0.5">{{ detailItem.regionName }}</div>
+          </div>
+          <div v-if="detailItem.productLine">
+            <span class="text-[var(--placeholder)]">产品线</span>
+            <div class="text-[var(--ink)] font-medium mt-0.5">{{ detailItem.productLine }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card bg-[var(--warning-bg)] border-[var(--warning)]">
+        <h4 class="font-semibold text-[var(--warning)] mb-2 flex items-center gap-2">
+          <XqIcon name="info" size="14" />
+          AI 下钻建议
+        </h4>
+        <p class="text-sm text-[var(--ink)]">
+          {{
+            detailItem.achievementRate < 80
+              ? '达成率偏低，建议下钻查看该对象下属客户/人员/产品的贡献明细，定位缺口根因。'
+              : '达成良好，可重点关注同比/环比波动，挖掘持续增长机会。'
+          }}
+        </p>
+      </div>
+    </div>
+  </XqDrawer>
 </template>
