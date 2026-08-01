@@ -9040,6 +9040,12 @@
             </div>
           </div>
 
+          <!-- Tab title -->
+          <div id="pf-tab-title" class="mb-4">
+            <div class="text-lg font-semibold text-ink" id="pf-tab-name">我的绩效</div>
+            <div class="text-sm text-sub" id="pf-tab-desc">查看当前登录销售代表的 Q3 目标与达成情况</div>
+          </div>
+
           <!-- 我的绩效 / 团队绩效 / 区域绩效 / 产品绩效 / 渠道绩效 - Chart view -->
           <div id="performance-panel-chart" class="performance-panel">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
@@ -9131,8 +9137,8 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
               <div class="card">
-                <div class="font-semibold text-ink mb-4">达成排名 Top5</div>
-                <div class="space-y-3">
+                <div id="pf-rank-title" class="font-semibold text-ink mb-4">达成排名 Top5</div>
+                <div id="pf-rank-list" class="space-y-3">
                   <div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-warning text-white text-xs flex items-center justify-center">1</span><span class="text-sm text-ink">华东区</span></div><span class="text-sm font-medium text-success">78%</span></div>
                   <div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-line text-sub text-xs flex items-center justify-center">2</span><span class="text-sm text-ink">华南区</span></div><span class="text-sm font-medium text-success">72%</span></div>
                   <div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-line text-sub text-xs flex items-center justify-center">3</span><span class="text-sm text-ink">西南区</span></div><span class="text-sm font-medium text-primary">65%</span></div>
@@ -19501,6 +19507,50 @@ Content-Type: application/json
       btn.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
       filterPerformance();
+      updatePfTabTitle();
+      updatePerformanceChartView();
+    }
+
+    function updatePfTabTitle() {
+      const activeTabBtn = document.querySelector('#performance-tabs .tab.active');
+      const tab = activeTabBtn ? (activeTabBtn.dataset.pftab || 'mine') : 'mine';
+      const nameEl = document.getElementById('pf-tab-name');
+      const descEl = document.getElementById('pf-tab-desc');
+      if (!nameEl || !descEl) return;
+      const titles = {
+        mine: { name: '我的绩效', desc: '查看当前登录销售代表的 Q3 目标与达成情况' },
+        team: { name: '团队绩效', desc: '对比各销售团队的达成率、缺口与同比增长' },
+        region: { name: '区域绩效', desc: '按销售区域查看目标完成度与资源投入建议' },
+        product: { name: '产品绩效', desc: '按产品线查看销售额、达成率与上量空间' },
+        channel: { name: '渠道绩效', desc: '按经销商查看返利达成、库存周转与重点项目' }
+      };
+      const t = titles[tab] || titles.mine;
+      nameEl.textContent = t.name;
+      descEl.textContent = t.desc;
+    }
+
+    function updatePerformanceChartView() {
+      const activeTabBtn = document.querySelector('#performance-tabs .tab.active');
+      const tab = activeTabBtn ? (activeTabBtn.dataset.pftab || 'mine') : 'mine';
+      const titleMap = { mine: '人员达成率排名', team: '团队达成率排名', region: '区域达成率排名', product: '产品线达成率排名', channel: '经销商达成率排名' };
+      const rankTitleEl = document.getElementById('pf-rank-title');
+      if (rankTitleEl) rankTitleEl.textContent = titleMap[tab] || '达成排名 Top5';
+
+      // 根据当前 Tab 更新排名列表
+      const rankContainer = document.getElementById('pf-rank-list');
+      if (rankContainer) {
+        const items = Array.from(document.querySelectorAll('#performance-panel-grid .pf-card:not(.hidden)'))
+          .map(c => ({ name: c.dataset.name || '', rate: parseInt(c.dataset.rate || 0) }))
+          .sort((a, b) => b.rate - a.rate)
+          .slice(0, 5);
+        let html = '';
+        items.forEach((item, idx) => {
+          const dotClass = idx === 0 ? 'bg-warning' : 'bg-line';
+          const textClass = item.rate >= 70 ? 'text-success' : (item.rate >= 60 ? 'text-primary' : 'text-warning');
+          html += '<div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="w-5 h-5 rounded-full ' + dotClass + ' text-white text-xs flex items-center justify-center">' + (idx + 1) + '</span><span class="text-sm text-ink">' + item.name + '</span></div><span class="text-sm font-medium ' + textClass + '">' + item.rate + '%</span></div>';
+        });
+        rankContainer.innerHTML = html || '<div class="text-sm text-sub">暂无数据</div>';
+      }
     }
 
     function switchPerformanceView(mode) {
@@ -20170,8 +20220,9 @@ Content-Type: application/json
       switchEquipmentView('grid');
       switchReagentView('grid');
       switchComplianceView('grid');
-      switchPerformanceView('chart');
+      switchPerformanceView('grid');
       filterPerformance();
+      updatePfTabTitle();
       switchBrandView('grid');
       setTaskView('card');
       setContactView('card');
