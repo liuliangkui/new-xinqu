@@ -11,7 +11,7 @@ datasource db {
 }
 
 // ======================
-// 系统配置
+// 系统配置与审计
 // ======================
 model SystemConfig {
   id          String    @id @default(cuid())
@@ -46,6 +46,84 @@ model SystemConfigHistory {
   @@map("system_config_histories")
 }
 
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  username    String?
+  action      String
+  resource    String
+  resourceId  String?
+  method      String
+  path        String
+  ip          String
+  payload     Json?
+  statusCode  Int
+  duration    Int
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([resource])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model FileAttachment {
+  id           String    @id @default(cuid())
+  filename     String
+  originalName String
+  url          String
+  size         Int
+  mimetype     String
+  module       String // customer / lead / ticket / compliance...
+  recordType   String?
+  recordId     String?
+  uploaderId   String
+  createdAt    DateTime  @default(now())
+  deletedAt    DateTime?
+
+  @@index([module, recordType, recordId])
+  @@index([deletedAt])
+  @@map("file_attachments")
+}
+
+// ======================
+// 组织架构与区域
+// ======================
+model Department {
+  id        String    @id @default(cuid())
+  name      String
+  parentId  String?
+  leaderId  String?
+  path      String
+  sortOrder Int       @default(0)
+  status    String    @default("ACTIVE")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([parentId])
+  @@index([deletedAt])
+  @@map("departments")
+}
+
+model Region {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  name      String
+  parentId  String?
+  path      String
+  level     Int       @default(1)
+  sortOrder Int       @default(0)
+  status    String    @default("ACTIVE")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([parentId])
+  @@index([deletedAt])
+  @@map("regions")
+}
+
 // ======================
 // 用户与权限
 // ======================
@@ -64,24 +142,9 @@ model User {
   updatedAt     DateTime  @updatedAt
   deletedAt     DateTime?
 
+  @@index([departmentId])
   @@index([deletedAt])
   @@map("users")
-}
-
-model Department {
-  id        String    @id @default(cuid())
-  name      String
-  parentId  String?
-  leaderId  String?
-  path      String
-  sortOrder Int       @default(0)
-  status    String    @default("ACTIVE")
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-
-  @@index([deletedAt])
-  @@map("departments")
 }
 
 model Role {
@@ -99,6 +162,90 @@ model Role {
   @@map("roles")
 }
 
+model UserSetting {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  theme     String   @default("light")
+  language  String   @default("zh-CN")
+  settings  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("user_settings")
+}
+
+// ======================
+// 应用中心与收藏
+// ======================
+model App {
+  id          String    @id @default(cuid())
+  code        String    @unique
+  name        String
+  icon        String?
+  route       String?
+  category    String    @default("BUSINESS") // PLATFORM / BUSINESS / PROCESS / ANALYSIS / SYSTEM
+  permissions String[]
+  sortOrder   Int       @default(0)
+  status      String    @default("ACTIVE")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([category])
+  @@index([deletedAt])
+  @@map("apps")
+}
+
+model UserFavorite {
+  id         String    @id @default(cuid())
+  userId     String
+  targetType String // APP / CUSTOMER / LEAD / INTENTION / REPORT
+  targetId   String
+  sortOrder  Int       @default(0)
+  createdAt  DateTime  @default(now())
+  deletedAt  DateTime?
+
+  @@unique([userId, targetType, targetId])
+  @@index([userId])
+  @@index([deletedAt])
+  @@map("user_favorites")
+}
+
+// ======================
+// 消息通知
+// ======================
+model Message {
+  id        String    @id @default(cuid())
+  type      String    @default("SYSTEM") // SYSTEM / TASK / APPROVAL / REMINDER
+  title     String
+  content   String
+  senderId  String?
+  receiverId String
+  payload   Json?
+  readAt    DateTime?
+  status    String    @default("UNREAD") // UNREAD / READ / ARCHIVED
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  @@index([receiverId, status])
+  @@index([createdAt])
+  @@index([deletedAt])
+  @@map("messages")
+}
+
+model NotificationSetting {
+  id        String   @id @default(cuid())
+  userId    String
+  channel   String // WEB / EMAIL / SMS / WECHAT
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, channel])
+  @@map("notification_settings")
+}
+
 // ======================
 // 客户管理
 // ======================
@@ -110,8 +257,10 @@ model Customer {
   level         String    @default("NORMAL") // STRATEGIC / NORMAL
   healthScore   Int?
   region        String
+  regionId      String?
   address       Json?
   ownerId       String
+  departmentId  String?
   status        String    @default("POTENTIAL") // POTENTIAL / COOPERATING / LOST
   tags          String[]
   source        String?
@@ -124,8 +273,11 @@ model Customer {
   visitRecords  VisitRecord[]
   leads         Lead[]
   intentions    Intention[]
+  equipment     Equipment[]
+  tickets       Ticket[]
 
   @@index([ownerId])
+  @@index([regionId])
   @@index([region])
   @@index([status])
   @@index([type])
@@ -146,6 +298,7 @@ model Contact {
   isPrimary    Boolean   @default(false)
   status       String    @default("ACTIVE")
   createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
 
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
@@ -162,6 +315,7 @@ model CustomerDepartment {
   bedCount   Int?
   remark     String?
   createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
   deletedAt  DateTime?
 
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
@@ -181,6 +335,7 @@ model VisitRecord {
   location    String?
   attachments Json?
   createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
 
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
@@ -203,6 +358,7 @@ model Lead {
   poolType            String    @default("PUBLIC") // MINE / PUBLIC / TEAM
   ownerId             String?
   region              String?
+  regionId            String?
   contactName         String?
   contactPhone        String?
   companyName         String?
@@ -223,6 +379,7 @@ model Lead {
   @@index([status])
   @@index([poolType])
   @@index([source])
+  @@index([regionId])
   @@index([deletedAt])
   @@map("leads")
 }
@@ -235,6 +392,7 @@ model LeadFollowRecord {
   content      String
   nextFollowAt DateTime?
   createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
 
   lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
@@ -257,6 +415,7 @@ model Intention {
   expectedAt  DateTime?
   ownerId     String
   status      String    @default("ACTIVE") // ACTIVE / WON / LOST / STALLED
+  lostReason  String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
@@ -267,6 +426,7 @@ model Intention {
   @@index([customerId])
   @@index([ownerId])
   @@index([status])
+  @@index([productId])
   @@index([deletedAt])
   @@map("intentions")
 }
@@ -287,4 +447,603 @@ model IntentionStageRecord {
   @@index([intentionId])
   @@index([deletedAt])
   @@map("intention_stage_records")
+}
+
+// ======================
+// 产品 / 品牌 / 设备 / 试剂
+// ======================
+model Brand {
+  id          String    @id @default(cuid())
+  code        String    @unique
+  name        String
+  category    String?
+  description String?
+  status      String    @default("ACTIVE")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  products Product[]
+
+  @@index([deletedAt])
+  @@map("brands")
+}
+
+model Product {
+  id          String    @id @default(cuid())
+  code        String    @unique
+  name        String
+  category    String // EQUIPMENT / REAGENT / SERVICE / PACKAGE
+  brandId     String?
+  unit        String?
+  price       Decimal?
+  description String?
+  status      String    @default("ACTIVE")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  brand Brand? @relation(fields: [brandId], references: [id])
+
+  @@index([category])
+  @@index([brandId])
+  @@index([deletedAt])
+  @@map("products")
+}
+
+model Equipment {
+  id            String    @id @default(cuid())
+  code          String    @unique
+  name          String
+  productId     String?
+  customerId    String?
+  serialNo      String?
+  installDate   DateTime?
+  warrantyExpire DateTime?
+  status        String    @default("RUNNING") // RUNNING / MAINTAINING / SCRAPPED
+  ownerId       String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  @@index([customerId])
+  @@index([productId])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("equipment")
+}
+
+model ReagentBatch {
+  id         String    @id @default(cuid())
+  productId  String
+  batchNo    String
+  expiryDate DateTime?
+  stock      Int       @default(0)
+  status     String    @default("ACTIVE")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@index([productId])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("reagent_batches")
+}
+
+model ReagentConsumption {
+  id         String   @id @default(cuid())
+  batchId    String
+  equipmentId String?
+  customerId String?
+  quantity   Int
+  usedAt     DateTime @default(now())
+  operatorId String
+  createdAt  DateTime @default(now())
+
+  @@index([batchId])
+  @@index([equipmentId])
+  @@index([customerId])
+  @@map("reagent_consumptions")
+}
+
+// ======================
+// 任务管理
+// ======================
+model Task {
+  id             String    @id @default(cuid())
+  title          String
+  content        String?
+  type           String    @default("TODO") // TODO / FOLLOW_UP / APPROVAL / REVIEW
+  priority       String    @default("MEDIUM") // LOW / MEDIUM / HIGH / URGENT
+  status         String    @default("PENDING") // PENDING / IN_PROGRESS / COMPLETED / CANCELLED
+  ownerId        String
+  assigneeIds    String[]
+  participantIds String[]
+  relatedType    String? // CUSTOMER / LEAD / INTENTION / TICKET
+  relatedId      String?
+  dueAt          DateTime?
+  remindAt       DateTime?
+  completedAt    DateTime?
+  createdBy      String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+
+  comments TaskComment[]
+
+  @@index([ownerId])
+  @@index([assigneeIds])
+  @@index([status])
+  @@index([relatedType, relatedId])
+  @@index([deletedAt])
+  @@map("tasks")
+}
+
+model TaskComment {
+  id        String    @id @default(cuid())
+  taskId    String
+  userId    String
+  content   String
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([deletedAt])
+  @@map("task_comments")
+}
+
+// ======================
+// 日历 / 日程
+// ======================
+model Schedule {
+  id              String    @id @default(cuid())
+  title           String
+  content         String?
+  type            String    @default("MEETING") // MEETING / VISIT / REMINDER / TASK
+  startTime       DateTime
+  endTime         DateTime?
+  allDay          Boolean   @default(false)
+  ownerId         String
+  participantIds  String[]
+  relatedType     String? // CUSTOMER / LEAD / INTENTION / TASK
+  relatedId       String?
+  location        String?
+  reminderMinutes Int       @default(15)
+  status          String    @default("ACTIVE") // ACTIVE / CANCELLED / COMPLETED
+  createdBy       String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  reminders ScheduleReminder[]
+
+  @@index([ownerId])
+  @@index([startTime])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("schedules")
+}
+
+model ScheduleReminder {
+  id         String    @id @default(cuid())
+  scheduleId String
+  remindAt   DateTime
+  status     String    @default("PENDING") // PENDING / SENT / DISMISSED
+  createdAt  DateTime  @default(now())
+  deletedAt  DateTime?
+
+  schedule Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+  @@index([scheduleId])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("schedule_reminders")
+}
+
+// ======================
+// 审批中心
+// ======================
+model ApprovalTemplate {
+  id         String    @id @default(cuid())
+  name       String
+  code       String    @unique
+  module     String // LEAVE / EXPENSE / CONTRACT / DISCOUNT ...
+  formSchema Json // 表单字段定义
+  flowNodes  Json // 审批节点 [{ nodeId, name, approverType, approvers, conditions }]
+  status     String    @default("ACTIVE")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  instances ApprovalInstance[]
+
+  @@index([module])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("approval_templates")
+}
+
+model ApprovalInstance {
+  id            String    @id @default(cuid())
+  templateId    String
+  applicantId   String
+  title         String
+  businessKey   String?
+  payload       Json
+  status        String    @default("PENDING") // PENDING / APPROVED / REJECTED / WITHDRAWN
+  currentNodeId String?
+  createdAt     DateTime  @default(now())
+  completedAt   DateTime?
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  template ApprovalTemplate @relation(fields: [templateId], references: [id])
+  tasks    ApprovalTask[]
+  ccRecords ApprovalCcRecord[]
+
+  @@index([applicantId])
+  @@index([status])
+  @@index([templateId])
+  @@index([deletedAt])
+  @@map("approval_instances")
+}
+
+model ApprovalTask {
+  id          String    @id @default(cuid())
+  instanceId  String
+  nodeId      String
+  assigneeId  String
+  action      String? // APPROVE / REJECT / TRANSFER
+  comment     String?
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+  deletedAt   DateTime?
+
+  instance ApprovalInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+
+  @@index([instanceId])
+  @@index([assigneeId])
+  @@index([action])
+  @@index([deletedAt])
+  @@map("approval_tasks")
+}
+
+model ApprovalCcRecord {
+  id         String    @id @default(cuid())
+  instanceId String
+  userId     String
+  readAt     DateTime?
+  createdAt  DateTime  @default(now())
+  deletedAt  DateTime?
+
+  instance ApprovalInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+
+  @@index([instanceId])
+  @@index([userId])
+  @@index([deletedAt])
+  @@map("approval_cc_records")
+}
+
+// ======================
+// 售后工单
+// ======================
+model Ticket {
+  id          String    @id @default(cuid())
+  code        String    @unique
+  title       String
+  type        String    @default("REPAIR") // REPAIR / MAINTENANCE / CONSULT / COMPLAINT
+  priority    String    @default("MEDIUM") // LOW / MEDIUM / HIGH / URGENT
+  status      String    @default("PENDING") // PENDING / PROCESSING / WAITING / RESOLVED / CLOSED
+  customerId  String?
+  contactId   String?
+  equipmentId String?
+  reporterId  String
+  assigneeId  String?
+  source      String? // PHONE / WECHAT / APP / AGENT
+  content     String
+  solution    String?
+  satisfiedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  customer  Customer?  @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  comments  TicketComment[]
+  histories TicketHistory[]
+
+  @@index([customerId])
+  @@index([assigneeId])
+  @@index([status])
+  @@index([priority])
+  @@index([deletedAt])
+  @@map("tickets")
+}
+
+model TicketComment {
+  id         String    @id @default(cuid())
+  ticketId   String
+  userId     String
+  content    String
+  isInternal Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  deletedAt  DateTime?
+
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+  @@index([deletedAt])
+  @@map("ticket_comments")
+}
+
+model TicketHistory {
+  id         String   @id @default(cuid())
+  ticketId   String
+  fieldName  String
+  oldValue   String?
+  newValue   String?
+  operatorId String
+  createdAt  DateTime @default(now())
+
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+  @@map("ticket_histories")
+}
+
+// ======================
+// 经销商协同
+// ======================
+model Dealer {
+  id           String    @id @default(cuid())
+  code         String    @unique
+  name         String
+  regionId     String?
+  level        String    @default("NORMAL") // NORMAL / CORE / STRATEGIC
+  contactName  String?
+  contactPhone String?
+  address      String?
+  status       String    @default("ACTIVE")
+  authorizedAt DateTime?
+  expireAt     DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  contracts DealerContract[]
+  orders    DealerOrder[]
+  inventory DealerInventory[]
+
+  @@index([regionId])
+  @@index([status])
+  @@index([level])
+  @@index([deletedAt])
+  @@map("dealers")
+}
+
+model DealerContract {
+  id        String    @id @default(cuid())
+  dealerId  String
+  startDate DateTime
+  endDate   DateTime
+  amount    Decimal?
+  status    String    @default("ACTIVE") // ACTIVE / EXPIRED / TERMINATED
+  files     Json?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  dealer Dealer @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+
+  @@index([dealerId])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("dealer_contracts")
+}
+
+model DealerOrder {
+  id         String    @id @default(cuid())
+  dealerId   String
+  customerId String?
+  amount     Decimal?
+  status     String    @default("PENDING") // PENDING / CONFIRMED / DELIVERED / SETTLED
+  orderDate  DateTime  @default(now())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  dealer Dealer @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+
+  @@index([dealerId])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("dealer_orders")
+}
+
+model DealerInventory {
+  id        String    @id @default(cuid())
+  dealerId  String
+  productId String
+  quantity  Int       @default(0)
+  warningQty Int      @default(10)
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  dealer Dealer @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+
+  @@unique([dealerId, productId])
+  @@index([dealerId])
+  @@index([deletedAt])
+  @@map("dealer_inventory")
+}
+
+// ======================
+// 流程设计器（通用工作流）
+// ======================
+model WorkflowDefinition {
+  id        String    @id @default(cuid())
+  name      String
+  code      String    @unique
+  module    String // APPROVAL / TICKET / TASK / CUSTOMER_LIFECYCLE
+  version   Int       @default(1)
+  nodes     Json // 节点定义
+  edges     Json // 连线定义
+  status    String    @default("ACTIVE") // ACTIVE / ARCHIVED / DRAFT
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  instances WorkflowInstance[]
+
+  @@index([module])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("workflow_definitions")
+}
+
+model WorkflowInstance {
+  id           String    @id @default(cuid())
+  definitionId String
+  businessType String // 关联业务对象类型
+  businessKey  String // 关联业务对象 ID
+  payload      Json
+  status       String    @default("RUNNING") // RUNNING / COMPLETED / TERMINATED
+  currentNode  String?
+  createdAt    DateTime  @default(now())
+  completedAt  DateTime?
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  definition WorkflowDefinition @relation(fields: [definitionId], references: [id])
+
+  @@index([definitionId])
+  @@index([businessType, businessKey])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("workflow_instances")
+}
+
+// ======================
+// 合规风控
+// ======================
+model ComplianceRule {
+  id          String    @id @default(cuid())
+  name        String
+  code        String    @unique
+  module      String // CONTRACT / TICKET / DEALER / VISIT
+  description String?
+  checkItems  Json // 检查项列表
+  status      String    @default("ACTIVE")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  records ComplianceRecord[]
+
+  @@index([module])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("compliance_rules")
+}
+
+model ComplianceRecord {
+  id         String    @id @default(cuid())
+  ruleId     String
+  recordType String
+  recordId   String
+  result     String    @default("PASS") // PASS / FAIL / PENDING
+  score      Int?
+  checkedAt  DateTime  @default(now())
+  checkerId  String
+  remark     String?
+  createdAt  DateTime  @default(now())
+  deletedAt  DateTime?
+
+  rule ComplianceRule @relation(fields: [ruleId], references: [id])
+
+  @@index([ruleId])
+  @@index([recordType, recordId])
+  @@index([result])
+  @@index([deletedAt])
+  @@map("compliance_records")
+}
+
+model ComplianceEvidence {
+  id          String    @id @default(cuid())
+  recordId    String
+  fileId      String
+  description String?
+  createdAt   DateTime  @default(now())
+  deletedAt   DateTime?
+
+  @@index([recordId])
+  @@index([deletedAt])
+  @@map("compliance_evidences")
+}
+
+// ======================
+// 目标绩效
+// ======================
+model PerformanceTarget {
+  id           String    @id @default(cuid())
+  dimension    String // USER / DEPT / REGION / PRODUCT / CHANNEL
+  objectId     String // 对应维度的对象 ID
+  objectName   String?
+  period       String // 2025-Q1 / 2025-01 / 2025
+  indicator    String // REVENUE / INTENTION_AMOUNT / CUSTOMER_COUNT / LEAD_COUNT
+  targetValue  Decimal
+  weight       Int       @default(100)
+  status       String    @default("ACTIVE")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  actuals PerformanceActual[]
+
+  @@index([dimension, objectId])
+  @@index([period])
+  @@index([indicator])
+  @@index([deletedAt])
+  @@map("performance_targets")
+}
+
+model PerformanceActual {
+  id             String    @id @default(cuid())
+  targetId       String
+  actualValue    Decimal
+  achievementRate Decimal?
+  gap            Decimal?
+  reportedAt     DateTime  @default(now())
+  deletedAt      DateTime?
+
+  target PerformanceTarget @relation(fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@index([targetId])
+  @@index([reportedAt])
+  @@index([deletedAt])
+  @@map("performance_actuals")
+}
+
+// ======================
+// 经营驾驶舱
+// ======================
+model DashboardConfig {
+  id        String    @id @default(cuid())
+  name      String
+  type      String    @default("PERSONAL") // PERSONAL / DEPT / GLOBAL
+  userId    String?
+  layout    Json // 布局配置
+  widgets   Json // 组件配置
+  isDefault Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([userId])
+  @@index([type])
+  @@index([deletedAt])
+  @@map("dashboard_configs")
 }
