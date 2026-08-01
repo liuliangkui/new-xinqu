@@ -5963,49 +5963,72 @@
             </div>
           </div>
           <div id="db-panel-region" class="db-panel hidden">
+            <!-- 第一层：区域核心指标 -->
+            <div class="kpi-grid mb-5">
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">全国总业绩</div><svg class="icon icon-md text-primary"><use href="#icon-chart"/></svg></div>
+                <div class="text-2xl font-bold text-primary">¥1.09亿</div>
+                <div class="text-xs text-success mt-1">同比 +14%</div>
+              </div>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">达标区域</div><svg class="icon icon-md text-success"><use href="#icon-check"/></svg></div>
+                <div class="text-2xl font-bold text-success">4/7</div>
+                <div class="text-xs text-sub mt-1">达成率 ≥80%</div>
+              </div>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">落后区域</div><svg class="icon icon-md text-danger"><use href="#icon-warning"/></svg></div>
+                <div class="text-2xl font-bold text-danger">2</div>
+                <div class="text-xs text-danger mt-1">西南、西北需关注</div>
+              </div>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">区域业绩 TOP1</div><svg class="icon icon-md text-warning"><use href="#icon-flag"/></svg></div>
+                <div class="text-2xl font-bold text-warning">华东</div>
+                <div class="text-xs text-sub mt-1">¥2,860万</div>
+              </div>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">区域业绩缺口</div><svg class="icon icon-md text-info"><use href="#icon-info"/></svg></div>
+                <div class="text-2xl font-bold text-info">¥2,640万</div>
+                <div class="text-xs text-sub mt-1">主要集中在西南</div>
+              </div>
+            </div>
+
+            <!-- 第二层：区域业绩地图 + 排名 -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
               <div class="card p-4 lg:col-span-2">
                 <div class="font-semibold text-ink mb-3">区域业绩地图</div>
                 <div class="h-48 rounded-xl bg-panel p-3">
                   <svg viewBox="0 0 400 240" class="w-full h-full">
                     <text x="8" y="16" font-size="10" fill="var(--sub)">业绩热力：颜色越深代表业绩越高</text>
-                    <!-- 东北 -->
                     <g class="cursor-pointer" onclick="openDrillDown('region','东北大区')">
                       <path d="M260,40 L310,35 L320,70 L300,95 L265,85 Z" fill="var(--primary)" opacity="0.45"/>
                       <text x="285" y="68" text-anchor="middle" font-size="10" fill="var(--ink)">东北</text>
                       <text x="285" y="80" text-anchor="middle" font-size="9" fill="var(--sub)">¥620万</text>
                     </g>
-                    <!-- 华北 -->
                     <g class="cursor-pointer" onclick="openDrillDown('region','华北大区')">
                       <path d="M220,80 L265,85 L275,115 L245,130 L210,120 Z" fill="var(--primary)" opacity="0.65"/>
                       <text x="242" y="110" text-anchor="middle" font-size="10" fill="var(--ink)">华北</text>
                       <text x="242" y="122" text-anchor="middle" font-size="9" fill="var(--sub)">¥1,980万</text>
                     </g>
-                    <!-- 西北 -->
                     <g class="cursor-pointer" onclick="openDrillDown('region','西北大区')">
                       <path d="M110,60 L200,55 L210,120 L160,140 L100,120 Z" fill="var(--primary)" opacity="0.35"/>
                       <text x="155" y="100" text-anchor="middle" font-size="10" fill="var(--ink)">西北</text>
                       <text x="155" y="112" text-anchor="middle" font-size="9" fill="var(--sub)">¥480万</text>
                     </g>
-                    <!-- 华东 -->
                     <g class="cursor-pointer" onclick="openDrillDown('region','华东大区')">
                       <path d="M275,115 L310,120 L325,150 L295,170 L255,155 Z" fill="var(--primary)" opacity="0.9"/>
                       <text x="290" y="145" text-anchor="middle" font-size="10" fill="#fff">华东</text>
                       <text x="290" y="157" text-anchor="middle" font-size="9" fill="#fff">¥2,860万</text>
                     </g>
-                    <!-- 华中 -->
                     <g class="cursor-pointer" onclick="openDrillDown('region','华中大区')">
                       <path d="M210,120 L255,122 L265,155 L245,180 L205,170 Z" fill="var(--primary)" opacity="0.55"/>
                       <text x="235" y="152" text-anchor="middle" font-size="10" fill="var(--ink)">华中</text>
                       <text x="235" y="164" text-anchor="middle" font-size="9" fill="var(--sub)">¥1,120万</text>
                     </g>
-                    <!-- 西南 -->
                     <g class="cursor-pointer" onclick="openDrillDown('region','西南大区')">
                       <path d="M120,140 L205,138 L220,185 L170,210 L115,185 Z" fill="var(--primary)" opacity="0.45"/>
                       <text x="170" y="172" text-anchor="middle" font-size="10" fill="var(--ink)">西南</text>
                       <text x="170" y="184" text-anchor="middle" font-size="9" fill="var(--sub)">¥1,360万</text>
                     </g>
-                    <!-- 华南 -->
                     <g class="cursor-pointer" onclick="openDrillDown('region','华南大区')">
                       <path d="M220,175 L265,165 L290,200 L270,225 L230,215 Z" fill="var(--primary)" opacity="0.75"/>
                       <text x="252" y="198" text-anchor="middle" font-size="10" fill="var(--ink)">华南</text>
@@ -6029,6 +6052,77 @@
                   <div class="flex items-center justify-between p-2 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('province','浙江省区')"><span class="text-sm text-ink">浙江省区</span><span class="text-sm font-bold text-ink">¥590万 <svg class="icon icon-xs inline text-sub"><use href="#icon-arrow-right"/></svg></span></div>
                   <div class="flex items-center justify-between p-2 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('province','贵州省区')"><span class="text-sm text-ink">贵州省区</span><span class="text-sm font-bold text-ink">¥420万 <svg class="icon icon-xs inline text-sub"><use href="#icon-arrow-right"/></svg></span></div>
                 </div>
+              </div>
+            </div>
+
+            <!-- 第三层：区域达成分布 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
+              <div class="card p-4">
+                <div class="font-semibold text-ink mb-3">区域目标达成率分布</div>
+                <div class="space-y-3">
+                  <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('region','华南大区')">
+                    <div class="flex-1"><div class="text-sm font-medium text-ink">华南大区</div><div class="text-xs text-sub">目标 ¥2,800万 · 实际 ¥2,576万</div></div>
+                    <div class="w-20"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-success rounded-full" style="width:92%"></div></div></div>
+                    <div class="text-sm font-bold text-success w-12 text-right">92%</div>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('region','华北大区')">
+                    <div class="flex-1"><div class="text-sm font-medium text-ink">华北大区</div><div class="text-xs text-sub">目标 ¥2,400万 · 实际 ¥2,040万</div></div>
+                    <div class="w-20"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:85%"></div></div></div>
+                    <div class="text-sm font-bold text-primary w-12 text-right">85%</div>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('region','华东大区')">
+                    <div class="flex-1"><div class="text-sm font-medium text-ink">华东大区</div><div class="text-xs text-sub">目标 ¥3,200万 · 实际 ¥2,496万</div></div>
+                    <div class="w-20"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:78%"></div></div></div>
+                    <div class="text-sm font-bold text-warning w-12 text-right">78%</div>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('region','西南大区')">
+                    <div class="flex-1"><div class="text-sm font-medium text-ink">西南大区</div><div class="text-xs text-sub">目标 ¥2,000万 · 实际 ¥1,360万</div></div>
+                    <div class="w-20"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-danger rounded-full" style="width:68%"></div></div></div>
+                    <div class="text-sm font-bold text-danger w-12 text-right">68%</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card p-4">
+                <div class="font-semibold text-ink mb-3">区域关键指标对比</div>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-sm">
+                    <thead class="text-sub border-b border-line"><tr><th class="text-left py-2">区域</th><th class="text-right py-2">业绩</th><th class="text-right py-2">达成率</th><th class="text-right py-2">装机</th><th class="text-right py-2">回款率</th></tr></thead>
+                    <tbody>
+                      <tr class="border-b border-line-light"><td class="py-2">华东</td><td class="text-right py-2">¥2,860万</td><td class="text-right py-2 text-warning">78%</td><td class="text-right py-2">12</td><td class="text-right py-2">85%</td></tr>
+                      <tr class="border-b border-line-light"><td class="py-2">华南</td><td class="text-right py-2">¥2,120万</td><td class="text-right py-2 text-success">92%</td><td class="text-right py-2">9</td><td class="text-right py-2">88%</td></tr>
+                      <tr class="border-b border-line-light"><td class="py-2">华北</td><td class="text-right py-2">¥1,980万</td><td class="text-right py-2 text-primary">85%</td><td class="text-right py-2">8</td><td class="text-right py-2">82%</td></tr>
+                      <tr class="border-b border-line-light"><td class="py-2">华中</td><td class="text-right py-2">¥1,120万</td><td class="text-right py-2 text-primary">81%</td><td class="text-right py-2">5</td><td class="text-right py-2">79%</td></tr>
+                      <tr class="border-b border-line-light"><td class="py-2">西南</td><td class="text-right py-2">¥1,360万</td><td class="text-right py-2 text-danger">68%</td><td class="text-right py-2">4</td><td class="text-right py-2">71%</td></tr>
+                      <tr><td class="py-2">东北</td><td class="text-right py-2">¥620万</td><td class="text-right py-2 text-primary">83%</td><td class="text-right py-2">3</td><td class="text-right py-2">80%</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- AI 分析结论 -->
+            <div class="card p-4 mb-5">
+              <div class="flex items-center gap-2 mb-4">
+                <svg class="icon icon-md text-primary"><use href="#icon-ai"/></svg>
+                <h3 class="font-semibold text-ink">AI 分析结论</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="p-4 rounded-lg bg-success-bg">
+                  <div class="text-sm font-medium text-success mb-1">华东、华南贡献主要增长</div>
+                  <div class="text-xs text-sub">两区合计业绩 ¥4,980万，占全国 45.7%，其中华南达成率 92% 表现最优。</div>
+                </div>
+                <div class="p-4 rounded-lg bg-danger-bg">
+                  <div class="text-sm font-medium text-danger mb-1">西南区缺口最大</div>
+                  <div class="text-xs text-sub">西南区达成率 68%，缺口 ¥640万，回款率 71% 同样偏低，需重点关注。</div>
+                </div>
+                <div class="p-4 rounded-lg bg-warning-bg">
+                  <div class="text-sm font-medium text-warning mb-1">西北体量小但增速快</div>
+                  <div class="text-xs text-sub">西北业绩 ¥480万，同比增长 22%，可作为潜力市场加大投入。</div>
+                </div>
+              </div>
+              <div class="p-3 rounded-lg bg-panel">
+                <div class="text-sm font-medium text-ink mb-2">经营建议</div>
+                <div class="text-sm text-sub">1. 向西南区调配销售与售前资源，重点攻克 3-5 家标杆医院；2. 复制华南区高达成经验，推广至华东、华中；3. 关注西北潜力市场，提前布局渠道伙伴。</div>
               </div>
             </div>
           </div>
