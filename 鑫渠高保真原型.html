@@ -5453,6 +5453,7 @@
                   <div class="text-xs text-sub mt-1">3 个停滞重点意向</div>
                 </div>
               </div>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-5">
               <!-- 收入趋势 -->
               <div class="card p-4">
@@ -5603,38 +5604,170 @@
               </div>
             </div>
           </div>
-<!-- 专题屏：区域目标达成率 -->
+<!-- 专题屏：目标与绩效 -->
           <div id="db-panel-target" class="db-panel hidden">
-            <div class="card p-4 mb-5">
-              <div class="flex items-center justify-between mb-4">
-                <div class="font-semibold text-ink">区域目标达成率</div>
-                <button class="text-xs text-primary flex items-center gap-1 hover:underline" onclick="openDrillDown('region','华东大区')">华东大区 <svg class="icon icon-xs"><use href="#icon-arrow-right"/></svg></button>
+            <!-- 第一层：核心 KPI -->
+            <div class="kpi-grid mb-5">
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">年度目标</div><svg class="icon icon-md text-primary"><use href="#icon-flag"/></svg></div>
+                <div class="text-2xl font-bold text-ink">¥1.10亿</div>
+                <div class="text-xs text-sub mt-1">集团年度签约目标</div>
               </div>
-              <div class="space-y-3">
-                <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('region','华东大区')">
-                  <div class="flex-1"><div class="text-sm font-medium text-ink">华东大区</div><div class="text-xs text-sub">目标 ¥3,200万</div></div>
-                  <div class="w-24"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:78%"></div></div></div>
-                  <div class="text-sm font-bold text-warning w-12 text-right">78%</div>
-                  <svg class="icon icon-sm text-sub"><use href="#icon-arrow-right"/></svg>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">当前达成</div><svg class="icon icon-md text-success"><use href="#icon-check"/></svg></div>
+                <div class="text-2xl font-bold text-success">¥8,360万</div>
+                <div class="text-xs text-success mt-1">同比 +12%</div>
+              </div>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">整体达成率</div><svg class="icon icon-md text-warning"><use href="#icon-chart"/></svg></div>
+                <div class="text-2xl font-bold text-warning">76%</div>
+                <div class="text-xs text-danger mt-1">低于 80% 警戒线</div>
+              </div>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">业绩缺口</div><svg class="icon icon-md text-danger"><use href="#icon-warning"/></svg></div>
+                <div class="text-2xl font-bold text-danger">¥2,640万</div>
+                <div class="text-xs text-sub mt-1">需新增 6-8 个重点项目</div>
+              </div>
+              <div class="card card-hover">
+                <div class="flex items-center justify-between mb-2"><div class="text-sub text-xs">回款达成率</div><svg class="icon icon-md text-info"><use href="#icon-info"/></svg></div>
+                <div class="text-2xl font-bold text-info">82%</div>
+                <div class="text-xs text-warning mt-1">缺口 ¥680万</div>
+              </div>
+            </div>
+
+            <!-- 第二层：月度达成趋势 + 整体达成率 -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
+              <div class="card p-4 lg:col-span-2">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="font-semibold text-ink">月度达成趋势</h3>
+                  <span class="text-xs text-sub">单位：万元</span>
                 </div>
-                <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('region','华南大区')">
-                  <div class="flex-1"><div class="text-sm font-medium text-ink">华南大区</div><div class="text-xs text-sub">目标 ¥2,800万</div></div>
-                  <div class="w-24"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-success rounded-full" style="width:92%"></div></div></div>
-                  <div class="text-sm font-bold text-success w-12 text-right">92%</div>
-                  <svg class="icon icon-sm text-sub"><use href="#icon-arrow-right"/></svg>
+                <div class="h-56 flex items-end gap-2">
+                  <div class="flex-1 flex flex-col justify-end gap-1"><div class="bg-primary/20 rounded-t" style="height:35%"></div><div class="bg-warning/30 rounded-t" style="height:30%"></div></div>
+                  <div class="flex-1 flex flex-col justify-end gap-1"><div class="bg-primary/20 rounded-t" style="height:42%"></div><div class="bg-warning/30 rounded-t" style="height:38%"></div></div>
+                  <div class="flex-1 flex flex-col justify-end gap-1"><div class="bg-primary/20 rounded-t" style="height:48%"></div><div class="bg-warning/30 rounded-t" style="height:45%"></div></div>
+                  <div class="flex-1 flex flex-col justify-end gap-1"><div class="bg-primary/20 rounded-t" style="height:55%"></div><div class="bg-warning/30 rounded-t" style="height:50%"></div></div>
+                  <div class="flex-1 flex flex-col justify-end gap-1"><div class="bg-primary/30 rounded-t" style="height:62%"></div><div class="bg-warning/40 rounded-t" style="height:58%"></div></div>
+                  <div class="flex-1 flex flex-col justify-end gap-1"><div class="bg-primary rounded-t" style="height:78%"></div><div class="bg-warning rounded-t" style="height:68%"></div></div>
+                  <div class="flex-1 flex flex-col justify-end gap-1"><div class="bg-primary/20 rounded-t" style="height:40%"></div><div class="bg-warning/30 rounded-t" style="height:35%"></div></div>
+                  <div class="flex-1 flex flex-col justify-end gap-1"><div class="bg-primary/20 rounded-t" style="height:45%"></div><div class="bg-warning/30 rounded-t" style="height:42%"></div></div>
+                  <div class="flex-1 flex flex-col justify-end gap-1"><div class="bg-primary/20 rounded-t" style="height:50%"></div><div class="bg-warning/30 rounded-t" style="height:48%"></div></div>
+                  <div class="flex-1 flex flex-col justify-end gap-1"><div class="bg-primary/20 rounded-t" style="height:58%"></div><div class="bg-warning/30 rounded-t" style="height:55%"></div></div>
+                  <div class="flex-1 flex flex-col justify-end gap-1"><div class="bg-primary/30 rounded-t" style="height:70%"></div><div class="bg-warning/40 rounded-t" style="height:65%"></div></div>
+                  <div class="flex-1 flex flex-col justify-end gap-1"><div class="bg-primary rounded-t" style="height:85%"></div><div class="bg-warning rounded-t" style="height:76%"></div></div>
                 </div>
-                <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('region','华北大区')">
-                  <div class="flex-1"><div class="text-sm font-medium text-ink">华北大区</div><div class="text-xs text-sub">目标 ¥2,400万</div></div>
-                  <div class="w-24"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:85%"></div></div></div>
-                  <div class="text-sm font-bold text-primary w-12 text-right">85%</div>
-                  <svg class="icon icon-sm text-sub"><use href="#icon-arrow-right"/></svg>
+                <div class="flex justify-between text-xs text-sub mt-2"><span>1月</span><span>2月</span><span>3月</span><span>4月</span><span>5月</span><span>6月</span><span>7月</span><span>8月</span><span>9月</span><span>10月</span><span>11月</span><span>12月</span></div>
+                <div class="flex items-center gap-4 mt-3 text-xs text-sub">
+                  <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-primary"></span>签约金额</span>
+                  <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-warning"></span>目标金额</span>
                 </div>
-                <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('region','西南大区')">
-                  <div class="flex-1"><div class="text-sm font-medium text-ink">西南大区</div><div class="text-xs text-sub">目标 ¥2,000万</div></div>
-                  <div class="w-24"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-danger rounded-full" style="width:68%"></div></div></div>
-                  <div class="text-sm font-bold text-danger w-12 text-right">68%</div>
-                  <svg class="icon icon-sm text-sub"><use href="#icon-arrow-right"/></svg>
+              </div>
+              <div class="card p-4">
+                <h3 class="font-semibold text-ink mb-4">整体达成率</h3>
+                <div class="flex items-center justify-center">
+                  <div class="relative w-32 h-32">
+                    <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                      <path class="text-line" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"/>
+                      <path class="text-warning" stroke-dasharray="76, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"/>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                      <div class="text-2xl font-bold text-ink">76%</div>
+                      <div class="text-xs text-sub">达成率</div>
+                    </div>
+                  </div>
                 </div>
+                <div class="mt-4 space-y-2">
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">年度目标</span><span class="font-medium text-ink">¥1.10亿</span></div>
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">当前实际</span><span class="font-medium text-primary">¥8,360万</span></div>
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">业绩缺口</span><span class="font-medium text-danger">¥2,640万</span></div>
+                  <div class="flex items-center justify-between text-sm"><span class="text-sub">剩余月份</span><span class="font-medium text-info">5 个月</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 第三层：区域 / 团队达成排名 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
+              <div class="card p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <h3 class="font-semibold text-ink">区域达成排名</h3>
+                  <button class="text-xs text-primary hover:underline" onclick="openDrillDown('region','全国')">查看全部</button>
+                </div>
+                <div class="space-y-3">
+                  <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('region','华南大区')">
+                    <div class="flex-1"><div class="text-sm font-medium text-ink">华南大区</div><div class="text-xs text-sub">目标 ¥2,800万 · 实际 ¥2,576万</div></div>
+                    <div class="w-20"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-success rounded-full" style="width:92%"></div></div></div>
+                    <div class="text-sm font-bold text-success w-12 text-right">92%</div>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('region','华北大区')">
+                    <div class="flex-1"><div class="text-sm font-medium text-ink">华北大区</div><div class="text-xs text-sub">目标 ¥2,400万 · 实际 ¥2,040万</div></div>
+                    <div class="w-20"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:85%"></div></div></div>
+                    <div class="text-sm font-bold text-primary w-12 text-right">85%</div>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('region','华东大区')">
+                    <div class="flex-1"><div class="text-sm font-medium text-ink">华东大区</div><div class="text-xs text-sub">目标 ¥3,200万 · 实际 ¥2,496万</div></div>
+                    <div class="w-20"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:78%"></div></div></div>
+                    <div class="text-sm font-bold text-warning w-12 text-right">78%</div>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('region','西南大区')">
+                    <div class="flex-1"><div class="text-sm font-medium text-ink">西南大区</div><div class="text-xs text-sub">目标 ¥2,000万 · 实际 ¥1,360万</div></div>
+                    <div class="w-20"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-danger rounded-full" style="width:68%"></div></div></div>
+                    <div class="text-sm font-bold text-danger w-12 text-right">68%</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <h3 class="font-semibold text-ink">团队 / 省区达成排名</h3>
+                  <button class="text-xs text-primary hover:underline" onclick="openDrillDown('team','全部')">查看全部</button>
+                </div>
+                <div class="space-y-3">
+                  <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('team','云南省区')">
+                    <div class="flex-1"><div class="text-sm font-medium text-ink">云南省区</div><div class="text-xs text-sub">负责人：张经理 · 实际 ¥860万</div></div>
+                    <div class="w-20"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-success rounded-full" style="width:95%"></div></div></div>
+                    <div class="text-sm font-bold text-success w-12 text-right">95%</div>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('team','四川省区')">
+                    <div class="flex-1"><div class="text-sm font-medium text-ink">四川省区</div><div class="text-xs text-sub">负责人：王强 · 实际 ¥720万</div></div>
+                    <div class="w-20"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:86%"></div></div></div>
+                    <div class="text-sm font-bold text-primary w-12 text-right">86%</div>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('team','江苏省区')">
+                    <div class="flex-1"><div class="text-sm font-medium text-ink">江苏省区</div><div class="text-xs text-sub">负责人：李娜 · 实际 ¥680万</div></div>
+                    <div class="w-20"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-warning rounded-full" style="width:79%"></div></div></div>
+                    <div class="text-sm font-bold text-warning w-12 text-right">79%</div>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 rounded-lg bg-panel cursor-pointer hover:bg-primary-light/30" onclick="openDrillDown('team','贵州省区')">
+                    <div class="flex-1"><div class="text-sm font-medium text-ink">贵州省区</div><div class="text-xs text-sub">负责人：赵敏 · 实际 ¥420万</div></div>
+                    <div class="w-20"><div class="h-2 bg-line rounded-full overflow-hidden"><div class="h-full bg-danger rounded-full" style="width:64%"></div></div></div>
+                    <div class="text-sm font-bold text-danger w-12 text-right">64%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- AI 分析结论 -->
+            <div class="card p-4 mb-5">
+              <div class="flex items-center gap-2 mb-4">
+                <svg class="icon icon-md text-primary"><use href="#icon-ai"/></svg>
+                <h3 class="font-semibold text-ink">AI 分析结论</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="p-4 rounded-lg bg-danger-bg">
+                  <div class="text-sm font-medium text-danger mb-1">业绩缺口偏大</div>
+                  <div class="text-xs text-sub">当前整体达成率 76%，低于 80% 警戒线，Q4 需新增约 6-8 个重点项目方可补齐缺口。</div>
+                </div>
+                <div class="p-4 rounded-lg bg-warning-bg">
+                  <div class="text-sm font-medium text-warning mb-1">西南区进展滞后</div>
+                  <div class="text-xs text-sub">西南区达成率 68%，落后于均值 8 个百分点，且缺口集中在 7-8 月，建议重点跟进。</div>
+                </div>
+                <div class="p-4 rounded-lg bg-success-bg">
+                  <div class="text-sm font-medium text-success mb-1">华东、华南增长稳健</div>
+                  <div class="text-xs text-sub">华南 92%、华北 85% 达成率高于均值，可作为标杆经验向其他区域复制。</div>
+                </div>
+              </div>
+              <div class="p-3 rounded-lg bg-panel">
+                <div class="text-sm font-medium text-ink mb-2">经营建议</div>
+                <div class="text-sm text-sub">1. 聚焦高意向项目推进，缩短投标/签约周期；2. 强化西南区资源投入与高层覆盖；3. 关注回款缺口，提前介入逾期客户催收。</div>
               </div>
             </div>
           </div>
