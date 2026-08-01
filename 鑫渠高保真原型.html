@@ -3307,7 +3307,7 @@
                 <button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">查看详情</button>
               </div>
             </div>
-            <div class="card card-hover p-4 cursor-pointer" onclick="openCustomerModal(this)" data-name="大理州人民医院" data-level="三级乙等" data-type="我的客户" data-region="云南 · 大理" data-category="综合医院" data-decision="张主任" data-devices="35" data-reagents="12" data-amount="980万" data-health="78" data-health-color="warning">
+            <div class="card card-hover p-4 cursor-pointer" onclick="openCustomerModal(this)" data-name="大理州人民医院" data-level="三级乙等" data-type="我的客户" data-active="true" data-region="云南 · 大理" data-category="综合医院" data-decision="张主任" data-devices="35" data-reagents="12" data-amount="980万" data-health="78" data-health-color="warning">
               <div class="flex items-start justify-between mb-3">
                 <div class="flex gap-2 flex-wrap">
                   <span class="badge badge-primary">三级乙等</span>
@@ -3327,7 +3327,7 @@
                 <button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">查看详情</button>
               </div>
             </div>
-            <div class="card card-hover p-4 cursor-pointer" onclick="openCustomerModal(this)" data-name="曲靖市第一人民医院" data-level="三级乙等" data-type="我的客户" data-region="云南 · 曲靖" data-category="综合医院" data-decision="赵主任" data-devices="28" data-reagents="10" data-amount="720万" data-health="82" data-health-color="primary">
+            <div class="card card-hover p-4 cursor-pointer" onclick="openCustomerModal(this)" data-name="曲靖市第一人民医院" data-level="三级乙等" data-type="我的客户" data-active="true" data-region="云南 · 曲靖" data-category="综合医院" data-decision="赵主任" data-devices="28" data-reagents="10" data-amount="720万" data-health="82" data-health-color="primary">
               <div class="flex items-start justify-between mb-3">
                 <div class="flex gap-2 flex-wrap">
                   <span class="badge badge-primary">三级乙等</span>
@@ -3347,7 +3347,7 @@
                 <button class="btn btn-ghost text-xs" onclick="event.stopPropagation()">查看详情</button>
               </div>
             </div>
-            <div class="card card-hover p-4 cursor-pointer" onclick="openCustomerModal(this)" data-name="玉溪市人民医院" data-level="二级医院" data-type="我的客户" data-region="云南 · 玉溪" data-category="综合医院" data-decision="陈科长" data-devices="18" data-reagents="8" data-amount="420万" data-health="75" data-health-color="warning">
+            <div class="card card-hover p-4 cursor-pointer" onclick="openCustomerModal(this)" data-name="玉溪市人民医院" data-level="二级医院" data-type="我的客户" data-active="true" data-region="云南 · 玉溪" data-category="综合医院" data-decision="陈科长" data-devices="18" data-reagents="8" data-amount="420万" data-health="75" data-health-color="warning">
               <div class="flex items-start justify-between mb-3">
                 <div class="flex gap-2 flex-wrap">
                   <span class="badge badge-primary">二级医院</span>
@@ -3394,18 +3394,18 @@
             <table class="data-table">
               <thead><tr><th>客户名称</th><th>等级</th><th>类型</th><th>区域</th><th>决策人</th><th>设备数</th><th>健康度</th><th>成交金额</th><th>操作</th></tr></thead>
               <tbody>
-                <tr class="customer-row cursor-pointer" onclick="toggleCustomerAccordion(this)" data-name="云南省肿瘤医院" data-level="三级甲等" data-type="肿瘤专科医院" data-region="云南 · 昆明" data-decision="刘副院长" data-devices="42" data-health="92" data-amount="¥3,280万"><td>云南省肿瘤医院</td><td><span class="badge badge-primary">三级甲等</span></td><td>肿瘤专科医院</td><td>云南 · 昆明</td><td>刘副院长</td><td>42</td><td><span class="badge badge-success">92</span></td><td>¥3,280万</td><td><button class="btn btn-ghost text-xs" onclick="openCustomerModalByName('云南省肿瘤医院')">详情</button></td></tr>
-                <tr class="detail-accordion"><td colspan="9"><div class="accordion-panel"></div></td></tr>
-                <tr class="customer-row cursor-pointer" onclick="toggleCustomerAccordion(this)" data-name="昆明医科大学第一附属医院" data-level="三级甲等" data-type="综合医院" data-region="云南 · 昆明" data-decision="李老师" data-devices="68" data-health="85" data-amount="¥2,150万"><td>昆明医科大学第一附属医院</td><td><span class="badge badge-primary">三级甲等</span></td><td>综合医院</td><td>云南 · 昆明</td><td>李老师</td><td>68</td><td><span class="badge badge-primary">85</span></td><td>¥2,150万</td><td><button class="btn btn-ghost text-xs" onclick="openCustomerModalByName('昆明医科大学第一附属医院')">详情</button></td></tr>
-                <tr class="detail-accordion"><td colspan="9"><div class="accordion-panel"></div></td></tr>
-                <tr class="customer-row cursor-pointer" onclick="toggleCustomerAccordion(this)" data-name="大理州人民医院" data-level="三级乙等" data-type="综合医院" data-region="云南 · 大理" data-decision="张主任" data-devices="35" data-health="78" data-amount="¥980万"><td>大理州人民医院</td><td><span class="badge badge-primary">三级乙等</span></td><td>综合医院</td><td>云南 · 大理</td><td>张主任</td><td>35</td><td><span class="badge badge-warning">78</span></td><td>¥980万</td><td><button class="btn btn-ghost text-xs" onclick="openCustomerModalByName('大理州人民医院')">详情</button></td></tr>
-                <tr class="detail-accordion"><td colspan="9"><div class="accordion-panel"></div></td></tr>
-                <tr class="customer-row cursor-pointer" onclick="toggleCustomerAccordion(this)" data-name="曲靖市第一人民医院" data-level="三级乙等" data-type="综合医院" data-region="云南 · 曲靖" data-decision="赵主任" data-devices="28" data-health="82" data-amount="¥720万"><td>曲靖市第一人民医院</td><td><span class="badge badge-primary">三级乙等</span></td><td>综合医院</td><td>云南 · 曲靖</td><td>赵主任</td><td>28</td><td><span class="badge badge-primary">82</span></td><td>¥720万</td><td><button class="btn btn-ghost text-xs" onclick="openCustomerModalByName('曲靖市第一人民医院')">详情</button></td></tr>
-                <tr class="detail-accordion"><td colspan="9"><div class="accordion-panel"></div></td></tr>
-                <tr class="customer-row cursor-pointer" onclick="toggleCustomerAccordion(this)" data-name="玉溪市人民医院" data-level="二级医院" data-type="综合医院" data-region="云南 · 玉溪" data-decision="陈科长" data-devices="18" data-health="75" data-amount="¥420万"><td>玉溪市人民医院</td><td><span class="badge badge-primary">二级医院</span></td><td>综合医院</td><td>云南 · 玉溪</td><td>陈科长</td><td>18</td><td><span class="badge badge-warning">75</span></td><td>¥420万</td><td><button class="btn btn-ghost text-xs" onclick="openCustomerModalByName('玉溪市人民医院')">详情</button></td></tr>
-                <tr class="detail-accordion"><td colspan="9"><div class="accordion-panel"></div></td></tr>
-                <tr class="customer-row cursor-pointer" onclick="toggleCustomerAccordion(this)" data-name="西双版纳傣族自治州医院" data-level="三级乙等" data-type="综合医院" data-region="云南 · 西双版纳" data-decision="岩医生" data-devices="22" data-health="70" data-amount="¥560万"><td>西双版纳傣族自治州医院</td><td><span class="badge badge-primary">三级乙等</span></td><td>综合医院</td><td>云南 · 西双版纳</td><td>岩医生</td><td>22</td><td><span class="badge badge-warning">70</span></td><td>¥560万</td><td><button class="btn btn-ghost text-xs" onclick="openCustomerModalByName('西双版纳傣族自治州医院')">详情</button></td></tr>
-                <tr class="detail-accordion"><td colspan="9"><div class="accordion-panel"></div></td></tr>
+                <tr class="customer-row cursor-pointer" onclick="toggleCustomerAccordion(this)" data-name="云南省肿瘤医院" data-level="三级甲等" data-type="肿瘤专科医院" data-cust-type="战略客户" data-region="云南 · 昆明" data-decision="刘副院长" data-devices="42" data-health="92" data-amount="¥3,280万"><td>云南省肿瘤医院</td><td><span class="badge badge-primary">三级甲等</span></td><td>肿瘤专科医院</td><td>云南 · 昆明</td><td>刘副院长</td><td>42</td><td><span class="badge badge-success">92</span></td><td>¥3,280万</td><td><button class="btn btn-ghost text-xs" onclick="openCustomerModalByName('云南省肿瘤医院')">详情</button></td></tr>
+                <tr class="detail-accordion" data-cust-type="战略客户"><td colspan="9"><div class="accordion-panel"></div></td></tr>
+                <tr class="customer-row cursor-pointer" onclick="toggleCustomerAccordion(this)" data-name="昆明医科大学第一附属医院" data-level="三级甲等" data-type="综合医院" data-cust-type="我的客户" data-region="云南 · 昆明" data-decision="李老师" data-devices="68" data-health="85" data-amount="¥2,150万"><td>昆明医科大学第一附属医院</td><td><span class="badge badge-primary">三级甲等</span></td><td>综合医院</td><td>云南 · 昆明</td><td>李老师</td><td>68</td><td><span class="badge badge-primary">85</span></td><td>¥2,150万</td><td><button class="btn btn-ghost text-xs" onclick="openCustomerModalByName('昆明医科大学第一附属医院')">详情</button></td></tr>
+                <tr class="detail-accordion" data-cust-type="我的客户"><td colspan="9"><div class="accordion-panel"></div></td></tr>
+                <tr class="customer-row cursor-pointer" onclick="toggleCustomerAccordion(this)" data-name="大理州人民医院" data-level="三级乙等" data-type="综合医院" data-cust-type="我的客户" data-active="true" data-region="云南 · 大理" data-decision="张主任" data-devices="35" data-health="78" data-amount="¥980万"><td>大理州人民医院</td><td><span class="badge badge-primary">三级乙等</span></td><td>综合医院</td><td>云南 · 大理</td><td>张主任</td><td>35</td><td><span class="badge badge-warning">78</span></td><td>¥980万</td><td><button class="btn btn-ghost text-xs" onclick="openCustomerModalByName('大理州人民医院')">详情</button></td></tr>
+                <tr class="detail-accordion" data-cust-type="我的客户" data-active="true"><td colspan="9"><div class="accordion-panel"></div></td></tr>
+                <tr class="customer-row cursor-pointer" onclick="toggleCustomerAccordion(this)" data-name="曲靖市第一人民医院" data-level="三级乙等" data-type="综合医院" data-cust-type="我的客户" data-active="true" data-region="云南 · 曲靖" data-decision="赵主任" data-devices="28" data-health="82" data-amount="¥720万"><td>曲靖市第一人民医院</td><td><span class="badge badge-primary">三级乙等</span></td><td>综合医院</td><td>云南 · 曲靖</td><td>赵主任</td><td>28</td><td><span class="badge badge-primary">82</span></td><td>¥720万</td><td><button class="btn btn-ghost text-xs" onclick="openCustomerModalByName('曲靖市第一人民医院')">详情</button></td></tr>
+                <tr class="detail-accordion" data-cust-type="我的客户" data-active="true"><td colspan="9"><div class="accordion-panel"></div></td></tr>
+                <tr class="customer-row cursor-pointer" onclick="toggleCustomerAccordion(this)" data-name="玉溪市人民医院" data-level="二级医院" data-type="综合医院" data-cust-type="我的客户" data-active="true" data-region="云南 · 玉溪" data-decision="陈科长" data-devices="18" data-health="75" data-amount="¥420万"><td>玉溪市人民医院</td><td><span class="badge badge-primary">二级医院</span></td><td>综合医院</td><td>云南 · 玉溪</td><td>陈科长</td><td>18</td><td><span class="badge badge-warning">75</span></td><td>¥420万</td><td><button class="btn btn-ghost text-xs" onclick="openCustomerModalByName('玉溪市人民医院')">详情</button></td></tr>
+                <tr class="detail-accordion" data-cust-type="我的客户" data-active="true"><td colspan="9"><div class="accordion-panel"></div></td></tr>
+                <tr class="customer-row cursor-pointer" onclick="toggleCustomerAccordion(this)" data-name="西双版纳傣族自治州医院" data-level="三级乙等" data-type="综合医院" data-cust-type="我的客户" data-region="云南 · 西双版纳" data-decision="岩医生" data-devices="22" data-health="70" data-amount="¥560万"><td>西双版纳傣族自治州医院</td><td><span class="badge badge-primary">三级乙等</span></td><td>综合医院</td><td>云南 · 西双版纳</td><td>岩医生</td><td>22</td><td><span class="badge badge-warning">70</span></td><td>¥560万</td><td><button class="btn btn-ghost text-xs" onclick="openCustomerModalByName('西双版纳傣族自治州医院')">详情</button></td></tr>
+                <tr class="detail-accordion" data-cust-type="我的客户"><td colspan="9"><div class="accordion-panel"></div></td></tr>
               </tbody>
             </table>
           </div>
@@ -17053,6 +17053,38 @@ Content-Type: application/json
     function switchCustomerListTab(btn) {
       btn.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
+      filterCustomerList(btn.dataset.custtab);
+    }
+
+    function filterCustomerList(tab) {
+      const grid = document.getElementById('customer-grid');
+      const list = document.getElementById('customer-list');
+      if (grid) {
+        grid.querySelectorAll('.card[data-name]').forEach(card => {
+          card.classList.toggle('hidden', !matchCustomerFilter(card, tab));
+        });
+      }
+      if (list) {
+        list.querySelectorAll('tr.customer-row').forEach(row => {
+          const show = matchCustomerFilter(row, tab);
+          row.classList.toggle('hidden', !show);
+          const next = row.nextElementSibling;
+          if (next && next.classList.contains('detail-accordion')) {
+            next.classList.toggle('hidden', !show);
+          }
+        });
+      }
+    }
+
+    function matchCustomerFilter(el, tab) {
+      if (tab === 'all') return true;
+      const type = (el.dataset.type || '').trim();
+      const custType = (el.dataset.custType || '').trim();
+      const active = el.dataset.active === 'true';
+      if (tab === 'mine') return type === '我的客户' || custType === '我的客户';
+      if (tab === 'strategic') return type === '战略客户' || custType === '战略客户';
+      if (tab === 'active') return active;
+      return true;
     }
 
     function setCustomerView(mode) {
