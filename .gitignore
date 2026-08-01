@@ -28,6 +28,8 @@ coverage
 
 .eslintcache
 
+.env
+
 # Local backups and generated artifacts
 backup-local/
 *.bak

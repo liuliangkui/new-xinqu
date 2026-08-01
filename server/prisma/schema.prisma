@@ -1,0 +1,264 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ======================
+// 系统配置
+// ======================
+model SystemConfig {
+  id          String   @id @default(cuid())
+  module      String
+  key         String
+  value       String
+  valueType   String   @default("STRING") // NUMBER / STRING / BOOLEAN / JSON
+  description String?
+  status      String   @default("ACTIVE")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([module, key])
+  @@map("system_configs")
+}
+
+model SystemConfigHistory {
+  id        String   @id @default(cuid())
+  configId  String
+  module    String
+  key       String
+  oldValue  String
+  newValue  String
+  reason    String
+  operatorId String
+  createdAt DateTime @default(now())
+
+  @@map("system_config_histories")
+}
+
+// ======================
+// 用户与权限
+// ======================
+model User {
+  id            String    @id @default(cuid())
+  username      String    @unique
+  password      String
+  name          String
+  phone         String?
+  email         String?
+  departmentId  String?
+  roleIds       String[]
+  status        String    @default("ACTIVE")
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+
+model Department {
+  id        String    @id @default(cuid())
+  name      String
+  parentId  String?
+  leaderId  String?
+  path      String
+  sortOrder Int       @default(0)
+  status    String    @default("ACTIVE")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("departments")
+}
+
+model Role {
+  id          String   @id @default(cuid())
+  name        String
+  code        String   @unique
+  permissions Json?    // [{ resource, action }]
+  dataScope   String   @default("SELF") // SELF / DEPT / DEPT_AND_CHILD / REGION / ALL
+  status      String   @default("ACTIVE")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("roles")
+}
+
+// ======================
+// 客户管理
+// ======================
+model Customer {
+  id            String   @id @default(cuid())
+  name          String
+  type          String   // 综合医院 / 肿瘤专科 / 妇幼医院等
+  hospitalLevel String?  // 三级甲等 / 三级乙等 / 二级医院等
+  level         String   @default("NORMAL") // STRATEGIC / NORMAL
+  healthScore   Int?
+  region        String
+  address       Json?
+  ownerId       String
+  status        String   @default("POTENTIAL") // POTENTIAL / COOPERATING / LOST
+  tags          String[]
+  source        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  contacts      Contact[]
+  departments   CustomerDepartment[]
+  visitRecords  VisitRecord[]
+  leads         Lead[]
+  intentions    Intention[]
+
+  @@index([ownerId])
+  @@index([region])
+  @@index([status])
+  @@index([type])
+  @@index([level])
+  @@map("customers")
+}
+
+model Contact {
+  id           String  @id @default(cuid())
+  customerId   String
+  name         String
+  phone        String
+  email        String?
+  position     String?
+  departmentId String?
+  decisionRole String   @default("USER") // DECISION_MAKER / INFLUENCER / USER / GATEKEEPER
+  isPrimary    Boolean @default(false)
+  status       String  @default("ACTIVE")
+  createdAt    DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+  @@map("contacts")
+}
+
+model CustomerDepartment {
+  id         String   @id @default(cuid())
+  customerId String
+  name       String
+  bedCount   Int?
+  remark     String?
+  createdAt  DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+  @@map("customer_departments")
+}
+
+model VisitRecord {
+  id          String   @id @default(cuid())
+  customerId  String
+  visitorId   String
+  visitType   String
+  visitTime   DateTime
+  content     String
+  location    String?
+  attachments Json?
+  createdAt   DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+  @@index([visitTime])
+  @@map("visit_records")
+}
+
+// ======================
+// 线索管理
+// ======================
+model Lead {
+  id                  String    @id @default(cuid())
+  name                String
+  source              String    // 官网注册 / 展会 / 转介绍 / 400电话 / 代理商推荐 / 学术活动
+  sourceDetail        String?
+  status              String    @default("PENDING") // PENDING / FOLLOWING / CONVERTED / INVALID
+  poolType            String    @default("PUBLIC") // MINE / PUBLIC / TEAM
+  ownerId             String?
+  region              String?
+  contactName         String?
+  contactPhone        String?
+  companyName         String?
+  demand              String?
+  estimatedAmount     Decimal?
+  intentionLevel      String?   // HIGH / MEDIUM / LOW
+  followCount         Int       @default(0)
+  lastFollowAt        DateTime?
+  convertedCustomerId String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  customer      Customer? @relation(fields: [convertedCustomerId], references: [id])
+  followRecords LeadFollowRecord[]
+
+  @@index([ownerId])
+  @@index([status])
+  @@index([poolType])
+  @@index([source])
+  @@map("leads")
+}
+
+model LeadFollowRecord {
+  id           String    @id @default(cuid())
+  leadId       String
+  followerId   String
+  followType   String    // PHONE / WECHAT / EMAIL / VISIT / MEETING
+  content      String
+  nextFollowAt DateTime?
+  createdAt    DateTime  @default(now())
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+  @@map("lead_follow_records")
+}
+
+// ======================
+// 意向管理
+// ======================
+model Intention {
+  id          String    @id @default(cuid())
+  customerId  String
+  productId   String?
+  amount      Decimal?
+  stage       String    @default("INITIAL") // INITIAL / NEGOTIATION / QUOTATION / CONTRACT / WON
+  probability Int       @default(0)
+  expectedAt  DateTime?
+  ownerId     String
+  status      String    @default("ACTIVE") // ACTIVE / WON / LOST / STALLED
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  customer     Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  stageRecords IntentionStageRecord[]
+
+  @@index([customerId])
+  @@index([ownerId])
+  @@index([status])
+  @@map("intentions")
+}
+
+model IntentionStageRecord {
+  id          String   @id @default(cuid())
+  intentionId String
+  fromStage   String
+  toStage     String
+  probability Int
+  operatorId  String
+  remark      String?
+  createdAt   DateTime @default(now())
+
+  intention Intention @relation(fields: [intentionId], references: [id], onDelete: Cascade)
+
+  @@index([intentionId])
+  @@map("intention_stage_records")
+}
