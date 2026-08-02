@@ -1,4 +1,10 @@
-import type { PerformanceItem, PerformanceOverview, PerformanceListResult } from './types'
+import type {
+  PerformanceItem,
+  PerformanceOverview,
+  PerformanceListResult,
+  PerformancePeriod,
+  PerformanceIndicator,
+} from './types'
 
 const regions = [
   { code: 'EAST', name: '华东区' },

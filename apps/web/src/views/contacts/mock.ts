@@ -193,9 +193,9 @@ export function mockCreateContact(
         customerName: data.customerName || '未知客户',
         department: data.department,
         jobTitle: data.jobTitle,
-        contactRole: data.contactRole,
-        attitude: data.attitude,
-        contactType: data.contactType,
+        contactRole: data.contactRole ?? ContactRole.HANDLER,
+        attitude: data.attitude ?? undefined,
+        contactType: data.contactType ?? ContactType.CUSTOMER,
         mobilePhone: data.mobilePhone,
         email: data.email,
         remark: data.remark,
@@ -217,13 +217,31 @@ export function mockCreateContact(
 /** 编辑联系人 */
 export function mockUpdateContact(
   contactId: number,
-  data: Partial<Contact>,
+  data: ContactFormData,
 ): Promise<{ contactId: number; updateTime: string }> {
   return new Promise((resolve) => {
     setTimeout(() => {
       const idx = allContacts.findIndex((c) => c.contactId === contactId)
       if (idx >= 0) {
-        allContacts[idx] = { ...allContacts[idx], ...data, updateTime: new Date().toISOString() }
+        const updateData: Partial<Contact> = {
+          contactName: data.contactName,
+          customerId: data.customerId ?? undefined,
+          customerName: data.customerName,
+          department: data.department,
+          jobTitle: data.jobTitle,
+          contactRole: data.contactRole ?? undefined,
+          attitude: data.attitude ?? undefined,
+          contactType: data.contactType ?? undefined,
+          mobilePhone: data.mobilePhone,
+          email: data.email,
+          remark: data.remark,
+          status: data.status,
+        }
+        allContacts[idx] = {
+          ...allContacts[idx],
+          ...updateData,
+          updateTime: new Date().toISOString(),
+        } as Contact
       }
       resolve({ contactId, updateTime: new Date().toISOString() })
     }, 200)

@@ -23,7 +23,6 @@ const tabs = [
   { key: 'overview', label: '综合看板', route: '/dashboard' },
   { key: 'performance', label: '目标绩效', route: '/performance' },
   { key: 'funnel', label: '销售漏斗', route: '/dashboard/funnel' },
-  { key: 'region', label: '区域经营', route: '/dashboard/region' },
   { key: 'dealer', label: '经销商协同', route: '/dealer' },
   { key: 'compliance', label: '合规风控', route: '/compliance' },
 ]
