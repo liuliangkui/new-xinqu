@@ -68,15 +68,22 @@ export const useAuthStore = defineStore('auth', () => {
     return roleList.some((r) => roles.value.includes(r))
   }
 
+  function matchPermission(perm: string): boolean {
+    if (permissions.value.includes(perm)) return true
+    const [resource] = perm.split(':')
+    if (permissions.value.includes(`${resource}:*`)) return true
+    if (permissions.value.includes('*:*')) return true
+    return permissions.value.includes('*')
+  }
+
   function hasPermission(perm: string): boolean {
     if (roles.value.includes('super_admin')) return true
-    return permissions.value.includes(perm) || permissions.value.includes('*')
+    return matchPermission(perm)
   }
 
   function hasAnyPermission(permList: string[]): boolean {
     if (roles.value.includes('super_admin')) return true
-    if (permissions.value.includes('*')) return true
-    return permList.some((p) => permissions.value.includes(p))
+    return permList.some((p) => matchPermission(p))
   }
 
   function logout(): void {
