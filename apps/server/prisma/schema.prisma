@@ -142,6 +142,8 @@ model User {
   updatedAt     DateTime  @updatedAt
   deletedAt     DateTime?
 
+  assignedTickets Ticket[]
+
   @@index([departmentId])
   @@index([deletedAt])
   @@map("users")
@@ -484,6 +486,8 @@ model Product {
   deletedAt   DateTime?
 
   brand Brand? @relation(fields: [brandId], references: [id])
+  reagentBatches ReagentBatch[]
+  equipment Equipment[]
 
   @@index([category])
   @@index([brandId])
@@ -507,6 +511,7 @@ model Equipment {
   deletedAt     DateTime?
 
   customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
 
   @@index([customerId])
   @@index([productId])
@@ -525,6 +530,8 @@ model ReagentBatch {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   deletedAt  DateTime?
+
+  product Product @relation(fields: [productId], references: [id])
 
   @@index([productId])
   @@index([status])
@@ -790,6 +797,7 @@ model Ticket {
   deletedAt   DateTime?
 
   customer  Customer?  @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  assignee  User?      @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
   comments  TicketComment[]
   histories TicketHistory[]
 
@@ -1001,6 +1009,7 @@ model ComplianceRecord {
   deletedAt  DateTime?
 
   rule ComplianceRule @relation(fields: [ruleId], references: [id])
+  evidences ComplianceEvidence[]
 
   @@index([ruleId])
   @@index([recordType, recordId])
@@ -1016,6 +1025,8 @@ model ComplianceEvidence {
   description String?
   createdAt   DateTime  @default(now())
   deletedAt   DateTime?
+
+  record ComplianceRecord @relation(fields: [recordId], references: [id])
 
   @@index([recordId])
   @@index([deletedAt])

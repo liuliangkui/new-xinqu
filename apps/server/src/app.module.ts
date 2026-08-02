@@ -29,6 +29,15 @@ import { PerformanceModule } from './modules/performance/performance.module'
 import { CalendarModule } from './modules/calendar/calendar.module'
 import { DashboardModule } from './modules/dashboard/dashboard.module'
 import { SystemConfigModule } from './modules/system-config/system-config.module'
+import { FavoriteModule } from './modules/favorite/favorite.module'
+import { WorkflowDefinitionModule } from './modules/workflow-definition/workflow-definition.module'
+import { BrandModule } from './modules/brand/brand.module'
+import { ReagentModule } from './modules/reagent/reagent.module'
+import { ComplianceModule } from './modules/compliance/compliance.module'
+import { DealerModule } from './modules/dealer/dealer.module'
+import { KanbanModule } from './modules/kanban/kanban.module'
+import { MessageModule } from './modules/message/message.module'
+import { SettingsModule } from './modules/settings/settings.module'
 import { HealthModule } from './modules/health/health.module'
 import { UploadModule } from './upload/upload.module'
 import { SchedulerModule } from './scheduler/scheduler.module'
@@ -58,6 +67,15 @@ import { SchedulerModule } from './scheduler/scheduler.module'
     PrismaModule,
     RedisModule,
     SystemConfigModule,
+    FavoriteModule,
+    WorkflowDefinitionModule,
+    BrandModule,
+    ReagentModule,
+    ComplianceModule,
+    DealerModule,
+    KanbanModule,
+    MessageModule,
+    SettingsModule,
     HealthModule,
     UploadModule,
     SchedulerModule,
