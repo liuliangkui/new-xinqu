@@ -264,10 +264,7 @@ function pageChange(page: number): void {
           placeholder="搜索编号、标题、客户…"
           width="240px"
           @search="handleSearch"
-          @reset="
-            keyword = ''
-            handleSearch('')
-          "
+          @reset="handleSearch('')"
         />
         <XqFilterBar :filters="filterConfig" :values="filterValues" @change="handleFilterChange" />
       </div>

@@ -252,10 +252,7 @@ function pageChange(page: number): void {
           placeholder="搜索经销商、地区、编码…"
           width="240px"
           @search="handleSearch"
-          @reset="
-            keyword = ''
-            handleSearch('')
-          "
+          @reset="handleSearch('')"
         />
         <XqFilterBar :filters="filterConfig" :values="filterValues" @change="handleFilterChange" />
       </div>
