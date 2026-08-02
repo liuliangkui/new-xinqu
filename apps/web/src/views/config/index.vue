@@ -65,6 +65,11 @@ function openEdit(item: ConfigItem) {
   formVisible.value = true
 }
 
+function openCreate() {
+  formData.value = { module: 'SYSTEM', key: '', value: '', valueType: 'STRING', description: '' }
+  formVisible.value = true
+}
+
 async function handleSave() {
   if (!formData.value.key || !formData.value.value) {
     alert('请填写键和值')
@@ -85,13 +90,7 @@ onMounted(fetchList)
     </template>
 
     <template #actions>
-      <XqButton
-        type="primary"
-        @click="
-          formData = { module: 'SYSTEM', key: '', value: '', valueType: 'STRING', description: '' }
-          formVisible = true
-        "
-      >
+      <XqButton type="primary" @click="openCreate">
         <span class="flex items-center gap-1">
           <XqIcon name="plus" size="14" />
           <span>新增配置</span>

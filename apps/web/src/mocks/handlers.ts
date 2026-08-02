@@ -97,6 +97,52 @@ import {
 } from '@/views/designer/mock'
 import type { WorkflowDefinition, WorkflowForm, WorkflowListResult } from '@/views/designer/types'
 import {
+  generateBrandList,
+  generateBrandStats,
+  createBrandInMock,
+  updateBrandInMock,
+  deleteBrandFromMock,
+  allBrands,
+} from '@/views/brand/mock'
+import type { Brand, BrandForm, BrandListResult } from '@/views/brand/types'
+import {
+  generateReagentList,
+  generateReagentStats,
+  createReagentInMock,
+  updateReagentInMock,
+  deleteReagentFromMock,
+  allReagents,
+} from '@/views/reagent/mock'
+import type { Reagent, ReagentForm, ReagentListResult } from '@/views/reagent/types'
+import {
+  generateComplianceList,
+  generateComplianceStats,
+  createComplianceInMock,
+  updateComplianceInMock,
+  deleteComplianceFromMock,
+  allComplianceRecords,
+} from '@/views/compliance/mock'
+import type {
+  ComplianceRecord,
+  ComplianceForm,
+  ComplianceListResult,
+} from '@/views/compliance/types'
+import {
+  generateDealerList,
+  generateDealerStats,
+  createDealerInMock,
+  updateDealerInMock,
+  deleteDealerFromMock,
+  allDealers,
+} from '@/views/dealer/mock'
+import type { Dealer, DealerForm, DealerListResult } from '@/views/dealer/types'
+import { generateKanbanData, generateKanbanStats } from '@/views/kanban/mock'
+import type { KanbanListResult, KanbanStats } from '@/views/kanban/types'
+import { generateMessageList, markMessageReadInMock, markAllReadInMock } from '@/views/message/mock'
+import type { Message, MessageListResult } from '@/views/message/types'
+import { generateSettings, updateSettingItemInMock } from '@/views/settings/mock'
+import type { SettingsResult, SettingItem } from '@/views/settings/types'
+import {
   generateCalendarEventList,
   generateCalendarMonthDots,
   generateCalendarStats,
@@ -876,5 +922,297 @@ export const handlers = [
       )
     }
     return HttpResponse.json(ok({ success: true }))
+  }),
+
+  // ---- 品牌库管理 ----
+  http.get('/api/v1/brands', ({ request }) => {
+    const url = new URL(request.url)
+    const page = Number(url.searchParams.get('page') ?? '1')
+    const size = Number(url.searchParams.get('size') ?? '20')
+    const keyword = url.searchParams.get('keyword') ?? undefined
+    const status = url.searchParams.get('status') ?? undefined
+    const category = url.searchParams.get('category') ?? undefined
+    const result = generateBrandList({ pageNum: page, pageSize: size, keyword, status, category })
+    return HttpResponse.json(ok<BrandListResult>(result))
+  }),
+
+  http.get('/api/v1/brands/stats', () => {
+    return HttpResponse.json(ok(generateBrandStats()))
+  }),
+
+  http.get('/api/v1/brands/:id', ({ params }) => {
+    const id = String(params.id)
+    const brand = allBrands.find((b) => b.brandId === id) || null
+    if (!brand) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '品牌不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Brand>(brand))
+  }),
+
+  http.post('/api/v1/brands', async ({ request }) => {
+    const body = (await request.json()) as Partial<BrandForm>
+    const brand = createBrandInMock(body)
+    return HttpResponse.json(ok<Brand>(brand), { status: 201 })
+  }),
+
+  http.put('/api/v1/brands/:id', async ({ request, params }) => {
+    const id = String(params.id)
+    const body = (await request.json()) as Partial<BrandForm>
+    const brand = updateBrandInMock(id, body)
+    if (!brand) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '品牌不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Brand>(brand))
+  }),
+
+  http.delete('/api/v1/brands/:id', ({ params }) => {
+    const id = String(params.id)
+    const success = deleteBrandFromMock(id)
+    if (!success) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '品牌不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok({ success: true }))
+  }),
+
+  // ---- 试剂运营 ----
+  http.get('/api/v1/reagents', ({ request }) => {
+    const url = new URL(request.url)
+    const page = Number(url.searchParams.get('page') ?? '1')
+    const size = Number(url.searchParams.get('size') ?? '20')
+    const keyword = url.searchParams.get('keyword') ?? undefined
+    const status = url.searchParams.get('status') ?? undefined
+    const category = url.searchParams.get('category') ?? undefined
+    const result = generateReagentList({ pageNum: page, pageSize: size, keyword, status, category })
+    return HttpResponse.json(ok<ReagentListResult>(result))
+  }),
+
+  http.get('/api/v1/reagents/stats', () => {
+    return HttpResponse.json(ok(generateReagentStats()))
+  }),
+
+  http.get('/api/v1/reagents/:id', ({ params }) => {
+    const id = String(params.id)
+    const reagent = allReagents.find((r) => r.reagentId === id) || null
+    if (!reagent) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '试剂不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Reagent>(reagent))
+  }),
+
+  http.post('/api/v1/reagents', async ({ request }) => {
+    const body = (await request.json()) as Partial<ReagentForm>
+    const reagent = createReagentInMock(body)
+    return HttpResponse.json(ok<Reagent>(reagent), { status: 201 })
+  }),
+
+  http.put('/api/v1/reagents/:id', async ({ request, params }) => {
+    const id = String(params.id)
+    const body = (await request.json()) as Partial<ReagentForm>
+    const reagent = updateReagentInMock(id, body)
+    if (!reagent) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '试剂不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Reagent>(reagent))
+  }),
+
+  http.delete('/api/v1/reagents/:id', ({ params }) => {
+    const id = String(params.id)
+    const success = deleteReagentFromMock(id)
+    if (!success) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '试剂不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok({ success: true }))
+  }),
+
+  // ---- 合规风控 ----
+  http.get('/api/v1/compliance-records', ({ request }) => {
+    const url = new URL(request.url)
+    const page = Number(url.searchParams.get('page') ?? '1')
+    const size = Number(url.searchParams.get('size') ?? '20')
+    const keyword = url.searchParams.get('keyword') ?? undefined
+    const status = url.searchParams.get('status') ?? undefined
+    const type = url.searchParams.get('type') ?? undefined
+    const result = generateComplianceList({ pageNum: page, pageSize: size, keyword, status, type })
+    return HttpResponse.json(ok<ComplianceListResult>(result))
+  }),
+
+  http.get('/api/v1/compliance-records/stats', () => {
+    return HttpResponse.json(ok(generateComplianceStats()))
+  }),
+
+  http.get('/api/v1/compliance-records/:id', ({ params }) => {
+    const id = String(params.id)
+    const record = allComplianceRecords.find((c) => c.recordId === id) || null
+    if (!record) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '记录不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<ComplianceRecord>(record))
+  }),
+
+  http.post('/api/v1/compliance-records', async ({ request }) => {
+    const body = (await request.json()) as Partial<ComplianceForm>
+    const record = createComplianceInMock(body)
+    return HttpResponse.json(ok<ComplianceRecord>(record), { status: 201 })
+  }),
+
+  http.put('/api/v1/compliance-records/:id', async ({ request, params }) => {
+    const id = String(params.id)
+    const body = (await request.json()) as Partial<ComplianceForm>
+    const record = updateComplianceInMock(id, body)
+    if (!record) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '记录不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<ComplianceRecord>(record))
+  }),
+
+  http.delete('/api/v1/compliance-records/:id', ({ params }) => {
+    const id = String(params.id)
+    const success = deleteComplianceFromMock(id)
+    if (!success) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '记录不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok({ success: true }))
+  }),
+
+  // ---- 经销商协同 ----
+  http.get('/api/v1/dealers', ({ request }) => {
+    const url = new URL(request.url)
+    const page = Number(url.searchParams.get('page') ?? '1')
+    const size = Number(url.searchParams.get('size') ?? '20')
+    const keyword = url.searchParams.get('keyword') ?? undefined
+    const status = url.searchParams.get('status') ?? undefined
+    const level = url.searchParams.get('level') ?? undefined
+    const result = generateDealerList({ pageNum: page, pageSize: size, keyword, status, level })
+    return HttpResponse.json(ok<DealerListResult>(result))
+  }),
+
+  http.get('/api/v1/dealers/stats', () => {
+    return HttpResponse.json(ok(generateDealerStats()))
+  }),
+
+  http.get('/api/v1/dealers/:id', ({ params }) => {
+    const id = String(params.id)
+    const dealer = allDealers.find((d) => d.dealerId === id) || null
+    if (!dealer) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '经销商不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Dealer>(dealer))
+  }),
+
+  http.post('/api/v1/dealers', async ({ request }) => {
+    const body = (await request.json()) as Partial<DealerForm>
+    const dealer = createDealerInMock(body)
+    return HttpResponse.json(ok<Dealer>(dealer), { status: 201 })
+  }),
+
+  http.put('/api/v1/dealers/:id', async ({ request, params }) => {
+    const id = String(params.id)
+    const body = (await request.json()) as Partial<DealerForm>
+    const dealer = updateDealerInMock(id, body)
+    if (!dealer) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '经销商不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Dealer>(dealer))
+  }),
+
+  http.delete('/api/v1/dealers/:id', ({ params }) => {
+    const id = String(params.id)
+    const success = deleteDealerFromMock(id)
+    if (!success) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '经销商不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok({ success: true }))
+  }),
+
+  // ---- 工单看板 ----
+  http.get('/api/v1/kanban', () => {
+    return HttpResponse.json(ok<KanbanListResult>(generateKanbanData()))
+  }),
+
+  http.get('/api/v1/kanban/stats', () => {
+    return HttpResponse.json(ok<KanbanStats>(generateKanbanStats()))
+  }),
+
+  // ---- 消息中心 ----
+  http.get('/api/v1/messages', ({ request }) => {
+    const url = new URL(request.url)
+    const page = Number(url.searchParams.get('page') ?? '1')
+    const size = Number(url.searchParams.get('size') ?? '20')
+    const status = url.searchParams.get('status') ?? undefined
+    const type = url.searchParams.get('type') ?? undefined
+    const result = generateMessageList({ pageNum: page, pageSize: size, status, type })
+    return HttpResponse.json(ok<MessageListResult>(result))
+  }),
+
+  http.put('/api/v1/messages/:id/read', ({ params }) => {
+    const id = String(params.id)
+    const message = markMessageReadInMock(id)
+    if (!message) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '消息不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<Message>(message))
+  }),
+
+  http.post('/api/v1/messages/read-all', () => {
+    markAllReadInMock()
+    return HttpResponse.json(ok({ success: true }))
+  }),
+
+  // ---- 后台设置 ----
+  http.get('/api/v1/settings', () => {
+    return HttpResponse.json(ok<SettingsResult>(generateSettings()))
+  }),
+
+  http.put('/api/v1/settings/:groupId/:itemId', async ({ request, params }) => {
+    const groupId = String(params.groupId)
+    const itemId = String(params.itemId)
+    const body = (await request.json()) as { value: SettingItem['value'] }
+    const item = updateSettingItemInMock(groupId, itemId, body.value)
+    if (!item) {
+      return HttpResponse.json(
+        { success: false, code: 404, message: '设置项不存在', data: null },
+        { status: 404 },
+      )
+    }
+    return HttpResponse.json(ok<SettingItem>(item))
   }),
 ]

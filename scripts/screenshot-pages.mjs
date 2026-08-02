@@ -10,6 +10,13 @@ const pages = [
   { path: '/favorites', name: 'favorites' },
   { path: '/config', name: 'config' },
   { path: '/designer', name: 'designer' },
+  { path: '/brand', name: 'brand' },
+  { path: '/reagent', name: 'reagent' },
+  { path: '/compliance', name: 'compliance' },
+  { path: '/dealer', name: 'dealer' },
+  { path: '/kanban', name: 'kanban' },
+  { path: '/message', name: 'message' },
+  { path: '/settings', name: 'settings' },
 ]
 
 async function main() {
