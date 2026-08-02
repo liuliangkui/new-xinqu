@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { PrismaClient } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 
@@ -307,13 +308,58 @@ async function main() {
     },
   })
 
-   
-  console.log('Seed completed: roles, departments, regions, apps and default admin created.')
+  const demoPassword = await bcrypt.hash('123456', 10)
+
+  await prisma.user.upsert({
+    where: { username: '13800000001' },
+    update: {},
+    create: {
+      id: 'user_sales_01',
+      username: '13800000001',
+      password: demoPassword,
+      name: '张销售',
+      phone: '13800000001',
+      departmentId: 'dept_east',
+      roleIds: ['role_sales'],
+      status: 'ACTIVE',
+    },
+  })
+
+  await prisma.user.upsert({
+    where: { username: '13900000002' },
+    update: {},
+    create: {
+      id: 'user_region_01',
+      username: '13900000002',
+      password: demoPassword,
+      name: '王经理',
+      phone: '13900000002',
+      departmentId: 'dept_east',
+      roleIds: ['role_region_manager'],
+      status: 'ACTIVE',
+    },
+  })
+
+  await prisma.user.upsert({
+    where: { username: '13700000003' },
+    update: {},
+    create: {
+      id: 'user_viewer_01',
+      username: '13700000003',
+      password: demoPassword,
+      name: '李只读',
+      phone: '13700000003',
+      departmentId: 'dept_marketing',
+      roleIds: ['role_viewer'],
+      status: 'ACTIVE',
+    },
+  })
+
+  console.log('Seed completed: roles, departments, regions, apps and demo users created.')
 }
 
 main()
   .catch((e) => {
-     
     console.error(e)
     process.exit(1)
   })
