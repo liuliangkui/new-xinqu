@@ -6,9 +6,21 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { NavTabItem, StatusMap } from '@/types/common'
-import type { Customer, CustomerForm, CustomerListParams, CustomerStats } from './types'
+import type {
+  Customer,
+  CustomerDetail,
+  CustomerForm,
+  CustomerListParams,
+  CustomerStats,
+} from './types'
 import { CustomerLevel, HealthLevel, OrgType } from './types'
-import { getCustomerList, createCustomer, updateCustomer, deleteCustomer } from './api'
+import {
+  getCustomerList,
+  getCustomerDetail,
+  createCustomer,
+  updateCustomer,
+  deleteCustomer,
+} from './api'
 
 const router = useRouter()
 
@@ -51,11 +63,17 @@ const pagination = ref({ page: 1, size: 12 })
 
 // 详情弹窗
 const detailVisible = ref(false)
-const detailCustomer = ref<Customer | null>(null)
+const detailCustomer = ref<CustomerDetail | null>(null)
+const detailLoading = ref(false)
 
-function openDetail(customer: Customer): void {
-  detailCustomer.value = customer
+async function openDetail(customer: Customer): Promise<void> {
   detailVisible.value = true
+  detailLoading.value = true
+  try {
+    detailCustomer.value = await getCustomerDetail(customer.customerId)
+  } finally {
+    detailLoading.value = false
+  }
 }
 
 function closeDetail(): void {
@@ -303,6 +321,25 @@ function healthColor(score: number): string {
   if (score >= 80) return 'var(--success)'
   if (score >= 60) return 'var(--warning)'
   return 'var(--danger)'
+}
+
+function relationText(level: string): string {
+  const map: Record<string, string> = {
+    high: '紧密',
+    medium: '一般',
+    low: '疏远',
+  }
+  return map[level] || level
+}
+
+function attitudeText(attitude: string): string {
+  const map: Record<string, string> = {
+    support: '支持',
+    neutral: '中立',
+    oppose: '反对',
+    unknown: '未知',
+  }
+  return map[attitude] || attitude
 }
 
 // ---- 表单操作 ----
@@ -555,7 +592,12 @@ async function handleDelete(record: Customer): Promise<void> {
     width="720px"
     @close="closeDetail"
   >
-    <div v-if="detailCustomer" class="flex flex-col gap-5">
+    <div v-if="detailLoading" class="flex items-center justify-center py-12 text-[var(--sub)]">
+      <XqIcon name="loading" size="24" class="animate-spin mr-2" />
+      加载客户摘要中…
+    </div>
+    <div v-else-if="detailCustomer" class="flex flex-col gap-5 max-h-[70vh] overflow-y-auto pr-1">
+      <!-- 头部名片 -->
       <div class="card">
         <div class="flex items-start gap-4">
           <div
@@ -564,7 +606,7 @@ async function handleDelete(record: Customer): Promise<void> {
             {{ detailCustomer.customerName.charAt(0) }}
           </div>
           <div class="min-w-0 flex-1">
-            <div class="flex items-center gap-2 mb-1">
+            <div class="flex items-center gap-2 mb-1 flex-wrap">
               <h3 class="text-lg font-semibold text-[var(--ink)]">
                 {{ detailCustomer.customerName }}
               </h3>
@@ -581,7 +623,7 @@ async function handleDelete(record: Customer): Promise<void> {
             </div>
             <div class="text-sm text-[var(--sub)] mb-2">
               {{ orgTypeMap[detailCustomer.orgType] }} · {{ detailCustomer.regionName }} ·
-              {{ detailCustomer.bedCount }} 床
+              {{ detailCustomer.bedCount }} 床 · 编码 {{ detailCustomer.customerCode }}
             </div>
             <div class="flex flex-wrap gap-x-6 gap-y-1 text-sm">
               <span class="text-[var(--sub)]">负责人：{{ detailCustomer.ownerName }}</span>
@@ -599,9 +641,11 @@ async function handleDelete(record: Customer): Promise<void> {
           </div>
         </div>
       </div>
+
+      <!-- 客户资产 -->
       <div class="card">
         <h4 class="font-semibold text-[var(--ink)] mb-3">客户资产</h4>
-        <div class="grid grid-cols-3 gap-4 text-center">
+        <div class="grid grid-cols-4 gap-4 text-center">
           <div>
             <div class="text-xl font-bold text-[var(--primary)]">
               {{ detailCustomer.deptCount }}
@@ -619,6 +663,118 @@ async function handleDelete(record: Customer): Promise<void> {
               {{ detailCustomer.intentionCount }}
             </div>
             <div class="text-xs text-[var(--sub)]">意向</div>
+          </div>
+          <div>
+            <div class="text-xl font-bold text-[var(--primary)]">
+              {{ detailCustomer.reagents?.length || 0 }}
+            </div>
+            <div class="text-xs text-[var(--sub)]">试剂</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 预警与机会 -->
+      <div v-if="detailCustomer.alerts?.length" class="card">
+        <h4 class="font-semibold text-[var(--ink)] mb-3">预警与提醒</h4>
+        <div class="space-y-2">
+          <div
+            v-for="(alert, idx) in detailCustomer.alerts"
+            :key="idx"
+            class="flex items-start gap-2 text-sm"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
+              :class="alert.severity === 'danger' ? 'bg-[var(--danger)]' : 'bg-[var(--warning)]'"
+            />
+            <span class="text-[var(--ink)]">{{ alert.message }}</span>
+            <span class="text-[var(--placeholder)] text-xs ml-auto">{{ alert.createdAt }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="detailCustomer.crossSellOpportunities?.length" class="card">
+        <h4 class="font-semibold text-[var(--ink)] mb-3">交叉销售机会</h4>
+        <div class="space-y-2">
+          <div
+            v-for="(opp, idx) in detailCustomer.crossSellOpportunities"
+            :key="idx"
+            class="flex items-start gap-2 text-sm"
+          >
+            <span
+              class="px-1.5 py-0.5 rounded text-xs flex-shrink-0"
+              :class="
+                opp.matchLevel === 'high'
+                  ? 'bg-[var(--danger-light)] text-[var(--danger)]'
+                  : opp.matchLevel === 'medium'
+                    ? 'bg-[var(--warning-light)] text-[var(--warning)]'
+                    : 'bg-[var(--success-light)] text-[var(--success)]'
+              "
+            >
+              {{ opp.matchLevel === 'high' ? '高' : opp.matchLevel === 'medium' ? '中' : '低' }}
+            </span>
+            <div class="min-w-0">
+              <div class="font-medium text-[var(--ink)]">{{ opp.title }}</div>
+              <div class="text-[var(--sub)] truncate">{{ opp.description }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 关键决策人 -->
+      <div v-if="detailCustomer.decisionContacts?.length" class="card">
+        <h4 class="font-semibold text-[var(--ink)] mb-3">
+          关键决策人（{{ detailCustomer.decisionContacts.length }}）
+        </h4>
+        <div class="space-y-3">
+          <div
+            v-for="contact in detailCustomer.decisionContacts.slice(0, 3)"
+            :key="contact.contactId"
+            class="flex items-center justify-between"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-8 h-8 rounded-full bg-[var(--primary-light)] text-[var(--primary)] flex items-center justify-center text-xs font-semibold"
+              >
+                {{ contact.contactName.charAt(0) }}
+              </div>
+              <div>
+                <div class="text-sm font-medium text-[var(--ink)]">
+                  {{ contact.contactName }}
+                  <span class="text-xs text-[var(--sub)] font-normal"
+                    >{{ contact.contactTitle }} · {{ contact.deptName }}</span
+                  >
+                </div>
+                <div class="text-xs text-[var(--sub)]">
+                  关系：{{ relationText(contact.relationLevel) }} · 态度：{{
+                    attitudeText(contact.attitude)
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="text-xs text-[var(--sub)]">
+              {{ contact.lastContactTime ? `最近联系 ${contact.lastContactTime}` : '暂无联系' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 最近动态 -->
+      <div v-if="detailCustomer.timeline?.length" class="card">
+        <h4 class="font-semibold text-[var(--ink)] mb-3">最近动态</h4>
+        <div class="space-y-3 relative pl-3">
+          <div
+            v-for="(item, idx) in detailCustomer.timeline.slice(0, 4)"
+            :key="idx"
+            class="relative pl-5 pb-1 border-l border-[var(--line)] last:border-0"
+          >
+            <div
+              class="absolute left-[-5px] top-1.5 w-2.5 h-2.5 rounded-full bg-[var(--primary)] border-2 border-white"
+            />
+            <div class="text-sm font-medium text-[var(--ink)]">{{ item.title }}</div>
+            <div class="text-xs text-[var(--sub)] mt-0.5 line-clamp-2">{{ item.content }}</div>
+            <div class="text-xs text-[var(--placeholder)] mt-1">
+              {{ item.operator }} · {{ item.time }}
+            </div>
           </div>
         </div>
       </div>
