@@ -2294,12 +2294,12 @@
           </div>
 
           <!-- KPI -->
-          <div class="kpi-grid mb-5">
-            <div class="card card-hover"><div class="text-sub text-xs mb-1">全部意向</div><div class="text-2xl font-bold text-ink">186</div><div class="text-xs text-sub mt-1">总金额 ¥8,420万</div></div>
-            <div class="card card-hover"><div class="text-sub text-xs mb-1">审批中</div><div class="text-2xl font-bold text-warning">12</div><div class="text-xs text-warning mt-1">3 条今日到期</div></div>
-            <div class="card card-hover"><div class="text-sub text-xs mb-1">生效中</div><div class="text-2xl font-bold text-primary">98</div><div class="text-xs text-primary mt-1">本月新增 14</div></div>
-            <div class="card card-hover"><div class="text-sub text-xs mb-1">已成交</div><div class="text-2xl font-bold text-success">56</div><div class="text-xs text-success mt-1">金额 ¥2,680万</div></div>
-            <div class="card card-hover"><div class="text-sub text-xs mb-1">冲突待裁决</div><div class="text-2xl font-bold text-danger">5</div><div class="text-xs text-danger mt-1">需尽快裁决</div></div>
+          <div class="kpi-grid intention-kpi-grid mb-5">
+            <div class="card card-hover"><div class="text-sub text-xs mb-1">本月意向数</div><div class="text-2xl font-bold text-ink" id="intention-kpi-month">0</div><div class="text-xs text-sub mt-1">本月新增报备</div></div>
+            <div class="card card-hover"><div class="text-sub text-xs mb-1">生效中</div><div class="text-2xl font-bold text-primary" id="intention-kpi-active">0</div><div class="text-xs text-primary mt-1">跟进中意向</div></div>
+            <div class="card card-hover"><div class="text-sub text-xs mb-1">待审批</div><div class="text-2xl font-bold text-warning" id="intention-kpi-pending">0</div><div class="text-xs text-warning mt-1">等待审批</div></div>
+            <div class="card card-hover"><div class="text-sub text-xs mb-1">冲突待裁决</div><div class="text-2xl font-bold text-danger" id="intention-kpi-conflict">0</div><div class="text-xs text-danger mt-1">需尽快裁决</div></div>
+            <div class="card card-hover"><div class="text-sub text-xs mb-1">本月成交率</div><div class="text-2xl font-bold text-success" id="intention-kpi-winrate">0%</div><div class="text-xs text-success mt-1">正常结束 / 本月结束</div></div>
           </div>
 
           <div class="card mb-4">
@@ -2494,21 +2494,15 @@
           <div id="intention-list-empty" class="hidden text-center py-8 text-sub">未找到匹配数据</div>
 
 
-          <div class="flex items-center justify-between">
-            <div class="text-sub text-sm">共 186 条 · 每页 12 条</div>
-            <div class="pagination">
-              <button class="page-btn" onclick="showToast('切换到上一页')"><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>
-              <button class="page-btn active" onclick="showToast('切换到第 1 页')">1</button>
-              <button class="page-btn" onclick="showToast('切换到第 2 页')">2</button>
-              <button class="page-btn" onclick="showToast('切换到第 3 页')">3</button>
-              <button class="page-btn" onclick="showToast('切换到下一页')"><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>
-            </div>
+          <div class="flex items-center justify-between intention-pagination-wrap">
+            <div class="text-sub text-sm" id="intention-pagination-info">共 0 条</div>
+            <div class="pagination" id="intention-pagination"></div>
           </div>
 
           <!-- Intention detail modal -->
           <div id="intention-modal-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeIntentionModal()">
             <div class="intention-modal" onclick="event.stopPropagation()">
-              <div class="card-modal-header"><div class="flex items-start gap-4"><div class="header-avatar">意</div><div class="header-title-wrap"><div class="header-title-row"><h3 class="text-lg font-bold text-ink truncate" id="modal-intention-project"></h3><span id="modal-intention-status"></span><span class="badge badge-info" id="modal-intention-life-stage"></span></div><div class="header-meta"><span class="meta-item"><svg class="icon icon-xs"><use href="#icon-building"/></svg><span id="modal-intention-customer"></span></span><span class="meta-item"><svg class="icon icon-xs"><use href="#icon-user"/></svg><span id="modal-intention-owner"></span></span><span class="meta-item"><svg class="icon icon-xs"><use href="#icon-clock"/></svg><span id="modal-intention-submit-time"></span></span></div></div></div><button class="btn btn-ghost flex-shrink-0" onclick="closeIntentionModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button></div><div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><div class="kpi-card"><div class="kpi-label">预计金额</div><div class="kpi-value text-ink" id="modal-intention-kpi-amount">-</div></div><div class="kpi-card"><div class="kpi-label">赢单率</div><div class="kpi-value text-primary" id="modal-intention-kpi-prob">-</div></div><div class="kpi-card"><div class="kpi-label">保护期剩余</div><div class="kpi-value text-warning" id="modal-intention-kpi-protect">-</div></div><div class="kpi-card"><div class="kpi-label">当前阶段</div><div class="kpi-value text-success" id="modal-intention-kpi-stage">-</div></div></div>
+              <div class="intention-modal-header"><div class="min-w-0"><h3 class="text-lg font-bold text-ink truncate" id="modal-intention-project"></h3><p class="text-sub text-sm mt-1"><span id="modal-intention-status"></span><span class="badge badge-info ml-2" id="modal-intention-life-stage"></span></p></div><button class="btn btn-ghost flex-shrink-0" onclick="closeIntentionModal()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button></div><div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><div class="kpi-card"><div class="kpi-label">预计金额</div><div class="kpi-value text-ink" id="modal-intention-kpi-amount">-</div></div><div class="kpi-card"><div class="kpi-label">赢单率</div><div class="kpi-value text-primary" id="modal-intention-kpi-prob">-</div></div><div class="kpi-card"><div class="kpi-label">保护期剩余</div><div class="kpi-value text-warning" id="modal-intention-kpi-protect">-</div></div><div class="kpi-card"><div class="kpi-label">当前阶段</div><div class="kpi-value text-success" id="modal-intention-kpi-stage">-</div></div></div>
 <div class="intention-modal-body">
                 <!-- 流程进度 -->
                 <div class="mb-4">
@@ -2949,46 +2943,122 @@
               <div class="intention-modal-header">
                 <div class="min-w-0">
                   <h3 class="text-lg font-bold text-ink">录入跟进</h3>
-                  <p class="text-sub text-sm mt-1">记录意向最新推进情况</p>
+                  <p class="text-sub text-sm mt-1">按业务类型记录意向最新推进情况</p>
                 </div>
                 <button class="btn btn-ghost flex-shrink-0" onclick="closeIntentionFollowUp()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button>
               </div>
               <div class="intention-modal-body">
-                <div class="form-group">
-                  <label class="form-label">跟进阶段</label>
-                  <select class="input w-full" id="follow-up-stage">
-                    <option>意向</option>
-                    <option>方案</option>
-                    <option>装机</option>
-                    <option>试剂供应</option>
-                    <option>招标挂网</option>
-                    <option>招标结果</option>
-                    <option>送货</option>
-                    <option>结束分类</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">跟进内容</label>
-                  <textarea class="input w-full" id="follow-up-content" rows="3" placeholder="填写本次跟进的关键信息"></textarea>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">预计成交时间</label>
-                  <input type="date" class="input w-full" id="follow-up-date">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">成单概率 <span id="follow-up-prob-text">50%</span></label>
-                  <input type="range" class="input w-full" id="follow-up-prob" min="0" max="100" value="50" oninput="document.getElementById('follow-up-prob-text').textContent = this.value + '%'">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">附件上传</label>
-                  <div class="border border-dashed border-line rounded-xl p-4 text-center text-sub text-sm bg-panel cursor-pointer" onclick="showToast('请选择文件上传')">
-                    点击上传或拖拽文件至此
+                <input type="hidden" id="follow-up-code">
+                <input type="hidden" id="follow-up-business-type">
+                <input type="hidden" id="follow-up-tp-type">
+                <input type="hidden" id="follow-up-authorized" value="false">
+
+                <!-- 招标项目跟进字段 -->
+                <div id="follow-up-bid-fields" class="hidden">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group">
+                      <label class="form-label">挂网时间 <span class="required">*</span></label>
+                      <input type="date" class="input w-full" id="follow-up-publish-date">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">招标公司 <span class="required">*</span></label>
+                      <input type="text" class="input w-full" id="follow-up-bidding-company" placeholder="请输入招标公司">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">招标编号 <span class="required">*</span></label>
+                      <input type="text" class="input w-full" id="follow-up-bidding-code" placeholder="请输入招标编号">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">授权申请</label>
+                      <button type="button" class="btn btn-outline w-full" id="follow-up-authorize-btn" onclick="applyIntentionAuthorize()">发起授权申请</button>
+                      <p class="text-xs text-success mt-1 hidden" id="follow-up-authorize-hint">授权申请已发起，等待厂家经理审批</p>
+                    </div>
                   </div>
+                  <div class="form-group">
+                    <label class="form-label">招标文件</label>
+                    <div class="border border-dashed border-line rounded-xl p-4 text-center text-sub text-sm bg-panel cursor-pointer" onclick="showToast('请选择招标文件上传')">
+                      点击上传或拖拽招标文件（PDF/图片）
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">招标结果</label>
+                    <div class="radio-group" id="follow-up-bid-result-group">
+                      <label class="radio-card"><input type="radio" name="bidResult" value="1" onchange="updateRadioCards(this);handleBidResultChange()"> 中标</label>
+                      <label class="radio-card"><input type="radio" name="bidResult" value="2" onchange="updateRadioCards(this);handleBidResultChange()"> 未中标</label>
+                    </div>
+                    <p class="text-xs text-warning mt-1 hidden" id="follow-up-bid-result-hint">请先完成授权申请并通过审批</p>
+                  </div>
+                </div>
+
+                <!-- TP/捐赠跟进字段 -->
+                <div id="follow-up-tp-fields" class="hidden">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group">
+                      <label class="form-label">仪器型号 <span class="required">*</span></label>
+                      <input type="text" class="input w-full" id="follow-up-device-model" placeholder="请输入仪器型号">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">预估月试剂消耗量 <span class="required">*</span></label>
+                      <input type="number" class="input w-full" id="follow-up-monthly-volume" placeholder="0" min="0">
+                    </div>
+                    <div class="form-group md:col-span-2">
+                      <label class="form-label">协议编号 <span class="required">*</span></label>
+                      <input type="text" class="input w-full" id="follow-up-agreement-code" placeholder="请输入投放/捐赠协议编号">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">协议扫描件 <span class="required">*</span></label>
+                    <div class="border border-dashed border-line rounded-xl p-4 text-center text-sub text-sm bg-panel cursor-pointer" onclick="showToast('请选择协议扫描件上传')">
+                      点击上传或拖拽协议扫描件（PDF/图片）
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">是否已装机 <span class="required">*</span></label>
+                    <div class="radio-group">
+                      <label class="radio-card"><input type="radio" name="installedFlag" value="1" onchange="updateRadioCards(this);handleInstalledChange()"> 已装机</label>
+                      <label class="radio-card"><input type="radio" name="installedFlag" value="0" onchange="updateRadioCards(this);handleInstalledChange()"> 未装机</label>
+                    </div>
+                  </div>
+                  <div id="follow-up-no-install-fields" class="hidden">
+                    <div class="form-group">
+                      <label class="form-label">未装机原因类型 <span class="required">*</span></label>
+                      <select class="input w-full" id="follow-up-no-install-type">
+                        <option value="">请选择原因类型</option>
+                        <option value="1">院方搁置</option>
+                        <option value="2">场地不足</option>
+                        <option value="3">预算变更</option>
+                        <option value="4">其他</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">未装机详细说明 <span class="required">*</span></label>
+                      <textarea class="input w-full" id="follow-up-no-install-reason" rows="2" placeholder="请填写未装机详细说明"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 常规跟进字段 -->
+                <div id="follow-up-normal-fields" class="hidden">
+                  <div class="form-group">
+                    <label class="form-label">跟进说明 <span class="required">*</span></label>
+                    <textarea class="input w-full" id="follow-up-content" rows="3" placeholder="填写本次跟进的关键信息"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">附件</label>
+                    <div class="border border-dashed border-line rounded-xl p-4 text-center text-sub text-sm bg-panel cursor-pointer" onclick="showToast('请选择文件上传')">
+                      点击上传或拖拽文件至此
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">备注</label>
+                  <textarea class="input w-full" id="follow-up-remark" rows="2" placeholder="补充说明"></textarea>
                 </div>
               </div>
               <div class="intention-modal-footer">
                 <button class="btn btn-ghost" onclick="closeIntentionFollowUp()">取消</button>
-                <button class="btn btn-primary" onclick="saveIntentionFollowUp()">保存</button>
+                <button class="btn btn-primary" onclick="saveIntentionFollowUp()">保存并继续</button>
               </div>
             </div>
           </div>
@@ -3007,9 +3077,9 @@
                 <div class="form-group">
                   <label class="form-label">结束分类</label>
                   <div class="radio-group">
-                    <label class="radio-card selected"><input type="radio" name="endCategory" value="正常结束" checked onchange="updateRadioCards(this)"> 正常结束</label>
-                    <label class="radio-card"><input type="radio" name="endCategory" value="否单" onchange="updateRadioCards(this)"> 否单</label>
-                    <label class="radio-card"><input type="radio" name="endCategory" value="其他" onchange="updateRadioCards(this)"> 其他</label>
+                    <label class="radio-card selected"><input type="radio" name="endCategory" value="1" checked onchange="updateRadioCards(this)"> 正常结束</label>
+                    <label class="radio-card"><input type="radio" name="endCategory" value="2" onchange="updateRadioCards(this)"> 否单</label>
+                    <label class="radio-card"><input type="radio" name="endCategory" value="3" onchange="updateRadioCards(this)"> 其他</label>
                   </div>
                 </div>
                 <div class="form-group">
@@ -3147,55 +3217,12 @@
               </div>
               <div class="intention-modal-footer">
                 <button class="btn btn-ghost" onclick="closeIntentionPushModal()">取消</button>
-                <button class="btn btn-primary" onclick="showToast('推进成功'); closeIntentionPushModal();">确认推进</button>
+                <button class="btn btn-primary" onclick="submitIntentionPush()">确认推进</button>
               </div>
             </div>
           </div>
 
           <!-- 意向手风琴只读详情弹窗 -->
-          <div id="intention-accordion-detail-overlay" class="intention-modal-overlay" onclick="if(event.target===this) closeIntentionAccordionDetail()">
-            <div class="intention-modal intention-modal-wide" onclick="event.stopPropagation()">
-              <div class="card-modal-header"><div class="flex items-start gap-4"><div class="header-avatar">意</div><div class="header-title-wrap"><div class="header-title-row"><h3 class="text-lg font-bold text-ink truncate" id="intention-accordion-detail-project"></h3><span id="intention-accordion-detail-status"></span><span class="badge badge-info" id="intention-accordion-detail-life-stage"></span></div><div class="header-meta"><span class="meta-item"><svg class="icon icon-xs"><use href="#icon-building"/></svg><span id="intention-accordion-detail-customer"></span></span><span class="meta-item"><svg class="icon icon-xs"><use href="#icon-user"/></svg><span id="intention-accordion-detail-owner"></span></span><span class="meta-item"><svg class="icon icon-xs"><use href="#icon-clock"/></svg><span id="intention-accordion-detail-submit-time"></span></span></div></div></div><button class="btn btn-ghost flex-shrink-0" onclick="closeIntentionAccordionDetail()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button></div><div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><div class="kpi-card"><div class="kpi-label">预计金额</div><div class="kpi-value text-ink" id="intention-accordion-detail-kpi-amount">-</div></div><div class="kpi-card"><div class="kpi-label">赢单率</div><div class="kpi-value text-primary" id="intention-accordion-detail-kpi-prob">-</div></div><div class="kpi-card"><div class="kpi-label">保护期剩余</div><div class="kpi-value text-warning" id="intention-accordion-detail-kpi-protect">-</div></div><div class="kpi-card"><div class="kpi-label">当前阶段</div><div class="kpi-value text-success" id="intention-accordion-detail-kpi-stage">-</div></div></div>
-              <div class="intention-modal-body">
-                <div class="mb-4"><div class="progress-steps" id="intention-accordion-detail-progress"></div></div>
-                <div class="bg-panel rounded-xl p-4 mb-4">
-                  <h4 class="font-semibold text-ink mb-3">项目信息</h4>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><div class="text-xs text-sub">项目名称</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-project2">-</div></div>
-                    <div><div class="text-xs text-sub">业务类型</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-business-type">-</div></div>
-                    <div><div class="text-xs text-sub">预计金额</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-amount">-</div></div>
-                    <div><div class="text-xs text-sub">预计采购时间</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-purchase-time">-</div></div>
-                    <div><div class="text-xs text-sub">关键决策人</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-decision-makers">-</div></div>
-                    <div><div class="text-xs text-sub">产品型号</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-product-model">-</div></div>
-                  </div>
-                </div>
-                <div class="bg-panel rounded-xl p-4 mb-4">
-                  <h4 class="font-semibold text-ink mb-3">人员与渠道</h4>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><div class="text-xs text-sub">负责经理</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-owner-name">-</div></div>
-                    <div><div class="text-xs text-sub">报单人</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-reporter-name">-</div></div>
-                    <div><div class="text-xs text-sub">大区经理</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-region-manager">-</div></div>
-                    <div><div class="text-xs text-sub">跟进公司</div><div class="font-medium text-ink mt-1" id="intention-accordion-detail-following-company">-</div></div>
-                  </div>
-                </div>
-                <div class="bg-panel rounded-xl p-4 mb-4">
-                  <h4 class="font-semibold text-ink mb-3">备注</h4>
-                  <div class="text-sm text-ink" id="intention-accordion-detail-remark">无</div>
-                </div>
-                <div class="bg-panel rounded-xl p-4">
-                  <h4 class="font-semibold text-ink mb-3">审批时间线</h4>
-                  <div class="timeline" id="intention-accordion-detail-timeline"></div>
-                </div>
-              </div>
-              <div class="intention-modal-footer">
-                <button class="btn btn-ghost" onclick="closeIntentionAccordionDetail()">关闭</button>
-              </div>
-            </div>
-          </div>
-
-
-        
-
           <!-- AI 分析结论：转化瓶颈 -->
           <div class="card p-4 mb-5">
             <div class="flex items-center gap-2 mb-4">
@@ -16459,13 +16486,80 @@ Content-Type: application/json
     }
 
     /* ===== Intention tabs & view ===== */
+    let intentionPageNum = 1;
+    const intentionPageSizeGrid = 8;
+    const intentionPageSizeList = 12;
+    let intentionDrafts = [];
+    try {
+      const drafts = localStorage.getItem('xqIntentionDrafts');
+      intentionDrafts = drafts ? JSON.parse(drafts) : [];
+      if (!Array.isArray(intentionDrafts)) intentionDrafts = [];
+    } catch (e) { intentionDrafts = []; }
+
+    function getAllIntentionItems() {
+      return Array.from(document.querySelectorAll('#intention-grid .intention-card, #intention-list .intention-row'));
+    }
+
+    function getCurrentIntentionPageSize() {
+      const listEl = document.getElementById('intention-list');
+      return (listEl && !listEl.classList.contains('hidden')) ? intentionPageSizeList : intentionPageSizeGrid;
+    }
+
+    function renderIntentionPagination(total, pageSize) {
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+      if (intentionPageNum > totalPages) intentionPageNum = totalPages;
+      if (intentionPageNum < 1) intentionPageNum = 1;
+      const info = document.getElementById('intention-pagination-info');
+      if (info) info.textContent = '共 ' + total + ' 条 · 每页 ' + pageSize + ' 条 · ' + intentionPageNum + ' / ' + totalPages + ' 页';
+      const container = document.getElementById('intention-pagination');
+      if (!container) return;
+      let html = '<button class="page-btn' + (intentionPageNum === 1 ? ' disabled' : '') + '" onclick="changeIntentionPage(' + (intentionPageNum - 1) + ')" ' + (intentionPageNum === 1 ? 'disabled' : '') + '><svg class="icon icon-sm"><use href="#icon-arrow-left"/></svg></button>';
+      for (let i = 1; i <= totalPages; i++) {
+        html += '<button class="page-btn ' + (i === intentionPageNum ? 'active' : '') + '" onclick="changeIntentionPage(' + i + ')">' + i + '</button>';
+      }
+      html += '<button class="page-btn' + (intentionPageNum === totalPages ? ' disabled' : '') + '" onclick="changeIntentionPage(' + (intentionPageNum + 1) + ')" ' + (intentionPageNum === totalPages ? 'disabled' : '') + '><svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></button>';
+      container.innerHTML = html;
+    }
+
+    function changeIntentionPage(page) {
+      intentionPageNum = page;
+      filterIntention(false);
+    }
+
+    function updateIntentionKpis() {
+      const items = getAllIntentionItems();
+      const now = new Date();
+      const currentMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+      let monthCount = 0, active = 0, pending = 0, conflict = 0, monthEnded = 0, monthNormalEnded = 0;
+      items.forEach(el => {
+        const d = el.dataset;
+        const submitMonth = d.submitTime ? d.submitTime.slice(0, 7) : '';
+        if (submitMonth === currentMonth) monthCount++;
+        if (d.status === '生效中') active++;
+        if (d.status === '审批中' || d.currentStage === 'LEADER_REVIEW' || d.currentStage === 'MANAGER_REVIEW' || d.currentStage === 'DIRECTOR_REVIEW' || d.currentStage === 'BID_AUTHORIZE' || d.currentStage === 'DELIVERY_REVIEW') pending++;
+        if (d.currentStage === 'CONFLICT_PENDING') conflict++;
+        if ((d.currentStage === 'ENDED' || d.status === '已结束') && submitMonth === currentMonth) {
+          monthEnded++;
+          if (d.endType === '1' || d.endType === '正常结束') monthNormalEnded++;
+        }
+      });
+      const winRate = monthEnded > 0 ? Math.round((monthNormalEnded / monthEnded) * 100) : 0;
+      document.getElementById('intention-kpi-month').textContent = monthCount;
+      document.getElementById('intention-kpi-active').textContent = active;
+      document.getElementById('intention-kpi-pending').textContent = pending;
+      document.getElementById('intention-kpi-conflict').textContent = conflict;
+      document.getElementById('intention-kpi-winrate').textContent = winRate + '%';
+    }
+
     function switchIntentionTab(btn) {
       btn.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
+      intentionPageNum = 1;
       filterIntention();
     }
 
-    function filterIntention() {
+    function filterIntention(resetPage) {
+      if (resetPage !== false) intentionPageNum = 1;
       const keyword = (document.getElementById('intention-search')?.value || '').toLowerCase();
       const region = (document.getElementById('intention-region-filter')?.value || '').toLowerCase();
       const product = (document.getElementById('intention-product-filter')?.value || '').toLowerCase();
@@ -16495,7 +16589,9 @@ Content-Type: application/json
         const code = (d.code || '').toLowerCase();
         const customer = (d.customer || '').toLowerCase();
         const project = (d.project || '').toLowerCase();
-        if (keyword && !code.includes(keyword) && !customer.includes(keyword) && !project.includes(keyword)) return false;
+        const owner = (d.ownerName || '').toLowerCase();
+        const businessType = (d.businessType || '').toLowerCase();
+        if (keyword && !code.includes(keyword) && !customer.includes(keyword) && !project.includes(keyword) && !owner.includes(keyword) && !businessType.includes(keyword)) return false;
 
         const regionVal = (d.region || '').toLowerCase();
         const regionText = el.textContent.toLowerCase();
@@ -16532,26 +16628,57 @@ Content-Type: application/json
         return true;
       }
 
-      let gridVisible = 0;
-      document.querySelectorAll('#intention-grid .intention-card').forEach(card => {
-        const ok = matches(card);
-        card.classList.toggle('hidden', !ok);
-        if (ok) gridVisible++;
+      const isList = !document.getElementById('intention-list').classList.contains('hidden');
+      const pageSize = isList ? intentionPageSizeList : intentionPageSizeGrid;
+      let matched = [];
+      const selector = isList ? '#intention-list .intention-row' : '#intention-grid .intention-card';
+      document.querySelectorAll(selector).forEach(el => {
+        const ok = matches(el);
+        el.classList.toggle('hidden', !ok);
+        if (ok) matched.push(el);
       });
 
-      let listVisible = 0;
-      document.querySelectorAll('#intention-list .intention-row').forEach(row => {
-        const ok = matches(row);
-        row.classList.toggle('hidden', !ok);
-        if (ok) listVisible++;
+      // 列表视图同时隐藏/显示对应的详情手风琴行
+      if (isList) {
+        document.querySelectorAll('#intention-list .intention-row').forEach(row => {
+          const acc = row.nextElementSibling;
+          if (acc && acc.classList.contains('detail-accordion')) {
+            acc.classList.toggle('hidden', row.classList.contains('hidden'));
+          }
+        });
+      }
+
+      // 分页
+      const total = matched.length;
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+      if (intentionPageNum > totalPages) intentionPageNum = totalPages;
+      if (intentionPageNum < 1) intentionPageNum = 1;
+      matched.forEach((el, idx) => {
+        const pageIndex = Math.floor(idx / pageSize) + 1;
+        if (pageIndex !== intentionPageNum) el.classList.add('hidden');
       });
+      if (isList) {
+        document.querySelectorAll('#intention-list .intention-row').forEach(row => {
+          const acc = row.nextElementSibling;
+          if (acc && acc.classList.contains('detail-accordion')) {
+            acc.classList.toggle('hidden', row.classList.contains('hidden'));
+            if (row.classList.contains('hidden')) {
+              acc.classList.remove('open');
+              const panel = acc.querySelector('.accordion-panel');
+              if (panel) panel.innerHTML = '';
+            }
+          }
+        });
+      }
+      renderIntentionPagination(total, pageSize);
+      updateIntentionKpis();
 
       const gridEmpty = document.getElementById('intention-grid-empty');
       const listEmpty = document.getElementById('intention-list-empty');
       const gridEl = document.getElementById('intention-grid');
       const listEl = document.getElementById('intention-list');
-      if (gridEmpty) gridEmpty.classList.toggle('hidden', !(gridEl && !gridEl.classList.contains('hidden') && gridVisible === 0));
-      if (listEmpty) listEmpty.classList.toggle('hidden', !(listEl && !listEl.classList.contains('hidden') && listVisible === 0));
+      if (gridEmpty) gridEmpty.classList.toggle('hidden', !(gridEl && !gridEl.classList.contains('hidden') && total === 0));
+      if (listEmpty) listEmpty.classList.toggle('hidden', !(listEl && !listEl.classList.contains('hidden') && total === 0));
     }
 
     function setIntentionView(mode) {
@@ -16568,7 +16695,7 @@ Content-Type: application/json
         listBtn.classList.add('btn-outline');
         listBtn.classList.remove('btn-primary');
         closeAllDetailAccordions();
-  } else {
+      } else {
         gridEl.classList.add('hidden');
         listEl.classList.remove('hidden');
         gridBtn.classList.add('btn-outline');
@@ -16576,6 +16703,8 @@ Content-Type: application/json
         listBtn.classList.add('btn-primary');
         listBtn.classList.remove('btn-outline');
       }
+      intentionPageNum = 1;
+      filterIntention(false);
     }
 
     function stageLabel(stage) {
@@ -16654,14 +16783,13 @@ Content-Type: application/json
 
     function openIntentionModal(el) {
       const d = el.dataset;
-            document.getElementById('modal-intention-project').textContent = d.project;
+      window.currentIntentionData = d;
+      window.currentIntentionElement = el;
+      document.getElementById('modal-intention-project').textContent = d.project;
       document.getElementById('modal-intention-project2').textContent = d.project;
-      document.getElementById('modal-intention-customer').textContent = d.customer;
       document.getElementById('modal-intention-customer2').textContent = d.customer;
-      document.getElementById('modal-intention-owner').textContent = '负责经理：' + (d.ownerName || '-');
       document.getElementById('modal-intention-owner-name').textContent = d.ownerName || '-';
       document.getElementById('modal-intention-reporter-name').textContent = d.reporterName || '-';
-      document.getElementById('modal-intention-submit-time').textContent = '提交：' + (d.submitTime || '-');
       document.getElementById('modal-intention-status').innerHTML = '<span class="badge ' + d.statusClass + '">' + d.status + '</span>';
 
       document.getElementById('modal-intention-life-stage').textContent = d.lifeStage || '-';
@@ -16754,6 +16882,11 @@ Content-Type: application/json
         todoNote = '项目已结束，仅可查看或导出。';
         todoActions = '<button class="btn btn-ghost" onclick="exportIntention(\'' + d.code + '\')">导出</button>';
         footerActions = '<button class="btn btn-ghost" onclick="exportIntention(\'' + d.code + '\')">导出</button>';
+      } else if (d.currentStage === 'DRAFT') {
+        todoTitle = '草稿待提交';
+        todoNote = '完善信息后可提交审批。';
+        todoActions = '<button class="btn btn-primary" onclick="openIntentionCreate(\'edit\')">编辑</button><button class="btn btn-ghost" onclick="showToast(\'草稿已删除\')">删除</button>';
+        footerActions = '<button class="btn btn-primary" onclick="openIntentionCreate(\'edit\')">编辑</button>';
       } else if (d.currentStage === 'LEADER_REVIEW') {
         todoTitle = '等待上级领导初审';
         todoNote = '请在审批中心及时处理该意向。';
@@ -16890,14 +17023,41 @@ Content-Type: application/json
 
     function openIntentionCreate(mode) {
       createIntentionStep = 1;
-      document.getElementById('intention-create-title').textContent = mode === 'resubmit' ? '重新提交意向' : '新建意向';
+      const isResubmit = mode === 'resubmit';
+      const isEdit = mode === 'edit';
+      document.getElementById('intention-create-title').textContent = isResubmit ? '重新提交意向' : (isEdit ? '编辑意向' : '新建意向');
       document.getElementById('intention-create-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
+      resetIntentionCreate();
+      if (isResubmit || isEdit) {
+        const d = window.currentIntentionData || {};
+        document.getElementById('create-customer').value = d.customerId || '';
+        document.getElementById('create-project').value = d.project || '';
+        document.getElementById('create-brand').value = d.brandName || '';
+        document.getElementById('create-product').value = d.productModel || '';
+        const amountText = (d.amount || '').replace(/[^\d.]/g, '');
+        document.getElementById('create-amount').value = amountText || '';
+        document.getElementById('create-quantity').value = d.quantity || '1';
+        document.getElementById('create-purchase-time').value = d.purchaseTime || '';
+        document.getElementById('create-following-company').value = d.followingCompany || '';
+        document.getElementById('create-is-new-dealer').checked = d.isNewDealer === 'true';
+        document.getElementById('create-remark').value = d.remark || '';
+        document.querySelectorAll('input[name="businessType"]').forEach(r => { r.checked = r.value === (d.businessType || '招标'); });
+        document.querySelectorAll('input[name="tpType"]').forEach(r => { r.checked = r.value === (d.tpType || '否'); });
+        const decisionMakers = (d.decisionMakers || '').split(',').filter(Boolean);
+        document.querySelectorAll('#intention-create-overlay .checkbox-card input[type="checkbox"]').forEach(cb => {
+          cb.checked = decisionMakers.includes(cb.value);
+        });
+      } else {
+        // default purchase time to next month
+        const d = new Date();
+        d.setMonth(d.getMonth() + 1);
+        document.getElementById('create-purchase-time').value = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+      }
+      updateAllRadioCards();
+      updateAllCheckboxCards();
+      toggleTpHint();
       setIntentionStep(1);
-      // default purchase time to next month
-      const d = new Date();
-      d.setMonth(d.getMonth() + 1);
-      document.getElementById('create-purchase-time').value = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
     }
 
     function closeIntentionCreate() {
@@ -17035,30 +17195,135 @@ Content-Type: application/json
     }
 
     function saveIntentionDraft() {
-      if (!validateCreateStep1()) return;
+      const customerSel = document.getElementById('create-customer');
+      const customerText = customerSel.value ? customerSel.options[customerSel.selectedIndex].text : '';
+      const bt = document.querySelector('input[name="businessType"]:checked');
+      const tp = document.querySelector('input[name="tpType"]:checked');
+      const decisionMakers = Array.from(document.querySelectorAll('#intention-create-overlay .checkbox-card input[type="checkbox"]:checked')).map(cb => cb.value).join(',');
+      const draft = {
+        intentionId: 'DRAFT-' + Date.now(),
+        customerId: customerSel.value,
+        customerName: customerText,
+        intentionName: document.getElementById('create-project').value.trim(),
+        brandName: document.getElementById('create-brand').value,
+        productModel: document.getElementById('create-product').value,
+        amount: document.getElementById('create-amount').value,
+        quantity: document.getElementById('create-quantity').value,
+        businessType: bt ? bt.value : '招标',
+        tpType: tp ? tp.value : '否',
+        purchaseTime: document.getElementById('create-purchase-time').value,
+        decisionMakers: decisionMakers,
+        followingCompany: document.getElementById('create-following-company').value,
+        isNewDealer: document.getElementById('create-is-new-dealer').checked,
+        remark: document.getElementById('create-remark').value,
+        status: '草稿',
+        statusClass: 'badge-gray',
+        currentStage: 'DRAFT',
+        createTime: new Date().toISOString()
+      };
+      intentionDrafts.unshift(draft);
+      localStorage.setItem('xqIntentionDrafts', JSON.stringify(intentionDrafts));
       showToast('草稿已保存');
       closeIntentionCreate();
+      renderIntentionDraftList();
+      updateIntentionKpis();
+    }
+
+    function renderIntentionDraftList() {
+      // 草稿列表渲染：当前原型数据为静态，草稿以内存/LocalStorage 形式保留，供后续真实对接时展示
+      const grid = document.getElementById('intention-grid');
+      if (!grid || intentionDrafts.length === 0) return;
+      intentionDrafts.forEach(draft => {
+        const exists = grid.querySelector('.intention-card[data-code="' + draft.intentionId + '"]');
+        if (exists) return;
+        const card = document.createElement('div');
+        card.className = 'card card-hover p-4 cursor-pointer intention-card';
+        card.dataset.code = draft.intentionId;
+        card.dataset.status = '草稿';
+        card.dataset.statusClass = 'badge-gray';
+        card.dataset.project = draft.intentionName;
+        card.dataset.customer = draft.customerName;
+        card.dataset.customerId = draft.customerId;
+        card.dataset.amount = draft.amount ? '¥ ' + draft.amount + '万' : '-';
+        card.dataset.prob = '-';
+        card.dataset.progress = '0';
+        card.dataset.progressColor = 'bg-gray';
+        card.dataset.date = '-';
+        card.dataset.currentStage = 'DRAFT';
+        card.dataset.businessType = draft.businessType;
+        card.dataset.tpType = draft.tpType;
+        card.dataset.purchaseTime = draft.purchaseTime;
+        card.dataset.decisionMakers = draft.decisionMakers;
+        card.dataset.ownerName = '我';
+        card.dataset.reporterName = '我';
+        card.dataset.submitTime = draft.createTime.replace('T', ' ').slice(0, 16);
+        card.dataset.reportDate = draft.createTime.slice(0, 10);
+        card.dataset.protectDeadline = '-';
+        card.dataset.protectionDays = '-';
+        card.dataset.protectionStatus = 'normal';
+        card.dataset.remark = draft.remark;
+        card.dataset.isNewDealer = draft.isNewDealer ? 'true' : 'false';
+        card.dataset.followingCompany = draft.followingCompany;
+        card.dataset.productModel = draft.productModel;
+        card.dataset.quantity = draft.quantity;
+        card.dataset.region = '-';
+        card.dataset.province = '-';
+        card.dataset.customerLevel = '-';
+        card.dataset.regionManager = '-';
+        card.dataset.lifeStage = '意向';
+        card.dataset.lifeStageIndex = '1';
+        card.dataset.lifeDwell = '0';
+        card.dataset.conflictStatus = 'none';
+        card.innerHTML = '<div class="flex items-start justify-between mb-3"><span class="badge badge-gray">草稿</span><span class="text-xs text-placeholder">' + draft.intentionId + '</span></div><div class="font-semibold text-ink mb-1">' + (draft.intentionName || '未命名项目') + '</div><div class="text-sub text-sm mb-2">客户：' + (draft.customerName || '-') + '</div><div class="flex items-center justify-between pt-3 border-t border-line"><span class="text-xs text-placeholder">草稿</span><button class="btn btn-primary text-xs" onclick="event.stopPropagation();openIntentionCreate(\'edit\')">编辑</button></div>';
+        card.onclick = function(e) { if (e.target.closest('button')) return; openIntentionModal(this); };
+        grid.insertBefore(card, grid.firstChild);
+      });
+      filterIntention(false);
     }
 
     function submitIntentionCreate() {
-      // 模拟冲突检测：选择云南省肿瘤医院时触发冲突弹窗
       const customer = document.getElementById('create-customer').value;
-      if (customer === '1') {
-        openIntentionConflict();
+      const project = document.getElementById('create-project').value.trim();
+      const conflict = checkIntentionConflict(customer, project);
+      if (conflict) {
+        openIntentionConflict(conflict);
         return;
       }
       showToast('提交成功，等待审批');
       closeIntentionCreate();
     }
 
+    function checkIntentionConflict(customerId, projectName) {
+      if (!customerId || !projectName) return null;
+      const items = getAllIntentionItems();
+      for (const el of items) {
+        const d = el.dataset;
+        if (d.customerId === customerId && d.project && d.project.trim() === projectName && d.currentStage !== 'ENDED' && d.currentStage !== 'REJECTED' && d.status !== '已结束' && d.status !== '已驳回') {
+          const protectInfo = getProtectInfo(d.protectDeadline);
+          return {
+            originalCustomer: d.customer || '-',
+            originalProject: d.project || '-',
+            originalReporter: d.reporterName || '-',
+            originalTime: d.submitTime || '-',
+            originalRemaining: protectInfo.text,
+            originalStage: stageLabel(d.currentStage),
+            originalElement: el
+          };
+        }
+      }
+      return null;
+    }
+
     /* ===== Conflict detection & arbitration ===== */
-    function openIntentionConflict() {
-      document.getElementById('conflict-original-customer').textContent = '云南省肿瘤医院 · 检验科';
-      document.getElementById('conflict-original-project').textContent = '云南省肿瘤医院血球项目';
-      document.getElementById('conflict-original-reporter').textContent = '张伟';
-      document.getElementById('conflict-original-time').textContent = '2026-07-20 09:30';
-      document.getElementById('conflict-original-remaining').textContent = '剩余 68 天';
-      document.getElementById('conflict-original-stage').textContent = '意向跟进';
+    function openIntentionConflict(conflict) {
+      conflict = conflict || {};
+      document.getElementById('conflict-original-customer').textContent = conflict.originalCustomer || '云南省肿瘤医院 · 检验科';
+      document.getElementById('conflict-original-project').textContent = conflict.originalProject || '云南省肿瘤医院血球项目';
+      document.getElementById('conflict-original-reporter').textContent = conflict.originalReporter || '张伟';
+      document.getElementById('conflict-original-time').textContent = conflict.originalTime || '2026-07-20 09:30';
+      document.getElementById('conflict-original-remaining').textContent = conflict.originalRemaining || '剩余 68 天';
+      document.getElementById('conflict-original-stage').textContent = conflict.originalStage || '意向跟进';
+      window.conflictOriginalElement = conflict.originalElement || null;
       document.getElementById('intention-conflict-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
@@ -17070,8 +17335,8 @@ Content-Type: application/json
 
     function viewOriginalIntentionFromConflict() {
       closeIntentionConflict();
-      const card = document.querySelector('.card[data-code="INT-2026072501"]');
-      if (card) openIntentionModal(card);
+      const el = window.conflictOriginalElement || document.querySelector('.intention-card[data-code="INT-2026072501"]');
+      if (el) openIntentionModal(el);
     }
 
     function continueConflictSubmit() {
@@ -17099,11 +17364,47 @@ Content-Type: application/json
 
     /* ===== Follow up, End, Approval, Filter helpers ===== */
     function openIntentionFollowUp(code) {
-      document.getElementById('follow-up-stage').value = '意向';
+      const el = code ? document.querySelector('.intention-card[data-code="' + code + '"], .intention-row[data-code="' + code + '"], .accordion-panel [data-code="' + code + '"]') : (window.currentIntentionElement || null);
+      const d = el ? el.dataset : (window.currentIntentionData || {});
+      window.currentIntentionElement = el;
+      window.currentIntentionData = d;
+      document.getElementById('follow-up-code').value = code || d.code || '';
+      document.getElementById('follow-up-business-type').value = d.businessType || '非招标';
+      document.getElementById('follow-up-tp-type').value = d.tpType || '否';
+      document.getElementById('follow-up-authorized').value = (d.currentStage === 'BID_AUTHORIZE' || d.currentStage === 'BID_RESULT' || d.currentStage === 'DELIVERY_REVIEW' || d.currentStage === 'END_CATEGORY' || d.currentStage === 'ENDED') ? 'true' : 'false';
+
+      // reset fields
+      document.getElementById('follow-up-publish-date').value = '';
+      document.getElementById('follow-up-bidding-company').value = '';
+      document.getElementById('follow-up-bidding-code').value = '';
+      document.querySelectorAll('input[name="bidResult"]').forEach(r => { r.checked = false; r.disabled = true; });
+      document.getElementById('follow-up-bid-result-hint').classList.remove('hidden');
+      document.getElementById('follow-up-authorize-hint').classList.add('hidden');
+      document.getElementById('follow-up-authorize-btn').classList.remove('hidden');
+      document.getElementById('follow-up-device-model').value = '';
+      document.getElementById('follow-up-monthly-volume').value = '';
+      document.getElementById('follow-up-agreement-code').value = '';
+      document.querySelectorAll('input[name="installedFlag"]').forEach(r => r.checked = false);
+      document.getElementById('follow-up-no-install-type').value = '';
+      document.getElementById('follow-up-no-install-reason').value = '';
+      document.getElementById('follow-up-no-install-fields').classList.add('hidden');
       document.getElementById('follow-up-content').value = '';
-      document.getElementById('follow-up-date').value = '';
-      document.getElementById('follow-up-prob').value = 50;
-      document.getElementById('follow-up-prob-text').textContent = '50%';
+      document.getElementById('follow-up-remark').value = '';
+      updateAllRadioCards();
+
+      // show fields by business type
+      const isBid = d.businessType === '招标';
+      const isTp = d.tpType === 'TP/投放' || d.tpType === '捐赠';
+      document.getElementById('follow-up-bid-fields').classList.toggle('hidden', !isBid);
+      document.getElementById('follow-up-tp-fields').classList.toggle('hidden', !isTp);
+      document.getElementById('follow-up-normal-fields').classList.toggle('hidden', isBid || isTp);
+
+      const authorized = document.getElementById('follow-up-authorized').value === 'true';
+      if (isBid && authorized) {
+        document.querySelectorAll('input[name="bidResult"]').forEach(r => r.disabled = false);
+        document.getElementById('follow-up-bid-result-hint').classList.add('hidden');
+      }
+
       document.getElementById('intention-follow-up-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
@@ -17111,9 +17412,74 @@ Content-Type: application/json
       document.getElementById('intention-follow-up-overlay').classList.remove('open');
       document.body.style.overflow = '';
     }
+    function applyIntentionAuthorize() {
+      document.getElementById('follow-up-authorized').value = 'true';
+      document.querySelectorAll('input[name="bidResult"]').forEach(r => r.disabled = false);
+      document.getElementById('follow-up-bid-result-hint').classList.add('hidden');
+      document.getElementById('follow-up-authorize-btn').classList.add('hidden');
+      document.getElementById('follow-up-authorize-hint').classList.remove('hidden');
+      showToast('授权申请已发起，等待厂家经理审批');
+    }
+    function handleBidResultChange() {
+      const val = document.querySelector('input[name="bidResult"]:checked')?.value;
+      if (val === '2') {
+        showToast('未中标，将进入结束分类');
+      } else if (val === '1') {
+        showToast('中标，将进入送货审批流程');
+      }
+    }
+    function handleInstalledChange() {
+      const val = document.querySelector('input[name="installedFlag"]:checked')?.value;
+      document.getElementById('follow-up-no-install-fields').classList.toggle('hidden', val !== '0');
+      if (val === '1') showToast('已装机，将直接进入结束分类');
+    }
     function saveIntentionFollowUp() {
-      const content = document.getElementById('follow-up-content').value.trim();
-      if (!content) { alert('请填写跟进内容'); return; }
+      const businessType = document.getElementById('follow-up-business-type').value;
+      const tpType = document.getElementById('follow-up-tp-type').value;
+      if (businessType === '招标') {
+        const publishDate = document.getElementById('follow-up-publish-date').value.trim();
+        const biddingCompany = document.getElementById('follow-up-bidding-company').value.trim();
+        const biddingCode = document.getElementById('follow-up-bidding-code').value.trim();
+        if (!publishDate) { alert('请填写挂网时间'); return; }
+        if (!biddingCompany) { alert('请填写招标公司'); return; }
+        if (!biddingCode) { alert('请填写招标编号'); return; }
+        const bidResult = document.querySelector('input[name="bidResult"]:checked')?.value;
+        if (bidResult === '2') {
+          showToast('跟进已保存，招标未中标，请进行结束分类');
+          closeIntentionFollowUp();
+          openIntentionEnd(document.getElementById('follow-up-code').value);
+          return;
+        }
+        if (bidResult === '1') {
+          showToast('跟进已保存，中标后进入送货审批');
+          closeIntentionFollowUp();
+          return;
+        }
+      } else if (tpType === 'TP/投放' || tpType === '捐赠') {
+        const deviceModel = document.getElementById('follow-up-device-model').value.trim();
+        const monthlyVolume = document.getElementById('follow-up-monthly-volume').value.trim();
+        const agreementCode = document.getElementById('follow-up-agreement-code').value.trim();
+        const installedFlag = document.querySelector('input[name="installedFlag"]:checked')?.value;
+        if (!deviceModel) { alert('请填写仪器型号'); return; }
+        if (!monthlyVolume) { alert('请填写预估月试剂消耗量'); return; }
+        if (!agreementCode) { alert('请填写协议编号'); return; }
+        if (!installedFlag) { alert('请选择是否已装机'); return; }
+        if (installedFlag === '0') {
+          const reasonType = document.getElementById('follow-up-no-install-type').value.trim();
+          const reason = document.getElementById('follow-up-no-install-reason').value.trim();
+          if (!reasonType) { alert('请选择未装机原因类型'); return; }
+          if (!reason) { alert('请填写未装机详细说明'); return; }
+        }
+        if (installedFlag === '1') {
+          showToast('跟进已保存，已装机，请进行结束分类');
+          closeIntentionFollowUp();
+          openIntentionEnd(document.getElementById('follow-up-code').value);
+          return;
+        }
+      } else {
+        const content = document.getElementById('follow-up-content').value.trim();
+        if (!content) { alert('请填写跟进说明'); return; }
+      }
       showToast('跟进已录入');
       closeIntentionFollowUp();
     }
@@ -17130,8 +17496,11 @@ Content-Type: application/json
       document.body.style.overflow = '';
     }
     function submitIntentionEnd() {
+      const endTypeEl = document.querySelector('input[name="endCategory"]:checked');
+      const endType = endTypeEl ? endTypeEl.value : '';
       const remark = document.getElementById('end-remark').value.trim();
-      if (!remark) { alert('请填写备注'); return; }
+      if (!endType) { alert('请选择结束分类'); return; }
+      if ((endType === '2' || endType === '3') && !remark) { alert('选择「否单」或「其他」时必须填写备注'); return; }
       showToast('意向已结束');
       closeIntentionEnd();
     }
@@ -17229,7 +17598,7 @@ Content-Type: application/json
         const decisionMakers = d.decisionMakers ? d.decisionMakers.replace(/,/g, '、') : '-';
         const newDealerHtml = d.isNewDealer === 'true' ? '<span class="badge badge-danger">新</span><span class="text-xs text-sub ml-1">新增炒单商</span>' : '<span class="text-sub text-sm">-</span>';
         const attachments = (d.attachments || '').split(',').filter(Boolean);
-        const attachmentHtml = attachments.length ? attachments.map(name => '<div class="flex items-center justify-between p-2 rounded-lg bg-card border border-line"><div class="flex items-center gap-2"><svg class="icon icon-sm text-sub"><use href="#icon-download"/></svg><span class="text-sm text-ink">' + name + '</span></div><button class="btn btn-ghost text-xs" onclick="showToast(`下载`)">下载</button></div>').join('') : '<div class="text-sub text-sm">暂无附件</div>';
+        const attachmentHtml = attachments.length ? attachments.map(name => '<div class="flex items-center justify-between p-2 rounded-lg bg-card border border-line"><div class="flex items-center gap-2"><svg class="icon icon-sm text-sub"><use href="#icon-download"/></svg><span class="text-sm text-ink">' + name + '</span></div><button class="btn btn-ghost text-xs" onclick="event.stopPropagation();showToast(\'开始下载：' + name + '\')">下载</button></div>').join('') : '<div class="text-sub text-sm">暂无附件</div>';
         const history = (d.approvalHistory || '').split(';').filter(Boolean).map(rec => {
           const parts = rec.split('|');
           const node = parts[0] || '';
@@ -17242,28 +17611,66 @@ Content-Type: application/json
           return '<div class="timeline-item"><div class="timeline-dot ' + dotClass + '"></div><div class="flex-1 min-w-0"><div class="text-sm ' + titleClass + '">' + node + ' · ' + action + '</div>' + (comment ? '<div class="text-xs text-sub mt-0.5">' + comment + '</div>' : '') + '<div class="text-xs text-placeholder mt-0.5">' + time + '</div></div></div>';
         }).join('');
         const protectBanner = '<div class="flex items-center justify-between gap-2 rounded-lg p-2.5 border mb-3 ' + protectInfo.bannerBg + ' ' + protectInfo.bannerBorder + ' ' + protectInfo.bannerText + '"><div class="flex items-center gap-2 min-w-0"><svg class="icon icon-md ' + protectInfo.iconColor + ' flex-shrink-0"><use href="#icon-clock"/></svg><span class="text-sm font-medium truncate">授权保护期：' + (d.protectDeadline && d.protectDeadline !== '-' ? d.protectDeadline : '无') + '</span></div><span class="badge ' + protectInfo.badgeClass + ' flex-shrink-0">' + protectInfo.text + '</span></div>';
-        let footerActions = '';
-        if (d.status === '被驳回') footerActions = '<button class="btn btn-primary" onclick="openIntentionCreate(\'resubmit\');event.stopPropagation();">重新提交</button>';
-        else if (d.status === '已成交' || d.status === '已结束') footerActions = '<button class="btn btn-ghost" onclick="openIntentionAccordionDetail()">查看详情</button>';
-        else footerActions = '<button class="btn btn-primary" onclick="openIntentionPushModal()">推进</button>';
-        return renderCardModalHeader({
-          iconText: '意',
-          title: d.project,
-          badges: [{ class: d.statusClass, text: d.status }, { class: 'badge-info', text: d.lifeStage || '-' }],
-          metaItems: [
-            { icon: 'building', text: d.customer || '-' },
-            { icon: 'user', text: '负责：' + (d.ownerName || '-') },
-            { icon: 'clock', text: d.submitTime || '-' }
-          ],
-          rightHtml: '',
-          kpiItems: [
-            { label: '预计金额', value: d.amount || '-' },
-            { label: '赢单率', value: d.prob || '-', color: 'text-primary' },
-            { label: '保护期剩余', value: (d.protectionDays || '-') + ' 天', color: 'text-warning' },
-            { label: '当前阶段', value: stageLabel(d.currentStage), color: 'text-success' }
-          ]
-        }) +
-        protectBanner +
+
+        // 当前待办与操作按钮（与详情弹窗一致）
+        let todoTitle = '', todoNote = '', actions = '';
+        if (d.status === '被驳回') {
+          todoTitle = '<span class="text-danger font-medium">单据已被驳回</span>';
+          todoNote = '驳回原因：' + (d.remark || '请查看审批时间线');
+          actions = '<button class="btn btn-primary" onclick="event.stopPropagation();openIntentionCreate(\'resubmit\')">重新提交</button><button class="btn btn-ghost" onclick="event.stopPropagation();openArbitrationLetter(\'' + d.code + '\')">查看裁决书</button>';
+        } else if (d.status === '已结束') {
+          todoTitle = '<span class="text-sub font-medium">流程已闭环</span>';
+          todoNote = '项目已结束，仅可查看或导出。';
+          actions = '<button class="btn btn-ghost" onclick="event.stopPropagation();exportIntention(\'' + d.code + '\')">导出</button>';
+        } else if (d.currentStage === 'DRAFT') {
+          todoTitle = '草稿待提交';
+          todoNote = '完善信息后可提交审批。';
+          actions = '<button class="btn btn-primary" onclick="event.stopPropagation();openIntentionCreate(\'edit\')">编辑</button>';
+        } else if (d.currentStage === 'LEADER_REVIEW') {
+          todoTitle = '等待上级领导初审';
+          todoNote = '请在审批中心及时处理该意向。';
+          actions = '<button class="btn btn-primary" onclick="event.stopPropagation();openIntentionApproval(\'' + d.code + '\', \'leader\')">审批</button>';
+        } else if (['CONFLICT_PENDING','MANAGER_REVIEW','DIRECTOR_REVIEW','ARBITRATE_COMPLETED','ARBITRATE_REJECTED'].includes(d.currentStage)) {
+          const cstat = d.conflictStatus || 'none';
+          if (cstat === 'pending') { todoTitle = '等待提交厂家经理审批'; todoNote = '与「' + (d.conflictWith || '-') + '」的意向冲突，需启动撞单裁决流程。'; }
+          else if (cstat === 'manager_review') { todoTitle = '厂家经理审批中'; todoNote = '等待厂家经理审批，通过后进入厂家负责人审批。'; }
+          else if (cstat === 'director_review') { todoTitle = '厂家负责人审批中'; todoNote = '厂家经理已通过，等待厂家负责人并行审批。'; }
+          else if (cstat === 'completed') { todoTitle = '撞单裁决已完成'; todoNote = '裁决结果：' + (d.arbitrateResult || '-') + '。'; }
+          else if (cstat === 'rejected') { todoTitle = '撞单裁决已驳回'; todoNote = '厂家经理/负责人已驳回，当前意向无效。'; }
+          else { todoTitle = '等待厂家经理/负责人裁决'; todoNote = '双人并行审批，任一驳回则当前意向结束。'; }
+          if (cstat === 'pending' || cstat === 'manager_review' || cstat === 'director_review') {
+            actions = '<button class="btn btn-primary" onclick="event.stopPropagation();openIntentionArbitrateFromRow()">裁决</button>';
+          } else {
+            actions = '<button class="btn btn-primary" onclick="event.stopPropagation();openArbitrationLetter(\'' + d.code + '\')">查看裁决书</button>';
+          }
+        } else if (d.currentStage === 'FOLLOW_UP' || d.currentStage === 'BID_PUBLISHED' || d.currentStage === 'TP_FOLLOW_UP') {
+          todoTitle = '进入统一跟进阶段';
+          todoNote = '根据业务类型录入招标、TP/捐赠或常规跟进。';
+          actions = '<button class="btn btn-primary" onclick="event.stopPropagation();openIntentionFollowUp(\'' + d.code + '\')">录入跟进</button><button class="btn btn-ghost" onclick="event.stopPropagation();openIntentionEnd(\'' + d.code + '\')">结束意向</button>';
+        } else if (d.currentStage === 'BID_AUTHORIZE') {
+          todoTitle = '等待厂家经理招标授权审批';
+          todoNote = '授权通过后方可录入招标结果。';
+          actions = '<button class="btn btn-primary" onclick="event.stopPropagation();openIntentionApproval(\'' + d.code + '\', \'authorize\')">审批</button>';
+        } else if (d.currentStage === 'DELIVERY_REVIEW') {
+          todoTitle = '等待送货审批';
+          todoNote = '中标后送货审批人进行专项审批。';
+          actions = '<button class="btn btn-primary" onclick="event.stopPropagation();openIntentionApproval(\'' + d.code + '\', \'delivery\')">审批</button>';
+        } else if (d.currentStage === 'END_CATEGORY') {
+          todoTitle = '等待结束分类';
+          todoNote = '选择正常结束/否单/其他并填写备注。';
+          actions = '<button class="btn btn-primary" onclick="event.stopPropagation();openIntentionEnd(\'' + d.code + '\')">结束分类</button>';
+        } else {
+          todoTitle = '暂无待办';
+          todoNote = '';
+          actions = '<button class="btn btn-ghost" onclick="event.stopPropagation();openIntentionPushModal()">推进</button>';
+        }
+
+        const header = '<div class="flex items-start justify-between gap-3 mb-3"><div class="min-w-0"><h3 class="text-base font-bold text-ink truncate">' + d.project + '</h3><p class="text-sub text-sm mt-1"><span class="badge ' + d.statusClass + '">' + d.status + '</span><span class="badge badge-info ml-2">' + (d.lifeStage || '-') + '</span></p><p class="text-sub text-xs mt-1">' + (d.customer || '-') + ' · 负责：' + (d.ownerName || '-') + ' · ' + (d.submitTime || '-') + '</p></div><button class="btn btn-ghost flex-shrink-0" onclick="event.stopPropagation();closeAllDetailAccordions()"><svg class="icon icon-md"><use href="#icon-close"/></svg></button></div>';
+        const kpis = '<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3"><div class="kpi-card"><div class="kpi-label">预计金额</div><div class="kpi-value text-ink">' + (d.amount || '-') + '</div></div><div class="kpi-card"><div class="kpi-label">赢单率</div><div class="kpi-value text-primary">' + (d.prob || '-') + '</div></div><div class="kpi-card"><div class="kpi-label">保护期剩余</div><div class="kpi-value text-warning">' + (d.protectionDays || '-') + ' 天</div></div><div class="kpi-card"><div class="kpi-label">当前阶段</div><div class="kpi-value text-success">' + stageLabel(d.currentStage) + '</div></div></div>';
+        const progress = '<div class="mb-3">' + renderIntentionProgressSteps(d.currentStage, d.status) + '</div>';
+        const todoPanel = '<div class="bg-panel rounded-xl p-3 mb-3"><h5 class="font-semibold text-ink mb-2 text-sm">当前待办</h5><div class="mb-2"><span class="badge badge-primary">' + stageLabel(d.currentStage) + '</span></div><div class="text-sm text-ink mb-1">' + todoTitle + '</div><div class="text-xs text-sub mb-3">' + todoNote + '</div><div class="flex flex-wrap gap-2">' + actions + '</div></div>';
+
+        return header + kpis + progress + protectBanner +
         '<div class="grid grid-cols-1 xl:grid-cols-2 gap-3 mb-3">' +
           section('客户信息', field('意向医院', d.customer) + field('客户等级', d.customerLevel || '-') + field('省份', d.province || '-') + field('地区', d.region || '-')) +
           section('项目信息', field('项目名称', d.project) + field('业务类型', d.businessType || '-') + field('TP / 捐赠', d.tpType || '-') + field('预计采购时间', d.purchaseTime || '-') + field('预计金额', d.amount) + field('关键决策人', decisionMakers)) +
@@ -17274,8 +17681,27 @@ Content-Type: application/json
         '</div>' +
         '<div class="bg-panel rounded-xl p-3 mb-3"><h5 class="font-semibold text-ink mb-2 text-sm">备注</h5><div class="text-sm text-ink">' + (d.remark || '无') + '</div></div>' +
         '<div class="bg-panel rounded-xl p-3 mb-3"><h5 class="font-semibold text-ink mb-2 text-sm">附件与资料</h5><div class="space-y-2">' + attachmentHtml + '</div></div>' +
-        '<div class="bg-panel rounded-xl p-3 mb-3"><h5 class="font-semibold text-ink mb-2 text-sm">审批时间线</h5><div class="timeline">' + (history || '<div class="text-sub text-sm">暂无审批记录</div>') + '</div></div>' +
-        '<div class="flex justify-end gap-2 pt-2 border-t border-line">' + footerActions + renderAccordionCloseBtn() + '</div>';
+        '<div class="grid grid-cols-1 xl:grid-cols-2 gap-3 mb-3">' +
+          '<div class="bg-panel rounded-xl p-3"><h5 class="font-semibold text-ink mb-2 text-sm">审批时间线</h5><div class="timeline">' + (history || '<div class="text-sub text-sm">暂无审批记录</div>') + '</div></div>' +
+          todoPanel +
+        '</div>' +
+        '<div class="flex justify-end gap-2 pt-2 border-t border-line">' + actions + '<button class="btn btn-ghost" onclick="event.stopPropagation();closeAllDetailAccordions()">收起</button></div>';
+      });
+    }
+
+    function openIntentionArbitrateFromRow() {
+      const d = window.currentIntentionData || {};
+      openIntentionArbitrate({
+        currentProject: d.project,
+        currentCustomer: d.customer,
+        currentReporter: d.reporterName,
+        currentTime: d.submitTime,
+        currentStage: stageLabel(d.currentStage),
+        originalProject: d.conflictOpponentProject,
+        originalCustomer: d.customer,
+        originalReporter: d.conflictOpponentOwner,
+        originalTime: d.conflictOpponentTime,
+        originalStage: '生效中'
       });
     }
 
@@ -17292,49 +17718,25 @@ Content-Type: application/json
       document.getElementById('intention-push-overlay').classList.remove('open');
       document.body.style.overflow = '';
     }
-
-    function openIntentionAccordionDetail() {
+    function submitIntentionPush() {
+      const target = document.getElementById('intention-push-target').value;
+      const remark = document.getElementById('intention-push-remark').value.trim();
+      if (!target) { alert('请选择推进目标阶段'); return; }
       const d = window.currentIntentionData || {};
-      document.getElementById('intention-accordion-detail-project').textContent = d.project || '-';
-      document.getElementById('intention-accordion-detail-project2').textContent = d.project || '-';
-      document.getElementById('intention-accordion-detail-customer').textContent = d.customer || '-';
-      document.getElementById('intention-accordion-detail-status').innerHTML = '<span class="badge ' + (d.statusClass || 'badge-gray') + '">' + (d.status || '-') + '</span>';
-      document.getElementById('intention-accordion-detail-life-stage').textContent = d.lifeStage || '-';
-      document.getElementById('intention-accordion-detail-owner').textContent = '负责经理：' + (d.ownerName || '-');
-      document.getElementById('intention-accordion-detail-owner-name').textContent = d.ownerName || '-';
-      document.getElementById('intention-accordion-detail-reporter-name').textContent = d.reporterName || '-';
-      document.getElementById('intention-accordion-detail-submit-time').textContent = '提交：' + (d.submitTime || '-');
-      document.getElementById('intention-accordion-detail-kpi-amount').textContent = d.amount || '-';
-      document.getElementById('intention-accordion-detail-kpi-prob').textContent = d.prob || '-';
-      document.getElementById('intention-accordion-detail-kpi-protect').textContent = (d.protectionDays || '-') + ' 天';
-      document.getElementById('intention-accordion-detail-kpi-stage').textContent = stageLabel(d.currentStage);
-      document.getElementById('intention-accordion-detail-business-type').textContent = d.businessType || '-';
-      document.getElementById('intention-accordion-detail-amount').textContent = d.amount || '-';
-      document.getElementById('intention-accordion-detail-purchase-time').textContent = d.purchaseTime || '-';
-      document.getElementById('intention-accordion-detail-decision-makers').textContent = d.decisionMakers ? d.decisionMakers.replace(/,/g, '、') : '-';
-      document.getElementById('intention-accordion-detail-product-model').textContent = d.productModel || '-';
-      document.getElementById('intention-accordion-detail-region-manager').textContent = d.regionManager || '-';
-      document.getElementById('intention-accordion-detail-following-company').textContent = d.followingCompany || '-';
-      document.getElementById('intention-accordion-detail-remark').textContent = d.remark || '无';
-      document.getElementById('intention-accordion-detail-progress').innerHTML = renderIntentionProgressSteps(d.currentStage, d.status);
-      const history = (d.approvalHistory || '').split(';').filter(Boolean).map(rec => {
-        const parts = rec.split('|');
-        const node = parts[0] || '';
-        const time = parts[1] || '';
-        const action = parts[2] || '';
-        const comment = parts[3] || '';
-        let dotClass = 'bg-primary', titleClass = 'text-ink';
-        if (action === '驳回') { dotClass = 'bg-danger'; titleClass = 'text-danger'; }
-        else if (action === '审批中') { dotClass = 'bg-warning'; }
-        return '<div class="timeline-item"><div class="timeline-dot ' + dotClass + '"></div><div class="flex-1 min-w-0"><div class="text-sm ' + titleClass + '">' + node + ' · ' + action + '</div>' + (comment ? '<div class="text-xs text-sub mt-0.5">' + comment + '</div>' : '') + '<div class="text-xs text-placeholder mt-0.5">' + time + '</div></div></div>';
-      }).join('');
-      document.getElementById('intention-accordion-detail-timeline').innerHTML = history || '<div class="text-sub text-sm">暂无审批记录</div>';
-      document.getElementById('intention-accordion-detail-overlay').classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeIntentionAccordionDetail() {
-      document.getElementById('intention-accordion-detail-overlay').classList.remove('open');
-      document.body.style.overflow = '';
+      const el = window.currentIntentionElement;
+      if (el) {
+        el.dataset.currentStage = target;
+        const stageStatusMap = { FOLLOW_UP: '生效中', BID_PUBLISHED: '生效中', BID_AUTHORIZE: '生效中', BID_RESULT: '生效中', DELIVERY_REVIEW: '生效中', TP_FOLLOW_UP: '生效中', END_CATEGORY: '生效中', ENDED: '已结束', REJECTED: '被驳回' };
+        if (stageStatusMap[target]) {
+          el.dataset.status = stageStatusMap[target];
+          const statusClassMap = { '生效中': 'badge-primary', '已结束': 'badge-dark', '被驳回': 'badge-danger' };
+          el.dataset.statusClass = statusClassMap[stageStatusMap[target]] || 'badge-primary';
+        }
+      }
+      showToast('推进成功：' + stageLabel(target) + (remark ? ' · ' + remark : ''));
+      closeIntentionPushModal();
+      closeAllDetailAccordions();
+      filterIntention(false);
     }
 
     /* ===== Calendar tags ===== */
@@ -19080,6 +19482,9 @@ Content-Type: application/json
     setIntentionView('grid');
     setCustomerView('grid');
     renderIntentionProtects();
+    renderIntentionDraftList();
+    updateIntentionKpis();
+    filterIntention(false);
     renderWorkbenchApps();
     renderCalendarTags();
     renderMiniCalendar();
