@@ -7,7 +7,7 @@ import { useRouter } from 'vue-router'
 import type { NavTabItem } from '@/types/common'
 import type { AppItem, AppForm, AppListParams } from './types'
 import { AppCategory } from './types'
-import { getAppList, createApp, updateApp, deleteApp, toggleFavorite } from './api'
+import { getAppList, createApp, updateApp, toggleFavorite } from './api'
 import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
@@ -104,7 +104,6 @@ function handleOpenApp(app: AppItem): void {
     app.permissions.length > 0 &&
     !authStore.hasAnyPermission(app.permissions)
   ) {
-    // eslint-disable-next-line no-alert
     window.alert('暂无权限访问该应用')
     return
   }
@@ -140,14 +139,6 @@ function openEdit(app: AppItem, event: Event): void {
     status: app.status,
   }
   formVisible.value = true
-}
-
-async function handleDelete(app: AppItem, event: Event): Promise<void> {
-  event.stopPropagation()
-  // eslint-disable-next-line no-alert
-  if (!window.confirm(`确定删除应用「${app.name}」吗？`)) return
-  await deleteApp(app.appId)
-  fetchList()
 }
 
 function emptyForm(): AppForm {

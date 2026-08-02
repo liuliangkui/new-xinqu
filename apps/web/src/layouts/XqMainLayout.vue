@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { computed, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAppStore } from '@/stores/app'
 import { useThemeStore } from '@/stores/theme'
-import { useAuthStore } from '@/stores/auth'
 import { RouterView } from 'vue-router'
 import XqSidebar from '@/components/xq/XqSidebar/index.vue'
 import type { MenuItem } from '@/components/xq/XqSidebar/index.vue'
 
 const router = useRouter()
-const route = useRoute()
 const appStore = useAppStore()
 const themeStore = useThemeStore()
-const authStore = useAuthStore()
 
 // 侧边栏菜单
 const menus: MenuItem[] = [
@@ -95,11 +92,6 @@ function handleNavClick(item: MenuItem): void {
   if (isMobile.value) {
     appStore.closeMobileSidebar()
   }
-}
-
-function handleLogout(): void {
-  authStore.logout()
-  router.push('/login')
 }
 </script>
 

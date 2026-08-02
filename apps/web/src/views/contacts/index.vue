@@ -1,14 +1,13 @@
 <script setup lang="ts">
 // 通讯录 — 列表页主入口
 // 对应《通讯录功能与交互说明.md》v1.0
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { NavTabItem, StatusMap } from '@/types/common'
 import {
   ContactRole,
   ContactAttitude,
   ContactType,
-  ContactStatus,
   type Contact,
   type ContactFormData,
   type ContactListParams,
@@ -19,7 +18,6 @@ import {
   mockGetContactDetail,
   mockCreateContact,
   mockUpdateContact,
-  mockDeleteContact,
 } from './mock'
 import type { ContactStats } from './types'
 
@@ -86,12 +84,6 @@ const attitudeMap: StatusMap = {
   [ContactAttitude.NEUTRAL]: { text: '中立', color: 'orange' },
   [ContactAttitude.WAITING]: { text: '观望', color: 'gray' },
   [ContactAttitude.OPPOSE]: { text: '反对', color: 'red' },
-}
-
-const statusMap: StatusMap = {
-  [ContactStatus.DRAFT]: { text: '草稿', color: 'gray' },
-  [ContactStatus.ACTIVE]: { text: '已生效', color: 'green' },
-  [ContactStatus.INACTIVE]: { text: '已停用', color: 'gray' },
 }
 
 // ---- Tabs ----
@@ -351,15 +343,6 @@ function openEditFromDetail(): void {
   formVisible.value = true
 }
 
-// ---- 删除 ----
-async function handleDelete(): Promise<void> {
-  if (!detailContact.value) return
-  await mockDeleteContact(detailContact.value.contactId)
-  detailVisible.value = false
-  detailContact.value = null
-  fetchList()
-}
-
 // ---- 跳转客户 ----
 function goToCustomer(): void {
   if (detailContact.value) {
@@ -376,13 +359,6 @@ function callPhone(): void {
 
 // ---- 分页 ----
 const hasMore = computed(() => pagination.value.page * pagination.value.size < total.value)
-
-function loadMore(): void {
-  if (hasMore.value) {
-    pagination.value.page++
-    fetchList()
-  }
-}
 
 function pageChange(page: number): void {
   pagination.value.page = page
@@ -467,7 +443,10 @@ function maskPhone(phone: string): string {
             </button>
             <button
               class="text-sm text-[var(--sub)] hover:underline"
-              @click="handleRowClick(record); openEditFromDetail()"
+              @click="
+                handleRowClick(record)
+                openEditFromDetail()
+              "
             >
               编辑
             </button>

@@ -205,7 +205,9 @@ async function fetchList(): Promise<void> {
       pageNum: pagination.value.page,
       pageSize: pagination.value.size,
       ...(keyword.value ? { keyword: keyword.value } : {}),
-      ...(activeTab.value !== 'all' ? { tabType: activeTab.value as any } : {}),
+      ...(activeTab.value !== 'all'
+        ? { tabType: activeTab.value as TicketListParams['tabType'] }
+        : {}),
       ...(filterValues.value.status ? { status: String(filterValues.value.status) } : {}),
       ...(filterValues.value.priority ? { priority: String(filterValues.value.priority) } : {}),
       ...(filterValues.value.type ? { type: String(filterValues.value.type) } : {}),
@@ -306,7 +308,6 @@ async function handleFormSubmit(values: Record<string, unknown>): Promise<void> 
 }
 
 async function handleDelete(ticket: Ticket): Promise<void> {
-  // eslint-disable-next-line no-alert
   if (!window.confirm(`确定删除工单「${ticket.title}」吗？`)) return
   await deleteTicket(ticket.ticketId)
   fetchList()
@@ -317,12 +318,10 @@ async function handleDelete(ticket: Ticket): Promise<void> {
 }
 
 function handleDispatch(): void {
-  // eslint-disable-next-line no-alert
   window.alert('派单功能将在下一批次实现')
 }
 
 function handleResolve(): void {
-  // eslint-disable-next-line no-alert
   window.alert('结单功能将在下一批次实现')
 }
 </script>

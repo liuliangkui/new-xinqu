@@ -130,7 +130,9 @@ async function fetchList(): Promise<void> {
       pageNum: pagination.value.page,
       pageSize: pagination.value.size,
       ...(keyword.value ? { keyword: keyword.value } : {}),
-      ...(activeTab.value !== 'all' ? { tabType: activeTab.value as any } : {}),
+      ...(activeTab.value !== 'all'
+        ? { tabType: activeTab.value as EquipmentListParams['tabType'] }
+        : {}),
       ...(filterValues.value.status ? { status: String(filterValues.value.status) } : {}),
     }
     const result = await getEquipmentList(params)
@@ -229,7 +231,6 @@ async function handleFormSubmit(values: Record<string, unknown>): Promise<void> 
 }
 
 async function handleDelete(equipment: Equipment): Promise<void> {
-  // eslint-disable-next-line no-alert
   if (!window.confirm(`确定删除设备「${equipment.equipmentName}」吗？`)) return
   await deleteEquipment(equipment.equipmentId)
   fetchList()
@@ -240,12 +241,10 @@ async function handleDelete(equipment: Equipment): Promise<void> {
 }
 
 function handleMaintain(): void {
-  // eslint-disable-next-line no-alert
   window.alert('维保记录功能将在下一批次实现')
 }
 
 function handleTicket(): void {
-  // eslint-disable-next-line no-alert
   window.alert('报修工单功能将在下一批次实现')
 }
 </script>

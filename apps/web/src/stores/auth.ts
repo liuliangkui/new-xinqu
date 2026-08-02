@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { login, getProfile, type LoginResult, type ProfileResult } from '@/api/auth'
+import { login, getProfile, type ProfileResult } from '@/api/auth'
 
 export interface UserInfo {
   id: string

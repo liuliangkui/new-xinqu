@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { get, post, put, del, request } from './request'
+import { get } from './request'
 
 describe('request', () => {
   beforeEach(() => {
-    globalThis.fetch = vi.fn()
+    globalThis.fetch = vi.fn<() => Promise<Response>>()
     localStorage.clear()
   })
 
@@ -11,7 +11,12 @@ describe('request', () => {
     vi.restoreAllMocks()
   })
 
-  function mockFetch(response: { ok: boolean; status: number; statusText?: string; data: unknown }) {
+  function mockFetch(response: {
+    ok: boolean
+    status: number
+    statusText?: string
+    data: unknown
+  }) {
     vi.mocked(fetch).mockResolvedValue({
       ok: response.ok,
       status: response.status,

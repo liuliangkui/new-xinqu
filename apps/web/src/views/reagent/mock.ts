@@ -9,7 +9,7 @@ import type {
   ReagentStats,
 } from './types'
 
-export let allReagents: Reagent[] = [
+export const allReagents: Reagent[] = [
   {
     reagentId: 'r1',
     reagentName: '血常规试剂 A',

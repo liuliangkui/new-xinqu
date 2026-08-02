@@ -2,7 +2,7 @@
  * Xq 组件库 — 全局注册
  * 所有 Xq* 组件自动注册，无需手动 import
  */
-import type { App } from 'vue'
+import type { App, Component } from 'vue'
 import XqButton from './XqButton/index.vue'
 import XqCardGrid from './XqCardGrid/index.vue'
 import XqDataTable from './XqDataTable/index.vue'
@@ -41,7 +41,7 @@ export {
   XqViewSwitch,
 }
 
-const componentRegistry: Record<string, any> = {
+const componentRegistry: Record<string, Component> = {
   XqButton,
   XqCardGrid,
   XqDataTable,

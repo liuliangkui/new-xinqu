@@ -20,7 +20,7 @@ function createEvidences(uploadedCount = 5): ComplianceRecord['evidences'] {
   }))
 }
 
-export let allComplianceRecords: ComplianceRecord[] = [
+export const allComplianceRecords: ComplianceRecord[] = [
   {
     recordId: 'c1',
     recordCode: 'COMP-20260728-001',

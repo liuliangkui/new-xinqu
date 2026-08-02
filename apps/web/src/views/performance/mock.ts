@@ -84,8 +84,8 @@ export function generatePerformanceOverview(
     mom,
     underperformCount: Math.floor(Math.random() * 8) + 2,
     trend,
-    period: period as any,
-    indicator: indicator as any,
+    period: period as PerformancePeriod,
+    indicator: indicator as PerformanceIndicator,
   }
 }
 

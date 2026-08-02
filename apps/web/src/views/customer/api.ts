@@ -3,7 +3,6 @@
  * 对接后端 /customers REST 接口；开发环境由 MSW 拦截并返回完整视图模型数据。
  */
 import { get, post, put, del } from '@/api/request'
-import type { PageResult } from '@/types/common'
 import type {
   Customer,
   CustomerDetail,

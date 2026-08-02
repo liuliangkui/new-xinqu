@@ -3,7 +3,7 @@
  */
 import type { Dealer, DealerForm, DealerListResult, DealerListParams, DealerStats } from './types'
 
-export let allDealers: Dealer[] = [
+export const allDealers: Dealer[] = [
   {
     dealerId: 'd1',
     dealerName: '云南康达医疗器械有限公司',

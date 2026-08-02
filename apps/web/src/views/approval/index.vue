@@ -175,7 +175,9 @@ async function fetchList(): Promise<void> {
       pageNum: pagination.value.page,
       pageSize: pagination.value.size,
       ...(keyword.value ? { keyword: keyword.value } : {}),
-      ...(activeTab.value !== 'all' ? { tabType: activeTab.value as any } : {}),
+      ...(activeTab.value !== 'all'
+        ? { tabType: activeTab.value as ApprovalListParams['tabType'] }
+        : {}),
       ...(filterValues.value.module ? { module: String(filterValues.value.module) } : {}),
       ...(filterValues.value.status ? { status: String(filterValues.value.status) } : {}),
     }
@@ -270,7 +272,6 @@ async function handleFormSubmit(values: Record<string, unknown>): Promise<void> 
 }
 
 async function handleDelete(approval: Approval): Promise<void> {
-  // eslint-disable-next-line no-alert
   if (!window.confirm(`确定删除审批「${approval.title}」吗？`)) return
   await deleteApproval(approval.approvalId)
   fetchList()
@@ -281,12 +282,10 @@ async function handleDelete(approval: Approval): Promise<void> {
 }
 
 function handleApprove(): void {
-  // eslint-disable-next-line no-alert
   window.alert('审批通过功能将在下一批次实现')
 }
 
 function handleReject(): void {
-  // eslint-disable-next-line no-alert
   window.alert('审批驳回功能将在下一批次实现')
 }
 </script>

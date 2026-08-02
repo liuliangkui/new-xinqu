@@ -28,5 +28,12 @@ export default defineConfigWithVueTs(
 
   ...pluginOxlint.buildFromOxlintConfigFile('.oxlintrc.json'),
 
+  {
+    name: 'app/component-names',
+    rules: {
+      'vue/multi-word-component-names': ['error', { ignores: ['index', 'detail', 'funnel'] }],
+    },
+  },
+
   skipFormatting,
 )

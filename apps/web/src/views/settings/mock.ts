@@ -3,7 +3,7 @@
  */
 import type { SettingsResult, SettingItem } from './types'
 
-let settings: SettingsResult = {
+const settings: SettingsResult = {
   groups: [
     {
       groupId: 'security',

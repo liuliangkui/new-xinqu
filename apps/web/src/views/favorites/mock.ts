@@ -4,7 +4,7 @@
 import { allApps } from '@/views/apps/mock'
 import type { FavoriteItem, FavoriteListResult } from './types'
 
-let favorites: FavoriteItem[] = [
+const favorites: FavoriteItem[] = [
   {
     id: 'f1',
     targetType: 'APP',

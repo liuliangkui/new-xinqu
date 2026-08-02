@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 export interface MenuItem {
@@ -59,14 +59,15 @@ function handleChildClick(parent: MenuItem, child: MenuItem): void {
       <div v-if="item.children?.length">
         <button
           class="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors duration-200"
-          :class="isChildActive(item) ? 'text-[var(--sidebar-active-ink)] bg-[var(--sidebar-active-bg)]' : 'text-[var(--sidebar-ink)] hover:bg-[var(--gray-bg)]'"
+          :class="
+            isChildActive(item)
+              ? 'text-[var(--sidebar-active-ink)] bg-[var(--sidebar-active-bg)]'
+              : 'text-[var(--sidebar-ink)] hover:bg-[var(--gray-bg)]'
+          "
           @click="handleClick(item)"
         >
           <XqIcon :name="item.icon" :size="collapsed ? 20 : 16" />
-          <span
-            v-show="!collapsed"
-            class="flex-1 truncate"
-          >{{ item.label }}</span>
+          <span v-show="!collapsed" class="flex-1 truncate">{{ item.label }}</span>
           <XqIcon
             v-show="!collapsed"
             name="arrow-right"
@@ -83,7 +84,11 @@ function handleChildClick(parent: MenuItem, child: MenuItem): void {
             v-for="child in item.children"
             :key="child.key"
             class="w-full flex items-center gap-2 px-4 py-2 text-left text-xs rounded-md transition-colors duration-200"
-            :class="isActive(child) ? 'text-[var(--sidebar-active-ink)] bg-[var(--sidebar-active-bg)] font-medium' : 'text-[var(--sub)] hover:bg-[var(--gray-bg)]'"
+            :class="
+              isActive(child)
+                ? 'text-[var(--sidebar-active-ink)] bg-[var(--sidebar-active-bg)] font-medium'
+                : 'text-[var(--sub)] hover:bg-[var(--gray-bg)]'
+            "
             @click="handleChildClick(item, child)"
           >
             {{ child.label }}
@@ -95,14 +100,15 @@ function handleChildClick(parent: MenuItem, child: MenuItem): void {
       <button
         v-else
         class="flex items-center gap-3 mx-2 px-3 py-2.5 rounded-lg transition-colors duration-200"
-        :class="isActive(item) ? 'text-[var(--sidebar-active-ink)] bg-[var(--sidebar-active-bg)] font-medium' : 'text-[var(--sidebar-ink)] hover:bg-[var(--gray-bg)]'"
+        :class="
+          isActive(item)
+            ? 'text-[var(--sidebar-active-ink)] bg-[var(--sidebar-active-bg)] font-medium'
+            : 'text-[var(--sidebar-ink)] hover:bg-[var(--gray-bg)]'
+        "
         @click="handleClick(item)"
       >
         <XqIcon :name="item.icon" :size="collapsed ? 20 : 16" />
-        <span
-          v-show="!collapsed"
-          class="truncate"
-        >{{ item.label }}</span>
+        <span v-show="!collapsed" class="truncate">{{ item.label }}</span>
       </button>
     </template>
   </nav>

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
 interface Props {
   visible: boolean
   title?: string
@@ -52,11 +50,7 @@ function handleMaskClick(): void {
 <template>
   <Teleport to="body">
     <Transition name="drawer-fade">
-      <div
-        v-if="visible"
-        class="fixed inset-0 z-[1000] bg-black/40"
-        @click="handleMaskClick"
-      />
+      <div v-if="visible" class="fixed inset-0 z-[1000] bg-black/40" @click="handleMaskClick" />
     </Transition>
     <Transition name="drawer-slide">
       <div
@@ -69,7 +63,9 @@ function handleMaskClick(): void {
         :style="{ width: isMobile ? '100%' : width }"
       >
         <!-- Header -->
-        <div class="flex items-center justify-between px-6 py-4 border-b border-[var(--line)] flex-shrink-0">
+        <div
+          class="flex items-center justify-between px-6 py-4 border-b border-[var(--line)] flex-shrink-0"
+        >
           <h2 class="text-lg font-semibold text-[var(--ink)] truncate">
             <slot name="title">{{ title }}</slot>
           </h2>

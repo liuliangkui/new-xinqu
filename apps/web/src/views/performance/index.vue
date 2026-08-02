@@ -3,7 +3,7 @@
  * 目标绩效 — 多维绩效看板
  * 对应《目标绩效功能与交互说明.md》v1.0
  */
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import type { NavTabItem, StatusMap } from '@/types/common'
 import type {
   PerformanceItem,
@@ -258,7 +258,6 @@ const analysisItems = computed(() => {
 })
 
 function openExport(): void {
-  // eslint-disable-next-line no-alert
   window.alert('绩效报告导出功能将在后续批次实现')
 }
 </script>

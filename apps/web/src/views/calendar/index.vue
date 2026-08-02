@@ -8,12 +8,7 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import { message } from 'ant-design-vue'
 import type { CalendarEvent, CalendarEventForm } from './types'
-import {
-  CalendarEventType,
-  CalendarEventStatus,
-  eventTypeColors,
-  eventTypeNames,
-} from './types'
+import { CalendarEventType, CalendarEventStatus, eventTypeColors } from './types'
 import {
   getCalendarEventList,
   getCalendarMonthDots,
@@ -36,8 +31,6 @@ const detailVisible = ref(false)
 const formData = ref<CalendarEventForm>({})
 const detailEvent = ref<CalendarEvent | null>(null)
 const isEdit = computed(() => !!formData.value.id)
-
-const stats = ref({ todayCount: 0, weekCount: 0, pendingCount: 0 })
 
 const eventStatusMap: Record<number, { text: string; color: string }> = {
   [CalendarEventStatus.DRAFT]: { text: '草稿', color: 'gray' },
@@ -191,7 +184,12 @@ function openDetail(event: CalendarEvent) {
 }
 
 async function handleSave() {
-  if (!formData.value.eventType || !formData.value.subject || !formData.value.startTime || !formData.value.endTime) {
+  if (
+    !formData.value.eventType ||
+    !formData.value.subject ||
+    !formData.value.startTime ||
+    !formData.value.endTime
+  ) {
     message.error('请填写必填项')
     return
   }
@@ -244,8 +242,11 @@ async function handleComplete(event: CalendarEvent) {
 }
 
 function showCheckIn(event: CalendarEvent): boolean {
-  return event.eventStatus === CalendarEventStatus.PENDING &&
-    (event.eventType === CalendarEventType.CUSTOMER_VISIT || event.eventType === CalendarEventType.TASK_DEADLINE)
+  return (
+    event.eventStatus === CalendarEventStatus.PENDING &&
+    (event.eventType === CalendarEventType.CUSTOMER_VISIT ||
+      event.eventType === CalendarEventType.TASK_DEADLINE)
+  )
 }
 
 function showComplete(event: CalendarEvent): boolean {
@@ -261,11 +262,31 @@ function showDelete(event: CalendarEvent): boolean {
 }
 
 const eventTypeOptions = [
-  { value: CalendarEventType.CUSTOMER_VISIT, label: '客户拜访', color: eventTypeColors[CalendarEventType.CUSTOMER_VISIT] },
-  { value: CalendarEventType.INTENTION_FOLLOW, label: '意向跟进', color: eventTypeColors[CalendarEventType.INTENTION_FOLLOW] },
-  { value: CalendarEventType.MEETING, label: '会议/学术', color: eventTypeColors[CalendarEventType.MEETING] },
-  { value: CalendarEventType.TASK_DEADLINE, label: '任务截止', color: eventTypeColors[CalendarEventType.TASK_DEADLINE] },
-  { value: CalendarEventType.KEY_NODE, label: '关键节点', color: eventTypeColors[CalendarEventType.KEY_NODE] },
+  {
+    value: CalendarEventType.CUSTOMER_VISIT,
+    label: '客户拜访',
+    color: eventTypeColors[CalendarEventType.CUSTOMER_VISIT],
+  },
+  {
+    value: CalendarEventType.INTENTION_FOLLOW,
+    label: '意向跟进',
+    color: eventTypeColors[CalendarEventType.INTENTION_FOLLOW],
+  },
+  {
+    value: CalendarEventType.MEETING,
+    label: '会议/学术',
+    color: eventTypeColors[CalendarEventType.MEETING],
+  },
+  {
+    value: CalendarEventType.TASK_DEADLINE,
+    label: '任务截止',
+    color: eventTypeColors[CalendarEventType.TASK_DEADLINE],
+  },
+  {
+    value: CalendarEventType.KEY_NODE,
+    label: '关键节点',
+    color: eventTypeColors[CalendarEventType.KEY_NODE],
+  },
 ]
 
 onMounted(() => {
@@ -323,8 +344,10 @@ watch(
               class="flex flex-col items-center justify-center p-1.5 rounded-lg transition-colors min-h-[48px]"
               :class="{
                 'bg-[var(--primary)] text-white': isSelected(date),
-                'text-[var(--ink)] hover:bg-[var(--gray-bg)]': !isSelected(date) && isCurrentMonth(date),
-                'text-[var(--sub)] hover:bg-[var(--gray-bg)]': !isSelected(date) && !isCurrentMonth(date),
+                'text-[var(--ink)] hover:bg-[var(--gray-bg)]':
+                  !isSelected(date) && isCurrentMonth(date),
+                'text-[var(--sub)] hover:bg-[var(--gray-bg)]':
+                  !isSelected(date) && !isCurrentMonth(date),
               }"
               @click="handleSelectDate(date)"
             >
@@ -357,12 +380,18 @@ watch(
         </div>
 
         <!-- 右侧日程面板 -->
-        <div class="lg:col-span-3 bg-[var(--card)] rounded-xl border border-[var(--line)] flex flex-col overflow-hidden">
+        <div
+          class="lg:col-span-3 bg-[var(--card)] rounded-xl border border-[var(--line)] flex flex-col overflow-hidden"
+        >
           <!-- 顶部日期条 -->
           <div class="grid grid-cols-8 border-b border-[var(--line)]">
             <button
               class="py-3 text-sm font-medium flex flex-col items-center justify-center transition-colors"
-              :class="isToday(selectedDate) ? 'bg-[var(--primary)] text-white' : 'text-[var(--ink)] hover:bg-[var(--gray-bg)]'"
+              :class="
+                isToday(selectedDate)
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'text-[var(--ink)] hover:bg-[var(--gray-bg)]'
+              "
               @click="handleSelectDate(dayjs())"
             >
               <span>今日</span>
@@ -371,7 +400,11 @@ watch(
               v-for="date in weekRange"
               :key="date.format('YYYY-MM-DD')"
               class="py-3 text-sm flex flex-col items-center justify-center transition-colors border-l border-[var(--line)]"
-              :class="isSelected(date) ? 'bg-[var(--primary)] text-white' : 'text-[var(--ink)] hover:bg-[var(--gray-bg)]'"
+              :class="
+                isSelected(date)
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'text-[var(--ink)] hover:bg-[var(--gray-bg)]'
+              "
               @click="handleSelectDate(date)"
             >
               <span class="text-xs opacity-80">{{ date.format('ddd') }}</span>
@@ -384,9 +417,7 @@ watch(
             <h3 class="font-semibold text-[var(--ink)]">
               {{ selectedDate.format('M月D日 dddd') }} 日程
             </h3>
-            <span class="text-sm text-[var(--sub)]">
-              共 {{ events.length }} 项
-            </span>
+            <span class="text-sm text-[var(--sub)]"> 共 {{ events.length }} 项 </span>
           </div>
 
           <!-- 日程列表 -->
@@ -394,11 +425,7 @@ watch(
             <div v-if="loading" class="py-12 text-center text-[var(--sub)]">加载中...</div>
 
             <template v-else-if="events.length > 0">
-              <div
-                v-for="group in groupedEvents"
-                :key="group.key"
-                class="mb-6"
-              >
+              <div v-for="group in groupedEvents" :key="group.key" class="mb-6">
                 <h4 class="text-sm font-medium text-[var(--sub)] mb-3">{{ group.label }}</h4>
                 <div class="space-y-3">
                   <div
@@ -414,7 +441,14 @@ watch(
                       <div class="flex items-center gap-2 mb-1">
                         <XqStatusBadge
                           :status="event.eventType"
-                          :status-map="Object.fromEntries(eventTypeOptions.map((o) => [o.value, { text: o.label, color: o.color }]))"
+                          :status-map="
+                            Object.fromEntries(
+                              eventTypeOptions.map((o) => [
+                                o.value,
+                                { text: o.label, color: o.color },
+                              ]),
+                            )
+                          "
                           size="small"
                         />
                         <XqStatusBadge
@@ -473,21 +507,23 @@ watch(
   </XqPageLayout>
 
   <!-- 新建/编辑弹窗 -->
-  <XqModal
-    v-model:visible="formVisible"
-    :title="isEdit ? '编辑日程' : '新建日程'"
-    width="480px"
-  >
+  <XqModal v-model:visible="formVisible" :title="isEdit ? '编辑日程' : '新建日程'" width="480px">
     <div class="space-y-4">
       <div>
-        <label class="block text-sm font-medium text-[var(--ink)]">日程类型 <span class="text-[var(--danger)]">*</span></label>
+        <label class="block text-sm font-medium text-[var(--ink)]"
+          >日程类型 <span class="text-[var(--danger)]">*</span></label
+        >
         <div class="flex flex-wrap gap-2 mt-1">
           <button
             v-for="opt in eventTypeOptions"
             :key="opt.value"
             type="button"
             class="px-3 py-1.5 rounded-lg text-xs border transition-colors"
-            :class="formData.eventType === opt.value ? 'border-[var(--primary)] text-[var(--primary)] bg-[var(--primary-light)]' : 'border-[var(--line)] text-[var(--ink)] hover:border-[var(--primary)]'"
+            :class="
+              formData.eventType === opt.value
+                ? 'border-[var(--primary)] text-[var(--primary)] bg-[var(--primary-light)]'
+                : 'border-[var(--line)] text-[var(--ink)] hover:border-[var(--primary)]'
+            "
             @click="formData.eventType = opt.value"
           >
             {{ opt.label }}
@@ -496,7 +532,9 @@ watch(
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-[var(--ink)]">日程主题 <span class="text-[var(--danger)]">*</span></label>
+        <label class="block text-sm font-medium text-[var(--ink)]"
+          >日程主题 <span class="text-[var(--danger)]">*</span></label
+        >
         <input
           v-model="formData.subject"
           type="text"
@@ -507,7 +545,9 @@ watch(
 
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block text-sm font-medium text-[var(--ink)]">开始时间 <span class="text-[var(--danger)]">*</span></label>
+          <label class="block text-sm font-medium text-[var(--ink)]"
+            >开始时间 <span class="text-[var(--danger)]">*</span></label
+          >
           <input
             v-model="formData.startTime"
             type="text"
@@ -516,7 +556,9 @@ watch(
           />
         </div>
         <div>
-          <label class="block text-sm font-medium text-[var(--ink)]">结束时间 <span class="text-[var(--danger)]">*</span></label>
+          <label class="block text-sm font-medium text-[var(--ink)]"
+            >结束时间 <span class="text-[var(--danger)]">*</span></label
+          >
           <input
             v-model="formData.endTime"
             type="text"
@@ -584,16 +626,16 @@ watch(
   </XqModal>
 
   <!-- 详情弹窗 -->
-  <XqModal
-    v-model:visible="detailVisible"
-    title="日程详情"
-    width="520px"
-  >
+  <XqModal v-model:visible="detailVisible" title="日程详情" width="520px">
     <div v-if="detailEvent" class="space-y-4">
       <div class="flex items-center gap-2">
         <XqStatusBadge
           :status="detailEvent.eventType"
-          :status-map="Object.fromEntries(eventTypeOptions.map((o) => [o.value, { text: o.label, color: o.color }]))"
+          :status-map="
+            Object.fromEntries(
+              eventTypeOptions.map((o) => [o.value, { text: o.label, color: o.color }]),
+            )
+          "
         />
         <XqStatusBadge :status="detailEvent.eventStatus" :status-map="eventStatusMap" />
       </div>
@@ -609,7 +651,9 @@ watch(
         </div>
         <div>
           <span class="text-[var(--sub)]">来源</span>
-          <p class="text-[var(--ink)] mt-0.5">{{ sourceTypeMap[detailEvent.sourceType] || '未知' }}</p>
+          <p class="text-[var(--ink)] mt-0.5">
+            {{ sourceTypeMap[detailEvent.sourceType] || '未知' }}
+          </p>
         </div>
         <div v-if="detailEvent.customerName">
           <span class="text-[var(--sub)]">关联客户</span>
@@ -674,4 +718,3 @@ watch(
     </template>
   </XqModal>
 </template>
-

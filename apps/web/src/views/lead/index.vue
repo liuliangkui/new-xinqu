@@ -181,7 +181,9 @@ async function fetchList(): Promise<void> {
       pageNum: pagination.value.page,
       pageSize: pagination.value.size,
       ...(keyword.value ? { keyword: keyword.value } : {}),
-      ...(activeTab.value !== 'all' ? { tabType: activeTab.value as any } : {}),
+      ...(activeTab.value !== 'all'
+        ? { tabType: activeTab.value as LeadListParams['tabType'] }
+        : {}),
       ...(filterValues.value.sourceType
         ? { sourceType: Number(filterValues.value.sourceType) }
         : {}),
@@ -287,7 +289,6 @@ async function handleFormSubmit(values: Record<string, unknown>): Promise<void> 
 }
 
 async function handleDelete(lead: Lead): Promise<void> {
-  // eslint-disable-next-line no-alert
   if (!window.confirm(`确定删除线索「${lead.customerName}」吗？`)) return
   await deleteLead(lead.leadId)
   fetchList()
@@ -298,12 +299,10 @@ async function handleDelete(lead: Lead): Promise<void> {
 }
 
 function handleFollow(): void {
-  // eslint-disable-next-line no-alert
   window.alert('跟进录入功能将在下一批次实现')
 }
 
 function handleConvert(): void {
-  // eslint-disable-next-line no-alert
   window.alert('转意向功能将在下一批次实现')
 }
 </script>

@@ -40,7 +40,7 @@ export interface PerformanceItem {
   ownerName?: string
 }
 
-export interface PerformanceListResult extends PageResult<PerformanceItem> {}
+export type PerformanceListResult = PageResult<PerformanceItem>
 
 export interface PerformanceListParams {
   page?: number

@@ -3,7 +3,7 @@
  */
 import type { WorkflowDefinition, WorkflowForm, WorkflowListResult } from './types'
 
-let workflows: WorkflowDefinition[] = [
+const workflows: WorkflowDefinition[] = [
   {
     id: '1',
     name: '折扣审批流程',

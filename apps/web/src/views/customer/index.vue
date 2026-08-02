@@ -259,7 +259,9 @@ async function fetchList(): Promise<void> {
       pageNum: pagination.value.page,
       pageSize: pagination.value.size,
       ...(keyword.value ? { keyword: keyword.value } : {}),
-      ...(activeTab.value !== 'all' ? { tabType: activeTab.value as any } : {}),
+      ...(activeTab.value !== 'all'
+        ? { tabType: activeTab.value as CustomerListParams['tabType'] }
+        : {}),
       ...(filterValues.value.regionCode
         ? { regionCode: String(filterValues.value.regionCode) }
         : {}),
@@ -398,7 +400,6 @@ async function handleFormSubmit(values: Record<string, unknown>): Promise<void> 
 }
 
 async function handleDelete(record: Customer): Promise<void> {
-  // eslint-disable-next-line no-alert
   if (!window.confirm(`确定删除客户「${record.customerName}」吗？`)) return
   await deleteCustomer(record.customerId)
   fetchList()

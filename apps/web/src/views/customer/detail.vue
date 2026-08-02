@@ -3,15 +3,13 @@
  * 客户 360° — 详情页
  * 对应《客户360°功能与交互说明.md》v1.3
  */
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { NavTabItem, StatusMap } from '@/types/common'
 import type { CustomerDetail } from './types'
 import {
   HealthLevel,
   CooperationStatus,
-  RelationLevel,
-  ContactAttitudeEnum,
   RoleType,
   DeployMode,
   EquipmentStatus,

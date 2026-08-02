@@ -7,7 +7,6 @@ import type {
   CalendarEventListResult,
   CalendarMonthDotsResult,
   CalendarStatsResult,
-  CalendarSaveResult,
   CalendarCheckInResult,
   CalendarCompleteResult,
   CalendarEventForm,
@@ -147,7 +146,9 @@ export function generateCalendarMonthDots(yearMonth: string): CalendarMonthDotsR
 }
 
 export function generateCalendarStats(queryDate: string): CalendarStatsResult {
-  const todayCount = allEvents.filter((e) => e.startTime && e.startTime.startsWith(queryDate)).length
+  const todayCount = allEvents.filter(
+    (e) => e.startTime && e.startTime.startsWith(queryDate),
+  ).length
   const weekStart = dayjs(queryDate).startOf('week').add(1, 'day')
   const weekEnd = weekStart.add(7, 'day')
   const weekCount = allEvents.filter((e) => {
@@ -188,7 +189,10 @@ export function createCalendarEventInMock(data: CalendarEventForm): CalendarEven
   return event
 }
 
-export function updateCalendarEventInMock(id: string, data: CalendarEventForm): CalendarEvent | null {
+export function updateCalendarEventInMock(
+  id: string,
+  data: CalendarEventForm,
+): CalendarEvent | null {
   const idx = allEvents.findIndex((e) => e.id === id)
   if (idx === -1) return null
   allEvents[idx] = { ...allEvents[idx], ...data } as CalendarEvent

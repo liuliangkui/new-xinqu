@@ -1,13 +1,8 @@
 /**
  * 通讯录模块 — Mock 数据
  */
-import type { Contact, ContactListResult, ContactStats } from './types'
-import {
-  ContactRole,
-  ContactAttitude,
-  ContactType,
-  ContactStatus,
-} from './types'
+import type { Contact, ContactFormData, ContactListResult, ContactStats } from './types'
+import { ContactRole, ContactAttitude, ContactType, ContactStatus } from './types'
 
 /** 生成 Mock 联系人 */
 function makeContact(id: number): Contact {
@@ -22,8 +17,22 @@ function makeContact(id: number): Contact {
     '红河州第一人民医院',
   ]
   const names = ['陈主任', '王科长', '李院长', '张医生', '赵老师', '刘主任', '钱科长', '孙工']
-  const jobs = ['检验科主任', '设备科科长', '副院长', '主治医师', '护士长', '药剂科主任', '信息科科长', '采购专员']
-  const roles = [ContactRole.DECISION_MAKER, ContactRole.INFLUENCER, ContactRole.HANDLER, ContactRole.USER]
+  const jobs = [
+    '检验科主任',
+    '设备科科长',
+    '副院长',
+    '主治医师',
+    '护士长',
+    '药剂科主任',
+    '信息科科长',
+    '采购专员',
+  ]
+  const roles = [
+    ContactRole.DECISION_MAKER,
+    ContactRole.INFLUENCER,
+    ContactRole.HANDLER,
+    ContactRole.USER,
+  ]
 
   const ci = id % customerNames.length
   const ni = id % names.length
@@ -41,7 +50,12 @@ function makeContact(id: number): Contact {
     department: ['检验科', '设备科', '院办', '药剂科', '信息科'][id % 5]!,
     jobTitle: jobs[ni]!,
     contactRole: roles[ri]!,
-    attitude: [ContactAttitude.SUPPORT, ContactAttitude.NEUTRAL, ContactAttitude.WAITING, ContactAttitude.OPPOSE][id % 4]!,
+    attitude: [
+      ContactAttitude.SUPPORT,
+      ContactAttitude.NEUTRAL,
+      ContactAttitude.WAITING,
+      ContactAttitude.OPPOSE,
+    ][id % 4]!,
     contactType: id % 5 === 0 ? ContactType.DEALER : ContactType.CUSTOMER,
     mobilePhone: `138${String(88000000 + id).slice(0, 8)}`,
     email: id % 3 === 0 ? `${names[ni]!.replace(/\s/g, '')}@hospital.com` : undefined,
@@ -103,7 +117,7 @@ export function mockGetContactList(params: {
             c.customerName.toLowerCase().includes(kw) ||
             c.jobTitle.toLowerCase().includes(kw) ||
             // 拼音首字母模拟
-            kw === 'zs' && c.contactName === '张三',
+            (kw === 'zs' && c.contactName === '张三'),
         )
       }
 
@@ -138,7 +152,8 @@ export function mockGetContactList(params: {
 
       const stats: ContactStats = {
         contactTotalCount: filtered.length,
-        decisionMakerCount: filtered.filter((c) => c.contactRole === ContactRole.DECISION_MAKER).length,
+        decisionMakerCount: filtered.filter((c) => c.contactRole === ContactRole.DECISION_MAKER)
+          .length,
         influencerCount: filtered.filter((c) => c.contactRole === ContactRole.INFLUENCER).length,
         handlerCount: filtered.filter((c) => c.contactRole === ContactRole.HANDLER).length,
       }
@@ -164,7 +179,9 @@ export function mockGetContactDetail(contactId: number): Promise<Contact | null>
 }
 
 /** 新建联系人 */
-export function mockCreateContact(data: any): Promise<{ contactId: number; contactCode: string }> {
+export function mockCreateContact(
+  data: ContactFormData,
+): Promise<{ contactId: number; contactCode: string }> {
   return new Promise((resolve) => {
     setTimeout(() => {
       const newId = allContacts.length + 1
@@ -200,7 +217,7 @@ export function mockCreateContact(data: any): Promise<{ contactId: number; conta
 /** 编辑联系人 */
 export function mockUpdateContact(
   contactId: number,
-  data: any,
+  data: Partial<Contact>,
 ): Promise<{ contactId: number; updateTime: string }> {
   return new Promise((resolve) => {
     setTimeout(() => {

@@ -208,7 +208,9 @@ async function fetchList(): Promise<void> {
       pageNum: pagination.value.page,
       pageSize: pagination.value.size,
       ...(keyword.value ? { keyword: keyword.value } : {}),
-      ...(activeTab.value !== 'all' ? { tabType: activeTab.value as any } : {}),
+      ...(activeTab.value !== 'all'
+        ? { tabType: activeTab.value as TaskListParams['tabType'] }
+        : {}),
       ...(filterValues.value.taskType ? { taskType: String(filterValues.value.taskType) } : {}),
       ...(filterValues.value.priority ? { priority: String(filterValues.value.priority) } : {}),
       ...(filterValues.value.status ? { status: String(filterValues.value.status) } : {}),
@@ -307,7 +309,6 @@ async function handleFormSubmit(values: Record<string, unknown>): Promise<void> 
 }
 
 async function handleDelete(task: Task): Promise<void> {
-  // eslint-disable-next-line no-alert
   if (!window.confirm(`确定删除任务「${task.title}」吗？`)) return
   await deleteTask(task.taskId)
   fetchList()

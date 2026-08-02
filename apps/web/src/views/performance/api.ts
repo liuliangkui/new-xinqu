@@ -1,10 +1,5 @@
 import { get } from '@/api/request'
-import type {
-  PerformanceOverview,
-  PerformanceItem,
-  PerformanceListParams,
-  PerformanceListResult,
-} from './types'
+import type { PerformanceOverview, PerformanceListParams, PerformanceListResult } from './types'
 
 export function getPerformanceOverview(
   params?: Pick<PerformanceListParams, 'period' | 'indicator'>,

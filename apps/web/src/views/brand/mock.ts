@@ -3,7 +3,7 @@
  */
 import type { Brand, BrandForm, BrandListResult, BrandListParams, BrandStats } from './types'
 
-export let allBrands: Brand[] = [
+export const allBrands: Brand[] = [
   {
     brandId: 'b1',
     brandName: '迈瑞',

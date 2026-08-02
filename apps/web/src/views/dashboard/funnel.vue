@@ -2,8 +2,8 @@
 /**
  * 经营驾驶舱 — 销售漏斗专题页
  */
-import { ref, computed, onMounted } from 'vue'
-import type { DashboardFunnelResult, DashboardFunnelStage, DashboardPeriod } from './types'
+import { ref, onMounted } from 'vue'
+import type { DashboardFunnelResult, DashboardPeriod } from './types'
 import { getDashboardFunnel } from './api'
 
 const period = ref<DashboardPeriod>('month')
@@ -44,23 +44,11 @@ async function fetchFunnel() {
   }
 }
 
-function switchTab(tab: typeof tabs[number]) {
+function switchTab(tab: (typeof tabs)[number]) {
   activeTab.value = tab.key
   if (tab.route !== '/dashboard/funnel') {
     window.location.href = tab.route
   }
-}
-
-function funnelShapeClass(index: number): string {
-  const shapes = [
-    'clip-path-polygon-top',
-    '',
-    '',
-    '',
-    '',
-    'clip-path-polygon-bottom',
-  ]
-  return shapes[index] || ''
 }
 
 onMounted(fetchFunnel)
@@ -96,7 +84,11 @@ onMounted(fetchFunnel)
               v-for="tab in tabs"
               :key="tab.key"
               class="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-              :class="activeTab === tab.key ? 'bg-[var(--primary)] text-white' : 'text-[var(--ink)] hover:bg-[var(--gray-bg)]'"
+              :class="
+                activeTab === tab.key
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'text-[var(--ink)] hover:bg-[var(--gray-bg)]'
+              "
               @click="switchTab(tab)"
             >
               {{ tab.label }}
@@ -106,13 +98,22 @@ onMounted(fetchFunnel)
 
         <!-- 筛选栏 -->
         <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-          <div class="flex items-center gap-1 bg-[var(--card)] rounded-lg border border-[var(--line)] p-1">
+          <div
+            class="flex items-center gap-1 bg-[var(--card)] rounded-lg border border-[var(--line)] p-1"
+          >
             <button
               v-for="p in periods"
               :key="p.value"
               class="px-3 py-1.5 text-xs rounded-md transition-colors"
-              :class="period === p.value ? 'bg-[var(--primary)] text-white' : 'text-[var(--ink)] hover:bg-[var(--gray-bg)]'"
-              @click="period = p.value; fetchFunnel()"
+              :class="
+                period === p.value
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'text-[var(--ink)] hover:bg-[var(--gray-bg)]'
+              "
+              @click="
+                period = p.value
+                fetchFunnel()
+              "
             >
               {{ p.label }}
             </button>
@@ -138,7 +139,9 @@ onMounted(fetchFunnel)
           </div>
           <div class="bg-[var(--card)] rounded-xl border border-[var(--line)] p-4 text-center">
             <p class="text-xs text-[var(--sub)]">成交赢单</p>
-            <p class="text-2xl font-bold text-[var(--success)]">{{ funnel.stages[funnel.stages.length - 1]?.count ?? 0 }}</p>
+            <p class="text-2xl font-bold text-[var(--success)]">
+              {{ funnel.stages[funnel.stages.length - 1]?.count ?? 0 }}
+            </p>
           </div>
           <div class="bg-[var(--card)] rounded-xl border border-[var(--line)] p-4 text-center">
             <p class="text-xs text-[var(--sub)]">赢单率</p>
@@ -146,7 +149,9 @@ onMounted(fetchFunnel)
           </div>
           <div class="bg-[var(--card)] rounded-xl border border-[var(--line)] p-4 text-center">
             <p class="text-xs text-[var(--sub)]">平均客单价</p>
-            <p class="text-2xl font-bold text-[var(--ink)]">{{ formatCurrency(funnel.avgDealAmount) }}</p>
+            <p class="text-2xl font-bold text-[var(--ink)]">
+              {{ formatCurrency(funnel.avgDealAmount) }}
+            </p>
           </div>
         </div>
 
@@ -159,7 +164,11 @@ onMounted(fetchFunnel)
                 v-for="(item, index) in funnel.stages"
                 :key="item.stage"
                 class="relative flex flex-col items-center justify-center text-white rounded-lg py-3 transition-all hover:opacity-90"
-                :style="{ width: `${item.widthPercent}%`, minWidth: '200px', backgroundColor: item.color }"
+                :style="{
+                  width: `${item.widthPercent}%`,
+                  minWidth: '200px',
+                  backgroundColor: item.color,
+                }"
               >
                 <span class="text-sm font-medium">{{ item.stage }}</span>
                 <div class="flex items-center gap-3 text-xs mt-1 opacity-90">
@@ -179,7 +188,10 @@ onMounted(fetchFunnel)
                 :key="item.stage"
                 class="flex items-center gap-3"
               >
-                <span class="w-6 h-6 rounded-full text-xs flex items-center justify-center text-white font-medium" :style="{ backgroundColor: item.color }">
+                <span
+                  class="w-6 h-6 rounded-full text-xs flex items-center justify-center text-white font-medium"
+                  :style="{ backgroundColor: item.color }"
+                >
                   {{ index + 1 }}
                 </span>
                 <div class="flex-1">
@@ -188,7 +200,10 @@ onMounted(fetchFunnel)
                     <span class="text-sm text-[var(--ink)]">{{ item.count }}</span>
                   </div>
                   <div class="h-1.5 bg-[var(--gray-bg)] rounded-full mt-1 overflow-hidden">
-                    <div class="h-full rounded-full" :style="{ width: `${item.widthPercent}%`, backgroundColor: item.color }" />
+                    <div
+                      class="h-full rounded-full"
+                      :style="{ width: `${item.widthPercent}%`, backgroundColor: item.color }"
+                    />
                   </div>
                 </div>
               </div>
@@ -221,9 +236,17 @@ onMounted(fetchFunnel)
                     <span class="text-[var(--ink)]">{{ item.stage }}</span>
                   </td>
                   <td class="text-right py-3 px-3 text-[var(--ink)]">{{ item.count }}</td>
-                  <td class="text-right py-3 px-3 text-[var(--ink)]">{{ item.amount ? formatCurrency(item.amount) : '-' }}</td>
+                  <td class="text-right py-3 px-3 text-[var(--ink)]">
+                    {{ item.amount ? formatCurrency(item.amount) : '-' }}
+                  </td>
                   <td class="text-right py-3 px-3 text-[var(--ink)]">{{ item.conversionRate }}%</td>
-                  <td class="text-right py-3 px-3 text-[var(--ink)]">{{ funnel.totalCount ? ((item.count / funnel.totalCount) * 100).toFixed(1) : '0.0' }}%</td>
+                  <td class="text-right py-3 px-3 text-[var(--ink)]">
+                    {{
+                      funnel.totalCount
+                        ? ((item.count / funnel.totalCount) * 100).toFixed(1)
+                        : '0.0'
+                    }}%
+                  </td>
                 </tr>
               </tbody>
             </table>

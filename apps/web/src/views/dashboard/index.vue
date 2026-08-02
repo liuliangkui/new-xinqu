@@ -2,7 +2,7 @@
 /**
  * 经营驾驶舱 — 高管综合看板
  */
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import type { DashboardOverview, DashboardPeriod, AlertLevel } from './types'
 import { getDashboardOverview } from './api'
 
@@ -68,7 +68,7 @@ async function fetchOverview() {
   }
 }
 
-function switchTab(tab: typeof tabs[number]) {
+function switchTab(tab: (typeof tabs)[number]) {
   activeTab.value = tab.key
   if (tab.route !== '/dashboard') {
     window.location.href = tab.route
@@ -96,7 +96,9 @@ onMounted(fetchOverview)
         <button class="btn btn-ghost text-sm relative flex items-center gap-1">
           <XqIcon name="bell" size="16" />
           <span>预警</span>
-          <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center">
+          <span
+            class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center"
+          >
             {{ overview?.alerts.length ?? 0 }}
           </span>
         </button>
@@ -129,7 +131,9 @@ onMounted(fetchOverview)
                     :stroke-dasharray="`${overview.healthScore}, 100`"
                   />
                 </svg>
-                <span class="absolute text-xl font-bold text-[var(--ink)]">{{ overview.healthScore }}</span>
+                <span class="absolute text-xl font-bold text-[var(--ink)]">{{
+                  overview.healthScore
+                }}</span>
               </div>
               <div>
                 <p class="text-sm text-[var(--sub)]">经营健康度</p>
@@ -140,22 +144,38 @@ onMounted(fetchOverview)
             <div class="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4">
               <div class="p-3 rounded-lg bg-[var(--bg)]">
                 <p class="text-xs text-[var(--sub)]">本月收入</p>
-                <p class="text-lg font-semibold text-[var(--ink)]">{{ formatCurrency(overview.kpis.revenue.value) }}</p>
-                <p class="text-xs text-[var(--sub)]">达成 {{ rateText(overview.kpis.revenue.value, overview.kpis.revenue.target ?? 0) }}</p>
+                <p class="text-lg font-semibold text-[var(--ink)]">
+                  {{ formatCurrency(overview.kpis.revenue.value) }}
+                </p>
+                <p class="text-xs text-[var(--sub)]">
+                  达成
+                  {{ rateText(overview.kpis.revenue.value, overview.kpis.revenue.target ?? 0) }}
+                </p>
               </div>
               <div class="p-3 rounded-lg bg-[var(--bg)]">
                 <p class="text-xs text-[var(--sub)]">本月回款</p>
-                <p class="text-lg font-semibold text-[var(--ink)]">{{ formatCurrency(overview.kpis.receivable.value) }}</p>
-                <p class="text-xs text-[var(--sub)]">达成 {{ rateText(overview.kpis.receivable.value, overview.kpis.receivable.target ?? 0) }}</p>
+                <p class="text-lg font-semibold text-[var(--ink)]">
+                  {{ formatCurrency(overview.kpis.receivable.value) }}
+                </p>
+                <p class="text-xs text-[var(--sub)]">
+                  达成
+                  {{
+                    rateText(overview.kpis.receivable.value, overview.kpis.receivable.target ?? 0)
+                  }}
+                </p>
               </div>
               <div class="p-3 rounded-lg bg-[var(--bg)]">
                 <p class="text-xs text-[var(--sub)]">新增意向</p>
-                <p class="text-lg font-semibold text-[var(--ink)]">{{ overview.kpis.intentionCount }} 条</p>
+                <p class="text-lg font-semibold text-[var(--ink)]">
+                  {{ overview.kpis.intentionCount }} 条
+                </p>
                 <p class="text-xs text-[var(--sub)]">同比 +15%</p>
               </div>
               <div class="p-3 rounded-lg bg-[var(--bg)]">
                 <p class="text-xs text-[var(--sub)]">拜访合规率</p>
-                <p class="text-lg font-semibold text-[var(--ink)]">{{ formatPercent(overview.kpis.visitComplianceRate) }}</p>
+                <p class="text-lg font-semibold text-[var(--ink)]">
+                  {{ formatPercent(overview.kpis.visitComplianceRate) }}
+                </p>
                 <p class="text-xs text-[var(--sub)]">环比 +2%</p>
               </div>
             </div>
@@ -169,7 +189,11 @@ onMounted(fetchOverview)
               v-for="tab in tabs"
               :key="tab.key"
               class="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-              :class="activeTab === tab.key ? 'bg-[var(--primary)] text-white' : 'text-[var(--ink)] hover:bg-[var(--gray-bg)]'"
+              :class="
+                activeTab === tab.key
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'text-[var(--ink)] hover:bg-[var(--gray-bg)]'
+              "
               @click="switchTab(tab)"
             >
               {{ tab.label }}
@@ -179,13 +203,22 @@ onMounted(fetchOverview)
 
         <!-- 筛选栏 -->
         <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-          <div class="flex items-center gap-1 bg-[var(--card)] rounded-lg border border-[var(--line)] p-1">
+          <div
+            class="flex items-center gap-1 bg-[var(--card)] rounded-lg border border-[var(--line)] p-1"
+          >
             <button
               v-for="p in periods"
               :key="p.value"
               class="px-3 py-1.5 text-xs rounded-md transition-colors"
-              :class="period === p.value ? 'bg-[var(--primary)] text-white' : 'text-[var(--ink)] hover:bg-[var(--gray-bg)]'"
-              @click="period = p.value; fetchOverview()"
+              :class="
+                period === p.value
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'text-[var(--ink)] hover:bg-[var(--gray-bg)]'
+              "
+              @click="
+                period = p.value
+                fetchOverview()
+              "
             >
               {{ p.label }}
             </button>
@@ -251,12 +284,16 @@ onMounted(fetchOverview)
                   />
                 </svg>
                 <span class="absolute text-xs font-bold text-[var(--ink)]">
-                  {{ rateText(overview.kpis.receivable.value, overview.kpis.receivable.target ?? 0) }}
+                  {{
+                    rateText(overview.kpis.receivable.value, overview.kpis.receivable.target ?? 0)
+                  }}
                 </span>
               </div>
               <div>
                 <p class="text-sm text-[var(--sub)]">目标</p>
-                <p class="text-base font-semibold text-[var(--ink)]">{{ formatCurrency(overview.kpis.receivable.target ?? 0) }}</p>
+                <p class="text-base font-semibold text-[var(--ink)]">
+                  {{ formatCurrency(overview.kpis.receivable.target ?? 0) }}
+                </p>
               </div>
             </div>
           </div>
@@ -268,10 +305,24 @@ onMounted(fetchOverview)
               <XqIcon name="more" size="16" class="text-[var(--sub)]" />
             </div>
             <div class="space-y-2">
-              <div v-for="(label, i) in ['初步接洽', '需求确认', '方案报价', '商务谈判', '中标待签', '已成交']" :key="label" class="flex items-center gap-2">
+              <div
+                v-for="(label, i) in [
+                  '初步接洽',
+                  '需求确认',
+                  '方案报价',
+                  '商务谈判',
+                  '中标待签',
+                  '已成交',
+                ]"
+                :key="label"
+                class="flex items-center gap-2"
+              >
                 <span class="text-xs text-[var(--sub)] w-16 truncate">{{ label }}</span>
                 <div class="flex-1 h-2 bg-[var(--gray-bg)] rounded-full overflow-hidden">
-                  <div class="h-full rounded-full bg-[var(--primary)]" :style="{ width: `${barData[i] || 10}%` }" />
+                  <div
+                    class="h-full rounded-full bg-[var(--primary)]"
+                    :style="{ width: `${barData[i] || 10}%` }"
+                  />
                 </div>
                 <span class="text-xs text-[var(--ink)] w-6 text-right">{{ barData[i] || 0 }}</span>
               </div>
@@ -318,7 +369,9 @@ onMounted(fetchOverview)
                 :style="{ height: `${h}%`, opacity: 0.5 + i * 0.07 }"
               />
             </div>
-            <p class="text-xs text-[var(--sub)] mt-2">本周拜访次数：{{ overview.kpis.visitComplianceRate * 3 }}</p>
+            <p class="text-xs text-[var(--sub)] mt-2">
+              本周拜访次数：{{ overview.kpis.visitComplianceRate * 3 }}
+            </p>
           </div>
 
           <!-- 试剂消耗 -->
@@ -351,7 +404,9 @@ onMounted(fetchOverview)
             </div>
             <div class="flex items-center gap-4">
               <div class="text-center">
-                <p class="text-2xl font-bold text-[var(--ink)]">{{ overview.kpis.equipmentCount }}</p>
+                <p class="text-2xl font-bold text-[var(--ink)]">
+                  {{ overview.kpis.equipmentCount }}
+                </p>
                 <p class="text-xs text-[var(--sub)]">总装机</p>
               </div>
               <div class="flex-1 space-y-2">

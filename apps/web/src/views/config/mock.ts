@@ -3,7 +3,7 @@
  */
 import type { ConfigItem, ConfigForm, ConfigListResult } from './types'
 
-let configs: ConfigItem[] = [
+const configs: ConfigItem[] = [
   {
     id: '1',
     module: 'SYSTEM',
