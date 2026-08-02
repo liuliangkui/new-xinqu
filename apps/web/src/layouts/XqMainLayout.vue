@@ -230,7 +230,7 @@ const pageTitle = computed(() => {
         <div class="relative">
           <button
             class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-lg hover:bg-[var(--gray-bg)] transition-colors text-[var(--ink)]"
-            @click="userMenuOpen = !userMenuOpen"
+            @click.stop="userMenuOpen = !userMenuOpen"
           >
             <span
               class="w-7 h-7 rounded-full bg-[var(--primary-light)] text-[var(--primary)] flex items-center justify-center text-xs font-bold"
@@ -275,7 +275,7 @@ const pageTitle = computed(() => {
                 class="w-full text-left px-4 py-2 text-sm text-[var(--danger)] hover:bg-[var(--danger-bg)] transition-colors flex items-center gap-2"
                 @click="handleLogout"
               >
-                <XqIcon name="close" size="14" />
+                <XqIcon name="logout" size="14" />
                 <span>退出登录</span>
               </button>
             </div>
