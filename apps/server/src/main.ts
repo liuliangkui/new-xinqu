@@ -1,3 +1,5 @@
+import 'class-validator'
+import 'class-transformer'
 import { NestFactory } from '@nestjs/core'
 import { ValidationPipe, VersioningType, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
@@ -56,7 +58,7 @@ async function bootstrap() {
   // 静态文件服务（上传文件）
   app.use('/uploads', express.static(join(process.cwd(), 'uploads')))
 
-  const port = configService.get('PORT', 3000)
+  const port = configService.get('SERVER_PORT', 3001)
   await app.listen(port)
 
   logger.log(`Application is running on: http://localhost:${port}/api`)

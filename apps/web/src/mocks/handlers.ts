@@ -169,36 +169,6 @@ const ok = <T>(data: T): ApiResponse<T> => ({
 })
 
 export const handlers = [
-  http.post('/api/v1/auth/login', async () =>
-    HttpResponse.json(
-      ok({
-        accessToken: 'mock-jwt-token',
-        user: {
-          id: '1',
-          name: '管理员',
-          username: 'admin',
-          deptId: '1',
-          deptName: '销售部',
-          roles: ['admin'],
-          permissions: ['*'],
-        },
-      }),
-    ),
-  ),
-
-  http.get('/api/v1/auth/profile', () =>
-    HttpResponse.json(
-      ok({
-        id: '1',
-        name: '管理员',
-        username: 'admin',
-        departmentId: '1',
-        roleIds: ['admin'],
-        permissions: ['*'],
-      }),
-    ),
-  ),
-
   http.get('/api/v1/customers', ({ request }) => {
     const url = new URL(request.url)
     const page = Number(url.searchParams.get('page') ?? '1')
