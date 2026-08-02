@@ -6,7 +6,7 @@ import { AxiosError } from 'axios'
 
 export interface FlowableProcessDefinition {
   id: string
-  url: string
+  url?: string
   key: string
   version: number
   name?: string
@@ -29,7 +29,7 @@ export interface FlowableDeployment {
 
 export interface FlowableProcessInstance {
   id: string
-  url: string
+  url?: string
   name?: string
   businessKey?: string
   processDefinitionId: string
@@ -43,6 +43,12 @@ export interface FlowableProcessInstance {
   suspended: boolean
 }
 
+/**
+ * 工作流引擎 REST 客户端
+ *
+ * 当前实现基于 Camunda 7 (engine-rest)。历史文件名/字段名保留为 flowable*，
+ * 仅内部 HTTP 路径与报文结构按 Camunda 7 REST API 实现，避免数据库字段与外部调用方改动。
+ */
 @Injectable()
 export class FlowableService {
   private readonly logger = new Logger(FlowableService.name)
@@ -54,9 +60,9 @@ export class FlowableService {
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {
-    this.baseUrl = this.configService.get('FLOWABLE_URL', 'http://localhost:8080/flowable-rest')
-    this.username = this.configService.get('FLOWABLE_USERNAME', 'rest-admin')
-    this.password = this.configService.get('FLOWABLE_PASSWORD', 'test')
+    this.baseUrl = this.configService.get('CAMUNDA_URL', 'http://localhost:8080/engine-rest')
+    this.username = this.configService.get('CAMUNDA_USERNAME', 'demo')
+    this.password = this.configService.get('CAMUNDA_PASSWORD', 'demo')
   }
 
   private get auth() {
@@ -69,23 +75,37 @@ export class FlowableService {
   private handleError(error: unknown, context: string): never {
     if (error instanceof AxiosError) {
       const message = error.response?.data?.message || error.message
-      this.logger.error(`Flowable ${context} failed: ${message}`, error.response?.data)
-      throw new Error(`Flowable ${context} failed: ${message}`)
+      this.logger.error(`Camunda ${context} failed: ${message}`, error.response?.data)
+      throw new Error(`Camunda ${context} failed: ${message}`)
     }
     throw error
+  }
+
+  private toCamundaVariables(variables?: Record<string, unknown>): Record<string, { value: unknown; type?: string }> {
+    if (!variables) return {}
+    const result: Record<string, { value: unknown; type?: string }> = {}
+    for (const [name, value] of Object.entries(variables)) {
+      let type: string | undefined
+      if (typeof value === 'boolean') type = 'Boolean'
+      else if (typeof value === 'number') type = Number.isInteger(value) ? 'Integer' : 'Double'
+      else if (value instanceof Date) type = 'Date'
+      else if (typeof value === 'string') type = 'String'
+      result[name] = { value, type }
+    }
+    return result
   }
 
   async health(): Promise<boolean> {
     try {
       await firstValueFrom(
-        this.httpService.get(`${this.baseUrl}/service/management/engine`, {
+        this.httpService.get(`${this.baseUrl}/engine`, {
           auth: this.auth,
           timeout: 5000,
         }),
       )
       return true
     } catch (error) {
-      this.logger.warn(`Flowable health check failed: ${error instanceof Error ? error.message : String(error)}`)
+      this.logger.warn(`Camunda health check failed: ${error instanceof Error ? error.message : String(error)}`)
       return false
     }
   }
@@ -93,15 +113,14 @@ export class FlowableService {
   async deploy(name: string, bpmnXml: string): Promise<FlowableDeployment> {
     const formData = new FormData()
     const blob = new Blob([bpmnXml], { type: 'application/xml' })
-    formData.append('deploymentKey', name)
-    formData.append('deploymentName', name)
-    formData.append('file', blob, `${name}.bpmn20.xml`)
+    // Camunda 7 REST: part name 必须为 data，文件名决定 resourceName
+    formData.append('data', blob, `${name}.bpmn20.xml`)
 
     try {
       const { data } = await firstValueFrom(
-        this.httpService.post(`${this.baseUrl}/repository/deployments`, formData, {
+        this.httpService.post(`${this.baseUrl}/deployment/create`, formData, {
           auth: this.auth,
-          headers: { 'Content-Type': 'multipart/form-data' },
+          params: { 'deployment-name': name },
         }),
       )
       return data as FlowableDeployment
@@ -113,12 +132,12 @@ export class FlowableService {
   async getProcessDefinitions(deploymentId?: string): Promise<FlowableProcessDefinition[]> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.get(`${this.baseUrl}/repository/process-definitions`, {
+        this.httpService.get(`${this.baseUrl}/process-definition`, {
           auth: this.auth,
           params: deploymentId ? { deploymentId } : {},
         }),
       )
-      return (data.data || []) as FlowableProcessDefinition[]
+      return (Array.isArray(data) ? data : data.data || []) as FlowableProcessDefinition[]
     } catch (error) {
       this.handleError(error, 'getProcessDefinitions')
     }
@@ -130,21 +149,15 @@ export class FlowableService {
     businessKey?: string,
   ): Promise<FlowableProcessInstance> {
     try {
+      const body: { businessKey?: string; variables?: Record<string, { value: unknown; type?: string }> } = {
+        variables: this.toCamundaVariables(variables),
+      }
+      if (businessKey) body.businessKey = businessKey
+
       const { data } = await firstValueFrom(
-        this.httpService.post(
-          `${this.baseUrl}/runtime/process-instances`,
-          {
-            processDefinitionId,
-            businessKey,
-            variables: variables
-              ? Object.entries(variables).map(([name, value]) => ({
-                  name,
-                  value,
-                }))
-              : [],
-          },
-          { auth: this.auth },
-        ),
+        this.httpService.post(`${this.baseUrl}/process-definition/${processDefinitionId}/start`, body, {
+          auth: this.auth,
+        }),
       )
       return data as FlowableProcessInstance
     } catch (error) {
@@ -155,7 +168,7 @@ export class FlowableService {
   async getProcessInstance(instanceId: string): Promise<FlowableProcessInstance> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.get(`${this.baseUrl}/runtime/process-instances/${instanceId}`, {
+        this.httpService.get(`${this.baseUrl}/process-instance/${instanceId}`, {
           auth: this.auth,
         }),
       )

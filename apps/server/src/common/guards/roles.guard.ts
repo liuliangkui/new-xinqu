@@ -41,12 +41,21 @@ export class RolesGuard implements CanActivate {
 
     const permissions = await this.resolvePermissions(user.roleIds || [])
 
-    const hasPermission = requiredPermissions.some((p) => permissions.has(p))
+    const hasPermission = requiredPermissions.some((p) => this.matchPermission(p, permissions))
     if (!hasPermission) {
       throw new BusinessException('PERM_001', '权限不足，无法访问该资源', 403)
     }
 
     return true
+  }
+
+  private matchPermission(required: string, permissions: Set<string>): boolean {
+    if (permissions.has(required)) return true
+    const [resource] = required.split(':')
+    if (permissions.has(`${resource}:*`)) return true
+    if (permissions.has('*:*')) return true
+    // 兼容旧数据中的单独 resource/action 对象形式
+    return permissions.has('*')
   }
 
   private async resolvePermissions(roleIds: string[]): Promise<Set<string>> {

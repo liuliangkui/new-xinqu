@@ -134,7 +134,7 @@ export class WorkflowDefinitionService {
   async startInstance(id: string, businessKey?: string, variables?: Record<string, unknown>) {
     const existing = await this.findOne(id)
     if (!existing.flowableDefinitionId) {
-      throw new ConflictException('流程尚未发布到 Flowable')
+      throw new ConflictException('流程尚未发布到工作流引擎')
     }
 
     const instance = await this.flowable.startProcessInstance(existing.flowableDefinitionId, variables, businessKey)
