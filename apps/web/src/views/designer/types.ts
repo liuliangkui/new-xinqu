@@ -18,7 +18,10 @@ export interface WorkflowDefinition {
   module: string
   version: number
   status: WorkflowStatus
+  bpmnXml?: string
   nodes: WorkflowNode[]
+  flowableDeploymentId?: string
+  flowableDefinitionId?: string
   createdAt: string
   updatedAt: string
 }
@@ -29,6 +32,7 @@ export interface WorkflowForm {
   code: string
   module: string
   status?: WorkflowStatus
+  bpmnXml?: string
 }
 
 export interface WorkflowListResult {

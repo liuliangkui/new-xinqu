@@ -25,6 +25,7 @@
     "openapi:generate": "JWT_SECRET=openapi ts-node -r tsconfig-paths/register scripts/generate-openapi.ts"
   },
   "dependencies": {
+    "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.0.0",
     "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^11.0.0",
@@ -36,6 +37,7 @@
     "@nestjs/swagger": "^11.0.0",
     "@nestjs/throttler": "^6.5.0",
     "@prisma/client": "^6.0.0",
+    "axios": "^1.19.0",
     "bcrypt": "^5.1.1",
     "bullmq": "^5.0.0",
     "class-transformer": "^0.5.1",
@@ -99,7 +101,11 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "coverageReporters": ["text", "text-summary", "lcov"],
+    "coverageReporters": [
+      "text",
+      "text-summary",
+      "lcov"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 0,

@@ -428,12 +428,7 @@ function pageChange(page: number): void {
     </div>
     <template #footer>
       <XqButton @click="detailVisible = false">关闭</XqButton>
-      <XqButton
-        type="primary"
-        @click="
-          detailVisible = false
-          openEdit(detailRecord!)
-        "
+      <XqButton type="primary" @click="((detailVisible = false), openEdit(detailRecord!))"
         >编辑</XqButton
       >
     </template>

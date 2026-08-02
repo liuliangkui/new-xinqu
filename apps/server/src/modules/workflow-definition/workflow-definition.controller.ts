@@ -46,4 +46,18 @@ export class WorkflowDefinitionController {
   remove(@Param('id') id: string) {
     return this.workflowDefinitionService.remove(id)
   }
+
+  @Post(':id/deploy')
+  @Permissions('workflow:update')
+  @ApiOperation({ summary: '发布流程到 Flowable 引擎' })
+  deploy(@Param('id') id: string) {
+    return this.workflowDefinitionService.deploy(id)
+  }
+
+  @Post(':id/start')
+  @Permissions('workflow:create')
+  @ApiOperation({ summary: '启动流程实例' })
+  startInstance(@Param('id') id: string, @Body() body: { businessKey?: string; variables?: Record<string, unknown> }) {
+    return this.workflowDefinitionService.startInstance(id, body.businessKey, body.variables)
+  }
 }

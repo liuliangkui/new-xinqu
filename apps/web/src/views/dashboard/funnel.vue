@@ -109,10 +109,7 @@ onMounted(fetchFunnel)
                   ? 'bg-[var(--primary)] text-white'
                   : 'text-[var(--ink)] hover:bg-[var(--gray-bg)]'
               "
-              @click="
-                period = p.value
-                fetchFunnel()
-              "
+              @click="((period = p.value), fetchFunnel())"
             >
               {{ p.label }}
             </button>

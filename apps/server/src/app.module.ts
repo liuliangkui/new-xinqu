@@ -31,6 +31,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module'
 import { SystemConfigModule } from './modules/system-config/system-config.module'
 import { FavoriteModule } from './modules/favorite/favorite.module'
 import { WorkflowDefinitionModule } from './modules/workflow-definition/workflow-definition.module'
+import { FlowableModule } from './modules/flowable/flowable.module'
 import { BrandModule } from './modules/brand/brand.module'
 import { ReagentModule } from './modules/reagent/reagent.module'
 import { ComplianceModule } from './modules/compliance/compliance.module'
@@ -69,6 +70,7 @@ import { SchedulerModule } from './scheduler/scheduler.module'
     SystemConfigModule,
     FavoriteModule,
     WorkflowDefinitionModule,
+    FlowableModule,
     BrandModule,
     ReagentModule,
     ComplianceModule,

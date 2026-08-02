@@ -930,38 +930,43 @@ model DealerInventory {
 // 流程设计器（通用工作流）
 // ======================
 model WorkflowDefinition {
-  id        String    @id @default(cuid())
-  name      String
-  code      String    @unique
-  module    String // APPROVAL / TICKET / TASK / CUSTOMER_LIFECYCLE
-  version   Int       @default(1)
-  nodes     Json // 节点定义
-  edges     Json // 连线定义
-  status    String    @default("ACTIVE") // ACTIVE / ARCHIVED / DRAFT
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  id                   String    @id @default(cuid())
+  name                 String
+  code                 String    @unique
+  module               String // APPROVAL / TICKET / TASK / CUSTOMER_LIFECYCLE
+  version              Int       @default(1)
+  bpmnXml              String?   @map("bpmn_xml") @db.Text
+  nodes                Json      @default("[]") // 节点定义（兼容旧数据）
+  edges                Json      @default("[]") // 连线定义（兼容旧数据）
+  flowableDeploymentId String?   @map("flowable_deployment_id")
+  flowableDefinitionId String?   @map("flowable_definition_id")
+  status               String    @default("DRAFT") // ACTIVE / ARCHIVED / DRAFT
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  deletedAt            DateTime?
 
   instances WorkflowInstance[]
 
   @@index([module])
   @@index([status])
   @@index([deletedAt])
+  @@index([flowableDefinitionId])
   @@map("workflow_definitions")
 }
 
 model WorkflowInstance {
-  id           String    @id @default(cuid())
-  definitionId String
-  businessType String // 关联业务对象类型
-  businessKey  String // 关联业务对象 ID
-  payload      Json
-  status       String    @default("RUNNING") // RUNNING / COMPLETED / TERMINATED
-  currentNode  String?
-  createdAt    DateTime  @default(now())
-  completedAt  DateTime?
-  updatedAt    DateTime  @updatedAt
-  deletedAt    DateTime?
+  id                       String    @id @default(cuid())
+  definitionId             String
+  businessType             String // 关联业务对象类型
+  businessKey              String // 关联业务对象 ID
+  payload                  Json
+  status                   String    @default("RUNNING") // RUNNING / COMPLETED / TERMINATED
+  currentNode              String?
+  flowableProcessInstanceId String?   @map("flowable_process_instance_id")
+  createdAt                DateTime  @default(now())
+  completedAt              DateTime?
+  updatedAt                DateTime  @updatedAt
+  deletedAt                DateTime?
 
   definition WorkflowDefinition @relation(fields: [definitionId], references: [id])
 

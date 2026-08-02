@@ -30,6 +30,11 @@ export class CreateWorkflowDefinitionDto {
   @IsOptional()
   edges?: unknown
 
+  @ApiPropertyOptional({ description: 'BPMN 2.0 XML' })
+  @IsOptional()
+  @IsString()
+  bpmnXml?: string
+
   @ApiPropertyOptional({ description: '状态', enum: ['ACTIVE', 'ARCHIVED', 'DRAFT'] })
   @IsOptional()
   @IsEnum(['ACTIVE', 'ARCHIVED', 'DRAFT'])

@@ -4,7 +4,14 @@
  */
 import { ref, computed, onMounted } from 'vue'
 import type { WorkflowDefinition, WorkflowForm, WorkflowStatus } from './types'
-import { getWorkflowList, saveWorkflow, deleteWorkflow } from './api'
+import {
+  getWorkflowList,
+  saveWorkflow,
+  deleteWorkflow,
+  deployWorkflow,
+  startWorkflowInstance,
+} from './api'
+import BpmnEditor from './components/BpmnEditor.vue'
 
 const loading = ref(false)
 const workflows = ref<WorkflowDefinition[]>([])
@@ -14,6 +21,11 @@ const moduleFilter = ref('')
 const formVisible = ref(false)
 const formData = ref<WorkflowForm>({ name: '', code: '', module: 'APPROVAL', status: 'DRAFT' })
 const formLoading = ref(false)
+const editorVisible = ref(false)
+const editorXml = ref('')
+const editorRecord = ref<WorkflowDefinition | null>(null)
+const editorLoading = ref(false)
+const bpmnEditorRef = ref<InstanceType<typeof BpmnEditor> | null>(null)
 
 const moduleOptions = [
   { value: '', label: '全部模块' },
@@ -92,6 +104,61 @@ async function handleDelete(item: WorkflowDefinition) {
   if (!confirm(`确定删除流程「${item.name}」？`)) return
   await deleteWorkflow(item.id)
   await fetchList()
+}
+
+function openBpmnEditor(item: WorkflowDefinition) {
+  editorRecord.value = item
+  editorXml.value = item.bpmnXml || ''
+  editorVisible.value = true
+}
+
+function handleBpmnChange(xml: string) {
+  editorXml.value = xml
+}
+
+async function handleSaveBpmn() {
+  if (!editorRecord.value) return
+  editorLoading.value = true
+  try {
+    const xml = bpmnEditorRef.value ? await bpmnEditorRef.value.getXml() : editorXml.value
+    await saveWorkflow({
+      id: editorRecord.value.id,
+      name: editorRecord.value.name,
+      code: editorRecord.value.code,
+      module: editorRecord.value.module,
+      status: editorRecord.value.status,
+      bpmnXml: xml,
+    })
+    editorVisible.value = false
+    await fetchList()
+  } finally {
+    editorLoading.value = false
+  }
+}
+
+async function handleDeploy(item: WorkflowDefinition) {
+  if (!item.bpmnXml) {
+    alert('请先编辑并保存 BPMN 流程图')
+    return
+  }
+  if (!confirm(`确定发布流程「${item.name}」？`)) return
+  try {
+    await deployWorkflow(item.id)
+    await fetchList()
+    alert('发布成功')
+  } catch (e) {
+    alert(e instanceof Error ? e.message : '发布失败')
+  }
+}
+
+async function handleStartInstance(item: WorkflowDefinition) {
+  if (!confirm(`确定启动流程「${item.name}」的一个实例？`)) return
+  try {
+    await startWorkflowInstance(item.id, { businessKey: `demo-${Date.now()}` })
+    alert('实例启动成功')
+  } catch (e) {
+    alert(e instanceof Error ? e.message : '启动失败')
+  }
 }
 
 function toggleStatus(item: WorkflowDefinition) {
@@ -194,10 +261,29 @@ onMounted(fetchList)
                       编辑
                     </button>
                     <button
+                      class="text-sm text-[var(--primary)] hover:underline"
+                      @click="openBpmnEditor(item)"
+                    >
+                      BPMN
+                    </button>
+                    <button
                       class="text-sm text-[var(--sub)] hover:underline"
                       @click="toggleStatus(item)"
                     >
                       {{ item.status === 'ACTIVE' ? '归档' : '启用' }}
+                    </button>
+                    <button
+                      class="text-sm text-[var(--warning)] hover:underline"
+                      @click="handleDeploy(item)"
+                    >
+                      发布
+                    </button>
+                    <button
+                      v-if="item.flowableDefinitionId"
+                      class="text-sm text-[var(--success)] hover:underline"
+                      @click="handleStartInstance(item)"
+                    >
+                      启动
                     </button>
                     <button
                       class="text-sm text-[var(--danger)] hover:underline"
@@ -271,6 +357,23 @@ onMounted(fetchList)
     <template #footer>
       <XqButton @click="formVisible = false">取消</XqButton>
       <XqButton type="primary" :loading="formLoading" @click="handleSave">保存</XqButton>
+    </template>
+  </XqModal>
+
+  <!-- BPMN 编辑器弹窗 -->
+  <XqModal
+    v-model:visible="editorVisible"
+    :title="editorRecord ? `编辑流程图 - ${editorRecord.name}` : '编辑流程图'"
+    width="960px"
+  >
+    <div class="h-[500px]">
+      <BpmnEditor ref="bpmnEditorRef" :xml="editorXml" @change="handleBpmnChange" />
+    </div>
+    <template #footer>
+      <XqButton @click="editorVisible = false">取消</XqButton>
+      <XqButton type="primary" :loading="editorLoading" @click="handleSaveBpmn">
+        保存 BPMN
+      </XqButton>
     </template>
   </XqModal>
 </template>

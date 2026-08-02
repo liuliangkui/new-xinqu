@@ -214,10 +214,7 @@ onMounted(fetchOverview)
                   ? 'bg-[var(--primary)] text-white'
                   : 'text-[var(--ink)] hover:bg-[var(--gray-bg)]'
               "
-              @click="
-                period = p.value
-                fetchOverview()
-              "
+              @click="((period = p.value), fetchOverview())"
             >
               {{ p.label }}
             </button>

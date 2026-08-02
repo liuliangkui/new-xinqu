@@ -25,3 +25,22 @@ export function saveWorkflow(data: WorkflowForm): Promise<WorkflowDefinition> {
 export function deleteWorkflow(id: string): Promise<{ success: boolean }> {
   return del<{ success: boolean }>(`${BASE}/${id}`)
 }
+
+/** 发布流程到 Flowable */
+export function deployWorkflow(id: string): Promise<{
+  deploymentId: string
+  definitionId: string
+  version: number
+}> {
+  return post<{ deploymentId: string; definitionId: string; version: number }>(
+    `${BASE}/${id}/deploy`,
+  )
+}
+
+/** 启动流程实例 */
+export function startWorkflowInstance(
+  id: string,
+  data: { businessKey?: string; variables?: Record<string, unknown> } = {},
+): Promise<unknown> {
+  return post<unknown>(`${BASE}/${id}/start`, data)
+}
