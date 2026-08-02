@@ -127,7 +127,7 @@ npm run build:web
 打开两个终端（或后台任务）：
 
 ```bash
-# 终端 1：后端
+# 终端 1：后端（默认端口 3000；若 3000 被占用，将 .env 的 SERVER_PORT 改为 3001）
 npm run dev:server
 ```
 
@@ -138,30 +138,38 @@ npm run dev:web
 
 ### 9. 检查服务是否就绪
 
-```bash
-curl http://localhost:3000/api/health
-```
-
+后端默认地址：`http://localhost:3000/api`（若改为 3001 则对应调整）
 前端默认地址：`http://localhost:5173`
+
+由于 `/api/health` 已接入认证，用登录接口验证：
+
+```bash
+curl -X POST http://localhost:3000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}'
+```
 
 ### 10. 登录验证
 
-使用 seed 创建的默认管理员账号登录：
+使用 seed 创建的默认账号登录：
 
-- 用户名：`admin`
-- 密码：`admin123`
+- 管理员：`admin` / `admin123`
+- 销售代表：`13800000001` / `123456`
+- 区域经理：`13900000002` / `123456`
+- 只读用户：`13700000003` / `123456`
 
 如果登录失败，检查：
 
 - 后端是否正常启动
 - 数据库是否已 seed
 - `.env` 中的 `JWT_SECRET` 是否一致
+- 后端端口与前端 `apps/web/vite.config.ts` 代理是否一致
 
 ## 常见问题
 
 ### 端口冲突
 
-如果 3000/5173/5432/6379 被占用，修改 `.env` 和 `docker-compose.yml` 中的端口映射。
+如果 3000/5173/5432/6379 被占用，修改 `.env` 和 `docker-compose.yml` 中的端口映射。当前项目本地开发已将后端端口调整为 `3001`，前端 Vite 代理 `/api/v1` 到 `http://localhost:3001`。
 
 ### 数据库已存在但 schema 不对
 
