@@ -55,7 +55,7 @@ import { SchedulerModule } from './scheduler/scheduler.module'
       {
         name: 'default',
         ttl: 60000,
-        limit: 100,
+        limit: 1000,
       },
       {
         name: 'auth',
