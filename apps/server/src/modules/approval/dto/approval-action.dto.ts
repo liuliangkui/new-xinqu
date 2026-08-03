@@ -11,4 +11,9 @@ export class ApprovalActionDto {
   @IsOptional()
   @IsNumber()
   targetNodeIndex?: number
+
+  @ApiPropertyOptional({ description: '驳回到指定处理人 ID（配合 targetNodeIndex 使用）' })
+  @IsOptional()
+  @IsString()
+  targetAssigneeId?: string
 }

@@ -76,7 +76,14 @@ export class ApprovalController {
   @ApiResponse({ status: 200, description: '审批驳回成功' })
   reject(@Req() req: Request, @Param('id') id: string, @Body() dto: ApprovalActionDto) {
     const user = this.getCurrentUser(req)
-    return this.approvalService.action(id, user.userId, 'REJECT', dto.comment, dto.targetNodeIndex)
+    return this.approvalService.action(
+      id,
+      user.userId,
+      'REJECT',
+      dto.comment,
+      dto.targetNodeIndex,
+      dto.targetAssigneeId,
+    )
   }
 
   @Post(':id/withdraw')

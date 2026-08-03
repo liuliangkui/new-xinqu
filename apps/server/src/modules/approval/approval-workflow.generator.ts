@@ -92,7 +92,7 @@ export function generateApprovalBpmn(options: GenerateApprovalBpmnOptions): stri
         nodes.push({
           id: taskId,
           name: `${stage.name || `阶段 ${stageIndex + 1}`} - ${approverIndex + 1}`,
-          xml: `<userTask id="${taskId}" name="${escapeXml(stage.name || `阶段 ${stageIndex + 1}`)} - ${approverIndex + 1}" camunda:assignee="${escapeXml(approver.id)}">
+          xml: `<userTask id="${taskId}" name="${escapeXml(stage.name || `阶段 ${stageIndex + 1}`)} - ${approverIndex + 1}" camunda:assignee="\${assignee_${taskId}}">
   <documentation>审批人：${escapeXml(approver.name || approver.id)}</documentation>
 </userTask>`,
         })
@@ -122,7 +122,7 @@ export function generateApprovalBpmn(options: GenerateApprovalBpmnOptions): stri
       nodes.push({
         id: taskId,
         name: stage.name || `阶段 ${stageIndex + 1}`,
-        xml: `<userTask id="${taskId}" name="${escapeXml(stage.name || `阶段 ${stageIndex + 1}`)}" camunda:assignee="${escapeXml(approver.id)}">
+        xml: `<userTask id="${taskId}" name="${escapeXml(stage.name || `阶段 ${stageIndex + 1}`)}" camunda:assignee="\${assignee_${taskId}}">
   <documentation>审批人：${escapeXml(approver.name || approver.id)}</documentation>
 </userTask>`,
       })

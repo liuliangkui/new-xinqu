@@ -182,6 +182,7 @@ export class ApprovalService {
           applicant: userId,
           module,
           priority: dto.priority || 'normal',
+          ...this.buildAssigneeVariables(stages),
           ...(instance.payload as Record<string, unknown>),
         },
         instance.id,
@@ -237,7 +238,14 @@ export class ApprovalService {
     return { success: true }
   }
 
-  async action(id: string, userId: string, action: 'APPROVE' | 'REJECT', comment?: string, targetNodeIndex?: number) {
+  async action(
+    id: string,
+    userId: string,
+    action: 'APPROVE' | 'REJECT',
+    comment?: string,
+    targetNodeIndex?: number,
+    targetAssigneeId?: string,
+  ) {
     const instance = await this.prisma.approvalInstance.findUnique({
       where: { id },
       include: { tasks: true, template: true },
@@ -262,6 +270,10 @@ export class ApprovalService {
       }
       if (action === 'REJECT' && targetNodeIndex !== undefined) {
         variables.rejectTargetStageIndex = targetNodeIndex
+        if (targetAssigneeId) {
+          // 驳回到指定阶段的具体处理人（当前仅串行阶段支持动态指派）
+          variables[`assignee_task_s${targetNodeIndex}`] = targetAssigneeId
+        }
       } else if (action === 'APPROVE') {
         // 通过时清空驳回目标，避免后续节点受旧变量影响
         variables.rejectTargetStageIndex = null
@@ -331,7 +343,7 @@ export class ApprovalService {
       }
     } else {
       // 本地模式：按阶段推进
-      await this.handleLocalActionProgress(id, userId, action, completedNodeId, targetNodeIndex)
+      await this.handleLocalActionProgress(id, userId, action, completedNodeId, targetNodeIndex, targetAssigneeId)
     }
 
     return this.findOne(id)
@@ -524,9 +536,10 @@ export class ApprovalService {
     instanceId: string,
     stageIndex: number,
     stage: ApprovalFlowStage,
+    assigneeId?: string,
   ): Promise<void> {
     const nodeId = `stage_${stageIndex}`
-    const approvers = stage.approvers.filter((a) => a.id)
+    const approvers = assigneeId ? [{ id: assigneeId }] : stage.approvers.filter((a) => a.id)
     if (approvers.length === 0) return
     await this.prisma.approvalTask.createMany({
       data: approvers.map((a) => ({
@@ -550,6 +563,7 @@ export class ApprovalService {
     action: 'APPROVE' | 'REJECT',
     completedNodeId?: string,
     targetNodeIndex?: number,
+    targetAssigneeId?: string,
   ): Promise<void> {
     const instance = await this.prisma.approvalInstance.findUnique({
       where: { id: instanceId },
@@ -575,7 +589,7 @@ export class ApprovalService {
       })
       const targetStage = stages[targetNodeIndex]
       if (targetStage) {
-        await this.createLocalTasksForStage(instanceId, targetNodeIndex, targetStage)
+        await this.createLocalTasksForStage(instanceId, targetNodeIndex, targetStage, targetAssigneeId)
       }
       return
     }
@@ -638,6 +652,22 @@ export class ApprovalService {
 
     const deployed = await this.ensureWorkflowDefinitionDeployed(def)
     return deployed
+  }
+
+  private buildAssigneeVariables(stages: ApprovalFlowStage[]): Record<string, string> {
+    const variables: Record<string, string> = {}
+    stages.forEach((stage, idx) => {
+      if (stage.mode === 'parallel') {
+        stage.approvers.forEach((approver, aIdx) => {
+          if (approver.id) {
+            variables[`assignee_task_s${idx}_a${aIdx}`] = approver.id
+          }
+        })
+      } else if (stage.approvers[0]?.id) {
+        variables[`assignee_task_s${idx}`] = stage.approvers[0].id
+      }
+    })
+    return variables
   }
 
   private resolveStages(dto: CreateApprovalDto): ApprovalFlowStage[] {

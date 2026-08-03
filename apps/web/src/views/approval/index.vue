@@ -492,6 +492,7 @@ const actionType = ref<'approve' | 'reject' | null>(null)
 const actionComment = ref('')
 const actionRejectTarget = ref<'end' | 'prev' | 'node'>('end')
 const actionRejectNodeIndex = ref<number | null>(null)
+const actionRejectAssigneeId = ref<string | null>(null)
 
 function canApprove(record: Approval | null): boolean {
   if (!record || record.status !== ApprovalStatus.PENDING) return false
@@ -514,20 +515,22 @@ function buildRejectStageOptions() {
     if (t.assigneeId && t.assigneeName) userMap.set(t.assigneeId, t.assigneeName)
   })
   return stages.map((stage, idx) => {
-    const names = stage.approvers
+    const approvers = stage.approvers
       .filter((a) => a.id)
-      .map(
-        (a) =>
+      .map((a) => ({
+        id: a.id,
+        name:
           userMap.get(a.id) ||
           userOptions.value.find((u) => u.value === a.id)?.label.split(' ')[0] ||
           a.name ||
           a.id,
-      )
+      }))
     return {
       index: idx,
       label: `阶段 ${idx + 1}`,
-      assigneeName: names.join('、') || '未配置',
+      assigneeName: approvers.map((a) => a.name).join('、') || '未配置',
       stageMode: stage.mode,
+      approvers,
     }
   })
 }
@@ -537,6 +540,7 @@ function openAction(type: 'approve' | 'reject'): void {
   actionComment.value = ''
   actionRejectTarget.value = 'end'
   actionRejectNodeIndex.value = null
+  actionRejectAssigneeId.value = null
   actionModalVisible.value = true
 }
 
@@ -556,7 +560,12 @@ async function handleActionSubmit(): Promise<void> {
       } else if (actionRejectTarget.value === 'node' && actionRejectNodeIndex.value !== null) {
         targetNodeIndex = actionRejectNodeIndex.value
       }
-      await rejectApproval(detailApproval.value.approvalId, actionComment.value, targetNodeIndex)
+      await rejectApproval(
+        detailApproval.value.approvalId,
+        actionComment.value,
+        targetNodeIndex,
+        actionRejectAssigneeId.value || undefined,
+      )
     }
     actionModalVisible.value = false
     detailVisible.value = false
@@ -1268,7 +1277,10 @@ function timelineItems() {
                   ? 'bg-[var(--danger-light)] text-[var(--danger)] border-[var(--danger)]'
                   : 'border-[var(--line)] text-[var(--ink)] hover:border-[var(--danger)]'
               "
-              @click="actionRejectNodeIndex = opt.index"
+              @click="
+                actionRejectNodeIndex = opt.index
+                actionRejectAssigneeId = opt.approvers[0]?.id || null
+              "
             >
               <span
                 class="w-5 h-5 rounded-full bg-[var(--gray-bg)] text-xs flex items-center justify-center flex-shrink-0"
@@ -1281,6 +1293,20 @@ function timelineItems() {
               }}</span>
             </button>
           </div>
+
+          <!-- 指定具体处理人 -->
+          <div v-if="actionRejectNodeIndex !== null" class="flex flex-col gap-1.5 mt-2">
+            <span class="text-xs text-[var(--sub)]"
+              >指定该阶段的处理人（不选则默认给阶段原审批人）</span
+            >
+            <select v-model="actionRejectAssigneeId" class="input text-sm">
+              <option value="" disabled>请选择处理人</option>
+              <option v-for="u in userOptions" :key="u.value" :value="u.value">
+                {{ u.label }}
+              </option>
+            </select>
+          </div>
+
           <p
             v-if="buildRejectStageOptions().length === 0"
             class="text-xs text-[var(--placeholder)]"

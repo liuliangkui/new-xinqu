@@ -60,8 +60,13 @@ export function rejectApproval(
   approvalId: string,
   comment?: string,
   targetNodeIndex?: number,
+  targetAssigneeId?: string,
 ): Promise<Approval> {
-  return post<Approval>(`${BASE}/${approvalId}/reject`, { comment, targetNodeIndex })
+  return post<Approval>(`${BASE}/${approvalId}/reject`, {
+    comment,
+    targetNodeIndex,
+    targetAssigneeId,
+  })
 }
 
 /** 撤回审批 */
