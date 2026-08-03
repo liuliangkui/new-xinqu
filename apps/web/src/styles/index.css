@@ -220,6 +220,39 @@ body {
   background: var(--line-light);
 }
 
+/* 输入框 */
+.input {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 0.929rem;
+  line-height: 1.5;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input::placeholder {
+  color: var(--placeholder);
+}
+
+.input:hover {
+  border-color: var(--line-light);
+}
+
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.input:disabled {
+  background: var(--gray-bg);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 /* 状态标签 */
 .badge {
   display: inline-flex;
