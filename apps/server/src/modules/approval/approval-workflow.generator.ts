@@ -1,27 +1,36 @@
 /**
- * 审批工作流 BPMN 生成器
+ * 审批工作流 BPMN 生成器（阶段流）
  *
- * 根据审批人、串并行模式、驳回策略生成可直接部署到 Camunda 7 的 BPMN 2.0 XML。
- * 支持：
- * - 串行审批：依次审批，可驳回至结束、上一节点、指定节点
- * - 并行审批：多节点同时审批，任意节点驳回即结束
+ * 根据审批阶段生成可直接部署到 Camunda 7 / Flowable 的 BPMN 2.0 XML。
+ * 支持混合串并行：阶段之间串行，每个阶段内部可串行（1 人）或并行（多人会签）。
  */
 
 export type ApprovalFlowMode = 'serial' | 'parallel'
 export type ApprovalRejectAction = 'end' | 'prev' | 'node'
+
+export interface ApprovalStageApprover {
+  id: string
+  name?: string
+  avatar?: string
+}
+
+export interface ApprovalFlowStage {
+  id: string
+  name?: string
+  mode: ApprovalFlowMode
+  approvers: ApprovalStageApprover[]
+}
 
 export interface GenerateApprovalBpmnOptions {
   /** 流程 key，建议唯一，例如 approval-dynamic-${instanceId} */
   processKey: string
   /** 流程显示名称 */
   name: string
-  /** 审批人 ID 列表（顺序即为串行顺序） */
-  approvers: string[]
-  /** 串行 / 并行 */
-  mode: ApprovalFlowMode
-  /** 驳回后策略：end 结束 / prev 回到上一节点 / node 回到指定节点 */
+  /** 审批阶段列表（阶段之间串行） */
+  stages: ApprovalFlowStage[]
+  /** 驳回后策略：end 结束 / prev 回到上一阶段 / node 回到指定阶段 */
   rejectAction?: ApprovalRejectAction
-  /** rejectAction = node 时，回到的节点下标（从 0 开始） */
+  /** rejectAction = node 时，回到的阶段下标（从 0 开始） */
   rejectTargetIndex?: number
 }
 
@@ -32,8 +41,10 @@ interface BpmnNode {
 }
 
 export function generateApprovalBpmn(options: GenerateApprovalBpmnOptions): string {
-  const { processKey, name, approvers, mode, rejectAction = 'end', rejectTargetIndex } = options
-  if (!approvers.length) throw new Error('审批人列表不能为空')
+  const { processKey, name, stages } = options
+  if (!stages.length) throw new Error('审批阶段列表不能为空')
+  const validStages = stages.filter((s) => s.approvers.filter((a) => a.id).length > 0)
+  if (!validStages.length) throw new Error('审批阶段列表不能为空')
 
   const nodes: BpmnNode[] = []
   const flows: string[] = []
@@ -56,99 +67,117 @@ export function generateApprovalBpmn(options: GenerateApprovalBpmnOptions): stri
     xml: `<endEvent id="end_rejected" name="已驳回" />`,
   })
 
-  if (mode === 'serial') {
-    // 审批节点 + 网关
-    approvers.forEach((approver, index) => {
+  validStages.forEach((stage, stageIndex) => {
+    const isParallel = stage.mode === 'parallel'
+    const approvers = stage.approvers.filter((a) => a.id)
+
+    if (isParallel) {
+      // 并行阶段：fork -> 多个 userTask（各带决策网关） -> join
+      const forkId = `fork_s${stageIndex}`
+      const joinId = `join_s${stageIndex}`
       nodes.push({
-        id: `task_${index}`,
-        name: `审批节点 ${index + 1}`,
-        xml: `<userTask id="task_${index}" name="审批节点 ${index + 1}" camunda:assignee="${escapeXml(approver)}">
-  <documentation>审批人：${escapeXml(approver)}</documentation>
+        id: forkId,
+        name: `${stage.name || `阶段 ${stageIndex + 1}`} 分发`,
+        xml: `<parallelGateway id="${forkId}" name="${escapeXml(stage.name || `阶段 ${stageIndex + 1}`)} 分发" />`,
+      })
+      nodes.push({
+        id: joinId,
+        name: `${stage.name || `阶段 ${stageIndex + 1}`} 汇聚`,
+        xml: `<parallelGateway id="${joinId}" name="${escapeXml(stage.name || `阶段 ${stageIndex + 1}`)} 汇聚" />`,
+      })
+
+      approvers.forEach((approver, approverIndex) => {
+        const taskId = `task_s${stageIndex}_a${approverIndex}`
+        const gatewayId = `gateway_s${stageIndex}_a${approverIndex}`
+        nodes.push({
+          id: taskId,
+          name: `${stage.name || `阶段 ${stageIndex + 1}`} - ${approverIndex + 1}`,
+          xml: `<userTask id="${taskId}" name="${escapeXml(stage.name || `阶段 ${stageIndex + 1}`)} - ${approverIndex + 1}" camunda:assignee="${escapeXml(approver.id)}">
+  <documentation>审批人：${escapeXml(approver.name || approver.id)}</documentation>
+</userTask>`,
+        })
+        nodes.push({
+          id: gatewayId,
+          name: `决策 ${stageIndex + 1}-${approverIndex + 1}`,
+          xml: `<exclusiveGateway id="${gatewayId}" name="决策 ${stageIndex + 1}-${approverIndex + 1}" default="flow_${gatewayId}_join" />`,
+        })
+
+        flows.push(`<sequenceFlow id="flow_${forkId}_${taskId}" sourceRef="${forkId}" targetRef="${taskId}" />`)
+        flows.push(`<sequenceFlow id="flow_${taskId}_${gatewayId}" sourceRef="${taskId}" targetRef="${gatewayId}" />`)
+        flows.push(
+          `<sequenceFlow id="flow_${gatewayId}_join" sourceRef="${gatewayId}" targetRef="${joinId}" name="同意" />`,
+        )
+        // 并行阶段中任意审批人驳回即结束流程
+        flows.push(
+          `<sequenceFlow id="flow_${gatewayId}_rejected" sourceRef="${gatewayId}" targetRef="end_rejected" name="驳回">
+  <conditionExpression xsi:type="tFormalExpression">\${approved_${taskId} == false}</conditionExpression>
+</sequenceFlow>`,
+        )
+      })
+    } else {
+      // 串行阶段：userTask + 决策网关
+      const approver = approvers[0]
+      const taskId = `task_s${stageIndex}`
+      const gatewayId = `gateway_s${stageIndex}`
+      nodes.push({
+        id: taskId,
+        name: stage.name || `阶段 ${stageIndex + 1}`,
+        xml: `<userTask id="${taskId}" name="${escapeXml(stage.name || `阶段 ${stageIndex + 1}`)}" camunda:assignee="${escapeXml(approver.id)}">
+  <documentation>审批人：${escapeXml(approver.name || approver.id)}</documentation>
 </userTask>`,
       })
-
       nodes.push({
-        id: `gateway_${index}`,
-        name: `决策 ${index + 1}`,
-        xml: `<exclusiveGateway id="gateway_${index}" name="决策 ${index + 1}" default="flow_gateway_${index}_approved" />`,
+        id: gatewayId,
+        name: `决策 ${stageIndex + 1}`,
+        xml: `<exclusiveGateway id="${gatewayId}" name="决策 ${stageIndex + 1}" default="flow_${gatewayId}_approved" />`,
       })
-    })
 
-    // start -> task_0
-    flows.push(`<sequenceFlow id="flow_start_task_0" sourceRef="start" targetRef="task_0" />`)
+      flows.push(`<sequenceFlow id="flow_${taskId}_${gatewayId}" sourceRef="${taskId}" targetRef="${gatewayId}" />`)
+    }
+  })
 
-    approvers.forEach((_, index) => {
-      // task -> gateway
+  // 阶段间连接：start -> stage0 -> stage1 -> ... -> end_approved
+  validStages.forEach((stage, stageIndex) => {
+    const isParallel = stage.mode === 'parallel'
+    const currentEntryId = resolveStageEntryId(stage, stageIndex)
+    const isLast = stageIndex === validStages.length - 1
+
+    // 第一个阶段：start -> entry
+    if (stageIndex === 0) {
+      flows.push(`<sequenceFlow id="flow_start_${currentEntryId}" sourceRef="start" targetRef="${currentEntryId}" />`)
+    }
+
+    // 阶段出口
+    if (isParallel) {
+      // 并行阶段：join -> 下一阶段 / 结束
+      const joinId = `join_s${stageIndex}`
+      const nextTarget = isLast ? 'end_approved' : resolveStageEntryId(validStages[stageIndex + 1], stageIndex + 1)
       flows.push(
-        `<sequenceFlow id="flow_task_${index}_gateway_${index}" sourceRef="task_${index}" targetRef="gateway_${index}" />`,
+        `<sequenceFlow id="flow_${joinId}_${isLast ? 'end' : nextTarget.replace(/\./g, '_')}" sourceRef="${joinId}" targetRef="${nextTarget}" name="完成" />`,
+      )
+    } else {
+      // 串行阶段：网关同意分支 -> 下一阶段 / 结束（默认分支）
+      const gatewayId = `gateway_s${stageIndex}`
+      const nextTarget = isLast ? 'end_approved' : resolveStageEntryId(validStages[stageIndex + 1], stageIndex + 1)
+      flows.push(
+        `<sequenceFlow id="flow_${gatewayId}_approved" sourceRef="${gatewayId}" targetRef="${nextTarget}" name="同意" />`,
       )
 
-      // 同意分支：默认到下一节点 / 结束
-      const isLast = index === approvers.length - 1
-      const approvedTarget = isLast ? 'end_approved' : `task_${index + 1}`
-      flows.push(
-        `<sequenceFlow id="flow_gateway_${index}_approved" sourceRef="gateway_${index}" targetRef="${approvedTarget}" name="同意" />`,
-      )
-
-      // 驳回分支：为每个可能的目标节点生成条件路由
-      for (let targetIndex = 0; targetIndex < approvers.length; targetIndex++) {
+      // 驳回分支
+      for (let targetStageIndex = 0; targetStageIndex < validStages.length; targetStageIndex++) {
+        const targetEntryId = resolveStageEntryId(validStages[targetStageIndex], targetStageIndex)
         flows.push(
-          `<sequenceFlow id="flow_gateway_${index}_rejected_task_${targetIndex}" sourceRef="gateway_${index}" targetRef="task_${targetIndex}" name="驳回到节点 ${targetIndex + 1}">
-  <conditionExpression xsi:type="tFormalExpression">\${approved_${index} == false &amp;&amp; rejectTargetIndex == ${targetIndex}}</conditionExpression>
+          `<sequenceFlow id="flow_${gatewayId}_rejected_s${targetStageIndex}" sourceRef="${gatewayId}" targetRef="${targetEntryId}" name="驳回到阶段 ${targetStageIndex + 1}">
+  <conditionExpression xsi:type="tFormalExpression">\${approved_${resolveSerialTaskId(stageIndex)} == false &amp;&amp; rejectTargetStageIndex == ${targetStageIndex}}</conditionExpression>
 </sequenceFlow>`,
         )
       }
+      // 默认驳回结束（兜底，当未指定 rejectTargetStageIndex 时）
       flows.push(
-        `<sequenceFlow id="flow_gateway_${index}_rejected_end" sourceRef="gateway_${index}" targetRef="end_rejected" name="驳回结束" default="true" />`,
+        `<sequenceFlow id="flow_${gatewayId}_rejected_end" sourceRef="${gatewayId}" targetRef="end_rejected" name="驳回结束" />`,
       )
-    })
-  } else {
-    // 并行模式
-    nodes.push({
-      id: 'fork',
-      name: '并行分发',
-      xml: `<parallelGateway id="fork" name="并行分发" />`,
-    })
-    nodes.push({
-      id: 'join',
-      name: '并行汇聚',
-      xml: `<parallelGateway id="join" name="并行汇聚" />`,
-    })
-
-    flows.push(`<sequenceFlow id="flow_start_fork" sourceRef="start" targetRef="fork" />`)
-
-    approvers.forEach((approver, index) => {
-      nodes.push({
-        id: `task_${index}`,
-        name: `审批节点 ${index + 1}`,
-        xml: `<userTask id="task_${index}" name="审批节点 ${index + 1}" camunda:assignee="${escapeXml(approver)}">
-  <documentation>审批人：${escapeXml(approver)}</documentation>
-</userTask>`,
-      })
-      nodes.push({
-        id: `gateway_${index}`,
-        name: `决策 ${index + 1}`,
-        xml: `<exclusiveGateway id="gateway_${index}" name="决策 ${index + 1}" default="flow_gateway_${index}_join" />`,
-      })
-
-      flows.push(`<sequenceFlow id="flow_fork_task_${index}" sourceRef="fork" targetRef="task_${index}" />`)
-      flows.push(
-        `<sequenceFlow id="flow_task_${index}_gateway_${index}" sourceRef="task_${index}" targetRef="gateway_${index}" />`,
-      )
-      // 同意 -> join
-      flows.push(
-        `<sequenceFlow id="flow_gateway_${index}_join" sourceRef="gateway_${index}" targetRef="join" name="同意" />`,
-      )
-      // 驳回 -> 直接结束
-      flows.push(
-        `<sequenceFlow id="flow_gateway_${index}_rejected" sourceRef="gateway_${index}" targetRef="end_rejected" name="驳回">
-  <conditionExpression xsi:type="tFormalExpression">\${approved_${index} == false}</conditionExpression>
-</sequenceFlow>`,
-      )
-    })
-
-    flows.push(`<sequenceFlow id="flow_join_end" sourceRef="join" targetRef="end_approved" />`)
-  }
+    }
+  })
 
   const processBody = nodes.map((n) => `  ${n.xml}`).join('\n') + '\n' + flows.map((f) => `  ${f}`).join('\n')
 
@@ -159,30 +188,19 @@ export function generateApprovalBpmn(options: GenerateApprovalBpmnOptions): stri
              id="Definitions_${processKey}"
              targetNamespace="http://bpmn.io/schema/bpmn"
              exporter="XQCOP Approval Workflow Generator"
-             exporterVersion="1.0">
+             exporterVersion="2.0">
   <process id="${processKey}" name="${escapeXml(name)}" isExecutable="true" camunda:historyTimeToLive="180">
 ${processBody}
   </process>
 </definitions>`
 }
 
-function resolveSerialRejectTarget(
-  currentIndex: number,
-  rejectAction: ApprovalRejectAction,
-  rejectTargetIndex: number | undefined,
-  total: number,
-): string {
-  if (rejectAction === 'prev') {
-    return currentIndex > 0 ? `task_${currentIndex - 1}` : 'end_rejected'
-  }
+function resolveStageEntryId(stage: ApprovalFlowStage, stageIndex: number): string {
+  return stage.mode === 'parallel' ? `fork_s${stageIndex}` : `task_s${stageIndex}`
+}
 
-  if (rejectAction === 'node' && rejectTargetIndex !== undefined) {
-    const target = Math.max(0, Math.min(total - 1, rejectTargetIndex))
-    if (target === currentIndex) return 'end_rejected'
-    return `task_${target}`
-  }
-
-  return 'end_rejected'
+function resolveSerialTaskId(stageIndex: number): string {
+  return `task_s${stageIndex}`
 }
 
 function escapeXml(value: string): string {

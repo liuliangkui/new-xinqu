@@ -5,7 +5,12 @@ import { FlowableService, type FlowableHistoricVariableInstance } from '@/module
 import { CreateApprovalDto } from './dto/create-approval.dto'
 import { UpdateApprovalDto } from './dto/update-approval.dto'
 import type { ApprovalQueryDto } from './dto/approval-query.dto'
-import { generateApprovalBpmn, type ApprovalFlowMode, type ApprovalRejectAction } from './approval-workflow.generator'
+import {
+  generateApprovalBpmn,
+  type ApprovalFlowMode,
+  type ApprovalRejectAction,
+  type ApprovalFlowStage,
+} from './approval-workflow.generator'
 
 @Injectable()
 export class ApprovalService {
@@ -127,20 +132,19 @@ export class ApprovalService {
 
   async create(userId: string, dto: CreateApprovalDto) {
     const module = dto.module || 'other'
-    const approverIds = this.resolveApproverIds(dto)
+    const stages = this.resolveStages(dto)
     const mode: ApprovalFlowMode = dto.mode === 'parallel' ? 'parallel' : 'serial'
     const rejectAction: ApprovalRejectAction = dto.rejectAction || 'end'
     const rejectTargetIndex = dto.rejectTargetIndex
 
-    if (approverIds.length === 0) {
-      throw new ConflictException('审批人列表不能为空')
+    if (stages.length === 0) {
+      throw new ConflictException('审批阶段不能为空')
     }
 
     // 1. 生成动态 BPMN 并持久化流程定义
     const workflowDef = await this.createDynamicWorkflowDefinition({
       title: dto.title,
-      approvers: approverIds,
-      mode,
+      stages,
       rejectAction,
       rejectTargetIndex,
     })
@@ -152,11 +156,11 @@ export class ApprovalService {
         code: `${module}-dynamic-${Date.now()}`,
         module,
         formSchema: this.buildFormSchema(dto),
-        flowNodes: approverIds.map((uid, idx) => ({
-          nodeId: `task_${idx}`,
-          name: `审批节点 ${idx + 1}`,
+        flowNodes: stages.map((stage, idx) => ({
+          nodeId: stage.id,
+          name: stage.name || `阶段 ${idx + 1}`,
           approverType: 'USER',
-          approvers: [uid],
+          approvers: stage.approvers.map((a) => a.id),
         })) as unknown as object[],
         workflowDefinitionId: workflowDef.id,
         status: 'ACTIVE',
@@ -174,11 +178,12 @@ export class ApprovalService {
         payload: {
           ...(dto.payload || {}),
           priority: dto.priority || 'normal',
-          approverIds,
+          stages: stages as unknown as Record<string, unknown>[],
+          approverIds: stages.flatMap((s) => s.approvers.map((a) => a.id)),
           mode,
           rejectAction,
           rejectTargetIndex,
-        },
+        } as any,
         ccRecords: dto.ccUserIds?.length ? { create: dto.ccUserIds.map((uid) => ({ userId: uid })) } : undefined,
       },
       include: { template: true, tasks: true, ccRecords: true },
@@ -257,17 +262,18 @@ export class ApprovalService {
       const task = tasks.find((t) => t.assignee === userId) || tasks[0]
       if (!task?.id) throw new ConflictException('当前没有可审批的任务')
 
-      const nodeIndex = this.getNodeIndex(task.taskDefinitionKey || task.id)
       completedNodeId = task.taskDefinitionKey || task.id
+      const approvalVarName = this.getApprovalVariableName(completedNodeId)
+      const commentVarName = this.getCommentVariableName(completedNodeId)
       const variables: Record<string, unknown> = {
-        [`approved_${nodeIndex}`]: action === 'APPROVE',
-        [`comment_${nodeIndex}`]: comment || '',
+        [approvalVarName]: action === 'APPROVE',
+        [commentVarName]: comment || '',
       }
       if (action === 'REJECT' && targetNodeIndex !== undefined) {
-        variables.rejectTargetIndex = targetNodeIndex
+        variables.rejectTargetStageIndex = targetNodeIndex
       } else if (action === 'APPROVE') {
         // 通过时清空驳回目标，避免后续节点受旧变量影响
-        variables.rejectTargetIndex = null
+        variables.rejectTargetStageIndex = null
       }
       await this.flowable.completeTask(task.id, variables)
     }
@@ -387,8 +393,10 @@ export class ApprovalService {
 
     const timeline = taskActivities.map((a) => {
       const index = this.getNodeIndex(a.activityId)
-      const approved = variableMap.get(`approved_${index}`)
-      const cmt = variableMap.get(`comment_${index}`)
+      const approvalVar = this.getApprovalVariableName(a.activityId)
+      const commentVar = this.getCommentVariableName(a.activityId)
+      const approved = variableMap.get(approvalVar)
+      const cmt = variableMap.get(commentVar)
       const isFinished = !!a.endTime
       let action: 'approve' | 'reject' | undefined
       if (isFinished) {
@@ -473,18 +481,16 @@ export class ApprovalService {
 
   private async createDynamicWorkflowDefinition(input: {
     title: string
-    approvers: string[]
-    mode: ApprovalFlowMode
+    stages: ApprovalFlowStage[]
     rejectAction: ApprovalRejectAction
     rejectTargetIndex?: number
   }) {
-    const { title, approvers, mode, rejectAction, rejectTargetIndex } = input
+    const { title, stages, rejectAction, rejectTargetIndex } = input
     const key = `approval-dynamic-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
     const bpmnXml = generateApprovalBpmn({
       processKey: key,
       name: `审批流程：${title}`,
-      approvers,
-      mode,
+      stages,
       rejectAction,
       rejectTargetIndex,
     })
@@ -503,6 +509,30 @@ export class ApprovalService {
 
     const deployed = await this.ensureWorkflowDefinitionDeployed(def)
     return deployed
+  }
+
+  private resolveStages(dto: CreateApprovalDto): ApprovalFlowStage[] {
+    if (dto.stages && dto.stages.length > 0) {
+      return dto.stages
+        .map((s, idx) => ({
+          id: s.id || `stage_${idx}`,
+          name: s.name || `阶段 ${idx + 1}`,
+          mode: s.mode === 'parallel' ? ('parallel' as const) : ('serial' as const),
+          approvers: s.approvers.filter((a) => a.id),
+        }))
+        .filter((s) => s.approvers.length > 0)
+    }
+    // 兼容旧版：按全局 mode 把所有审批人作为一个阶段
+    const approverIds = this.resolveApproverIds(dto)
+    if (approverIds.length === 0) return []
+    return [
+      {
+        id: 'stage_legacy',
+        name: dto.mode === 'parallel' ? '并行审批' : '串行审批',
+        mode: dto.mode === 'parallel' ? 'parallel' : 'serial',
+        approvers: approverIds.map((id) => ({ id })),
+      },
+    ]
   }
 
   private resolveApproverIds(dto: CreateApprovalDto): string[] {
@@ -532,8 +562,24 @@ export class ApprovalService {
 
   private getNodeIndex(nodeId?: string): number {
     if (!nodeId) return 0
-    const match = nodeId.match(/^task_(\d+)$/)
-    return match ? Number(match[1]) : 0
+    // 兼容旧版 task_N 以及新版 task_sN / task_sN_aM
+    const match = nodeId.match(/^task_(?:s(\d+)(?:_a(\d+))?|\d+)$/)
+    if (!match) return 0
+    return Number(match[1] ?? match[0].replace(/^task_/, ''))
+  }
+
+  private getApprovalVariableName(nodeId?: string): string {
+    if (!nodeId) return 'approved_0'
+    if (nodeId.startsWith('task_s')) return `approved_${nodeId}`
+    // 兼容旧版 task_N
+    const legacy = nodeId.match(/^task_(\d+)$/)
+    if (legacy) return `approved_${legacy[1]}`
+    return `approved_${nodeId}`
+  }
+
+  private getCommentVariableName(nodeId?: string): string {
+    const approvalVar = this.getApprovalVariableName(nodeId)
+    return approvalVar.replace(/^approved_/, 'comment_')
   }
 
   private async ensureWorkflowDefinitionDeployed(def: {
@@ -561,9 +607,7 @@ export class ApprovalService {
       })
       return updated
     } catch (e) {
-      this.logger.warn(
-        `Camunda 部署失败，审批将降级为本地模式: ${e instanceof Error ? e.message : String(e)}`,
-      )
+      this.logger.warn(`Camunda 部署失败，审批将降级为本地模式: ${e instanceof Error ? e.message : String(e)}`)
       return def
     }
   }

@@ -1,5 +1,55 @@
-import { IsString, IsNotEmpty, IsOptional, IsEnum, IsObject, IsArray, IsNumber, ArrayMinSize } from 'class-validator'
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsEnum,
+  IsObject,
+  IsArray,
+  IsNumber,
+  ArrayMinSize,
+  ValidateNested,
+} from 'class-validator'
+import { Type } from 'class-transformer'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+
+class ApprovalStageApproverDto {
+  @ApiProperty({ description: '审批人ID' })
+  @IsString()
+  @IsNotEmpty()
+  id: string
+
+  @ApiPropertyOptional({ description: '审批人姓名' })
+  @IsOptional()
+  @IsString()
+  name?: string
+
+  @ApiPropertyOptional({ description: '审批人头像' })
+  @IsOptional()
+  @IsString()
+  avatar?: string
+}
+
+class ApprovalStageDto {
+  @ApiProperty({ description: '阶段ID' })
+  @IsString()
+  @IsNotEmpty()
+  id: string
+
+  @ApiPropertyOptional({ description: '阶段名称' })
+  @IsOptional()
+  @IsString()
+  name?: string
+
+  @ApiProperty({ description: '阶段模式', enum: ['serial', 'parallel'] })
+  @IsEnum(['serial', 'parallel'])
+  mode: 'serial' | 'parallel'
+
+  @ApiProperty({ description: '阶段审批人列表', type: [ApprovalStageApproverDto] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ApprovalStageApproverDto)
+  approvers: ApprovalStageApproverDto[]
+}
 
 export class CreateApprovalDto {
   @ApiProperty({ description: '审批标题' })
@@ -45,14 +95,21 @@ export class CreateApprovalDto {
   @IsNumber()
   rejectTargetIndex?: number
 
-  @ApiPropertyOptional({ description: '指定审批人ID列表（顺序即串行顺序）' })
+  @ApiPropertyOptional({ description: '阶段化审批流（串/并行混合），优先级最高', type: [ApprovalStageDto] })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ApprovalStageDto)
+  stages?: ApprovalStageDto[]
+
+  @ApiPropertyOptional({ description: '指定审批人ID列表（顺序即串行顺序，旧版兼容）' })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   @ArrayMinSize(1)
   approverIds?: string[]
 
-  @ApiPropertyOptional({ description: '指定单个审批人ID（兼容旧版，优先级低于 approverIds）' })
+  @ApiPropertyOptional({ description: '指定单个审批人ID（兼容旧版，优先级低于 stages / approverIds）' })
   @IsOptional()
   @IsString()
   approverId?: string

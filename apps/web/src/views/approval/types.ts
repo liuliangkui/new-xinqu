@@ -26,6 +26,21 @@ export enum ApprovalPriority {
 export type ApprovalMode = 'serial' | 'parallel'
 export type ApprovalRejectAction = 'end' | 'prev' | 'node'
 
+/** 审批阶段中的审批人 */
+export interface ApprovalStageApprover {
+  id: string
+  name: string
+  avatar?: string
+}
+
+/** 审批阶段：阶段之间串行，阶段内部可串行或并行 */
+export interface ApprovalStage {
+  id: string
+  name: string
+  mode: ApprovalMode
+  approvers: ApprovalStageApprover[]
+}
+
 export interface ApprovalTask {
   taskId: string
   nodeId?: string
@@ -78,6 +93,8 @@ export interface ApprovalForm {
   mode?: ApprovalMode
   rejectAction?: ApprovalRejectAction
   rejectTargetIndex?: number
+  /** 阶段化审批流（串/并行混合），优先级高于 nodes / approverIds */
+  stages?: ApprovalStage[]
   approverIds?: string[]
   approverId?: string
   nodes?: ApprovalFlowNode[]

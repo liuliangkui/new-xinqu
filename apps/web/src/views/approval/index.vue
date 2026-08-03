@@ -10,7 +10,7 @@ import type {
   ApprovalListParams,
   ApprovalStats,
   ApprovalTimelineNode,
-  ApprovalFlowNode,
+  ApprovalStage,
 } from './types'
 import { ApprovalModule, ApprovalStatus, ApprovalPriority } from './types'
 import ApprovalFlowDesigner from './components/ApprovalFlowDesigner.vue'
@@ -152,6 +152,7 @@ function emptyForm(): ApprovalForm {
     mode: 'serial',
     rejectAction: 'end',
     rejectTargetIndex: 0,
+    stages: [],
     approverIds: [],
     ccUserIds: [],
     nodes: [],
@@ -235,15 +236,17 @@ const composeLoading = ref(false)
 const composeForm = ref<ApprovalForm>(emptyForm())
 const pickerVisible = ref(false)
 const pickerTarget = ref<'approver' | 'cc'>('approver')
-const editingNodeIndex = ref<number | null>(null)
+const editingStageIndex = ref<number | null>(null)
+const editingApproverIndex = ref<number | null>(null)
 const pickerSelectedIds = ref<string[]>([])
 
 function computePickerInitialIds(): string[] {
   if (pickerTarget.value === 'cc') return composeForm.value.ccUserIds || []
-  const nodes = composeForm.value.nodes || []
-  if (editingNodeIndex.value === null) return []
-  const node = nodes[editingNodeIndex.value]
-  return node?.assigneeId ? [node.assigneeId] : []
+  const stages = composeForm.value.stages || []
+  if (editingStageIndex.value === null || editingApproverIndex.value === null) return []
+  const stage = stages[editingStageIndex.value]
+  const approver = stage?.approvers[editingApproverIndex.value]
+  return approver?.id ? [approver.id] : []
 }
 
 function updatePickerSelectedIds(val: string[]): void {
@@ -255,38 +258,32 @@ function openCompose(): void {
   composeVisible.value = true
 }
 
-function ensureNodes(): ApprovalFlowNode[] {
-  if (!composeForm.value.nodes) {
-    composeForm.value.nodes = []
+function ensureStages(): ApprovalStage[] {
+  if (!composeForm.value.stages) {
+    composeForm.value.stages = []
   }
-  return composeForm.value.nodes
+  return composeForm.value.stages
 }
 
-function openNodePicker(index: number): void {
-  editingNodeIndex.value = index
+function openApproverPicker(stageIndex: number, approverIndex: number): void {
+  editingStageIndex.value = stageIndex
+  editingApproverIndex.value = approverIndex
   pickerTarget.value = 'approver'
   pickerSelectedIds.value = computePickerInitialIds()
   pickerVisible.value = true
 }
 
-function addNode(): void {
-  const nodes = ensureNodes()
-  nodes.push({
-    id: `node_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-    name: `审批节点 ${nodes.length + 1}`,
-  })
-}
-
-function updateNodes(nodes: ApprovalFlowNode[]): void {
-  composeForm.value.nodes = nodes.map((n, i) => ({
-    ...n,
-    name: n.name || `审批节点 ${i + 1}`,
+function updateStages(stages: ApprovalStage[]): void {
+  composeForm.value.stages = stages.map((s, i) => ({
+    ...s,
+    name: s.name || `${s.mode === 'parallel' ? '并行' : '串行'}阶段 ${i + 1}`,
   }))
 }
 
 function openCcPicker(): void {
   pickerTarget.value = 'cc'
-  editingNodeIndex.value = null
+  editingStageIndex.value = null
+  editingApproverIndex.value = null
   pickerSelectedIds.value = computePickerInitialIds()
   pickerVisible.value = true
 }
@@ -297,17 +294,42 @@ function handlePickerConfirm(ids: string[]): void {
     composeForm.value.ccUserIds = selected
     return
   }
-  const nodes = ensureNodes()
-  if (editingNodeIndex.value !== null && editingNodeIndex.value < nodes.length && selected.length > 0) {
-    const user = userOptions.value.find((u) => u.value === selected[0])
-    const newNodes = [...nodes]
-    newNodes[editingNodeIndex.value] = {
-      ...nodes[editingNodeIndex.value]!,
-      assigneeId: selected[0],
-      assigneeName: user?.label.split(' ')[0] || selected[0],
+  const stages = ensureStages()
+  if (
+    editingStageIndex.value !== null &&
+    editingApproverIndex.value !== null &&
+    editingStageIndex.value < stages.length &&
+    selected.length > 0
+  ) {
+    const selectedId = selected[0]
+    if (!selectedId) return
+    const user = userOptions.value.find((u) => u.value === selectedId)
+    const newStages = [...stages]
+    const stage = { ...newStages[editingStageIndex.value]! }
+    const approvers = [...stage.approvers]
+    approvers[editingApproverIndex.value] = {
+      id: selectedId,
+      name: user?.label.split(' ')[0] || selectedId,
     }
-    composeForm.value.nodes = newNodes
+    stage.approvers = approvers
+    newStages[editingStageIndex.value] = stage
+    composeForm.value.stages = newStages
   }
+}
+
+function validateStages(stages?: ApprovalStage[]): { valid: boolean; message?: string } {
+  if (!stages || stages.length === 0) {
+    return { valid: false, message: '请至少添加一个审批阶段' }
+  }
+  for (const [idx, stage] of stages.entries()) {
+    if (stage.mode === 'serial' && stage.approvers.filter((a) => a.id).length === 0) {
+      return { valid: false, message: `串行阶段 ${idx + 1} 未选择审批人` }
+    }
+    if (stage.mode === 'parallel' && stage.approvers.filter((a) => a.id).length < 2) {
+      return { valid: false, message: `并行阶段 ${idx + 1} 至少需要两个审批人` }
+    }
+  }
+  return { valid: true }
 }
 
 async function handleComposeSubmit(): Promise<void> {
@@ -316,9 +338,9 @@ async function handleComposeSubmit(): Promise<void> {
     window.alert('请输入审批主题')
     return
   }
-  const nodes = (form.nodes || []).filter((n) => n.assigneeId)
-  if (nodes.length === 0) {
-    window.alert('请至少添加一个审批节点并选择审批人')
+  const validation = validateStages(form.stages)
+  if (!validation.valid) {
+    window.alert(validation.message || '审批流程配置不完整')
     return
   }
 
@@ -328,10 +350,9 @@ async function handleComposeSubmit(): Promise<void> {
       title: form.title,
       module: form.module,
       priority: form.priority,
-      mode: form.mode,
       rejectAction: form.rejectAction,
       rejectTargetIndex: form.rejectTargetIndex,
-      approverIds: nodes.map((n) => n.assigneeId!),
+      stages: form.stages,
       ccUserIds: form.ccUserIds,
       businessKey: form.businessKey,
       payload: {
@@ -406,20 +427,31 @@ function canWithdraw(record: Approval | null): boolean {
   return record.applicantId === authStore.user?.id || authStore.hasRole('super_admin')
 }
 
-function buildRejectNodeOptions() {
+function buildRejectStageOptions() {
   const approval = detailApproval.value
   if (!approval) return []
-  const approverIds = (approval.payload?.approverIds as string[] | undefined) || []
+  const stages = (approval.payload?.stages as ApprovalStage[] | undefined) || []
   const userMap = new Map<string, string>()
   approval.tasks?.forEach((t) => {
     if (t.assigneeId && t.assigneeName) userMap.set(t.assigneeId, t.assigneeName)
   })
-  return approverIds.map((id, idx) => ({
-    index: idx,
-    label: `节点 ${idx + 1}`,
-    assigneeName: userMap.get(id) || userOptions.value.find((u) => u.value === id)?.label.split(' ')[0] || id,
-    assigneeId: id,
-  }))
+  return stages.map((stage, idx) => {
+    const names = stage.approvers
+      .filter((a) => a.id)
+      .map(
+        (a) =>
+          userMap.get(a.id) ||
+          userOptions.value.find((u) => u.value === a.id)?.label.split(' ')[0] ||
+          a.name ||
+          a.id,
+      )
+    return {
+      index: idx,
+      label: `阶段 ${idx + 1}`,
+      assigneeName: names.join('、') || '未配置',
+      stageMode: stage.mode,
+    }
+  })
 }
 
 function openAction(type: 'approve' | 'reject'): void {
@@ -439,7 +471,10 @@ async function handleActionSubmit(): Promise<void> {
     } else {
       let targetNodeIndex: number | undefined
       if (actionRejectTarget.value === 'prev') {
-        targetNodeIndex = Math.max(0, (detailApproval.value.tasks?.findIndex((t) => !t.action) || 0) - 1)
+        targetNodeIndex = Math.max(
+          0,
+          (detailApproval.value.tasks?.findIndex((t) => !t.action) || 0) - 1,
+        )
       } else if (actionRejectTarget.value === 'node' && actionRejectNodeIndex.value !== null) {
         targetNodeIndex = actionRejectNodeIndex.value
       }
@@ -649,12 +684,9 @@ function timelineItems() {
 
       <!-- 审批流程设计器 -->
       <ApprovalFlowDesigner
-        :nodes="composeForm.nodes || []"
-        :mode="composeForm.mode"
-        @update:nodes="updateNodes"
-        @update:mode="(m) => (composeForm.mode = m)"
-        @click-node="(_, idx) => openNodePicker(idx)"
-        @add-node="addNode"
+        :stages="composeForm.stages || []"
+        @update:stages="updateStages"
+        @click-approver="openApproverPicker"
       />
 
       <!-- 抄送 -->
@@ -669,7 +701,12 @@ function timelineItems() {
             class="inline-flex items-center gap-1 px-2 py-1 text-sm rounded-md bg-[var(--gray-bg)] text-[var(--sub)]"
           >
             {{ userOptions.find((u) => u.value === id)?.label.split(' ')[0] || id }}
-            <button class="hover:text-[var(--ink)]" @click.stop="composeForm.ccUserIds = (composeForm.ccUserIds || []).filter((v) => v !== id)">
+            <button
+              class="hover:text-[var(--ink)]"
+              @click.stop="
+                composeForm.ccUserIds = (composeForm.ccUserIds || []).filter((v) => v !== id)
+              "
+            >
               <XqIcon name="close" size="12" />
             </button>
           </span>
@@ -707,57 +744,32 @@ function timelineItems() {
             <option value="urgent">紧急</option>
           </select>
         </div>
-        <div class="flex flex-col gap-1.5">
-          <label class="text-sm font-medium text-[var(--ink)]">审批模式</label>
-          <div class="flex items-center gap-2">
-            <button
-              class="px-3 py-1.5 text-sm rounded-md border"
-              :class="
-                composeForm.mode === 'serial'
-                  ? 'bg-[var(--primary-light)] text-[var(--primary)] border-[var(--primary)]'
-                  : 'border-[var(--line)] text-[var(--sub)]'
-              "
-              @click="composeForm.mode = 'serial'"
-            >
-              串行审批
-            </button>
-            <button
-              class="px-3 py-1.5 text-sm rounded-md border"
-              :class="
-                composeForm.mode === 'parallel'
-                  ? 'bg-[var(--primary-light)] text-[var(--primary)] border-[var(--primary)]'
-                  : 'border-[var(--line)] text-[var(--sub)]'
-              "
-              @click="composeForm.mode = 'parallel'"
-            >
-              并行审批
-            </button>
-          </div>
-        </div>
-        <div class="flex flex-col gap-1.5">
+        <div class="flex flex-col gap-1.5 sm:col-span-2">
           <label class="text-sm font-medium text-[var(--ink)]">驳回策略</label>
           <select v-model="composeForm.rejectAction" class="input">
             <option value="end">直接结束</option>
-            <option value="prev">驳回到上一节点</option>
-            <option value="node">驳回到指定节点</option>
+            <option value="prev">驳回到上一阶段</option>
+            <option value="node">驳回到指定阶段</option>
           </select>
           <div v-if="composeForm.rejectAction === 'node'" class="flex flex-col gap-2 mt-2">
-            <span class="text-sm text-[var(--sub)]">选择驳回目标节点</span>
+            <span class="text-sm text-[var(--sub)]">选择驳回目标阶段</span>
             <div class="flex flex-wrap gap-2">
               <button
-                v-for="(node, idx) in composeForm.nodes || []"
-                :key="node.id"
+                v-for="(stage, idx) in composeForm.stages || []"
+                :key="stage.id"
                 class="px-2.5 py-1 text-xs rounded-md border"
                 :class="
                   composeForm.rejectTargetIndex === idx
                     ? 'bg-[var(--primary-light)] text-[var(--primary)] border-[var(--primary)]'
                     : 'border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)]'
                 "
-                :disabled="!node.assigneeId"
+                :disabled="stage.approvers.filter((a) => a.id).length === 0"
                 @click="composeForm.rejectTargetIndex = idx"
               >
-                节点 {{ idx + 1 }}
-                <span class="ml-1 text-[var(--placeholder)]">{{ node.assigneeName || '未选择' }}</span>
+                阶段 {{ idx + 1 }}
+                <span class="ml-1 text-[var(--placeholder)]">
+                  {{ stage.approvers.map((a) => a.name || '未选择').join('、') || '未选择' }}
+                </span>
               </button>
             </div>
           </div>
@@ -972,10 +984,10 @@ function timelineItems() {
         </div>
 
         <div v-if="actionRejectTarget === 'node'" class="flex flex-col gap-2 mt-1">
-          <span class="text-xs text-[var(--sub)]">选择要驳回到的节点</span>
+          <span class="text-xs text-[var(--sub)]">选择要驳回到的阶段</span>
           <div class="flex flex-wrap gap-2">
             <button
-              v-for="opt in buildRejectNodeOptions()"
+              v-for="opt in buildRejectStageOptions()"
               :key="opt.index"
               class="px-3 py-2 text-sm rounded-md border flex items-center gap-2"
               :class="
@@ -985,14 +997,22 @@ function timelineItems() {
               "
               @click="actionRejectNodeIndex = opt.index"
             >
-              <span class="w-5 h-5 rounded-full bg-[var(--gray-bg)] text-xs flex items-center justify-center flex-shrink-0">
+              <span
+                class="w-5 h-5 rounded-full bg-[var(--gray-bg)] text-xs flex items-center justify-center flex-shrink-0"
+              >
                 {{ opt.index + 1 }}
               </span>
               <span class="truncate max-w-[120px]">{{ opt.assigneeName }}</span>
+              <span class="text-xs text-[var(--placeholder)]">{{
+                opt.stageMode === 'parallel' ? '并行' : '串行'
+              }}</span>
             </button>
           </div>
-          <p v-if="buildRejectNodeOptions().length === 0" class="text-xs text-[var(--placeholder)]">
-            未获取到审批节点信息
+          <p
+            v-if="buildRejectStageOptions().length === 0"
+            class="text-xs text-[var(--placeholder)]"
+          >
+            未获取到审批阶段信息
           </p>
         </div>
       </div>
@@ -1004,7 +1024,9 @@ function timelineItems() {
         :class="actionType === 'approve' ? 'btn btn-primary' : 'btn btn-danger'"
         :disabled="
           actionLoading ||
-          (actionType === 'reject' && actionRejectTarget === 'node' && actionRejectNodeIndex === null)
+          (actionType === 'reject' &&
+            actionRejectTarget === 'node' &&
+            actionRejectNodeIndex === null)
         "
         @click="handleActionSubmit"
       >
