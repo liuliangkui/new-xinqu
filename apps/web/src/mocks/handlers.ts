@@ -54,17 +54,6 @@ import {
   allTasks,
 } from '@/views/tasks/mock'
 import type { TaskListResult, Task, TaskForm } from '@/views/tasks/types'
-import {
-  generateAppList,
-  createAppInMock,
-  updateAppInMock,
-  deleteAppFromMock,
-  toggleFavoriteInMock,
-  allApps,
-} from '@/views/apps/mock'
-import type { AppListResult, AppItem, AppForm } from '@/views/apps/types'
-import { generateWorkbenchData } from '@/views/workbench/mock'
-import type { WorkbenchData } from '@/views/workbench/types'
 import { generatePerformanceOverview, generatePerformanceList } from '@/views/performance/mock'
 import type { PerformanceListResult, PerformanceOverview } from '@/views/performance/types'
 import { generateDashboardOverview, generateDashboardFunnel } from '@/views/dashboard/mock'
@@ -551,79 +540,6 @@ export const handlers = [
       )
     }
     return HttpResponse.json(ok({ success: true }))
-  }),
-
-  http.get('/api/v1/apps', ({ request }) => {
-    const url = new URL(request.url)
-    const page = Number(url.searchParams.get('page') ?? '1')
-    const size = Number(url.searchParams.get('size') ?? '100')
-    const keyword = url.searchParams.get('keyword') ?? undefined
-    const category = url.searchParams.get('category') ?? undefined
-    const status = url.searchParams.get('status') ?? undefined
-
-    const result = generateAppList({
-      pageNum: page,
-      pageSize: size,
-      keyword,
-      category,
-      status,
-    })
-    return HttpResponse.json(ok<AppListResult>(result))
-  }),
-
-  http.get('/api/v1/apps/:id', ({ params }) => {
-    const id = String(params.id)
-    const app = allApps.find((a) => a.appId === id) || null
-    if (!app) {
-      return HttpResponse.json(
-        { success: false, code: 404, message: '应用不存在', data: null },
-        { status: 404 },
-      )
-    }
-    return HttpResponse.json(ok<AppItem>(app))
-  }),
-
-  http.post('/api/v1/apps', async ({ request }) => {
-    const body = (await request.json()) as Partial<AppForm>
-    const app = createAppInMock(body)
-    return HttpResponse.json(ok<AppItem>(app), { status: 201 })
-  }),
-
-  http.put('/api/v1/apps/:id', async ({ request, params }) => {
-    const id = String(params.id)
-    const body = (await request.json()) as Partial<AppForm>
-    const app = updateAppInMock(id, body)
-    if (!app) {
-      return HttpResponse.json(
-        { success: false, code: 404, message: '应用不存在', data: null },
-        { status: 404 },
-      )
-    }
-    return HttpResponse.json(ok<AppItem>(app))
-  }),
-
-  http.delete('/api/v1/apps/:id', ({ params }) => {
-    const id = String(params.id)
-    const success = deleteAppFromMock(id)
-    if (!success) {
-      return HttpResponse.json(
-        { success: false, code: 404, message: '应用不存在', data: null },
-        { status: 404 },
-      )
-    }
-    return HttpResponse.json(ok({ success: true }))
-  }),
-
-  http.post('/api/v1/apps/:id/favorite', async ({ request, params }) => {
-    const id = String(params.id)
-    const body = (await request.json()) as { isFavorite?: boolean }
-    toggleFavoriteInMock(id, body.isFavorite ?? true)
-    return HttpResponse.json(ok({ success: true }))
-  }),
-
-  http.get('/api/v1/workbench', () => {
-    const result = generateWorkbenchData()
-    return HttpResponse.json(ok<WorkbenchData>(result))
   }),
 
   http.get('/api/v1/performance/overview', ({ request }) => {

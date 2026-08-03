@@ -52,6 +52,11 @@ screenshots_modified/
 /cypress/videos/
 /cypress/screenshots/
 
+# Playwright
+playwright-report/
+test-results/
+screenshot-*.cjs
+
 # Vitest
 __screenshots__/
 

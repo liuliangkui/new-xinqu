@@ -21,10 +21,10 @@ export class AppController {
   @Get()
   @Permissions('app:read')
   @ApiOperation({ summary: '查询应用列表' })
-  @ApiResponse({ status: 200, description: '返回应用列表' })
+  @ApiResponse({ status: 200, description: '返回应用列表（含当前用户收藏标识）' })
   findAll(@Req() req: Request, @Query() query: AppQueryDto) {
     const user = this.getCurrentUser(req)
-    return this.appService.findAll(user, query)
+    return this.appService.findAll(user.userId, query)
   }
 
   @Get(':id')
@@ -57,5 +57,18 @@ export class AppController {
   @ApiResponse({ status: 200, description: '删除成功' })
   remove(@Param('id') id: string) {
     return this.appService.remove(id)
+  }
+
+  @Post(':id/favorite')
+  @Permissions('favorite:create')
+  @ApiOperation({ summary: '切换应用在工作台的收藏状态' })
+  @ApiResponse({ status: 200, description: '切换成功' })
+  toggleFavorite(
+    @Req() req: Request,
+    @Param('id') id: string,
+    @Body('isFavorite') isFavorite: boolean,
+  ) {
+    const user = this.getCurrentUser(req)
+    return this.appService.toggleFavorite(user.userId, id, isFavorite)
   }
 }

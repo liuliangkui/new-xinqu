@@ -11,7 +11,7 @@ const BASE = '/apps'
 export function getAppList(params: AppListParams): Promise<AppListResult> {
   return get<AppListResult>(BASE, {
     page: params.pageNum,
-    size: params.pageSize,
+    pageSize: params.pageSize,
     keyword: params.keyword,
     category: params.category,
     status: params.status,

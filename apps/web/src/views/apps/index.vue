@@ -237,10 +237,10 @@ const formFields = [
       </div>
 
       <div v-else class="flex flex-col gap-6">
-        <!-- 我的收藏 -->
+        <!-- 我的工作台 -->
         <div v-if="favoriteApps.length > 0" class="card">
           <h2 class="text-base font-semibold text-[var(--ink)] mb-4 flex items-center gap-2">
-            <XqIcon name="star" size="16" class="text-yellow-500" />我的收藏
+            <XqIcon name="star" size="16" class="text-yellow-500" />我的工作台
           </h2>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             <div

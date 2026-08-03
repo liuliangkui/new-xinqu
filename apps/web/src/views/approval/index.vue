@@ -628,10 +628,7 @@ function timelineItems() {
             v-for="u in filteredApproverOptions.slice(0, 20)"
             :key="u.value"
             class="px-3 py-2 text-sm hover:bg-[var(--primary-light)] cursor-pointer"
-            @click="
-              toggleApprover(u.value)
-              approverSearch = ''
-            "
+            @click="toggleApprover(u.value); approverSearch = ''"
           >
             {{ u.label }}
           </div>
@@ -672,10 +669,7 @@ function timelineItems() {
             v-for="u in filteredCcOptions.slice(0, 20)"
             :key="u.value"
             class="px-3 py-2 text-sm hover:bg-[var(--gray-bg)] cursor-pointer"
-            @click="
-              toggleCc(u.value)
-              ccSearch = ''
-            "
+            @click="toggleCc(u.value); ccSearch = ''"
           >
             {{ u.label }}
           </div>
