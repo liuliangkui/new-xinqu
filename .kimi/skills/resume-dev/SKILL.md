@@ -9,13 +9,14 @@
 ## 用法
 
 ```text
+/resume dev xinqu
 /resume-dev [项目 GitHub 仓库地址或本地路径]
-/resume dev [项目名称]
 ```
 
+- 推荐指令：`/resume dev xinqu`
 - 如果参数是 GitHub URL：先 clone 到当前工作目录或指定目录。
 - 如果参数是本地路径：直接进入该目录检查环境。
-- 如果是项目名称（如 `鑫渠`）：解析为本地路径 `/Users/mac/qucheng` 或对应仓库。
+- 如果是项目名称（`xinqu` / `鑫渠` / `xqcop` / `qucheng`）：解析为本地路径 `/Users/mac/qucheng` 或对应仓库。
 - 如果没有参数：使用当前工作目录。
 - 参数通过 `$1` / `$ARGUMENTS` 传入。
 
@@ -52,9 +53,9 @@ git clone $REPO_URL
 
 #### 1.3 项目名称映射
 
-| 项目名称                     | 本地路径             | 远程仓库                                       |
-| ---------------------------- | -------------------- | ---------------------------------------------- |
-| `鑫渠` / `xqcop` / `qucheng` | `/Users/mac/qucheng` | `https://github.com/liuliangkui/new-xinqu.git` |
+| 项目名称                               | 本地路径             | 远程仓库                                       |
+| -------------------------------------- | -------------------- | ---------------------------------------------- |
+| `xinqu` / `鑫渠` / `xqcop` / `qucheng` | `/Users/mac/qucheng` | `https://github.com/liuliangkui/new-xinqu.git` |
 
 如果本地路径不存在，从远程仓库 clone。
 

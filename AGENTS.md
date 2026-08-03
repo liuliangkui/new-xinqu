@@ -125,11 +125,12 @@ type(scope): 简短描述
 用户可以通过以下指令快速恢复项目开发环境并加载上下文：
 
 ```text
+/resume dev xinqu
 /resume-dev [项目 GitHub 仓库地址或本地路径]
-/resume dev [项目名称]
 ```
 
-- `/resume dev 鑫渠` 会进入 `/Users/mac/qucheng`，读取 `.kimi/resume-context.md` 恢复上下文，并自动检查/启动环境。
+- `/resume dev xinqu` 会进入 `/Users/mac/qucheng`，读取 `.kimi/resume-context.md` 恢复上下文，并自动检查/启动环境。
+- 也兼容 `/resume dev 鑫渠`、`/resume dev xqcop`、`/resume dev qucheng`。
 - 具体执行清单见 `.kimi/skills/resume-dev/SKILL.md`。
 - 每次关键开发会话结束后，应更新 `.kimi/resume-context.md` 中的“当前活跃工作”和“最近变更”。
 
