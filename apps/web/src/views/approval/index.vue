@@ -235,19 +235,15 @@ const composeForm = ref<ApprovalForm>(emptyForm())
 const pickerVisible = ref(false)
 const pickerTarget = ref<'approver' | 'cc'>('approver')
 const editingNodeIndex = ref<number | null>(null)
+const pickerSelectedIds = ref<string[]>([])
 
-const nodeSelectedIds = computed<string[]>({
-  get: () => {
-    if (pickerTarget.value === 'cc') return composeForm.value.ccUserIds || []
-    const nodes = composeForm.value.nodes || []
-    if (editingNodeIndex.value === null) return []
-    const node = nodes[editingNodeIndex.value]
-    return node?.assigneeId ? [node.assigneeId] : []
-  },
-  set: () => {
-    // 选择器内部通过 confirm 事件处理，setter 仅用于关闭时同步
-  },
-})
+function computePickerInitialIds(): string[] {
+  if (pickerTarget.value === 'cc') return composeForm.value.ccUserIds || []
+  const nodes = composeForm.value.nodes || []
+  if (editingNodeIndex.value === null) return []
+  const node = nodes[editingNodeIndex.value]
+  return node?.assigneeId ? [node.assigneeId] : []
+}
 
 function openCompose(): void {
   composeForm.value = emptyForm()
@@ -264,6 +260,7 @@ function ensureNodes(): ApprovalFlowNode[] {
 function openNodePicker(index: number): void {
   editingNodeIndex.value = index
   pickerTarget.value = 'approver'
+  pickerSelectedIds.value = computePickerInitialIds()
   pickerVisible.value = true
 }
 
@@ -285,22 +282,26 @@ function updateNodes(nodes: ApprovalFlowNode[]): void {
 function openCcPicker(): void {
   pickerTarget.value = 'cc'
   editingNodeIndex.value = null
+  pickerSelectedIds.value = computePickerInitialIds()
   pickerVisible.value = true
 }
 
 function handlePickerConfirm(ids: string[]): void {
+  const selected = ids.length > 0 ? ids : pickerSelectedIds.value
   if (pickerTarget.value === 'cc') {
-    composeForm.value.ccUserIds = ids
+    composeForm.value.ccUserIds = selected
     return
   }
   const nodes = ensureNodes()
-  if (editingNodeIndex.value !== null && editingNodeIndex.value < nodes.length) {
-    const user = userOptions.value.find((u) => u.value === ids[0])
-    nodes[editingNodeIndex.value] = {
+  if (editingNodeIndex.value !== null && editingNodeIndex.value < nodes.length && selected.length > 0) {
+    const user = userOptions.value.find((u) => u.value === selected[0])
+    const newNodes = [...nodes]
+    newNodes[editingNodeIndex.value] = {
       ...nodes[editingNodeIndex.value]!,
-      assigneeId: ids[0],
-      assigneeName: user?.label.split(' ')[0] || ids[0],
+      assigneeId: selected[0],
+      assigneeName: user?.label.split(' ')[0] || selected[0],
     }
+    composeForm.value.nodes = newNodes
   }
 }
 
@@ -807,9 +808,10 @@ function timelineItems() {
   <!-- 人员选择器 -->
   <XqUserPicker
     v-model:visible="pickerVisible"
-    v-model="nodeSelectedIds"
+    :model-value="pickerSelectedIds"
     :title="pickerTarget === 'cc' ? '选择抄送人' : '选择审批人'"
     :multiple="pickerTarget === 'cc'"
+    @update:model-value="(val: string[]) => (pickerSelectedIds = val)"
     @confirm="handlePickerConfirm"
   />
 

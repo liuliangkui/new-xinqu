@@ -21,11 +21,11 @@ export class WorkbenchService {
         }),
       }),
       this.prisma.approvalInstance.count({
-        where: await this.dataScope.apply(user, 'approval', {
+        where: {
           ...baseWhere,
           status: 'pending',
           tasks: { some: { assigneeId: user.userId, action: null } },
-        }),
+        },
       }),
       this.prisma.message.count({
         where: {
@@ -100,11 +100,11 @@ export class WorkbenchService {
         select: { id: true, title: true, createdAt: true, priority: true },
       }),
       this.prisma.approvalInstance.findMany({
-        where: await this.dataScope.apply(user, 'approval', {
+        where: {
           ...baseWhere,
           status: 'pending',
           tasks: { some: { assigneeId: user.userId, action: null } },
-        }),
+        },
         orderBy: { createdAt: 'desc' },
         take: 5,
         select: { id: true, title: true, createdAt: true },
