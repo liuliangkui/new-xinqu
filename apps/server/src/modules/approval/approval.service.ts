@@ -202,6 +202,12 @@ export class ApprovalService {
       include: { template: true, tasks: true, ccRecords: true },
     })
     if (!refreshed) throw new NotFoundException('审批实例创建后未找到')
+
+    // 本地模式（Camunda 不可用时）：为第一阶段创建待审任务，使审批人能在待审清单中看到自己
+    if (!refreshed.workflowInstanceId && stages.length > 0) {
+      await this.createLocalTasksForStage(refreshed.id, 0, stages[0])
+    }
+
     const userMap = await this.buildUserMap(refreshed)
     return this.toApprovalDto(refreshed, userMap)
   }
@@ -286,11 +292,13 @@ export class ApprovalService {
     } else {
       const activeTask = await this.findActiveLocalTask(id, userId)
       if (activeTask) {
+        completedNodeId = activeTask.nodeId
         await this.prisma.approvalTask.update({
           where: { id: activeTask.id },
           data: { action: taskAction, comment, completedAt: new Date() },
         })
       } else {
+        completedNodeId = 'manual'
         await this.prisma.approvalTask.create({
           data: {
             instanceId: id,
@@ -306,23 +314,24 @@ export class ApprovalService {
 
     if (instance.workflowInstanceId) {
       await this.syncTasks(instance.id, instance.workflowInstanceId)
-    }
 
-    let ended = true
-    if (instance.workflowInstanceId) {
+      let ended = true
       try {
         const pi = await this.flowable.getProcessInstance(instance.workflowInstanceId)
         ended = pi.ended
       } catch {
         ended = true
       }
-    }
 
-    if (ended) {
-      await this.prisma.approvalInstance.update({
-        where: { id },
-        data: { status: action === 'APPROVE' ? 'APPROVED' : 'REJECTED', completedAt: new Date() },
-      })
+      if (ended) {
+        await this.prisma.approvalInstance.update({
+          where: { id },
+          data: { status: action === 'APPROVE' ? 'APPROVED' : 'REJECTED', completedAt: new Date() },
+        })
+      }
+    } else {
+      // 本地模式：按阶段推进
+      await this.handleLocalActionProgress(id, userId, action, completedNodeId)
     }
 
     return this.findOne(id)
@@ -509,6 +518,80 @@ export class ApprovalService {
       select: { instanceId: true },
     })
     return [...new Set(tasks.map((t) => t.instanceId))]
+  }
+
+  private async createLocalTasksForStage(
+    instanceId: string,
+    stageIndex: number,
+    stage: ApprovalFlowStage,
+  ): Promise<void> {
+    const nodeId = `stage_${stageIndex}`
+    const approvers = stage.approvers.filter((a) => a.id)
+    if (approvers.length === 0) return
+    await this.prisma.approvalTask.createMany({
+      data: approvers.map((a) => ({
+        instanceId,
+        nodeId,
+        assigneeId: a.id,
+      })),
+      skipDuplicates: true,
+    })
+  }
+
+  private parseStageIndex(nodeId?: string): number {
+    if (!nodeId) return 0
+    const match = nodeId.match(/^stage_(\d+)$/)
+    return match ? Number(match[1]) : 0
+  }
+
+  private async handleLocalActionProgress(
+    instanceId: string,
+    userId: string,
+    action: 'APPROVE' | 'REJECT',
+    completedNodeId?: string,
+  ): Promise<void> {
+    if (action === 'REJECT') {
+      await this.prisma.approvalInstance.update({
+        where: { id: instanceId },
+        data: { status: 'REJECTED', completedAt: new Date() },
+      })
+      return
+    }
+
+    const instance = await this.prisma.approvalInstance.findUnique({
+      where: { id: instanceId },
+      include: { tasks: true },
+    })
+    if (!instance) return
+
+    const payload = (instance.payload as Record<string, unknown>) || {}
+    const stages = (payload.stages as unknown as ApprovalFlowStage[] | undefined) || []
+    if (stages.length === 0) {
+      await this.prisma.approvalInstance.update({
+        where: { id: instanceId },
+        data: { status: 'APPROVED', completedAt: new Date() },
+      })
+      return
+    }
+
+    const stageIndex = this.parseStageIndex(completedNodeId)
+    const stageTasks = instance.tasks.filter((t) => t.nodeId === `stage_${stageIndex}`)
+    const allCompleted = stageTasks.length > 0 && stageTasks.every((t) => !!t.action)
+
+    if (!allCompleted) {
+      // 会签/并行阶段尚未全部完成，保持 PENDING
+      return
+    }
+
+    const nextStage = stages[stageIndex + 1]
+    if (nextStage) {
+      await this.createLocalTasksForStage(instanceId, stageIndex + 1, nextStage)
+    } else {
+      await this.prisma.approvalInstance.update({
+        where: { id: instanceId },
+        data: { status: 'APPROVED', completedAt: new Date() },
+      })
+    }
   }
 
   private async createDynamicWorkflowDefinition(input: {
