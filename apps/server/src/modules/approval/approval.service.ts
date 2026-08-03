@@ -331,7 +331,7 @@ export class ApprovalService {
       }
     } else {
       // 本地模式：按阶段推进
-      await this.handleLocalActionProgress(id, userId, action, completedNodeId)
+      await this.handleLocalActionProgress(id, userId, action, completedNodeId, targetNodeIndex)
     }
 
     return this.findOne(id)
@@ -549,15 +549,8 @@ export class ApprovalService {
     userId: string,
     action: 'APPROVE' | 'REJECT',
     completedNodeId?: string,
+    targetNodeIndex?: number,
   ): Promise<void> {
-    if (action === 'REJECT') {
-      await this.prisma.approvalInstance.update({
-        where: { id: instanceId },
-        data: { status: 'REJECTED', completedAt: new Date() },
-      })
-      return
-    }
-
     const instance = await this.prisma.approvalInstance.findUnique({
       where: { id: instanceId },
       include: { tasks: true },
@@ -566,6 +559,27 @@ export class ApprovalService {
 
     const payload = (instance.payload as Record<string, unknown>) || {}
     const stages = (payload.stages as unknown as ApprovalFlowStage[] | undefined) || []
+
+    if (action === 'REJECT') {
+      if (targetNodeIndex === undefined || targetNodeIndex < 0 || stages.length === 0) {
+        await this.prisma.approvalInstance.update({
+          where: { id: instanceId },
+          data: { status: 'REJECTED', completedAt: new Date() },
+        })
+        return
+      }
+
+      // 驳回到指定阶段：清理当前未完成任务，重建目标阶段任务
+      await this.prisma.approvalTask.deleteMany({
+        where: { instanceId, action: null },
+      })
+      const targetStage = stages[targetNodeIndex]
+      if (targetStage) {
+        await this.createLocalTasksForStage(instanceId, targetNodeIndex, targetStage)
+      }
+      return
+    }
+
     if (stages.length === 0) {
       await this.prisma.approvalInstance.update({
         where: { id: instanceId },
