@@ -1,19 +1,25 @@
 <script setup lang="ts">
 /**
- * 审批中心 — 列表页
+ * 审批中心 — 收件箱式列表 + 邮件式发起
  */
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import type { NavTabItem, StatusMap } from '@/types/common'
-import type { Approval, ApprovalForm, ApprovalListParams, ApprovalStats } from './types'
+import type {
+  Approval,
+  ApprovalForm,
+  ApprovalListParams,
+  ApprovalStats,
+  ApprovalTimelineNode,
+} from './types'
 import { ApprovalModule, ApprovalStatus, ApprovalPriority } from './types'
 import {
   getApprovalList,
   createApproval,
   updateApproval,
-  deleteApproval,
   approveApproval,
   rejectApproval,
   withdrawApproval,
+  getApprovalTimeline,
 } from './api'
 import { getUserList, type UserItem } from '@/api/user'
 import { useAuthStore } from '@/stores/auth'
@@ -28,7 +34,7 @@ function checkMobile(): void {
 
 async function fetchUsers() {
   try {
-    const res = await getUserList({ page: 1, size: 100 })
+    const res = await getUserList({ page: 1, size: 200 })
     userOptions.value = (res.list || []).map((u: UserItem) => ({
       value: u.id,
       label: `${u.name} (${u.username})`,
@@ -64,21 +70,14 @@ const stats = ref<ApprovalStats>({
   approvedCount: 0,
   rejectedCount: 0,
   withdrawnCount: 0,
+  initiatedCount: 0,
+  ccCount: 0,
 })
 const keyword = ref('')
 const searchTimer = ref<ReturnType<typeof setTimeout> | null>(null)
-const activeTab = ref('all')
+const activeTab = ref('pending')
 const filterValues = ref<Record<string, unknown>>({ module: '', status: '' })
 const pagination = ref({ page: 1, size: 12 })
-const detailVisible = ref(false)
-const detailApproval = ref<Approval | null>(null)
-
-// 表单抽屉
-const formVisible = ref(false)
-const formMode = ref<'create' | 'edit'>('create')
-const formData = ref<ApprovalForm>({} as ApprovalForm)
-const formLoading = ref(false)
-const editingApprovalId = ref<string | null>(null)
 
 const moduleMap: StatusMap = {
   [ApprovalModule.LEAVE]: { text: '请假', color: 'blue' },
@@ -101,13 +100,13 @@ const priorityMap: StatusMap = {
   [ApprovalPriority.URGENT]: { text: '紧急', color: 'red' },
 }
 
-const tabs: NavTabItem[] = [
-  { key: 'all', label: '全部' },
-  { key: 'pending', label: '待审批' },
-  { key: 'approved', label: '我已审批' },
-  { key: 'initiated', label: '我发起的' },
-  { key: 'cc', label: '抄送我的' },
-]
+const tabs = computed<NavTabItem[]>(() => [
+  { key: 'all', label: '全部', count: stats.value.totalCount },
+  { key: 'pending', label: '待我审批', count: stats.value.pendingCount },
+  { key: 'approved', label: '我已审批', count: stats.value.approvedCount },
+  { key: 'initiated', label: '我发起的', count: stats.value.initiatedCount },
+  { key: 'cc', label: '抄送我的', count: stats.value.ccCount },
+])
 
 const filterConfig = [
   {
@@ -137,76 +136,23 @@ const filterConfig = [
 ]
 
 const tableColumns = [
-  { title: '审批标题', dataIndex: 'title', width: '240px' },
-  { title: '审批编号', dataIndex: 'approvalCode', width: '130px', mobileHidden: true },
-  { title: '类型', dataIndex: 'module', width: '80px' },
-  { title: '状态', dataIndex: 'status', width: '90px' },
-  { title: '申请人', dataIndex: 'applicantName', width: '90px', mobileHidden: true },
-  { title: '当前审批人', dataIndex: 'currentApproverName', width: '100px', mobileHidden: true },
-  { title: '申请时间', dataIndex: 'createdAt', width: '110px', mobileHidden: true },
-  { title: '操作', dataIndex: 'actions', width: '120px', fixed: 'right' as const },
+  { title: '审批', dataIndex: 'title', width: 'auto' },
+  { title: '申请人', dataIndex: 'applicantName', width: '120px', mobileHidden: true },
+  { title: '时间', dataIndex: 'createdAt', width: '110px', mobileHidden: true },
 ]
-
-const formFields = computed(() => [
-  { key: 'title', label: '审批标题', required: true, placeholder: '请输入审批标题' },
-  {
-    key: 'module',
-    label: '审批类型',
-    type: 'select' as const,
-    required: true,
-    options: [
-      { value: 'leave', label: '请假' },
-      { value: 'expense', label: '报销' },
-      { value: 'contract', label: '合同' },
-      { value: 'discount', label: '折扣' },
-      { value: 'purchase', label: '采购' },
-      { value: 'other', label: '其他' },
-    ],
-  },
-  {
-    key: 'priority',
-    label: '紧急程度',
-    type: 'select' as const,
-    required: true,
-    options: [
-      { value: 'normal', label: '普通' },
-      { value: 'urgent', label: '紧急' },
-    ],
-  },
-  {
-    key: 'approverId',
-    label: '审批人',
-    type: 'select' as const,
-    required: true,
-    options: userOptions.value.length
-      ? userOptions.value
-      : [
-          { value: 'user_admin', label: '系统管理员' },
-          { value: 'user_sales_01', label: '张销售' },
-        ],
-  },
-  { key: 'businessKey', label: '业务编号', placeholder: '请输入业务编号' },
-  {
-    key: 'payload.amount',
-    label: '金额',
-    placeholder: '请输入金额',
-  },
-  {
-    key: 'payload.reason',
-    label: '申请理由',
-    type: 'textarea' as const,
-    placeholder: '请输入申请理由',
-  },
-])
 
 function emptyForm(): ApprovalForm {
   return {
     title: '',
     module: ApprovalModule.OTHER,
     priority: ApprovalPriority.NORMAL,
-    approverId: 'user_admin',
+    mode: 'serial',
+    rejectAction: 'end',
+    rejectTargetIndex: 0,
+    approverIds: [],
+    ccUserIds: [],
     businessKey: '',
-    payload: { amount: 0, reason: '' },
+    payload: { amount: undefined, reason: '' },
   }
 }
 
@@ -254,32 +200,148 @@ function handleFilterChange(values: Record<string, unknown>): void {
 function handleViewChange(val: 'card' | 'list'): void {
   viewMode.value = val
 }
-function openDetail(approval: Approval): void {
-  detailApproval.value = approval
-  detailVisible.value = true
-}
 function pageChange(page: number): void {
   pagination.value.page = page
   fetchList()
 }
 const hasMore = computed(() => pagination.value.page * pagination.value.size < total.value)
 
-// ---- 表单操作 ----
-function openCreate(): void {
-  formMode.value = 'create'
-  editingApprovalId.value = null
-  formData.value = emptyForm()
-  formVisible.value = true
+// ---- 详情弹窗 ----
+const detailVisible = ref(false)
+const detailApproval = ref<Approval | null>(null)
+const timeline = ref<ApprovalTimelineNode[]>([])
+const timelineLoading = ref(false)
+
+async function openDetail(approval: Approval): Promise<void> {
+  detailApproval.value = approval
+  detailVisible.value = true
+  timeline.value = []
+  timelineLoading.value = true
+  try {
+    const res = await getApprovalTimeline(approval.approvalId)
+    timeline.value = res.timeline || []
+  } finally {
+    timelineLoading.value = false
+  }
 }
 
+// ---- 邮件式发起弹窗 ----
+const composeVisible = ref(false)
+const composeLoading = ref(false)
+const composeForm = ref<ApprovalForm>(emptyForm())
+const approverSearch = ref('')
+const ccSearch = ref('')
+
+function openCompose(): void {
+  composeForm.value = emptyForm()
+  composeVisible.value = true
+}
+
+function toggleApprover(userId: string): void {
+  const list = composeForm.value.approverIds || []
+  if (list.includes(userId)) {
+    composeForm.value.approverIds = list.filter((id) => id !== userId)
+  } else {
+    composeForm.value.approverIds = [...list, userId]
+  }
+}
+
+function removeApprover(userId: string): void {
+  const list = composeForm.value.approverIds || []
+  composeForm.value.approverIds = list.filter((id) => id !== userId)
+}
+
+function toggleCc(userId: string): void {
+  const list = composeForm.value.ccUserIds || []
+  if (list.includes(userId)) {
+    composeForm.value.ccUserIds = list.filter((id) => id !== userId)
+  } else {
+    composeForm.value.ccUserIds = [...list, userId]
+  }
+}
+
+function removeCc(userId: string): void {
+  const list = composeForm.value.ccUserIds || []
+  composeForm.value.ccUserIds = list.filter((id) => id !== userId)
+}
+
+const filteredApproverOptions = computed(() => {
+  const selected = new Set(composeForm.value.approverIds || [])
+  const kw = approverSearch.value.trim().toLowerCase()
+  return userOptions.value.filter(
+    (u) => !selected.has(u.value) && u.label.toLowerCase().includes(kw),
+  )
+})
+
+const filteredCcOptions = computed(() => {
+  const selected = new Set(composeForm.value.ccUserIds || [])
+  const kw = ccSearch.value.trim().toLowerCase()
+  return userOptions.value.filter(
+    (u) => !selected.has(u.value) && u.label.toLowerCase().includes(kw),
+  )
+})
+
+function selectedApproverChips() {
+  return (composeForm.value.approverIds || [])
+    .map((id) => userOptions.value.find((u) => u.value === id))
+    .filter(Boolean)
+}
+
+function selectedCcChips() {
+  return (composeForm.value.ccUserIds || [])
+    .map((id) => userOptions.value.find((u) => u.value === id))
+    .filter(Boolean)
+}
+
+async function handleComposeSubmit(): Promise<void> {
+  const form = composeForm.value
+  if (!form.title?.trim()) {
+    window.alert('请输入审批主题')
+    return
+  }
+  if (!form.approverIds || form.approverIds.length === 0) {
+    window.alert('请选择至少一个审批人')
+    return
+  }
+
+  composeLoading.value = true
+  try {
+    await createApproval({
+      title: form.title,
+      module: form.module,
+      priority: form.priority,
+      mode: form.mode,
+      rejectAction: form.rejectAction,
+      rejectTargetIndex: form.rejectTargetIndex,
+      approverIds: form.approverIds,
+      ccUserIds: form.ccUserIds,
+      businessKey: form.businessKey,
+      payload: {
+        amount: Number(form.payload?.amount || 0),
+        reason: String(form.payload?.reason || ''),
+      },
+    })
+    composeVisible.value = false
+    activeTab.value = 'initiated'
+    pagination.value.page = 1
+    await fetchList()
+  } catch (e) {
+    window.alert(e instanceof Error ? e.message : '发起审批失败')
+  } finally {
+    composeLoading.value = false
+  }
+}
+
+// ---- 编辑抽屉 ----
+const formVisible = ref(false)
+const editingApprovalId = ref<string | null>(null)
+const editForm = ref<ApprovalForm>(emptyForm())
+const editLoading = ref(false)
+
 function openEdit(approval: Approval): void {
-  formMode.value = 'edit'
   editingApprovalId.value = approval.approvalId
-  formData.value = {
+  editForm.value = {
     title: approval.title,
-    module: approval.module,
-    priority: approval.priority,
-    approverId: (approval.payload?.approverId as string) || 'user_admin',
     businessKey: approval.businessKey,
     payload: approval.payload || {},
   }
@@ -287,45 +349,30 @@ function openEdit(approval: Approval): void {
   detailVisible.value = false
 }
 
-async function handleFormSubmit(values: Record<string, unknown>): Promise<void> {
-  formLoading.value = true
+async function handleEditSubmit(values: Record<string, unknown>): Promise<void> {
+  if (!editingApprovalId.value) return
+  editLoading.value = true
   try {
-    const data: ApprovalForm = {
+    await updateApproval(editingApprovalId.value, {
       title: String(values.title || ''),
-      module: String(values.module || ApprovalModule.OTHER) as ApprovalModule,
-      priority: String(values.priority || ApprovalPriority.NORMAL) as ApprovalPriority,
-      approverId: String(values.approverId || 'user_admin'),
       businessKey: values.businessKey ? String(values.businessKey) : undefined,
       payload: {
         amount: Number(values['payload.amount'] || 0),
         reason: String(values['payload.reason'] || ''),
       },
-    }
-
-    if (formMode.value === 'create') {
-      await createApproval(data)
-    } else if (editingApprovalId.value) {
-      await updateApproval(editingApprovalId.value, data)
-    }
-
+    })
     formVisible.value = false
-    fetchList()
+    await fetchList()
   } finally {
-    formLoading.value = false
+    editLoading.value = false
   }
 }
 
-async function handleDelete(approval: Approval): Promise<void> {
-  if (!window.confirm(`确定删除审批「${approval.title}」吗？`)) return
-  await deleteApproval(approval.approvalId)
-  fetchList()
-  if (detailApproval.value?.approvalId === approval.approvalId) {
-    detailVisible.value = false
-    detailApproval.value = null
-  }
-}
-
+// ---- 审批操作 ----
 const actionLoading = ref(false)
+const actionModalVisible = ref(false)
+const actionType = ref<'approve' | 'reject' | null>(null)
+const actionComment = ref('')
 
 function canApprove(record: Approval | null): boolean {
   if (!record || record.status !== ApprovalStatus.PENDING) return false
@@ -339,31 +386,26 @@ function canWithdraw(record: Approval | null): boolean {
   return record.applicantId === authStore.user?.id || authStore.hasRole('super_admin')
 }
 
-async function handleApprove(): Promise<void> {
-  if (!detailApproval.value) return
-  const comment = window.prompt('请输入审批意见（可选）') || undefined
-  actionLoading.value = true
-  try {
-    await approveApproval(detailApproval.value.approvalId, comment)
-    detailVisible.value = false
-    await fetchList()
-  } catch (e) {
-    window.alert(e instanceof Error ? e.message : '审批通过失败')
-  } finally {
-    actionLoading.value = false
-  }
+function openAction(type: 'approve' | 'reject'): void {
+  actionType.value = type
+  actionComment.value = ''
+  actionModalVisible.value = true
 }
 
-async function handleReject(): Promise<void> {
-  if (!detailApproval.value) return
-  const comment = window.prompt('请输入驳回意见（可选）') || undefined
+async function handleActionSubmit(): Promise<void> {
+  if (!detailApproval.value || !actionType.value) return
   actionLoading.value = true
   try {
-    await rejectApproval(detailApproval.value.approvalId, comment)
+    if (actionType.value === 'approve') {
+      await approveApproval(detailApproval.value.approvalId, actionComment.value)
+    } else {
+      await rejectApproval(detailApproval.value.approvalId, actionComment.value)
+    }
+    actionModalVisible.value = false
     detailVisible.value = false
     await fetchList()
   } catch (e) {
-    window.alert(e instanceof Error ? e.message : '审批驳回失败')
+    window.alert(e instanceof Error ? e.message : '操作失败')
   } finally {
     actionLoading.value = false
   }
@@ -383,21 +425,54 @@ async function handleWithdraw(): Promise<void> {
     actionLoading.value = false
   }
 }
+
+function formatTime(iso?: string): string {
+  if (!iso) return '-'
+  return iso.slice(0, 16).replace('T', ' ')
+}
+
+function approvalSnippet(approval: Approval): string {
+  const reason = approval.payload?.reason as string | undefined
+  if (reason) return reason
+  const amount = approval.payload?.amount as number | undefined
+  if (amount) return `金额：${amount} 元`
+  return '暂无内容摘要'
+}
+
+function timelineItems() {
+  return timeline.value.map((node) => ({
+    time: node.endTime ? formatTime(node.endTime) : formatTime(node.startTime),
+    title: `${node.nodeName || node.nodeId} · ${
+      node.action === 'approve' ? '已通过' : node.action === 'reject' ? '已驳回' : '待审批'
+    }`,
+    content: node.comment || undefined,
+    operator: node.assigneeName || node.assigneeId || '-',
+    status: node.action || 'pending',
+    statusColor:
+      node.action === 'approve'
+        ? 'var(--success)'
+        : node.action === 'reject'
+          ? 'var(--danger)'
+          : 'var(--warning)',
+  }))
+}
 </script>
 
 <template>
   <XqPageLayout title="审批中心">
     <template #actions>
-      <XqButton type="primary" @click="openCreate">
-        <XqIcon name="plus" size="14" />新建审批
+      <XqButton type="primary" @click="openCompose">
+        <XqIcon name="plus" size="14" />发起审批
       </XqButton>
     </template>
     <template #stats>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
         <XqKpiCard title="审批总数" :value="stats.totalCount" color="primary" />
-        <XqKpiCard title="审批中" :value="stats.pendingCount" color="warning" />
-        <XqKpiCard title="已通过" :value="stats.approvedCount" color="success" />
+        <XqKpiCard title="待我审批" :value="stats.pendingCount" color="warning" />
+        <XqKpiCard title="我已审批" :value="stats.approvedCount" color="success" />
         <XqKpiCard title="已驳回" :value="stats.rejectedCount" color="danger" />
+        <XqKpiCard title="我发起的" :value="stats.initiatedCount" color="ink" />
+        <XqKpiCard title="抄送我的" :value="stats.ccCount" color="ink" />
       </div>
     </template>
     <template #operation>
@@ -408,7 +483,7 @@ async function handleWithdraw(): Promise<void> {
       <div class="flex flex-col sm:flex-row sm:items-center gap-3">
         <XqSearchBar
           v-model="keyword"
-          placeholder="搜索审批标题、编号、业务关键字..."
+          placeholder="搜索审批主题、编号、业务关键字..."
           :pinyin-search="true"
           @search="handleSearch"
           @reset="handleSearch('')"
@@ -423,6 +498,7 @@ async function handleWithdraw(): Promise<void> {
       </div>
     </template>
     <template #content>
+      <!-- 列表视图：邮件收件箱风格 -->
       <XqDataTable
         v-if="viewMode === 'list'"
         :columns="tableColumns"
@@ -431,61 +507,57 @@ async function handleWithdraw(): Promise<void> {
         row-key="approvalId"
         @row-click="(r: Approval) => openDetail(r)"
       >
-        <template #module="{ value }">
-          <XqStatusBadge :status="value" :status-map="moduleMap" size="small" />
-        </template>
-        <template #status="{ value }">
-          <XqStatusBadge :status="value" :status-map="statusMap" size="small" />
-        </template>
         <template #title="{ value, record }">
-          <span
-            class="text-[var(--primary)] cursor-pointer hover:underline"
-            @click.stop="openDetail(record)"
-          >
-            {{ value }}
-          </span>
+          <div class="flex flex-col gap-1 py-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="font-medium text-[var(--ink)]">{{ value }}</span>
+              <XqStatusBadge :status="record.module" :status-map="moduleMap" size="small" />
+              <XqStatusBadge :status="record.priority" :status-map="priorityMap" size="small" />
+              <XqStatusBadge :status="record.status" :status-map="statusMap" size="small" />
+            </div>
+            <div class="text-sm text-[var(--sub)] truncate max-w-md">
+              {{ approvalSnippet(record) }}
+            </div>
+          </div>
+        </template>
+        <template #applicantName="{ value, record }">
+          <div class="flex flex-col text-sm">
+            <span class="text-[var(--ink)]">{{ value || '-' }}</span>
+            <span class="text-xs text-[var(--sub)]"
+              >当前：{{ record.currentApproverName || '-' }}</span
+            >
+          </div>
         </template>
         <template #createdAt="{ value }">
           <span class="text-sm text-[var(--sub)]">{{ value ? value.slice(0, 10) : '-' }}</span>
         </template>
-        <template #actions="{ record }">
-          <div class="flex items-center gap-2" @click.stop>
-            <button class="text-sm text-[var(--primary)] hover:underline" @click="openEdit(record)">
-              编辑
-            </button>
-            <button
-              class="text-sm text-[var(--danger)] hover:underline"
-              @click="handleDelete(record)"
-            >
-              删除
-            </button>
-          </div>
-        </template>
       </XqDataTable>
+
+      <!-- 卡片视图 -->
       <XqCardGrid
         v-else
         :data-source="approvals"
-        :columns="4"
+        :columns="isMobile ? 1 : 3"
         :loading="loading"
         @item-click="(r: Approval) => openDetail(r)"
       >
         <template #item="{ record }">
-          <div class="card card-hover cursor-pointer">
-            <div class="flex items-start justify-between mb-2">
-              <h3 class="text-md font-semibold text-[var(--ink)] truncate flex-1 min-w-0 pr-2">
+          <div class="card card-hover cursor-pointer flex flex-col gap-3">
+            <div class="flex items-start justify-between gap-2">
+              <h3 class="text-base font-semibold text-[var(--ink)] truncate flex-1">
                 {{ record.title }}
               </h3>
               <XqStatusBadge :status="record.status" :status-map="statusMap" size="small" />
             </div>
-            <p class="text-sm text-[var(--sub)] mb-2">{{ record.applicantName || '-' }}</p>
-            <div class="flex items-center gap-2 mb-2">
+            <div class="flex items-center gap-2 flex-wrap">
               <XqStatusBadge :status="record.module" :status-map="moduleMap" size="small" />
               <XqStatusBadge :status="record.priority" :status-map="priorityMap" size="small" />
             </div>
+            <p class="text-sm text-[var(--sub)] line-clamp-2">{{ approvalSnippet(record) }}</p>
             <div
-              class="flex items-center justify-between pt-2 border-t border-[var(--line-light)] text-sm"
+              class="flex items-center justify-between text-sm pt-2 border-t border-[var(--line-light)]"
             >
-              <span class="text-[var(--sub)]">{{ record.currentApproverName || '-' }}</span>
+              <span class="text-[var(--sub)]">{{ record.applicantName || '-' }}</span>
               <span class="text-xs text-[var(--placeholder)]">{{
                 record.createdAt.slice(0, 10)
               }}</span>
@@ -497,7 +569,7 @@ async function handleWithdraw(): Promise<void> {
     <template #footer>
       <div class="flex items-center justify-between text-sm text-[var(--sub)]">
         <span
-          >{{ pagination.page }} / {{ Math.ceil(total / pagination.size) }} 页，共
+          >{{ pagination.page }} / {{ Math.max(1, Math.ceil(total / pagination.size)) }} 页，共
           {{ total }} 条</span
         >
         <div class="flex items-center gap-2">
@@ -520,24 +592,242 @@ async function handleWithdraw(): Promise<void> {
     </template>
   </XqPageLayout>
 
-  <div v-if="isMobile" class="fixed bottom-5 right-5 z-50">
-    <button
-      class="w-14 h-14 rounded-full bg-[var(--primary)] text-white shadow-lg flex items-center justify-center"
-      @click="openCreate"
-    >
-      <XqIcon name="plus" size="24" />
-    </button>
-  </div>
+  <!-- 邮件式发起弹窗 -->
+  <XqModal v-model:visible="composeVisible" title="发起审批" width="720px">
+    <div class="flex flex-col gap-5">
+      <!-- 审批人 -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-medium text-[var(--ink)]"
+          >收件人（审批人）<span class="text-[var(--danger)]">*</span></label
+        >
+        <div
+          class="flex flex-wrap items-center gap-2 p-2 border border-[var(--line)] rounded-lg bg-[var(--bg)] min-h-[44px]"
+        >
+          <span
+            v-for="chip in selectedApproverChips()"
+            :key="chip!.value"
+            class="inline-flex items-center gap-1 px-2 py-1 text-sm rounded-md bg-[var(--primary-light)] text-[var(--primary)]"
+          >
+            {{ chip!.label }}
+            <button class="hover:text-[var(--ink)]" @click.stop="removeApprover(chip!.value)">
+              <XqIcon name="close" size="12" />
+            </button>
+          </span>
+          <select
+            v-model="approverSearch"
+            class="bg-transparent text-sm outline-none min-w-[120px] flex-1"
+            @change="
+              (e: Event) => {
+                const target = e.target as HTMLSelectElement
+                if (target.value) {
+                  toggleApprover(target.value)
+                  target.value = ''
+                  approverSearch = ''
+                }
+              }
+            "
+          >
+            <option value="">添加审批人</option>
+            <option v-for="u in filteredApproverOptions" :key="u.value" :value="u.value">
+              {{ u.label }}
+            </option>
+          </select>
+        </div>
+        <p class="text-xs text-[var(--sub)]">
+          按选择顺序依次审批；选择多人时可在下方切换为并行审批。
+        </p>
+      </div>
+
+      <!-- 抄送 -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-medium text-[var(--ink)]">抄送</label>
+        <div
+          class="flex flex-wrap items-center gap-2 p-2 border border-[var(--line)] rounded-lg bg-[var(--bg)] min-h-[44px]"
+        >
+          <span
+            v-for="chip in selectedCcChips()"
+            :key="chip!.value"
+            class="inline-flex items-center gap-1 px-2 py-1 text-sm rounded-md bg-[var(--gray-bg)] text-[var(--sub)]"
+          >
+            {{ chip!.label }}
+            <button class="hover:text-[var(--ink)]" @click.stop="removeCc(chip!.value)">
+              <XqIcon name="close" size="12" />
+            </button>
+          </span>
+          <select
+            v-model="ccSearch"
+            class="bg-transparent text-sm outline-none min-w-[120px] flex-1"
+            @change="
+              (e: Event) => {
+                const target = e.target as HTMLSelectElement
+                if (target.value) {
+                  toggleCc(target.value)
+                  target.value = ''
+                  ccSearch = ''
+                }
+              }
+            "
+          >
+            <option value="">添加抄送人</option>
+            <option v-for="u in filteredCcOptions" :key="u.value" :value="u.value">
+              {{ u.label }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 主题 -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-medium text-[var(--ink)]"
+          >主题<span class="text-[var(--danger)]">*</span></label
+        >
+        <input v-model="composeForm.title" type="text" class="input" placeholder="请输入审批主题" />
+      </div>
+
+      <!-- 类型 / 紧急 / 模式 / 驳回策略 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-medium text-[var(--ink)]">审批类型</label>
+          <select v-model="composeForm.module" class="input">
+            <option
+              v-for="m in [
+                { v: 'leave', l: '请假' },
+                { v: 'expense', l: '报销' },
+                { v: 'contract', l: '合同' },
+                { v: 'discount', l: '折扣' },
+                { v: 'purchase', l: '采购' },
+                { v: 'other', l: '其他' },
+              ]"
+              :key="m.v"
+              :value="m.v"
+            >
+              {{ m.l }}
+            </option>
+          </select>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-medium text-[var(--ink)]">紧急程度</label>
+          <select v-model="composeForm.priority" class="input">
+            <option value="normal">普通</option>
+            <option value="urgent">紧急</option>
+          </select>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-medium text-[var(--ink)]">审批模式</label>
+          <div class="flex items-center gap-2">
+            <button
+              class="px-3 py-1.5 text-sm rounded-md border"
+              :class="
+                composeForm.mode === 'serial'
+                  ? 'bg-[var(--primary-light)] text-[var(--primary)] border-[var(--primary)]'
+                  : 'border-[var(--line)] text-[var(--sub)]'
+              "
+              @click="composeForm.mode = 'serial'"
+            >
+              串行审批
+            </button>
+            <button
+              class="px-3 py-1.5 text-sm rounded-md border"
+              :class="
+                composeForm.mode === 'parallel'
+                  ? 'bg-[var(--primary-light)] text-[var(--primary)] border-[var(--primary)]'
+                  : 'border-[var(--line)] text-[var(--sub)]'
+              "
+              @click="composeForm.mode = 'parallel'"
+            >
+              并行审批
+            </button>
+          </div>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-medium text-[var(--ink)]">驳回策略</label>
+          <select v-model="composeForm.rejectAction" class="input">
+            <option value="end">直接结束</option>
+            <option value="prev">驳回到上一节点</option>
+            <option value="node">驳回到指定节点</option>
+          </select>
+          <div v-if="composeForm.rejectAction === 'node'" class="flex items-center gap-2 mt-1">
+            <span class="text-sm text-[var(--sub)]">目标节点序号</span>
+            <input
+              v-model.number="composeForm.rejectTargetIndex"
+              type="number"
+              min="0"
+              class="input w-24"
+            />
+            <span class="text-xs text-[var(--sub)]">从 0 开始</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 业务编号 / 金额 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-medium text-[var(--ink)]">业务编号</label>
+          <input
+            v-model="composeForm.businessKey"
+            type="text"
+            class="input"
+            placeholder="请输入业务编号"
+          />
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-medium text-[var(--ink)]">金额</label>
+          <input
+            v-model.number="(composeForm.payload as any).amount"
+            type="number"
+            class="input"
+            placeholder="请输入金额"
+          />
+        </div>
+      </div>
+
+      <!-- 正文 -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-medium text-[var(--ink)]">申请理由</label>
+        <textarea
+          v-model="(composeForm.payload as any).reason"
+          rows="4"
+          class="input min-h-[100px] resize-y"
+          placeholder="请输入申请理由"
+        />
+      </div>
+    </div>
+    <template #footer>
+      <button class="btn btn-ghost flex-1" @click="composeVisible = false">取消</button>
+      <button
+        class="btn btn-primary flex-1"
+        :disabled="composeLoading"
+        @click="handleComposeSubmit"
+      >
+        <XqIcon v-if="composeLoading" name="loading" size="14" class="animate-spin mr-1" />
+        {{ composeLoading ? '提交中…' : '发送审批' }}
+      </button>
+    </template>
+  </XqModal>
 
   <!-- 详情弹窗 -->
   <XqModal
     :visible="detailVisible"
     :title="detailApproval?.title || '审批详情'"
-    width="720px"
+    width="760px"
     @close="detailVisible = false"
   >
     <div v-if="detailApproval" class="flex flex-col gap-5">
       <div class="card">
+        <div class="flex items-start justify-between gap-3 mb-4">
+          <div class="flex items-center gap-2 flex-wrap">
+            <XqStatusBadge :status="detailApproval.module" :status-map="moduleMap" size="small" />
+            <XqStatusBadge
+              :status="detailApproval.priority"
+              :status-map="priorityMap"
+              size="small"
+            />
+            <XqStatusBadge :status="detailApproval.status" :status-map="statusMap" size="small" />
+          </div>
+          <span class="text-xs text-[var(--placeholder)]">{{
+            formatTime(detailApproval.createdAt)
+          }}</span>
+        </div>
         <div class="grid grid-cols-2 gap-4 text-sm">
           <div>
             <span class="text-[var(--placeholder)]">审批编号</span>
@@ -546,22 +836,6 @@ async function handleWithdraw(): Promise<void> {
           <div>
             <span class="text-[var(--placeholder)]">业务编号</span>
             <div class="text-[var(--ink)] mt-0.5">{{ detailApproval.businessKey || '-' }}</div>
-          </div>
-          <div class="col-span-2">
-            <span class="text-[var(--placeholder)]">审批标题</span>
-            <div class="text-[var(--ink)] mt-0.5 font-medium">{{ detailApproval.title }}</div>
-          </div>
-          <div>
-            <span class="text-[var(--placeholder)]">类型</span>
-            <div class="mt-0.5">
-              <XqStatusBadge :status="detailApproval.module" :status-map="moduleMap" size="small" />
-            </div>
-          </div>
-          <div>
-            <span class="text-[var(--placeholder)]">状态</span>
-            <div class="mt-0.5">
-              <XqStatusBadge :status="detailApproval.status" :status-map="statusMap" />
-            </div>
           </div>
           <div>
             <span class="text-[var(--placeholder)]">申请人</span>
@@ -573,70 +847,34 @@ async function handleWithdraw(): Promise<void> {
               {{ detailApproval.currentApproverName || '-' }}
             </div>
           </div>
-          <div>
-            <span class="text-[var(--placeholder)]">申请时间</span>
-            <div class="text-[var(--ink)] mt-0.5">{{ detailApproval.createdAt.slice(0, 10) }}</div>
+          <div v-if="detailApproval.payload?.amount" class="col-span-2">
+            <span class="text-[var(--placeholder)]">金额</span>
+            <div class="text-[var(--ink)] mt-0.5">{{ detailApproval.payload.amount }} 元</div>
           </div>
-          <div>
-            <span class="text-[var(--placeholder)]">紧急程度</span>
-            <div class="mt-0.5">
-              <XqStatusBadge
-                :status="detailApproval.priority"
-                :status-map="priorityMap"
-                size="small"
-              />
-            </div>
-          </div>
-          <div class="col-span-2" v-if="detailApproval.payload">
-            <span class="text-[var(--placeholder)]">申请内容</span>
-            <div class="text-[var(--ink)] mt-0.5">
-              <div v-if="detailApproval.payload.amount">
-                金额：{{ detailApproval.payload.amount }} 元
-              </div>
-              <div v-if="detailApproval.payload.reason">
-                理由：{{ detailApproval.payload.reason }}
-              </div>
-            </div>
-          </div>
-          <div class="col-span-2" v-if="detailApproval.tasks && detailApproval.tasks.length > 0">
-            <span class="text-[var(--placeholder)]">审批记录</span>
-            <div class="mt-2 space-y-2">
-              <div
-                v-for="task in detailApproval.tasks"
-                :key="task.taskId"
-                class="flex items-center gap-3 text-sm"
-              >
-                <span class="text-[var(--sub)]">{{ task.assigneeName || task.assigneeId }}</span>
-                <span
-                  :class="
-                    task.action === 'approve'
-                      ? 'text-green-600'
-                      : task.action === 'reject'
-                        ? 'text-red-600'
-                        : 'text-orange-500'
-                  "
-                >
-                  {{ task.action ? (task.action === 'approve' ? '已通过' : '已驳回') : '待审批' }}
-                </span>
-                <span class="text-[var(--placeholder)]">{{ task.comment || '' }}</span>
-              </div>
+          <div v-if="detailApproval.payload?.reason" class="col-span-2">
+            <span class="text-[var(--placeholder)]">申请理由</span>
+            <div class="text-[var(--ink)] mt-0.5 whitespace-pre-wrap">
+              {{ detailApproval.payload.reason }}
             </div>
           </div>
         </div>
       </div>
+
+      <div class="card">
+        <div class="text-sm font-medium text-[var(--ink)] mb-3">审批进度</div>
+        <div v-if="timelineLoading" class="py-4 text-center text-sm text-[var(--placeholder)]">
+          加载中…
+        </div>
+        <XqTimeline v-else :data="timelineItems()" />
+      </div>
     </div>
     <template #footer>
-      <button
-        v-if="detailApproval?.status === ApprovalStatus.PENDING"
-        class="btn btn-ghost flex-1"
-        :disabled="actionLoading"
-        @click="openEdit(detailApproval!)"
-      >
+      <button class="btn btn-ghost" :disabled="actionLoading" @click="openEdit(detailApproval!)">
         <XqIcon name="edit" size="14" />编辑
       </button>
       <button
         v-if="canWithdraw(detailApproval)"
-        class="btn btn-ghost flex-1"
+        class="btn btn-ghost"
         :disabled="actionLoading"
         @click="handleWithdraw"
       >
@@ -646,7 +884,7 @@ async function handleWithdraw(): Promise<void> {
         v-if="canApprove(detailApproval)"
         class="btn btn-danger flex-1"
         :disabled="actionLoading"
-        @click="handleReject"
+        @click="openAction('reject')"
       >
         <XqIcon name="close" size="14" />驳回
       </button>
@@ -654,21 +892,55 @@ async function handleWithdraw(): Promise<void> {
         v-if="canApprove(detailApproval)"
         class="btn btn-primary flex-1"
         :disabled="actionLoading"
-        @click="handleApprove"
+        @click="openAction('approve')"
       >
         <XqIcon name="check" size="14" />通过
       </button>
     </template>
   </XqModal>
 
-  <!-- 新建/编辑审批抽屉 -->
+  <!-- 审批意见弹窗 -->
+  <XqModal
+    :visible="actionModalVisible"
+    :title="actionType === 'approve' ? '审批通过' : '审批驳回'"
+    width="480px"
+    @close="actionModalVisible = false"
+  >
+    <div class="flex flex-col gap-3">
+      <label class="text-sm font-medium text-[var(--ink)]">审批意见（可选）</label>
+      <textarea
+        v-model="actionComment"
+        rows="3"
+        class="input resize-y"
+        placeholder="请输入审批意见"
+      />
+    </div>
+    <template #footer>
+      <button class="btn btn-ghost flex-1" @click="actionModalVisible = false">取消</button>
+      <button
+        class="flex-1"
+        :class="actionType === 'approve' ? 'btn btn-primary' : 'btn btn-danger'"
+        :disabled="actionLoading"
+        @click="handleActionSubmit"
+      >
+        {{ actionType === 'approve' ? '确认通过' : '确认驳回' }}
+      </button>
+    </template>
+  </XqModal>
+
+  <!-- 编辑抽屉 -->
   <XqFormDrawer
     :visible="formVisible"
-    :title="formMode === 'create' ? '新建审批' : '编辑审批'"
-    :fields="formFields"
-    :initial-values="formData as unknown as Record<string, unknown>"
-    :loading="formLoading"
-    @submit="handleFormSubmit"
+    title="编辑审批"
+    :fields="[
+      { key: 'title', label: '审批标题', required: true },
+      { key: 'businessKey', label: '业务编号' },
+      { key: 'payload.amount', label: '金额', placeholder: '请输入金额' },
+      { key: 'payload.reason', label: '申请理由', type: 'textarea', placeholder: '请输入申请理由' },
+    ]"
+    :initial-values="editForm as unknown as Record<string, unknown>"
+    :loading="editLoading"
+    @submit="handleEditSubmit"
     @cancel="formVisible = false"
   />
 </template>

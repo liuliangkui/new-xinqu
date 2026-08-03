@@ -55,14 +55,6 @@ import {
 } from '@/views/tasks/mock'
 import type { TaskListResult, Task, TaskForm } from '@/views/tasks/types'
 import {
-  generateApprovalList,
-  createApprovalInMock,
-  updateApprovalInMock,
-  deleteApprovalFromMock,
-  allApprovals,
-} from '@/views/approval/mock'
-import type { ApprovalListResult, Approval, ApprovalForm } from '@/views/approval/types'
-import {
   generateAppList,
   createAppInMock,
   updateAppInMock,
@@ -555,69 +547,6 @@ export const handlers = [
     if (!success) {
       return HttpResponse.json(
         { success: false, code: 404, message: '任务不存在', data: null },
-        { status: 404 },
-      )
-    }
-    return HttpResponse.json(ok({ success: true }))
-  }),
-
-  http.get('/api/v1/approvals', ({ request }) => {
-    const url = new URL(request.url)
-    const page = Number(url.searchParams.get('page') ?? '1')
-    const size = Number(url.searchParams.get('size') ?? '20')
-    const keyword = url.searchParams.get('keyword') ?? undefined
-    const module = url.searchParams.get('module') ?? undefined
-    const status = url.searchParams.get('status') ?? undefined
-    const tabType = url.searchParams.get('tabType') ?? undefined
-
-    const result = generateApprovalList({
-      pageNum: page,
-      pageSize: size,
-      keyword,
-      module,
-      status,
-      tabType,
-    })
-    return HttpResponse.json(ok<ApprovalListResult>(result))
-  }),
-
-  http.get('/api/v1/approvals/:id', ({ params }) => {
-    const id = String(params.id)
-    const approval = allApprovals.find((a) => a.approvalId === id) || null
-    if (!approval) {
-      return HttpResponse.json(
-        { success: false, code: 404, message: '审批不存在', data: null },
-        { status: 404 },
-      )
-    }
-    return HttpResponse.json(ok<Approval>(approval))
-  }),
-
-  http.post('/api/v1/approvals', async ({ request }) => {
-    const body = (await request.json()) as Partial<ApprovalForm>
-    const approval = createApprovalInMock(body)
-    return HttpResponse.json(ok<Approval>(approval), { status: 201 })
-  }),
-
-  http.put('/api/v1/approvals/:id', async ({ request, params }) => {
-    const id = String(params.id)
-    const body = (await request.json()) as Partial<ApprovalForm>
-    const approval = updateApprovalInMock(id, body)
-    if (!approval) {
-      return HttpResponse.json(
-        { success: false, code: 404, message: '审批不存在', data: null },
-        { status: 404 },
-      )
-    }
-    return HttpResponse.json(ok<Approval>(approval))
-  }),
-
-  http.delete('/api/v1/approvals/:id', ({ params }) => {
-    const id = String(params.id)
-    const success = deleteApprovalFromMock(id)
-    if (!success) {
-      return HttpResponse.json(
-        { success: false, code: 404, message: '审批不存在', data: null },
         { status: 404 },
       )
     }

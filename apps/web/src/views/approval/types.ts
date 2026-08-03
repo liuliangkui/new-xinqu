@@ -23,6 +23,9 @@ export enum ApprovalPriority {
   URGENT = 'urgent',
 }
 
+export type ApprovalMode = 'serial' | 'parallel'
+export type ApprovalRejectAction = 'end' | 'prev' | 'node'
+
 export interface ApprovalTask {
   taskId: string
   nodeId?: string
@@ -65,9 +68,13 @@ export interface ApprovalForm {
   businessKey?: string
   module?: ApprovalModule
   priority?: ApprovalPriority
+  mode?: ApprovalMode
+  rejectAction?: ApprovalRejectAction
+  rejectTargetIndex?: number
+  approverIds?: string[]
   approverId?: string
   payload?: Record<string, unknown>
-  ccUserNames?: string[]
+  ccUserIds?: string[]
 }
 
 export interface ApprovalStats {
@@ -76,6 +83,8 @@ export interface ApprovalStats {
   approvedCount: number
   rejectedCount: number
   withdrawnCount: number
+  initiatedCount?: number
+  ccCount?: number
 }
 
 export interface ApprovalListParams {
@@ -93,4 +102,20 @@ export interface ApprovalListResult {
   pageNum: number
   pageSize: number
   stats: ApprovalStats
+}
+
+export interface ApprovalTimelineNode {
+  nodeId: string
+  nodeName?: string
+  assigneeId?: string
+  assigneeName?: string
+  action?: 'approve' | 'reject'
+  comment?: string
+  startTime?: string
+  endTime?: string
+}
+
+export interface ApprovalTimelineResult {
+  instanceId: string
+  timeline: ApprovalTimelineNode[]
 }

@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsEnum, IsObject } from 'class-validator'
+import { IsString, IsNotEmpty, IsOptional, IsEnum, IsObject, IsArray, IsNumber, ArrayMinSize } from 'class-validator'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
 export class CreateApprovalDto {
@@ -30,7 +30,29 @@ export class CreateApprovalDto {
   @IsEnum(['normal', 'urgent'])
   priority?: string
 
-  @ApiPropertyOptional({ description: '指定审批人ID（为空则默认系统管理员）' })
+  @ApiPropertyOptional({ description: '审批模式', enum: ['serial', 'parallel'] })
+  @IsOptional()
+  @IsEnum(['serial', 'parallel'])
+  mode?: 'serial' | 'parallel'
+
+  @ApiPropertyOptional({ description: '驳回策略', enum: ['end', 'prev', 'node'] })
+  @IsOptional()
+  @IsEnum(['end', 'prev', 'node'])
+  rejectAction?: 'end' | 'prev' | 'node'
+
+  @ApiPropertyOptional({ description: 'rejectAction=node 时，驳回到的节点下标（从 0 开始）' })
+  @IsOptional()
+  @IsNumber()
+  rejectTargetIndex?: number
+
+  @ApiPropertyOptional({ description: '指定审批人ID列表（顺序即串行顺序）' })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  @ArrayMinSize(1)
+  approverIds?: string[]
+
+  @ApiPropertyOptional({ description: '指定单个审批人ID（兼容旧版，优先级低于 approverIds）' })
   @IsOptional()
   @IsString()
   approverId?: string

@@ -36,6 +36,14 @@ export class ApprovalController {
     return this.approvalService.findOne(id)
   }
 
+  @Get(':id/timeline')
+  @Permissions('approval:read')
+  @ApiOperation({ summary: '查询审批时间轴' })
+  @ApiResponse({ status: 200, description: '返回审批流程时间轴' })
+  getTimeline(@Param('id') id: string) {
+    return this.approvalService.getTimeline(id)
+  }
+
   @Post()
   @Permissions('approval:create')
   @ApiOperation({ summary: '创建审批' })

@@ -66,6 +66,59 @@ export interface FlowableTask {
   tenantId?: string
 }
 
+export interface FlowableHistoricProcessInstance {
+  id: string
+  businessKey?: string
+  processDefinitionId: string
+  processDefinitionKey?: string
+  startTime?: string
+  endTime?: string
+  durationInMillis?: number
+  startUserId?: string
+  startActivityId?: string
+  endActivityId?: string
+  deleteReason?: string
+  state?: string // ACTIVE / COMPLETED / INTERNALLY_TERMINATED
+}
+
+export interface FlowableHistoricTaskInstance {
+  id: string
+  taskDefinitionKey?: string
+  name?: string
+  assignee?: string
+  owner?: string
+  processInstanceId?: string
+  processDefinitionId?: string
+  startTime?: string
+  endTime?: string
+  durationInMillis?: number
+  deleteReason?: string
+}
+
+export interface FlowableHistoricActivityInstance {
+  id: string
+  activityId: string
+  activityName?: string
+  activityType: string
+  processInstanceId: string
+  processDefinitionId: string
+  taskId?: string
+  assignee?: string
+  startTime?: string
+  endTime?: string
+  durationInMillis?: number
+}
+
+export interface FlowableHistoricVariableInstance {
+  id: string
+  name: string
+  type: string
+  value: unknown
+  processInstanceId: string
+  executionId?: string
+  taskId?: string
+}
+
 /**
  * 工作流引擎 REST 客户端
  *
@@ -248,6 +301,94 @@ export class FlowableService {
       )
     } catch (error) {
       this.handleError(error, 'deleteProcessInstance')
+    }
+  }
+
+  async getHistoricProcessInstance(instanceId: string): Promise<FlowableHistoricProcessInstance | null> {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.get(`${this.baseUrl}/history/process-instance/${instanceId}`, {
+          auth: this.auth,
+        }),
+      )
+      return data as FlowableHistoricProcessInstance
+    } catch (error) {
+      if (error instanceof AxiosError && error.response?.status === 404) return null
+      this.handleError(error, 'getHistoricProcessInstance')
+    }
+  }
+
+  async getHistoricTasks(params?: {
+    processInstanceId?: string
+    assignee?: string
+    finished?: boolean
+    taskDefinitionKey?: string
+  }): Promise<FlowableHistoricTaskInstance[]> {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.get(`${this.baseUrl}/history/task`, {
+          auth: this.auth,
+          params: params || {},
+        }),
+      )
+      return (Array.isArray(data) ? data : data.data || []) as FlowableHistoricTaskInstance[]
+    } catch (error) {
+      this.handleError(error, 'getHistoricTasks')
+    }
+  }
+
+  async getHistoricActivityInstances(params?: {
+    processInstanceId?: string
+    activityId?: string
+    activityType?: string
+    sortBy?: string
+    sortOrder?: 'asc' | 'desc'
+  }): Promise<FlowableHistoricActivityInstance[]> {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.get(`${this.baseUrl}/history/activity-instance`, {
+          auth: this.auth,
+          params: {
+            ...(params || {}),
+            sortBy: params?.sortBy || 'startTime',
+            sortOrder: params?.sortOrder || 'asc',
+          },
+        }),
+      )
+      return (Array.isArray(data) ? data : data.data || []) as FlowableHistoricActivityInstance[]
+    } catch (error) {
+      this.handleError(error, 'getHistoricActivityInstances')
+    }
+  }
+
+  async getHistoricVariableInstances(params?: {
+    processInstanceId?: string
+    variableName?: string
+    variableNameLike?: string
+  }): Promise<FlowableHistoricVariableInstance[]> {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.get(`${this.baseUrl}/history/variable-instance`, {
+          auth: this.auth,
+          params: params || {},
+        }),
+      )
+      return (Array.isArray(data) ? data : data.data || []) as FlowableHistoricVariableInstance[]
+    } catch (error) {
+      this.handleError(error, 'getHistoricVariableInstances')
+    }
+  }
+
+  async getProcessInstanceActivityInstances(instanceId: string): Promise<unknown> {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.get(`${this.baseUrl}/process-instance/${instanceId}/activity-instances`, {
+          auth: this.auth,
+        }),
+      )
+      return data
+    } catch (error) {
+      this.handleError(error, 'getProcessInstanceActivityInstances')
     }
   }
 }

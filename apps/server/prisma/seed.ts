@@ -41,6 +41,8 @@ const roles = [
       { resource: 'ticket', action: 'read' },
       { resource: 'ticket', action: 'create' },
       { resource: 'approval', action: 'read' },
+      { resource: 'approval', action: 'create' },
+      { resource: 'approval', action: 'update' },
     ],
   },
   {
@@ -72,6 +74,8 @@ const roles = [
       { resource: 'equipment', action: 'read' },
       { resource: 'ticket', action: 'read' },
       { resource: 'approval', action: 'read' },
+      { resource: 'approval', action: 'create' },
+      { resource: 'approval', action: 'update' },
       { resource: 'dealer', action: 'read' },
       { resource: 'compliance', action: 'read' },
     ],

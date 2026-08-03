@@ -1,9 +1,15 @@
 /**
  * 审批中心 — API 层
- * 对接后端 /approvals REST 接口；开发环境由 MSW 拦截并返回视图模型数据。
+ * 对接后端 /approvals REST 接口
  */
 import { get, post, put, del } from '@/api/request'
-import type { Approval, ApprovalForm, ApprovalListParams, ApprovalListResult } from './types'
+import type {
+  Approval,
+  ApprovalForm,
+  ApprovalListParams,
+  ApprovalListResult,
+  ApprovalTimelineResult,
+} from './types'
 
 const BASE = '/approvals'
 
@@ -22,6 +28,11 @@ export function getApprovalList(params: ApprovalListParams): Promise<ApprovalLis
 /** 获取审批详情 */
 export function getApprovalDetail(approvalId: string): Promise<Approval> {
   return get<Approval>(`${BASE}/${approvalId}`)
+}
+
+/** 获取审批时间轴 */
+export function getApprovalTimeline(approvalId: string): Promise<ApprovalTimelineResult> {
+  return get<ApprovalTimelineResult>(`${BASE}/${approvalId}/timeline`)
 }
 
 /** 创建审批 */

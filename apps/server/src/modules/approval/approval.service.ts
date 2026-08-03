@@ -1,10 +1,11 @@
 import { Injectable, Logger, NotFoundException, ConflictException } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
-import { DataScopeHelper, type CurrentUser } from '@/common/helpers/data-scope.helper'
-import { FlowableService } from '@/modules/flowable/flowable.service'
+import type { CurrentUser } from '@/common/helpers/data-scope.helper'
+import { FlowableService, type FlowableHistoricVariableInstance } from '@/modules/flowable/flowable.service'
 import { CreateApprovalDto } from './dto/create-approval.dto'
 import { UpdateApprovalDto } from './dto/update-approval.dto'
 import type { ApprovalQueryDto } from './dto/approval-query.dto'
+import { generateApprovalBpmn, type ApprovalFlowMode, type ApprovalRejectAction } from './approval-workflow.generator'
 
 @Injectable()
 export class ApprovalService {
@@ -13,34 +14,63 @@ export class ApprovalService {
 
   constructor(
     private prisma: PrismaService,
-    private dataScope: DataScopeHelper,
     private flowable: FlowableService,
   ) {}
 
   async findAll(user: CurrentUser, query: ApprovalQueryDto) {
-    const { page = 1, pageSize = 20, keyword, module, status, tabType } = query
+    const { page = 1, pageSize = 20, keyword, module, status, tabType = 'all' } = query
 
-    const baseWhere: {
-      OR?: unknown[]
-      module?: string
-      status?: string
-      applicantId?: string
-      deletedAt?: null
-    } = { deletedAt: null }
-
-    if (keyword) {
-      baseWhere.OR = [{ title: { contains: keyword } }, { businessKey: { contains: keyword } }]
+    let workflowInstanceIds: string[] | undefined
+    if (tabType === 'pending') {
+      workflowInstanceIds = await this.findPendingWorkflowInstanceIds(user.userId)
+    } else if (tabType === 'approved') {
+      workflowInstanceIds = await this.findApprovedWorkflowInstanceIds(user.userId)
     }
-    if (module) baseWhere.module = module
-    if (status) baseWhere.status = status.toUpperCase()
+
+    const where: Record<string, unknown> = { deletedAt: null }
+
+    if (workflowInstanceIds !== undefined) {
+      if (workflowInstanceIds.length === 0) {
+        // 没有引擎任务时，仍保留本地兜底
+        const localInstanceIds =
+          tabType === 'pending'
+            ? await this.findLocalPendingInstanceIds(user.userId)
+            : await this.findLocalApprovedInstanceIds(user.userId)
+        if (localInstanceIds.length === 0) {
+          return {
+            list: [],
+            total: 0,
+            page,
+            pageSize,
+            stats: this.emptyStats(),
+          }
+        }
+        where.id = { in: localInstanceIds }
+      } else {
+        where.workflowInstanceId = { in: workflowInstanceIds }
+      }
+    }
 
     if (tabType === 'initiated') {
-      baseWhere.applicantId = user.userId
+      where.applicantId = user.userId
+    } else if (tabType === 'cc') {
+      where.ccRecords = { some: { userId: user.userId } }
     }
 
-    const where = await this.dataScope.apply(user, 'approval', baseWhere)
+    if (keyword) {
+      where.OR = [{ title: { contains: keyword } }, { businessKey: { contains: keyword } }]
+    }
+    if (module) {
+      where.template = { module }
+    }
+    if (status) {
+      where.status = status.toUpperCase()
+    }
+    if (tabType === 'pending') {
+      where.status = 'PENDING'
+    }
 
-    const [list, total, allForStats] = await Promise.all([
+    const [list, total, allForStats, initiatedCount, ccCount] = await Promise.all([
       this.prisma.approvalInstance.findMany({
         where,
         skip: (page - 1) * pageSize,
@@ -57,19 +87,16 @@ export class ApprovalService {
         where,
         select: { status: true },
       }),
+      this.prisma.approvalInstance.count({
+        where: { deletedAt: null, applicantId: user.userId },
+      }),
+      this.prisma.approvalInstance.count({
+        where: { deletedAt: null, ccRecords: { some: { userId: user.userId } } },
+      }),
     ])
 
-    let filteredList = list
-    if (tabType === 'pending') {
-      filteredList = list.filter((item) => item.tasks.some((t) => t.assigneeId === user.userId && !t.action))
-    } else if (tabType === 'approved') {
-      filteredList = list.filter((item) => item.tasks.some((t) => t.assigneeId === user.userId && t.action))
-    } else if (tabType === 'cc') {
-      filteredList = list.filter((item) => item.ccRecords.some((cc) => cc.userId === user.userId))
-    }
-
-    const userMap = await this.buildUserMap(filteredList)
-    const dtoList = filteredList.map((item) => this.toApprovalDto(item, userMap))
+    const userMap = await this.buildUserMap(list)
+    const dtoList = list.map((item) => this.toApprovalDto(item, userMap))
 
     const stats = {
       totalCount: total,
@@ -77,9 +104,11 @@ export class ApprovalService {
       approvedCount: allForStats.filter((a) => a.status === 'APPROVED').length,
       rejectedCount: allForStats.filter((a) => a.status === 'REJECTED').length,
       withdrawnCount: allForStats.filter((a) => a.status === 'WITHDRAWN').length,
+      initiatedCount,
+      ccCount,
     }
 
-    return { list: dtoList, total: dtoList.length, page, pageSize, stats }
+    return { list: dtoList, total, page, pageSize, stats }
   }
 
   async findOne(id: string) {
@@ -98,42 +127,43 @@ export class ApprovalService {
 
   async create(userId: string, dto: CreateApprovalDto) {
     const module = dto.module || 'other'
-    let template = dto.templateCode
-      ? await this.prisma.approvalTemplate.findUnique({ where: { code: dto.templateCode } })
-      : await this.prisma.approvalTemplate.findFirst({
-          where: { module, status: 'ACTIVE', deletedAt: null },
-        })
+    const approverIds = this.resolveApproverIds(dto)
+    const mode: ApprovalFlowMode = dto.mode === 'parallel' ? 'parallel' : 'serial'
+    const rejectAction: ApprovalRejectAction = dto.rejectAction || 'end'
+    const rejectTargetIndex = dto.rejectTargetIndex
 
-    if (!template) {
-      const defaultDef = await this.getDefaultWorkflowDefinition()
-      template = await this.prisma.approvalTemplate.create({
-        data: {
-          name: this.moduleName(module),
-          code: `${module}-${Date.now()}`,
-          module,
-          formSchema: {},
-          flowNodes: [],
-          workflowDefinitionId: defaultDef.id,
-          status: 'ACTIVE',
-        },
-      })
+    if (approverIds.length === 0) {
+      throw new ConflictException('审批人列表不能为空')
     }
 
-    if (!template.workflowDefinitionId) {
-      const defaultDef = await this.getDefaultWorkflowDefinition()
-      template = await this.prisma.approvalTemplate.update({
-        where: { id: template.id },
-        data: { workflowDefinitionId: defaultDef.id },
-      })
-    }
-
-    const workflowDef = await this.prisma.workflowDefinition.findUnique({
-      where: { id: template.workflowDefinitionId },
+    // 1. 生成动态 BPMN 并持久化流程定义
+    const workflowDef = await this.createDynamicWorkflowDefinition({
+      title: dto.title,
+      approvers: approverIds,
+      mode,
+      rejectAction,
+      rejectTargetIndex,
     })
-    if (!workflowDef) throw new Error('关联工作流定义不存在')
 
-    const approverId = dto.approverId || this.defaultApproverId
+    // 2. 创建专用模板（快照）
+    const template = await this.prisma.approvalTemplate.create({
+      data: {
+        name: this.moduleName(module),
+        code: `${module}-dynamic-${Date.now()}`,
+        module,
+        formSchema: this.buildFormSchema(dto),
+        flowNodes: approverIds.map((uid, idx) => ({
+          nodeId: `task_${idx}`,
+          name: `审批节点 ${idx + 1}`,
+          approverType: 'USER',
+          approvers: [uid],
+        })) as unknown as object[],
+        workflowDefinitionId: workflowDef.id,
+        status: 'ACTIVE',
+      },
+    })
 
+    // 3. 创建审批实例
     const instance = await this.prisma.approvalInstance.create({
       data: {
         title: dto.title,
@@ -141,16 +171,29 @@ export class ApprovalService {
         applicantId: userId,
         templateId: template.id,
         status: 'PENDING',
-        payload: { ...(dto.payload || {}), priority: dto.priority || 'normal' },
+        payload: {
+          ...(dto.payload || {}),
+          priority: dto.priority || 'normal',
+          approverIds,
+          mode,
+          rejectAction,
+          rejectTargetIndex,
+        },
         ccRecords: dto.ccUserIds?.length ? { create: dto.ccUserIds.map((uid) => ({ userId: uid })) } : undefined,
       },
       include: { template: true, tasks: true, ccRecords: true },
     })
 
+    // 4. 启动工作流
     try {
       const processInstance = await this.startWorkflowInstance(
         workflowDef,
-        { applicant: userId, approver: approverId, module, ...(instance.payload as Record<string, unknown>) },
+        {
+          applicant: userId,
+          module,
+          priority: dto.priority || 'normal',
+          ...(instance.payload as Record<string, unknown>),
+        },
         instance.id,
       )
       await this.prisma.approvalInstance.update({
@@ -166,8 +209,9 @@ export class ApprovalService {
       where: { id: instance.id },
       include: { template: true, tasks: true, ccRecords: true },
     })
-    const userMap = await this.buildUserMap(refreshed!)
-    return this.toApprovalDto(refreshed!, userMap)
+    if (!refreshed) throw new NotFoundException('审批实例创建后未找到')
+    const userMap = await this.buildUserMap(refreshed)
+    return this.toApprovalDto(refreshed, userMap)
   }
 
   async update(id: string, dto: UpdateApprovalDto) {
@@ -203,40 +247,65 @@ export class ApprovalService {
     if (!instance) throw new NotFoundException('审批不存在')
     if (instance.status !== 'PENDING') throw new ConflictException('审批已结束')
 
+    let completedNodeId: string | undefined
     if (instance.workflowInstanceId) {
       const tasks = await this.flowable.getTasks({
         processInstanceId: instance.workflowInstanceId,
       })
       const task = tasks.find((t) => t.assignee === userId) || tasks[0]
       if (!task?.id) throw new ConflictException('当前没有可审批的任务')
+
+      const nodeIndex = this.getNodeIndex(task.taskDefinitionKey || task.id)
+      completedNodeId = task.taskDefinitionKey || task.id
       await this.flowable.completeTask(task.id, {
-        approved: action === 'APPROVE',
-        comment: comment || '',
+        [`approved_${nodeIndex}`]: action === 'APPROVE',
+        [`comment_${nodeIndex}`]: comment || '',
       })
     }
 
-    const existingTask =
-      (await this.prisma.approvalTask.findFirst({
-        where: { instanceId: id, assigneeId: userId, action: null },
-      })) || instance.tasks.find((t) => !t.action)
-
     const taskAction = action === 'APPROVE' ? 'approve' : 'reject'
-    if (existingTask) {
-      await this.prisma.approvalTask.update({
-        where: { id: existingTask.id },
-        data: { action: taskAction, comment, completedAt: new Date() },
-      })
+    if (completedNodeId) {
+      const targetTask = instance.tasks.find((t) => t.nodeId === completedNodeId && !t.action)
+      if (targetTask) {
+        await this.prisma.approvalTask.update({
+          where: { id: targetTask.id },
+          data: { action: taskAction, comment, completedAt: new Date() },
+        })
+      } else {
+        await this.prisma.approvalTask.create({
+          data: {
+            instanceId: id,
+            nodeId: completedNodeId,
+            assigneeId: userId,
+            action: taskAction,
+            comment,
+            completedAt: new Date(),
+          },
+        })
+      }
     } else {
-      await this.prisma.approvalTask.create({
-        data: {
-          instanceId: id,
-          nodeId: 'manual',
-          assigneeId: userId,
-          action: taskAction,
-          comment,
-          completedAt: new Date(),
-        },
-      })
+      const activeTask = await this.findActiveLocalTask(id, userId)
+      if (activeTask) {
+        await this.prisma.approvalTask.update({
+          where: { id: activeTask.id },
+          data: { action: taskAction, comment, completedAt: new Date() },
+        })
+      } else {
+        await this.prisma.approvalTask.create({
+          data: {
+            instanceId: id,
+            nodeId: 'manual',
+            assigneeId: userId,
+            action: taskAction,
+            comment,
+            completedAt: new Date(),
+          },
+        })
+      }
+    }
+
+    if (instance.workflowInstanceId) {
+      await this.syncTasks(instance.id, instance.workflowInstanceId)
     }
 
     let ended = true
@@ -275,24 +344,187 @@ export class ApprovalService {
     return { success: true }
   }
 
-  private async getDefaultWorkflowDefinition() {
-    const def = await this.prisma.workflowDefinition.findFirst({
-      where: { code: 'approval-generic', status: 'ACTIVE', deletedAt: null },
+  async getTimeline(id: string) {
+    const instance = await this.prisma.approvalInstance.findUnique({
+      where: { id },
+      include: { tasks: true, ccRecords: true },
     })
-    if (!def) throw new Error('默认审批工作流定义不存在')
-    return def
+    if (!instance) throw new NotFoundException('审批不存在')
+
+    if (!instance.workflowInstanceId) {
+      return this.buildLocalTimeline(instance)
+    }
+
+    const [activities, variables] = await Promise.all([
+      this.flowable.getHistoricActivityInstances({
+        processInstanceId: instance.workflowInstanceId,
+      }),
+      this.flowable.getHistoricVariableInstances({
+        processInstanceId: instance.workflowInstanceId,
+      }),
+    ])
+
+    const variableMap = new Map<string, FlowableHistoricVariableInstance['value']>()
+    for (const v of variables) {
+      variableMap.set(v.name, v.value)
+    }
+
+    const userIds = new Set<string>([instance.applicantId])
+    const taskActivities = activities.filter((a) => a.activityType === 'userTask')
+    for (const a of taskActivities) {
+      if (a.assignee) userIds.add(a.assignee)
+    }
+    const userMap = await this.buildUserMapByIds(userIds)
+
+    const timeline = taskActivities.map((a) => {
+      const index = this.getNodeIndex(a.activityId)
+      const approved = variableMap.get(`approved_${index}`)
+      const cmt = variableMap.get(`comment_${index}`)
+      const isFinished = !!a.endTime
+      let action: 'approve' | 'reject' | undefined
+      if (isFinished) {
+        action = approved === true || approved === 'true' ? 'approve' : 'reject'
+      }
+      return {
+        nodeId: a.activityId,
+        nodeName: a.activityName || `审批节点 ${index + 1}`,
+        assigneeId: a.assignee,
+        assigneeName: a.assignee ? userMap.get(a.assignee) || a.assignee : '-',
+        action,
+        comment: cmt ? String(cmt) : undefined,
+        startTime: a.startTime,
+        endTime: a.endTime,
+      }
+    })
+
+    return { instanceId: id, timeline }
   }
 
-  private moduleName(module: string): string {
-    const map: Record<string, string> = {
-      leave: '请假审批',
-      expense: '报销审批',
-      contract: '合同审批',
-      discount: '折扣审批',
-      purchase: '采购审批',
-      other: '其他审批',
+  // ---------------------------------------------------------------------------
+  // 私有方法
+  // ---------------------------------------------------------------------------
+
+  private emptyStats() {
+    return {
+      totalCount: 0,
+      pendingCount: 0,
+      approvedCount: 0,
+      rejectedCount: 0,
+      withdrawnCount: 0,
+      initiatedCount: 0,
+      ccCount: 0,
     }
-    return map[module] || '其他审批'
+  }
+
+  private async findPendingWorkflowInstanceIds(userId: string): Promise<string[]> {
+    try {
+      const tasks = await this.flowable.getTasks({ assignee: userId, active: true })
+      const ids = tasks.map((t) => t.processInstanceId).filter((id): id is string => !!id)
+      const instances = await this.prisma.approvalInstance.findMany({
+        where: { workflowInstanceId: { in: [...new Set(ids)] } },
+        select: { workflowInstanceId: true },
+      })
+      return instances.map((i) => i.workflowInstanceId).filter((id): id is string => !!id)
+    } catch (e) {
+      this.logger.warn(`查询待审工作流任务失败: ${e instanceof Error ? e.message : String(e)}`)
+      return []
+    }
+  }
+
+  private async findApprovedWorkflowInstanceIds(userId: string): Promise<string[]> {
+    try {
+      const tasks = await this.flowable.getHistoricTasks({ assignee: userId, finished: true })
+      const ids = tasks.map((t) => t.processInstanceId).filter((id): id is string => !!id)
+      const instances = await this.prisma.approvalInstance.findMany({
+        where: { workflowInstanceId: { in: [...new Set(ids)] } },
+        select: { workflowInstanceId: true },
+      })
+      return instances.map((i) => i.workflowInstanceId).filter((id): id is string => !!id)
+    } catch (e) {
+      this.logger.warn(`查询已审历史任务失败: ${e instanceof Error ? e.message : String(e)}`)
+      return []
+    }
+  }
+
+  private async findLocalPendingInstanceIds(userId: string): Promise<string[]> {
+    const tasks = await this.prisma.approvalTask.findMany({
+      where: { assigneeId: userId, action: null },
+      select: { instanceId: true },
+    })
+    return [...new Set(tasks.map((t) => t.instanceId))]
+  }
+
+  private async findLocalApprovedInstanceIds(userId: string): Promise<string[]> {
+    const tasks = await this.prisma.approvalTask.findMany({
+      where: { assigneeId: userId, action: { not: null } },
+      select: { instanceId: true },
+    })
+    return [...new Set(tasks.map((t) => t.instanceId))]
+  }
+
+  private async createDynamicWorkflowDefinition(input: {
+    title: string
+    approvers: string[]
+    mode: ApprovalFlowMode
+    rejectAction: ApprovalRejectAction
+    rejectTargetIndex?: number
+  }) {
+    const { title, approvers, mode, rejectAction, rejectTargetIndex } = input
+    const key = `approval-dynamic-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+    const bpmnXml = generateApprovalBpmn({
+      processKey: key,
+      name: `审批流程：${title}`,
+      approvers,
+      mode,
+      rejectAction,
+      rejectTargetIndex,
+    })
+
+    const def = await this.prisma.workflowDefinition.create({
+      data: {
+        name: `动态审批 - ${title}`,
+        code: key,
+        module: 'APPROVAL',
+        status: 'ACTIVE',
+        bpmnXml,
+        nodes: [],
+        edges: [],
+      },
+    })
+
+    const deployed = await this.ensureWorkflowDefinitionDeployed(def)
+    return deployed
+  }
+
+  private resolveApproverIds(dto: CreateApprovalDto): string[] {
+    if (dto.approverIds && dto.approverIds.length > 0) {
+      return [...new Set(dto.approverIds.filter((id) => !!id))]
+    }
+    if (dto.approverId) {
+      return [dto.approverId]
+    }
+    return [this.defaultApproverId]
+  }
+
+  private buildFormSchema(dto: CreateApprovalDto): object {
+    return {
+      title: dto.title,
+      businessKey: dto.businessKey,
+      priority: dto.priority || 'normal',
+      payload: dto.payload || {},
+    }
+  }
+
+  private async findActiveLocalTask(instanceId: string, assigneeId: string) {
+    return this.prisma.approvalTask.findFirst({
+      where: { instanceId, assigneeId, action: null },
+    })
+  }
+
+  private getNodeIndex(nodeId?: string): number {
+    if (!nodeId) return 0
+    const match = nodeId.match(/^task_(\d+)$/)
+    return match ? Number(match[1]) : 0
   }
 
   private async ensureWorkflowDefinitionDeployed(def: {
@@ -340,10 +572,14 @@ export class ApprovalService {
     const tasks = await this.flowable.getTasks({ processInstanceId: workflowInstanceId })
     for (const task of tasks) {
       if (!task.id) continue
-      const exists = await this.prisma.approvalTask.findFirst({
-        where: { instanceId, nodeId: task.taskDefinitionKey || task.id, action: null },
+      const existsActive = await this.prisma.approvalTask.findFirst({
+        where: {
+          instanceId,
+          nodeId: task.taskDefinitionKey || task.id,
+          action: null,
+        },
       })
-      if (!exists) {
+      if (!existsActive) {
         await this.prisma.approvalTask.create({
           data: {
             instanceId,
@@ -354,6 +590,21 @@ export class ApprovalService {
         })
       }
     }
+  }
+
+  private buildLocalTimeline(instance: any) {
+    const userMap = new Map<string, string | null>()
+    const timeline = (instance.tasks || []).map((t: any) => ({
+      nodeId: t.nodeId,
+      nodeName: `审批节点`,
+      assigneeId: t.assigneeId,
+      assigneeName: userMap.get(t.assigneeId) || t.assigneeId,
+      action: t.action,
+      comment: t.comment,
+      startTime: t.createdAt?.toISOString(),
+      endTime: t.completedAt?.toISOString(),
+    }))
+    return { instanceId: instance.id, timeline }
   }
 
   private async buildUserMap(instance: any | any[]) {
@@ -368,6 +619,10 @@ export class ApprovalService {
         if (c.userId) ids.add(c.userId)
       }
     }
+    return this.buildUserMapByIds(ids)
+  }
+
+  private async buildUserMapByIds(ids: Set<string> | Iterable<string>) {
     const users = await this.prisma.user.findMany({
       where: { id: { in: Array.from(ids) } },
       select: { id: true, name: true },
@@ -375,9 +630,22 @@ export class ApprovalService {
     return new Map(users.map((u) => [u.id, u.name]))
   }
 
+  private moduleName(module: string): string {
+    const map: Record<string, string> = {
+      leave: '请假审批',
+      expense: '报销审批',
+      contract: '合同审批',
+      discount: '折扣审批',
+      purchase: '采购审批',
+      other: '其他审批',
+    }
+    return map[module] || '其他审批'
+  }
+
   private toApprovalDto(instance: any, userMap?: Map<string, string | null>) {
     const map = userMap || new Map<string, string | null>()
     const currentTask = (instance.tasks || []).find((t: any) => !t.action)
+    const payload = (instance.payload as Record<string, unknown> | undefined) || {}
     return {
       approvalId: instance.id,
       approvalCode: instance.businessKey || instance.id,
@@ -385,11 +653,11 @@ export class ApprovalService {
       businessKey: instance.businessKey,
       module: instance.template?.module || 'other',
       status: instance.status,
-      priority: instance.payload?.priority || 'normal',
+      priority: payload.priority || 'normal',
       applicantId: instance.applicantId,
       applicantName: map.get(instance.applicantId) || instance.applicantId,
       currentApproverName: currentTask ? map.get(currentTask.assigneeId) || currentTask.assigneeId : '-',
-      payload: instance.payload,
+      payload,
       tasks: (instance.tasks || []).map((t: any) => ({
         taskId: t.id,
         nodeId: t.nodeId,
