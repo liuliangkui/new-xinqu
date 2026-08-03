@@ -98,6 +98,18 @@ const statusMap: StatusMap = {
   [ApprovalStatus.WITHDRAWN]: { text: '已撤回', color: 'gray' },
 }
 
+const statusColorMap: Record<string, string> = {
+  pending: '#f59e0b',
+  approved: '#10b981',
+  rejected: '#ef4444',
+  withdrawn: '#9ca3af',
+}
+
+function statusColor(status?: string): string {
+  if (!status) return statusColorMap.pending!
+  return statusColorMap[status] || statusColorMap.pending!
+}
+
 const priorityMap: StatusMap = {
   [ApprovalPriority.NORMAL]: { text: '普通', color: 'gray' },
   [ApprovalPriority.URGENT]: { text: '紧急', color: 'red' },
@@ -110,6 +122,17 @@ const tabs = computed<NavTabItem[]>(() => [
   { key: 'initiated', label: '我发起的', count: stats.value.initiatedCount },
   { key: 'cc', label: '抄送我的', count: stats.value.ccCount },
 ])
+
+const emptyStateText = computed(() => {
+  const map: Record<string, string> = {
+    all: '当前没有任何审批记录',
+    pending: '暂无待我审批的事项',
+    approved: '暂无我已审批的事项',
+    initiated: '暂无我发起的审批',
+    cc: '暂无抄送我的审批',
+  }
+  return map[activeTab.value] || map.all
+})
 
 const filterConfig = [
   {
@@ -256,6 +279,32 @@ function updatePickerSelectedIds(val: string[]): void {
 function openCompose(): void {
   composeForm.value = emptyForm()
   composeVisible.value = true
+}
+
+const templateChips = [
+  { label: '请假', module: ApprovalModule.LEAVE, title: '请假申请', icon: 'calendar' },
+  { label: '报销', module: ApprovalModule.EXPENSE, title: '费用报销', icon: 'wallet' },
+  { label: '合同', module: ApprovalModule.CONTRACT, title: '合同审批', icon: 'file-text' },
+  { label: '折扣', module: ApprovalModule.DISCOUNT, title: '折扣申请', icon: 'tag' },
+  { label: '采购', module: ApprovalModule.PURCHASE, title: '采购申请', icon: 'shopping-cart' },
+]
+
+function applyTemplate(chip: (typeof templateChips)[number]): void {
+  composeForm.value.module = chip.module
+  composeForm.value.title = chip.title
+}
+
+const advancedExpanded = ref(false)
+
+function composeFlowSummary(): string {
+  const stages = composeForm.value.stages || []
+  if (stages.length === 0) return '尚未配置审批流程'
+  const parts = stages.map((s, i) => {
+    const names = s.approvers.filter((a) => a.id).map((a) => a.name || a.id)
+    const nameText = names.length ? names.join('、') : '未选择'
+    return `阶段${i + 1}（${s.mode === 'parallel' ? '并行' : '串行'}）：${nameText}`
+  })
+  return parts.join(' → ')
 }
 
 function ensureStages(): ApprovalStage[] {
@@ -577,9 +626,28 @@ function timelineItems() {
       </div>
     </template>
     <template #content>
-      <!-- 列表视图：邮件收件箱风格 -->
+      <!-- 空状态 -->
+      <div
+        v-if="!loading && approvals.length === 0"
+        class="flex flex-col items-center justify-center py-16 text-center"
+      >
+        <div
+          class="w-20 h-20 rounded-full bg-[var(--gray-bg)] flex items-center justify-center text-[var(--placeholder)] mb-4"
+        >
+          <XqIcon name="inbox" size="32" />
+        </div>
+        <h3 class="text-base font-medium text-[var(--ink)] mb-1">暂无审批</h3>
+        <p class="text-sm text-[var(--sub)] mb-4">
+          {{ emptyStateText }}
+        </p>
+        <XqButton type="primary" @click="openCompose">
+          <XqIcon name="plus" size="14" /> 发起审批
+        </XqButton>
+      </div>
+
+      <!-- 列表视图：审批卡片行 -->
       <XqDataTable
-        v-if="viewMode === 'list'"
+        v-else-if="viewMode === 'list'"
         :columns="tableColumns"
         :data-source="approvals"
         :loading="loading"
@@ -587,28 +655,60 @@ function timelineItems() {
         @row-click="(r: Approval) => openDetail(r)"
       >
         <template #title="{ value, record }">
-          <div class="flex flex-col gap-1 py-1">
-            <div class="flex items-center gap-2 flex-wrap">
-              <span class="font-medium text-[var(--ink)]">{{ value }}</span>
-              <XqStatusBadge :status="record.module" :status-map="moduleMap" size="small" />
-              <XqStatusBadge :status="record.priority" :status-map="priorityMap" size="small" />
-              <XqStatusBadge :status="record.status" :status-map="statusMap" size="small" />
-            </div>
-            <div class="text-sm text-[var(--sub)] truncate max-w-md">
-              {{ approvalSnippet(record) }}
+          <div class="flex items-center gap-3 py-1">
+            <div
+              class="w-1 h-10 rounded-full flex-shrink-0"
+              :style="{ backgroundColor: statusColor(record.status) }"
+            />
+            <div class="flex flex-col gap-1 min-w-0 flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-medium text-[var(--ink)] truncate">{{ value }}</span>
+                <XqStatusBadge :status="record.module" :status-map="moduleMap" size="small" />
+                <XqStatusBadge
+                  v-if="record.priority === 'urgent'"
+                  :status="record.priority"
+                  :status-map="priorityMap"
+                  size="small"
+                />
+              </div>
+              <div class="flex items-center gap-3 text-xs text-[var(--sub)]">
+                <span class="truncate max-w-[200px]">{{ approvalSnippet(record) }}</span>
+                <span class="hidden sm:inline text-[var(--placeholder)]">|</span>
+                <span class="hidden sm:inline">当前：{{ record.currentApproverName || '-' }}</span>
+              </div>
             </div>
           </div>
         </template>
         <template #applicantName="{ value, record }">
-          <div class="flex flex-col text-sm">
-            <span class="text-[var(--ink)]">{{ value || '-' }}</span>
-            <span class="text-xs text-[var(--sub)]"
-              >当前：{{ record.currentApproverName || '-' }}</span
+          <div class="flex items-center gap-2 text-sm">
+            <div
+              class="w-8 h-8 rounded-full bg-[var(--primary-light)] text-[var(--primary)] flex items-center justify-center text-xs font-medium flex-shrink-0"
             >
+              {{ (value || '?').slice(0, 1) }}
+            </div>
+            <div class="flex flex-col min-w-0">
+              <span class="text-[var(--ink)] truncate">{{ value || '-' }}</span>
+              <span class="text-xs text-[var(--sub)]">{{ record.applicantId }}</span>
+            </div>
           </div>
         </template>
-        <template #createdAt="{ value }">
-          <span class="text-sm text-[var(--sub)]">{{ value ? value.slice(0, 10) : '-' }}</span>
+        <template #createdAt="{ value, record }">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex flex-col text-sm text-right">
+              <span class="text-[var(--sub)]">{{ value ? value.slice(0, 10) : '-' }}</span>
+              <span class="text-xs text-[var(--placeholder)]">{{
+                value ? value.slice(11, 16) : ''
+              }}</span>
+            </div>
+            <button
+              v-if="canApprove(record)"
+              class="btn btn-primary btn-sm hidden lg:flex"
+              @click.stop="openDetail(record)"
+            >
+              审批
+            </button>
+            <XqStatusBadge v-else :status="record.status" :status-map="statusMap" size="small" />
+          </div>
         </template>
       </XqDataTable>
 
@@ -621,26 +721,49 @@ function timelineItems() {
         @item-click="(r: Approval) => openDetail(r)"
       >
         <template #item="{ record }">
-          <div class="card card-hover cursor-pointer flex flex-col gap-3">
-            <div class="flex items-start justify-between gap-2">
+          <div class="card card-hover cursor-pointer flex flex-col gap-3 relative overflow-hidden">
+            <div
+              class="absolute left-0 top-0 bottom-0 w-1"
+              :style="{ backgroundColor: statusColor(record.status) }"
+            />
+            <div class="flex items-start justify-between gap-2 pl-2">
               <h3 class="text-base font-semibold text-[var(--ink)] truncate flex-1">
                 {{ record.title }}
               </h3>
               <XqStatusBadge :status="record.status" :status-map="statusMap" size="small" />
             </div>
-            <div class="flex items-center gap-2 flex-wrap">
+            <div class="flex items-center gap-2 flex-wrap pl-2">
               <XqStatusBadge :status="record.module" :status-map="moduleMap" size="small" />
-              <XqStatusBadge :status="record.priority" :status-map="priorityMap" size="small" />
+              <XqStatusBadge
+                v-if="record.priority === 'urgent'"
+                :status="record.priority"
+                :status-map="priorityMap"
+                size="small"
+              />
             </div>
-            <p class="text-sm text-[var(--sub)] line-clamp-2">{{ approvalSnippet(record) }}</p>
+            <p class="text-sm text-[var(--sub)] line-clamp-2 pl-2">{{ approvalSnippet(record) }}</p>
             <div
-              class="flex items-center justify-between text-sm pt-2 border-t border-[var(--line-light)]"
+              class="flex items-center justify-between text-sm pt-2 border-t border-[var(--line-light)] pl-2"
             >
-              <span class="text-[var(--sub)]">{{ record.applicantName || '-' }}</span>
+              <div class="flex items-center gap-2">
+                <div
+                  class="w-6 h-6 rounded-full bg-[var(--primary-light)] text-[var(--primary)] flex items-center justify-center text-xs font-medium"
+                >
+                  {{ (record.applicantName || '?').slice(0, 1) }}
+                </div>
+                <span class="text-[var(--sub)]">{{ record.applicantName || '-' }}</span>
+              </div>
               <span class="text-xs text-[var(--placeholder)]">{{
                 record.createdAt.slice(0, 10)
               }}</span>
             </div>
+            <button
+              v-if="canApprove(record)"
+              class="btn btn-primary btn-sm w-full mt-1"
+              @click.stop="openDetail(record)"
+            >
+              去审批
+            </button>
           </div>
         </template>
       </XqCardGrid>
@@ -674,6 +797,27 @@ function timelineItems() {
   <!-- 流程式发起弹窗 -->
   <XqModal v-model:visible="composeVisible" title="发起审批" width="800px">
     <div class="flex flex-col gap-5">
+      <!-- 快捷模板 -->
+      <div class="flex flex-col gap-2">
+        <label class="text-xs font-medium text-[var(--sub)]">快捷选择</label>
+        <div class="flex flex-wrap gap-2">
+          <button
+            v-for="chip in templateChips"
+            :key="chip.module"
+            class="px-3 py-1.5 text-sm rounded-full border transition-colors"
+            :class="
+              composeForm.module === chip.module
+                ? 'bg-[var(--primary-light)] text-[var(--primary)] border-[var(--primary)]'
+                : 'border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)] hover:text-[var(--primary)]'
+            "
+            @click="applyTemplate(chip)"
+          >
+            <XqIcon :name="chip.icon" size="12" class="inline mr-1" />
+            {{ chip.label }}
+          </button>
+        </div>
+      </div>
+
       <!-- 主题 -->
       <div class="flex flex-col gap-1.5">
         <label class="text-sm font-medium text-[var(--ink)]"
@@ -683,11 +827,20 @@ function timelineItems() {
       </div>
 
       <!-- 审批流程设计器 -->
-      <ApprovalFlowDesigner
-        :stages="composeForm.stages || []"
-        @update:stages="updateStages"
-        @click-approver="openApproverPicker"
-      />
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center justify-between">
+          <label class="text-sm font-medium text-[var(--ink)]">审批流程</label>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-[var(--gray-bg)] text-[var(--sub)]">
+            {{ composeFlowSummary() }}
+          </span>
+        </div>
+        <ApprovalFlowDesigner
+          :stages="composeForm.stages || []"
+          :current-user-id="authStore.user?.id"
+          @update:stages="updateStages"
+          @click-approver="openApproverPicker"
+        />
+      </div>
 
       <!-- 抄送 -->
       <div class="flex flex-col gap-1.5">
@@ -716,85 +869,96 @@ function timelineItems() {
         </div>
       </div>
 
-      <!-- 类型 / 紧急 / 模式 / 驳回策略 -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="flex flex-col gap-1.5">
-          <label class="text-sm font-medium text-[var(--ink)]">审批类型</label>
-          <select v-model="composeForm.module" class="input">
-            <option
-              v-for="m in [
-                { v: 'leave', l: '请假' },
-                { v: 'expense', l: '报销' },
-                { v: 'contract', l: '合同' },
-                { v: 'discount', l: '折扣' },
-                { v: 'purchase', l: '采购' },
-                { v: 'other', l: '其他' },
-              ]"
-              :key="m.v"
-              :value="m.v"
-            >
-              {{ m.l }}
-            </option>
-          </select>
-        </div>
-        <div class="flex flex-col gap-1.5">
-          <label class="text-sm font-medium text-[var(--ink)]">紧急程度</label>
-          <select v-model="composeForm.priority" class="input">
-            <option value="normal">普通</option>
-            <option value="urgent">紧急</option>
-          </select>
-        </div>
-        <div class="flex flex-col gap-1.5 sm:col-span-2">
-          <label class="text-sm font-medium text-[var(--ink)]">驳回策略</label>
-          <select v-model="composeForm.rejectAction" class="input">
-            <option value="end">直接结束</option>
-            <option value="prev">驳回到上一阶段</option>
-            <option value="node">驳回到指定阶段</option>
-          </select>
-          <div v-if="composeForm.rejectAction === 'node'" class="flex flex-col gap-2 mt-2">
-            <span class="text-sm text-[var(--sub)]">选择驳回目标阶段</span>
-            <div class="flex flex-wrap gap-2">
-              <button
-                v-for="(stage, idx) in composeForm.stages || []"
-                :key="stage.id"
-                class="px-2.5 py-1 text-xs rounded-md border"
-                :class="
-                  composeForm.rejectTargetIndex === idx
-                    ? 'bg-[var(--primary-light)] text-[var(--primary)] border-[var(--primary)]'
-                    : 'border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)]'
-                "
-                :disabled="stage.approvers.filter((a) => a.id).length === 0"
-                @click="composeForm.rejectTargetIndex = idx"
-              >
-                阶段 {{ idx + 1 }}
-                <span class="ml-1 text-[var(--placeholder)]">
-                  {{ stage.approvers.map((a) => a.name || '未选择').join('、') || '未选择' }}
-                </span>
-              </button>
+      <!-- 高级设置（可折叠） -->
+      <div class="rounded-xl border border-[var(--line)] overflow-hidden">
+        <button
+          class="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-[var(--ink)] bg-[var(--bg)] hover:bg-[var(--gray-bg)] transition-colors"
+          @click="advancedExpanded = !advancedExpanded"
+        >
+          <span>高级设置</span>
+          <XqIcon :name="advancedExpanded ? 'chevron-up' : 'chevron-down'" size="14" />
+        </button>
+        <div v-if="advancedExpanded" class="p-4 flex flex-col gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1.5">
+              <label class="text-sm font-medium text-[var(--ink)]">审批类型</label>
+              <select v-model="composeForm.module" class="input">
+                <option
+                  v-for="m in [
+                    { v: 'leave', l: '请假' },
+                    { v: 'expense', l: '报销' },
+                    { v: 'contract', l: '合同' },
+                    { v: 'discount', l: '折扣' },
+                    { v: 'purchase', l: '采购' },
+                    { v: 'other', l: '其他' },
+                  ]"
+                  :key="m.v"
+                  :value="m.v"
+                >
+                  {{ m.l }}
+                </option>
+              </select>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="text-sm font-medium text-[var(--ink)]">紧急程度</label>
+              <select v-model="composeForm.priority" class="input">
+                <option value="normal">普通</option>
+                <option value="urgent">紧急</option>
+              </select>
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- 业务编号 / 金额 -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="flex flex-col gap-1.5">
-          <label class="text-sm font-medium text-[var(--ink)]">业务编号</label>
-          <input
-            v-model="composeForm.businessKey"
-            type="text"
-            class="input"
-            placeholder="请输入业务编号"
-          />
-        </div>
-        <div class="flex flex-col gap-1.5">
-          <label class="text-sm font-medium text-[var(--ink)]">金额</label>
-          <input
-            v-model.number="(composeForm.payload as any).amount"
-            type="number"
-            class="input"
-            placeholder="请输入金额"
-          />
+          <div class="flex flex-col gap-1.5">
+            <label class="text-sm font-medium text-[var(--ink)]">驳回策略</label>
+            <select v-model="composeForm.rejectAction" class="input">
+              <option value="end">直接结束</option>
+              <option value="prev">驳回到上一阶段</option>
+              <option value="node">驳回到指定阶段</option>
+            </select>
+            <div v-if="composeForm.rejectAction === 'node'" class="flex flex-col gap-2 mt-2">
+              <span class="text-sm text-[var(--sub)]">选择驳回目标阶段</span>
+              <div class="flex flex-wrap gap-2">
+                <button
+                  v-for="(stage, idx) in composeForm.stages || []"
+                  :key="stage.id"
+                  class="px-2.5 py-1 text-xs rounded-md border"
+                  :class="
+                    composeForm.rejectTargetIndex === idx
+                      ? 'bg-[var(--primary-light)] text-[var(--primary)] border-[var(--primary)]'
+                      : 'border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)]'
+                  "
+                  :disabled="stage.approvers.filter((a) => a.id).length === 0"
+                  @click="composeForm.rejectTargetIndex = idx"
+                >
+                  阶段 {{ idx + 1 }}
+                  <span class="ml-1 text-[var(--placeholder)]">
+                    {{ stage.approvers.map((a) => a.name || '未选择').join('、') || '未选择' }}
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1.5">
+              <label class="text-sm font-medium text-[var(--ink)]">业务编号</label>
+              <input
+                v-model="composeForm.businessKey"
+                type="text"
+                class="input"
+                placeholder="请输入业务编号"
+              />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="text-sm font-medium text-[var(--ink)]">金额</label>
+              <input
+                v-model.number="(composeForm.payload as any).amount"
+                type="number"
+                class="input"
+                placeholder="请输入金额"
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -836,57 +1000,95 @@ function timelineItems() {
   <XqModal
     :visible="detailVisible"
     :title="detailApproval?.title || '审批详情'"
-    width="760px"
+    width="800px"
     @close="detailVisible = false"
   >
     <div v-if="detailApproval" class="flex flex-col gap-5">
-      <div class="card">
-        <div class="flex items-start justify-between gap-3 mb-4">
-          <div class="flex items-center gap-2 flex-wrap">
-            <XqStatusBadge :status="detailApproval.module" :status-map="moduleMap" size="small" />
-            <XqStatusBadge
-              :status="detailApproval.priority"
-              :status-map="priorityMap"
-              size="small"
-            />
-            <XqStatusBadge :status="detailApproval.status" :status-map="statusMap" size="small" />
-          </div>
-          <span class="text-xs text-[var(--placeholder)]">{{
-            formatTime(detailApproval.createdAt)
-          }}</span>
-        </div>
-        <div class="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <span class="text-[var(--placeholder)]">审批编号</span>
-            <div class="text-[var(--ink)] mt-0.5">{{ detailApproval.approvalCode }}</div>
-          </div>
-          <div>
-            <span class="text-[var(--placeholder)]">业务编号</span>
-            <div class="text-[var(--ink)] mt-0.5">{{ detailApproval.businessKey || '-' }}</div>
-          </div>
-          <div>
-            <span class="text-[var(--placeholder)]">申请人</span>
-            <div class="text-[var(--ink)] mt-0.5">{{ detailApproval.applicantName || '-' }}</div>
-          </div>
-          <div>
-            <span class="text-[var(--placeholder)]">当前审批人</span>
-            <div class="text-[var(--ink)] mt-0.5">
-              {{ detailApproval.currentApproverName || '-' }}
+      <!-- 状态头 -->
+      <div
+        class="rounded-2xl p-5 text-white relative overflow-hidden"
+        :style="{ backgroundColor: statusColor(detailApproval.status) }"
+      >
+        <div class="relative z-10 flex flex-col gap-3">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <div class="text-xs opacity-80 mb-1">{{ detailApproval.approvalCode }}</div>
+              <h2 class="text-xl font-semibold">{{ detailApproval.title }}</h2>
             </div>
+            <span
+              class="px-3 py-1 rounded-full text-xs font-medium bg-white/20 backdrop-blur-sm border border-white/30"
+            >
+              {{ statusMap[detailApproval.status]?.text || detailApproval.status }}
+            </span>
           </div>
-          <div v-if="detailApproval.payload?.amount" class="col-span-2">
-            <span class="text-[var(--placeholder)]">金额</span>
-            <div class="text-[var(--ink)] mt-0.5">{{ detailApproval.payload.amount }} 元</div>
-          </div>
-          <div v-if="detailApproval.payload?.reason" class="col-span-2">
-            <span class="text-[var(--placeholder)]">申请理由</span>
-            <div class="text-[var(--ink)] mt-0.5 whitespace-pre-wrap">
-              {{ detailApproval.payload.reason }}
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm opacity-90">
+            <div class="flex items-center gap-1.5">
+              <div
+                class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs font-medium"
+              >
+                {{ (detailApproval.applicantName || '?').slice(0, 1) }}
+              </div>
+              <span>申请人：{{ detailApproval.applicantName || '-' }}</span>
             </div>
+            <span>当前审批人：{{ detailApproval.currentApproverName || '-' }}</span>
+            <span>{{ formatTime(detailApproval.createdAt) }}</span>
           </div>
         </div>
       </div>
 
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <!-- 左侧：审批信息 -->
+        <div class="card flex flex-col gap-4">
+          <div class="text-sm font-medium text-[var(--ink)]">审批信息</div>
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="text-[var(--placeholder)]">审批类型</span>
+              <div class="text-[var(--ink)] mt-0.5">
+                {{
+                  (detailApproval.module && moduleMap[detailApproval.module]?.text) ||
+                  detailApproval.module ||
+                  '-'
+                }}
+              </div>
+            </div>
+            <div>
+              <span class="text-[var(--placeholder)]">紧急程度</span>
+              <div class="text-[var(--ink)] mt-0.5">
+                {{
+                  (detailApproval.priority && priorityMap[detailApproval.priority]?.text) ||
+                  detailApproval.priority ||
+                  '-'
+                }}
+              </div>
+            </div>
+            <div>
+              <span class="text-[var(--placeholder)]">业务编号</span>
+              <div class="text-[var(--ink)] mt-0.5">{{ detailApproval.businessKey || '-' }}</div>
+            </div>
+            <div v-if="detailApproval.payload?.amount">
+              <span class="text-[var(--placeholder)]">金额</span>
+              <div class="text-[var(--ink)] mt-0.5">{{ detailApproval.payload.amount }} 元</div>
+            </div>
+          </div>
+          <div v-if="detailApproval.payload?.reason" class="text-sm">
+            <span class="text-[var(--placeholder)]">申请理由</span>
+            <div class="text-[var(--ink)] mt-1 whitespace-pre-wrap bg-[var(--bg)] rounded-lg p-3">
+              {{ detailApproval.payload.reason }}
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧：流程预览 -->
+        <div class="card flex flex-col gap-4">
+          <div class="text-sm font-medium text-[var(--ink)]">审批流程</div>
+          <ApprovalFlowDesigner
+            :stages="(detailApproval.payload?.stages as ApprovalStage[]) || []"
+            :readonly="true"
+          />
+        </div>
+      </div>
+
+      <!-- 审批进度 -->
       <div class="card">
         <div class="text-sm font-medium text-[var(--ink)] mb-3">审批进度</div>
         <div v-if="timelineLoading" class="py-4 text-center text-sm text-[var(--placeholder)]">
@@ -896,7 +1098,12 @@ function timelineItems() {
       </div>
     </div>
     <template #footer>
-      <button class="btn btn-ghost" :disabled="actionLoading" @click="openEdit(detailApproval!)">
+      <button
+        v-if="detailApproval?.status === ApprovalStatus.PENDING"
+        class="btn btn-ghost"
+        :disabled="actionLoading"
+        @click="openEdit(detailApproval!)"
+      >
         <XqIcon name="edit" size="14" />编辑
       </button>
       <button
@@ -934,52 +1141,85 @@ function timelineItems() {
     @close="actionModalVisible = false"
   >
     <div class="flex flex-col gap-4">
+      <!-- 迷你摘要 -->
+      <div
+        v-if="detailApproval"
+        class="flex items-start gap-3 p-3 rounded-xl bg-[var(--bg)] border border-[var(--line)]"
+      >
+        <div
+          class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium flex-shrink-0"
+          :style="{
+            backgroundColor: statusColor(detailApproval.status) + '20',
+            color: statusColor(detailApproval.status),
+          }"
+        >
+          {{ (detailApproval.applicantName || '?').slice(0, 1) }}
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="text-sm font-medium text-[var(--ink)] truncate">
+            {{ detailApproval.title }}
+          </div>
+          <div class="text-xs text-[var(--sub)] mt-0.5">
+            {{ moduleMap[detailApproval.module]?.text || detailApproval.module }} ·
+            {{ detailApproval.applicantName }}
+          </div>
+        </div>
+      </div>
+
       <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium text-[var(--ink)]">审批意见（可选）</label>
+        <label class="text-sm font-medium text-[var(--ink)]">
+          审批意见
+          <span class="text-[var(--placeholder)] font-normal">（可选）</span>
+        </label>
         <textarea
           v-model="actionComment"
           rows="3"
           class="input resize-y"
-          placeholder="请输入审批意见"
+          :placeholder="
+            actionType === 'approve' ? '可填写审批意见，留空直接通过' : '请说明驳回原因'
+          "
         />
       </div>
 
       <!-- 驳回目标选择 -->
       <div v-if="actionType === 'reject'" class="flex flex-col gap-2">
         <label class="text-sm font-medium text-[var(--ink)]">驳回方式</label>
-        <div class="flex flex-wrap gap-2">
+        <div class="grid grid-cols-3 gap-2">
           <button
-            class="px-3 py-1.5 text-sm rounded-md border"
+            class="px-2 py-2 text-sm rounded-md border flex flex-col items-center gap-1"
             :class="
               actionRejectTarget === 'end'
                 ? 'bg-[var(--danger-light)] text-[var(--danger)] border-[var(--danger)]'
-                : 'border-[var(--line)] text-[var(--sub)]'
+                : 'border-[var(--line)] text-[var(--sub)] hover:border-[var(--danger)]'
             "
             @click="actionRejectTarget = 'end'"
           >
-            直接结束
+            <XqIcon name="x-circle" size="16" />
+            <span>直接结束</span>
           </button>
           <button
-            class="px-3 py-1.5 text-sm rounded-md border"
+            class="px-2 py-2 text-sm rounded-md border flex flex-col items-center gap-1"
             :class="
               actionRejectTarget === 'prev'
                 ? 'bg-[var(--danger-light)] text-[var(--danger)] border-[var(--danger)]'
-                : 'border-[var(--line)] text-[var(--sub)]'
+                : 'border-[var(--line)] text-[var(--sub)] hover:border-[var(--danger)]'
             "
             @click="actionRejectTarget = 'prev'"
           >
-            驳回到上一节点
+            <XqIcon name="corner-up-left" size="16" />
+            <span>上一阶段</span>
           </button>
           <button
-            class="px-3 py-1.5 text-sm rounded-md border"
+            class="px-2 py-2 text-sm rounded-md border flex flex-col items-center gap-1"
             :class="
               actionRejectTarget === 'node'
                 ? 'bg-[var(--danger-light)] text-[var(--danger)] border-[var(--danger)]'
-                : 'border-[var(--line)] text-[var(--sub)]'
+                : 'border-[var(--line)] text-[var(--sub)] hover:border-[var(--danger)]'
             "
             @click="actionRejectTarget = 'node'"
           >
-            驳回到指定节点
+            <XqIcon name="map-pin" size="16" />
+            <span>指定阶段</span>
           </button>
         </div>
 

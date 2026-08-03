@@ -11,6 +11,7 @@ export type FlowStage = ApprovalStage
 interface Props {
   stages: FlowStage[]
   readonly?: boolean
+  currentUserId?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -21,6 +22,7 @@ const emit = defineEmits<{
   'update:stages': [value: FlowStage[]]
   'click-approver': [stageIndex: number, approverIndex: number]
   'add-stage': [mode: ApprovalMode]
+  'add-self': [stageIndex: number, approverIndex: number]
 }>()
 
 const draggingStageIndex = ref<number | null>(null)
@@ -155,6 +157,23 @@ function approverInitials(approver?: ApprovalStageApprover): string {
 function stageSummary(stage: FlowStage): string {
   if (stage.mode === 'serial') return '1 人依次审批'
   return `${stage.approvers.length || 0} 人会签（全部通过才通过）`
+}
+
+function canAddSelf(stage: FlowStage): boolean {
+  return !!props.currentUserId && !stage.approvers.some((a) => a.id === props.currentUserId)
+}
+
+function addSelf(stageIndex: number, approverIndex: number) {
+  if (!props.currentUserId) return
+  const stages = [...ensureStages()]
+  const stage = stages[stageIndex]
+  if (!stage) return
+  const selfName = '我自己'
+  const approvers = [...stage.approvers]
+  approvers[approverIndex] = { id: props.currentUserId, name: selfName }
+  stage.approvers = approvers
+  updateStages(stages)
+  emit('add-self', stageIndex, approverIndex)
 }
 </script>
 
@@ -305,14 +324,26 @@ function stageSummary(stage: FlowStage): string {
               </button>
 
               <!-- 空状态 -->
-              <button
+              <div
                 v-if="!readonly && stage.mode === 'serial' && stage.approvers.length === 0"
-                class="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-dashed border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
-                @click="$emit('click-approver', stageIndex, 0)"
+                class="flex items-center gap-2"
               >
-                <XqIcon name="plus" size="12" />
-                <span class="text-xs">选择审批人</span>
-              </button>
+                <button
+                  class="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-dashed border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
+                  @click="$emit('click-approver', stageIndex, 0)"
+                >
+                  <XqIcon name="plus" size="12" />
+                  <span class="text-xs">选择审批人</span>
+                </button>
+                <button
+                  v-if="canAddSelf(stage)"
+                  class="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-dashed border-[var(--primary)]/50 text-[var(--primary)] hover:bg-[var(--primary-light)]/20 transition-colors"
+                  @click="addSelf(stageIndex, 0)"
+                >
+                  <XqIcon name="user" size="12" />
+                  <span class="text-xs">添加自己</span>
+                </button>
+              </div>
             </div>
 
             <p class="mt-2 text-xs text-[var(--sub)]">{{ stageSummary(stage) }}</p>
@@ -329,8 +360,37 @@ function stageSummary(stage: FlowStage): string {
       </template>
     </div>
 
+    <!-- 空状态引导 -->
+    <div
+      v-if="stages.length === 0 && !readonly"
+      class="flex flex-col items-center justify-center gap-3 p-6 rounded-xl border border-dashed border-[var(--line)] bg-[var(--bg)] text-center"
+    >
+      <div
+        class="w-12 h-12 rounded-full bg-[var(--gray-bg)] flex items-center justify-center text-[var(--placeholder)]"
+      >
+        <XqIcon name="git-branch" size="24" />
+      </div>
+      <div class="text-sm text-[var(--sub)]">还没有审批阶段，点击下方按钮开始配置</div>
+      <div class="flex items-center gap-2">
+        <button
+          class="flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg border border-dashed border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
+          @click="addStage('serial')"
+        >
+          <XqIcon name="plus" size="12" />
+          串行阶段
+        </button>
+        <button
+          class="flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg border border-dashed border-[var(--primary)]/50 text-[var(--primary)] hover:bg-[var(--primary-light)]/20 transition-colors"
+          @click="addStage('parallel')"
+        >
+          <XqIcon name="plus" size="12" />
+          并行阶段
+        </button>
+      </div>
+    </div>
+
     <!-- 添加阶段 -->
-    <div v-if="!readonly" class="flex flex-wrap items-center gap-2">
+    <div v-else-if="!readonly" class="flex flex-wrap items-center gap-2">
       <button
         class="flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg border border-dashed border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
         @click="addStage('serial')"
@@ -339,7 +399,7 @@ function stageSummary(stage: FlowStage): string {
         添加串行阶段
       </button>
       <button
-        class="flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg border border-dashed border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
+        class="flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg border border-dashed border-[var(--primary)]/50 text-[var(--primary)] hover:bg-[var(--primary-light)]/20 transition-colors"
         @click="addStage('parallel')"
       >
         <XqIcon name="plus" size="12" />
