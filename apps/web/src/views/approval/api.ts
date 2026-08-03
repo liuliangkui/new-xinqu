@@ -56,8 +56,12 @@ export function approveApproval(approvalId: string, comment?: string): Promise<A
 }
 
 /** 审批驳回 */
-export function rejectApproval(approvalId: string, comment?: string): Promise<Approval> {
-  return post<Approval>(`${BASE}/${approvalId}/reject`, { comment })
+export function rejectApproval(
+  approvalId: string,
+  comment?: string,
+  targetNodeIndex?: number,
+): Promise<Approval> {
+  return post<Approval>(`${BASE}/${approvalId}/reject`, { comment, targetNodeIndex })
 }
 
 /** 撤回审批 */

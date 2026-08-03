@@ -63,6 +63,13 @@ export interface Approval {
   completedAt?: string
 }
 
+export interface ApprovalFlowNode {
+  id: string
+  name: string
+  assigneeId?: string
+  assigneeName?: string
+}
+
 export interface ApprovalForm {
   title: string
   businessKey?: string
@@ -73,6 +80,7 @@ export interface ApprovalForm {
   rejectTargetIndex?: number
   approverIds?: string[]
   approverId?: string
+  nodes?: ApprovalFlowNode[]
   payload?: Record<string, unknown>
   ccUserIds?: string[]
 }

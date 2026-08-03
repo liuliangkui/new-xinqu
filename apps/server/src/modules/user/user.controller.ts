@@ -18,8 +18,22 @@ export class UserController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('pageSize', new DefaultValuePipe(20), ParseIntPipe) pageSize: number,
     @Query('keyword') keyword?: string,
+    @Query('departmentId') departmentId?: string,
+    @Query('status') status?: string,
   ) {
-    return this.userService.findAll({ page, pageSize, keyword })
+    return this.userService.findAll({ page, pageSize, keyword, departmentId, status })
+  }
+
+  @Get('departments')
+  @ApiOperation({ summary: '查询部门列表' })
+  findDepartments() {
+    return this.userService.findDepartments()
+  }
+
+  @Get('roles')
+  @ApiOperation({ summary: '查询角色列表' })
+  findRoles() {
+    return this.userService.findRoles()
   }
 
   @Get(':id')

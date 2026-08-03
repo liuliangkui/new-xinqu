@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator'
+import { IsNumber, IsOptional, IsString } from 'class-validator'
 import { ApiPropertyOptional } from '@nestjs/swagger'
 
 export class ApprovalActionDto {
@@ -6,4 +6,9 @@ export class ApprovalActionDto {
   @IsOptional()
   @IsString()
   comment?: string
+
+  @ApiPropertyOptional({ description: '驳回到指定节点下标（从 0 开始），不传则直接结束' })
+  @IsOptional()
+  @IsNumber()
+  targetNodeIndex?: number
 }

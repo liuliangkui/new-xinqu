@@ -184,7 +184,7 @@ export class ApprovalService {
       include: { template: true, tasks: true, ccRecords: true },
     })
 
-    // 4. 启动工作流
+    // 4. 启动工作流（Camunda 不可用时降级为本地模式）
     try {
       const processInstance = await this.startWorkflowInstance(
         workflowDef,
@@ -196,11 +196,13 @@ export class ApprovalService {
         },
         instance.id,
       )
-      await this.prisma.approvalInstance.update({
-        where: { id: instance.id },
-        data: { workflowInstanceId: processInstance.id },
-      })
-      await this.syncTasks(instance.id, processInstance.id)
+      if (processInstance) {
+        await this.prisma.approvalInstance.update({
+          where: { id: instance.id },
+          data: { workflowInstanceId: processInstance.id },
+        })
+        await this.syncTasks(instance.id, processInstance.id)
+      }
     } catch (e) {
       this.logger.error(`审批工作流启动失败: ${e instanceof Error ? e.message : String(e)}`)
     }
@@ -239,7 +241,7 @@ export class ApprovalService {
     return { success: true }
   }
 
-  async action(id: string, userId: string, action: 'APPROVE' | 'REJECT', comment?: string) {
+  async action(id: string, userId: string, action: 'APPROVE' | 'REJECT', comment?: string, targetNodeIndex?: number) {
     const instance = await this.prisma.approvalInstance.findUnique({
       where: { id },
       include: { tasks: true, template: true },
@@ -257,10 +259,17 @@ export class ApprovalService {
 
       const nodeIndex = this.getNodeIndex(task.taskDefinitionKey || task.id)
       completedNodeId = task.taskDefinitionKey || task.id
-      await this.flowable.completeTask(task.id, {
+      const variables: Record<string, unknown> = {
         [`approved_${nodeIndex}`]: action === 'APPROVE',
         [`comment_${nodeIndex}`]: comment || '',
-      })
+      }
+      if (action === 'REJECT' && targetNodeIndex !== undefined) {
+        variables.rejectTargetIndex = targetNodeIndex
+      } else if (action === 'APPROVE') {
+        // 通过时清空驳回目标，避免后续节点受旧变量影响
+        variables.rejectTargetIndex = null
+      }
+      await this.flowable.completeTask(task.id, variables)
     }
 
     const taskAction = action === 'APPROVE' ? 'approve' : 'reject'
@@ -537,19 +546,26 @@ export class ApprovalService {
     if (def.flowableDefinitionId && def.flowableDeploymentId) return def
     if (!def.bpmnXml) throw new Error('工作流定义缺少 BPMN XML')
 
-    const deployment = await this.flowable.deploy(def.code, def.bpmnXml)
-    const definitions = await this.flowable.getProcessDefinitions(deployment.id)
-    const definitionId = definitions[0]?.id
-    if (!definitionId) throw new Error('未找到部署后的流程定义')
+    try {
+      const deployment = await this.flowable.deploy(def.code, def.bpmnXml)
+      const definitions = await this.flowable.getProcessDefinitions(deployment.id)
+      const definitionId = definitions[0]?.id
+      if (!definitionId) throw new Error('未找到部署后的流程定义')
 
-    const updated = await this.prisma.workflowDefinition.update({
-      where: { id: def.id },
-      data: {
-        flowableDeploymentId: deployment.id,
-        flowableDefinitionId: definitionId,
-      },
-    })
-    return updated
+      const updated = await this.prisma.workflowDefinition.update({
+        where: { id: def.id },
+        data: {
+          flowableDeploymentId: deployment.id,
+          flowableDefinitionId: definitionId,
+        },
+      })
+      return updated
+    } catch (e) {
+      this.logger.warn(
+        `Camunda 部署失败，审批将降级为本地模式: ${e instanceof Error ? e.message : String(e)}`,
+      )
+      return def
+    }
   }
 
   private async startWorkflowInstance(
@@ -564,7 +580,10 @@ export class ApprovalService {
     businessKey: string,
   ) {
     const deployed = await this.ensureWorkflowDefinitionDeployed(def)
-    if (!deployed.flowableDefinitionId) throw new Error('流程定义未部署')
+    if (!deployed.flowableDefinitionId) {
+      this.logger.warn('流程定义未部署到 Camunda，跳过工作流引擎启动')
+      return null
+    }
     return this.flowable.startProcessInstance(deployed.flowableDefinitionId, variables, businessKey)
   }
 

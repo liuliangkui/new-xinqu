@@ -8,16 +8,14 @@ import { UpdateUserDto } from './dto/update-user.dto'
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(params: { page: number; pageSize: number; keyword?: string }) {
-    const { page, pageSize, keyword } = params
-    const where = keyword
-      ? {
-          OR: [
-            { username: { contains: keyword } },
-            { name: { contains: keyword } },
-          ],
-        }
-      : {}
+  async findAll(params: { page: number; pageSize: number; keyword?: string; departmentId?: string; status?: string }) {
+    const { page, pageSize, keyword, departmentId, status } = params
+    const where: Record<string, unknown> = {}
+    if (keyword) {
+      where.OR = [{ username: { contains: keyword } }, { name: { contains: keyword } }]
+    }
+    if (departmentId) where.departmentId = departmentId
+    if (status) where.status = status
 
     const [list, total] = await Promise.all([
       this.prisma.user.findMany({
@@ -42,6 +40,24 @@ export class UserService {
     ])
 
     return { list, total, page, pageSize }
+  }
+
+  async findDepartments() {
+    const departments = await this.prisma.department.findMany({
+      where: { deletedAt: null, status: 'ACTIVE' },
+      orderBy: [{ parentId: 'asc' }, { sortOrder: 'asc' }, { name: 'asc' }],
+      select: { id: true, name: true, parentId: true, path: true, sortOrder: true },
+    })
+    return { list: departments }
+  }
+
+  async findRoles() {
+    const roles = await this.prisma.role.findMany({
+      where: { deletedAt: null, status: 'ACTIVE' },
+      orderBy: [{ name: 'asc' }],
+      select: { id: true, name: true, code: true },
+    })
+    return { list: roles }
   }
 
   async findOne(id: string) {

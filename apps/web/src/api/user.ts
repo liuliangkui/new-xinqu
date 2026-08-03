@@ -25,8 +25,32 @@ export interface UserForm {
   status?: string
 }
 
-export function getUserList(params?: PageParams & { keyword?: string }) {
+export function getUserList(
+  params?: PageParams & { pageSize?: number; keyword?: string; departmentId?: string; status?: string },
+) {
   return getPage<UserItem>('/users', params)
+}
+
+export interface DepartmentItem {
+  id: string
+  name: string
+  parentId?: string | null
+  path?: string
+  sortOrder?: number
+}
+
+export interface RoleItem {
+  id: string
+  name: string
+  code: string
+}
+
+export function getDepartmentList() {
+  return get<{ list: DepartmentItem[] }>('/users/departments')
+}
+
+export function getRoleList() {
+  return get<{ list: RoleItem[] }>('/users/roles')
 }
 
 export function getUserDetail(id: string) {

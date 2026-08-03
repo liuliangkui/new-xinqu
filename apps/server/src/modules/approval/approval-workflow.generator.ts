@@ -87,16 +87,19 @@ export function generateApprovalBpmn(options: GenerateApprovalBpmnOptions): stri
       const isLast = index === approvers.length - 1
       const approvedTarget = isLast ? 'end_approved' : `task_${index + 1}`
       flows.push(
-        `<sequenceFlow id="flow_gateway_${index}_approved" sourceRef="gateway_${index}" targetRef="${approvedTarget}" name="同意" />
-      `,
+        `<sequenceFlow id="flow_gateway_${index}_approved" sourceRef="gateway_${index}" targetRef="${approvedTarget}" name="同意" />`,
       )
 
-      // 驳回分支：按策略路由
-      const rejectTarget = resolveSerialRejectTarget(index, rejectAction, rejectTargetIndex, approvers.length)
-      flows.push(
-        `<sequenceFlow id="flow_gateway_${index}_rejected" sourceRef="gateway_${index}" targetRef="${rejectTarget}" name="驳回">
-  <conditionExpression xsi:type="tFormalExpression">\${approved_${index} == false}</conditionExpression>
+      // 驳回分支：为每个可能的目标节点生成条件路由
+      for (let targetIndex = 0; targetIndex < approvers.length; targetIndex++) {
+        flows.push(
+          `<sequenceFlow id="flow_gateway_${index}_rejected_task_${targetIndex}" sourceRef="gateway_${index}" targetRef="task_${targetIndex}" name="驳回到节点 ${targetIndex + 1}">
+  <conditionExpression xsi:type="tFormalExpression">\${approved_${index} == false &amp;&amp; rejectTargetIndex == ${targetIndex}}</conditionExpression>
 </sequenceFlow>`,
+        )
+      }
+      flows.push(
+        `<sequenceFlow id="flow_gateway_${index}_rejected_end" sourceRef="gateway_${index}" targetRef="end_rejected" name="驳回结束" default="true" />`,
       )
     })
   } else {

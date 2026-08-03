@@ -10,8 +10,10 @@ import type {
   ApprovalListParams,
   ApprovalStats,
   ApprovalTimelineNode,
+  ApprovalFlowNode,
 } from './types'
 import { ApprovalModule, ApprovalStatus, ApprovalPriority } from './types'
+import ApprovalFlowDesigner from './components/ApprovalFlowDesigner.vue'
 import {
   getApprovalList,
   createApproval,
@@ -151,6 +153,7 @@ function emptyForm(): ApprovalForm {
     rejectTargetIndex: 0,
     approverIds: [],
     ccUserIds: [],
+    nodes: [],
     businessKey: '',
     payload: { amount: undefined, reason: '' },
   }
@@ -225,72 +228,80 @@ async function openDetail(approval: Approval): Promise<void> {
   }
 }
 
-// ---- 邮件式发起弹窗 ----
+// ---- 流程式发起弹窗 ----
 const composeVisible = ref(false)
 const composeLoading = ref(false)
 const composeForm = ref<ApprovalForm>(emptyForm())
-const approverSearch = ref('')
-const ccSearch = ref('')
+const pickerVisible = ref(false)
+const pickerTarget = ref<'approver' | 'cc'>('approver')
+const editingNodeIndex = ref<number | null>(null)
+
+const nodeSelectedIds = computed<string[]>({
+  get: () => {
+    if (pickerTarget.value === 'cc') return composeForm.value.ccUserIds || []
+    const nodes = composeForm.value.nodes || []
+    if (editingNodeIndex.value === null) return []
+    const node = nodes[editingNodeIndex.value]
+    return node?.assigneeId ? [node.assigneeId] : []
+  },
+  set: () => {
+    // 选择器内部通过 confirm 事件处理，setter 仅用于关闭时同步
+  },
+})
 
 function openCompose(): void {
   composeForm.value = emptyForm()
   composeVisible.value = true
 }
 
-function toggleApprover(userId: string): void {
-  const list = composeForm.value.approverIds || []
-  if (list.includes(userId)) {
-    composeForm.value.approverIds = list.filter((id) => id !== userId)
-  } else {
-    composeForm.value.approverIds = [...list, userId]
+function ensureNodes(): ApprovalFlowNode[] {
+  if (!composeForm.value.nodes) {
+    composeForm.value.nodes = []
   }
+  return composeForm.value.nodes
 }
 
-function removeApprover(userId: string): void {
-  const list = composeForm.value.approverIds || []
-  composeForm.value.approverIds = list.filter((id) => id !== userId)
+function openNodePicker(index: number): void {
+  editingNodeIndex.value = index
+  pickerTarget.value = 'approver'
+  pickerVisible.value = true
 }
 
-function toggleCc(userId: string): void {
-  const list = composeForm.value.ccUserIds || []
-  if (list.includes(userId)) {
-    composeForm.value.ccUserIds = list.filter((id) => id !== userId)
-  } else {
-    composeForm.value.ccUserIds = [...list, userId]
+function addNode(): void {
+  const nodes = ensureNodes()
+  nodes.push({
+    id: `node_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+    name: `审批节点 ${nodes.length + 1}`,
+  })
+}
+
+function updateNodes(nodes: ApprovalFlowNode[]): void {
+  composeForm.value.nodes = nodes.map((n, i) => ({
+    ...n,
+    name: n.name || `审批节点 ${i + 1}`,
+  }))
+}
+
+function openCcPicker(): void {
+  pickerTarget.value = 'cc'
+  editingNodeIndex.value = null
+  pickerVisible.value = true
+}
+
+function handlePickerConfirm(ids: string[]): void {
+  if (pickerTarget.value === 'cc') {
+    composeForm.value.ccUserIds = ids
+    return
   }
-}
-
-function removeCc(userId: string): void {
-  const list = composeForm.value.ccUserIds || []
-  composeForm.value.ccUserIds = list.filter((id) => id !== userId)
-}
-
-const filteredApproverOptions = computed(() => {
-  const selected = new Set(composeForm.value.approverIds || [])
-  const kw = approverSearch.value.trim().toLowerCase()
-  return userOptions.value.filter(
-    (u) => !selected.has(u.value) && u.label.toLowerCase().includes(kw),
-  )
-})
-
-const filteredCcOptions = computed(() => {
-  const selected = new Set(composeForm.value.ccUserIds || [])
-  const kw = ccSearch.value.trim().toLowerCase()
-  return userOptions.value.filter(
-    (u) => !selected.has(u.value) && u.label.toLowerCase().includes(kw),
-  )
-})
-
-function selectedApproverChips() {
-  return (composeForm.value.approverIds || [])
-    .map((id) => userOptions.value.find((u) => u.value === id))
-    .filter(Boolean)
-}
-
-function selectedCcChips() {
-  return (composeForm.value.ccUserIds || [])
-    .map((id) => userOptions.value.find((u) => u.value === id))
-    .filter(Boolean)
+  const nodes = ensureNodes()
+  if (editingNodeIndex.value !== null && editingNodeIndex.value < nodes.length) {
+    const user = userOptions.value.find((u) => u.value === ids[0])
+    nodes[editingNodeIndex.value] = {
+      ...nodes[editingNodeIndex.value]!,
+      assigneeId: ids[0],
+      assigneeName: user?.label.split(' ')[0] || ids[0],
+    }
+  }
 }
 
 async function handleComposeSubmit(): Promise<void> {
@@ -299,8 +310,9 @@ async function handleComposeSubmit(): Promise<void> {
     window.alert('请输入审批主题')
     return
   }
-  if (!form.approverIds || form.approverIds.length === 0) {
-    window.alert('请选择至少一个审批人')
+  const nodes = (form.nodes || []).filter((n) => n.assigneeId)
+  if (nodes.length === 0) {
+    window.alert('请至少添加一个审批节点并选择审批人')
     return
   }
 
@@ -313,7 +325,7 @@ async function handleComposeSubmit(): Promise<void> {
       mode: form.mode,
       rejectAction: form.rejectAction,
       rejectTargetIndex: form.rejectTargetIndex,
-      approverIds: form.approverIds,
+      approverIds: nodes.map((n) => n.assigneeId!),
       ccUserIds: form.ccUserIds,
       businessKey: form.businessKey,
       payload: {
@@ -373,6 +385,8 @@ const actionLoading = ref(false)
 const actionModalVisible = ref(false)
 const actionType = ref<'approve' | 'reject' | null>(null)
 const actionComment = ref('')
+const actionRejectTarget = ref<'end' | 'prev' | 'node'>('end')
+const actionRejectNodeIndex = ref<number | null>(null)
 
 function canApprove(record: Approval | null): boolean {
   if (!record || record.status !== ApprovalStatus.PENDING) return false
@@ -386,9 +400,27 @@ function canWithdraw(record: Approval | null): boolean {
   return record.applicantId === authStore.user?.id || authStore.hasRole('super_admin')
 }
 
+function buildRejectNodeOptions() {
+  const approval = detailApproval.value
+  if (!approval) return []
+  const approverIds = (approval.payload?.approverIds as string[] | undefined) || []
+  const userMap = new Map<string, string>()
+  approval.tasks?.forEach((t) => {
+    if (t.assigneeId && t.assigneeName) userMap.set(t.assigneeId, t.assigneeName)
+  })
+  return approverIds.map((id, idx) => ({
+    index: idx,
+    label: `节点 ${idx + 1}`,
+    assigneeName: userMap.get(id) || userOptions.value.find((u) => u.value === id)?.label.split(' ')[0] || id,
+    assigneeId: id,
+  }))
+}
+
 function openAction(type: 'approve' | 'reject'): void {
   actionType.value = type
   actionComment.value = ''
+  actionRejectTarget.value = 'end'
+  actionRejectNodeIndex.value = null
   actionModalVisible.value = true
 }
 
@@ -399,7 +431,13 @@ async function handleActionSubmit(): Promise<void> {
     if (actionType.value === 'approve') {
       await approveApproval(detailApproval.value.approvalId, actionComment.value)
     } else {
-      await rejectApproval(detailApproval.value.approvalId, actionComment.value)
+      let targetNodeIndex: number | undefined
+      if (actionRejectTarget.value === 'prev') {
+        targetNodeIndex = Math.max(0, (detailApproval.value.tasks?.findIndex((t) => !t.action) || 0) - 1)
+      } else if (actionRejectTarget.value === 'node' && actionRejectNodeIndex.value !== null) {
+        targetNodeIndex = actionRejectNodeIndex.value
+      }
+      await rejectApproval(detailApproval.value.approvalId, actionComment.value, targetNodeIndex)
     }
     actionModalVisible.value = false
     detailVisible.value = false
@@ -592,96 +630,47 @@ function timelineItems() {
     </template>
   </XqPageLayout>
 
-  <!-- 邮件式发起弹窗 -->
-  <XqModal v-model:visible="composeVisible" title="发起审批" width="720px">
+  <!-- 流程式发起弹窗 -->
+  <XqModal v-model:visible="composeVisible" title="发起审批" width="800px">
     <div class="flex flex-col gap-5">
-      <!-- 审批人 -->
-      <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium text-[var(--ink)]"
-          >收件人（审批人）<span class="text-[var(--danger)]">*</span></label
-        >
-        <div
-          class="flex flex-wrap items-center gap-2 p-2 border border-[var(--line)] rounded-lg bg-[var(--bg)] min-h-[44px]"
-        >
-          <span
-            v-for="chip in selectedApproverChips()"
-            :key="chip!.value"
-            class="inline-flex items-center gap-1 px-2 py-1 text-sm rounded-md bg-[var(--primary-light)] text-[var(--primary)]"
-          >
-            {{ chip!.label }}
-            <button class="hover:text-[var(--ink)]" @click.stop="removeApprover(chip!.value)">
-              <XqIcon name="close" size="12" />
-            </button>
-          </span>
-          <input
-            v-model="approverSearch"
-            type="text"
-            class="bg-transparent text-sm outline-none min-w-[120px] flex-1"
-            placeholder="搜索并选择审批人"
-          />
-        </div>
-        <div
-          v-if="filteredApproverOptions.length"
-          class="border border-[var(--line)] rounded-lg bg-[var(--card)] max-h-40 overflow-y-auto"
-        >
-          <div
-            v-for="u in filteredApproverOptions.slice(0, 20)"
-            :key="u.value"
-            class="px-3 py-2 text-sm hover:bg-[var(--primary-light)] cursor-pointer"
-            @click="toggleApprover(u.value); approverSearch = ''"
-          >
-            {{ u.label }}
-          </div>
-        </div>
-        <p class="text-xs text-[var(--sub)]">
-          按选择顺序依次审批；选择多人时可在下方切换为并行审批。
-        </p>
-      </div>
-
-      <!-- 抄送 -->
-      <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium text-[var(--ink)]">抄送</label>
-        <div
-          class="flex flex-wrap items-center gap-2 p-2 border border-[var(--line)] rounded-lg bg-[var(--bg)] min-h-[44px]"
-        >
-          <span
-            v-for="chip in selectedCcChips()"
-            :key="chip!.value"
-            class="inline-flex items-center gap-1 px-2 py-1 text-sm rounded-md bg-[var(--gray-bg)] text-[var(--sub)]"
-          >
-            {{ chip!.label }}
-            <button class="hover:text-[var(--ink)]" @click.stop="removeCc(chip!.value)">
-              <XqIcon name="close" size="12" />
-            </button>
-          </span>
-          <input
-            v-model="ccSearch"
-            type="text"
-            class="bg-transparent text-sm outline-none min-w-[120px] flex-1"
-            placeholder="搜索并选择抄送人"
-          />
-        </div>
-        <div
-          v-if="filteredCcOptions.length"
-          class="border border-[var(--line)] rounded-lg bg-[var(--card)] max-h-40 overflow-y-auto"
-        >
-          <div
-            v-for="u in filteredCcOptions.slice(0, 20)"
-            :key="u.value"
-            class="px-3 py-2 text-sm hover:bg-[var(--gray-bg)] cursor-pointer"
-            @click="toggleCc(u.value); ccSearch = ''"
-          >
-            {{ u.label }}
-          </div>
-        </div>
-      </div>
-
       <!-- 主题 -->
       <div class="flex flex-col gap-1.5">
         <label class="text-sm font-medium text-[var(--ink)]"
-          >主题<span class="text-[var(--danger)]">*</span></label
+          >审批主题<span class="text-[var(--danger)]">*</span></label
         >
         <input v-model="composeForm.title" type="text" class="input" placeholder="请输入审批主题" />
+      </div>
+
+      <!-- 审批流程设计器 -->
+      <ApprovalFlowDesigner
+        :nodes="composeForm.nodes || []"
+        :mode="composeForm.mode"
+        @update:nodes="updateNodes"
+        @update:mode="(m) => (composeForm.mode = m)"
+        @click-node="(_, idx) => openNodePicker(idx)"
+        @add-node="addNode"
+      />
+
+      <!-- 抄送 -->
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-medium text-[var(--ink)]">抄送人</label>
+        <div
+          class="flex flex-wrap items-center gap-2 p-2 border border-[var(--line)] rounded-lg bg-[var(--bg)] min-h-[44px]"
+        >
+          <span
+            v-for="id in composeForm.ccUserIds || []"
+            :key="id"
+            class="inline-flex items-center gap-1 px-2 py-1 text-sm rounded-md bg-[var(--gray-bg)] text-[var(--sub)]"
+          >
+            {{ userOptions.find((u) => u.value === id)?.label.split(' ')[0] || id }}
+            <button class="hover:text-[var(--ink)]" @click.stop="composeForm.ccUserIds = (composeForm.ccUserIds || []).filter((v) => v !== id)">
+              <XqIcon name="close" size="12" />
+            </button>
+          </span>
+          <button class="text-sm text-[var(--primary)] hover:underline" @click="openCcPicker">
+            <XqIcon name="plus" size="12" class="inline" /> 选择抄送人
+          </button>
+        </div>
       </div>
 
       <!-- 类型 / 紧急 / 模式 / 驳回策略 -->
@@ -746,15 +735,25 @@ function timelineItems() {
             <option value="prev">驳回到上一节点</option>
             <option value="node">驳回到指定节点</option>
           </select>
-          <div v-if="composeForm.rejectAction === 'node'" class="flex items-center gap-2 mt-1">
-            <span class="text-sm text-[var(--sub)]">目标节点序号</span>
-            <input
-              v-model.number="composeForm.rejectTargetIndex"
-              type="number"
-              min="0"
-              class="input w-24"
-            />
-            <span class="text-xs text-[var(--sub)]">从 0 开始</span>
+          <div v-if="composeForm.rejectAction === 'node'" class="flex flex-col gap-2 mt-2">
+            <span class="text-sm text-[var(--sub)]">选择驳回目标节点</span>
+            <div class="flex flex-wrap gap-2">
+              <button
+                v-for="(node, idx) in composeForm.nodes || []"
+                :key="node.id"
+                class="px-2.5 py-1 text-xs rounded-md border"
+                :class="
+                  composeForm.rejectTargetIndex === idx
+                    ? 'bg-[var(--primary-light)] text-[var(--primary)] border-[var(--primary)]'
+                    : 'border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)]'
+                "
+                :disabled="!node.assigneeId"
+                @click="composeForm.rejectTargetIndex = idx"
+              >
+                节点 {{ idx + 1 }}
+                <span class="ml-1 text-[var(--placeholder)]">{{ node.assigneeName || '未选择' }}</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -804,6 +803,15 @@ function timelineItems() {
       </button>
     </template>
   </XqModal>
+
+  <!-- 人员选择器 -->
+  <XqUserPicker
+    v-model:visible="pickerVisible"
+    v-model="nodeSelectedIds"
+    :title="pickerTarget === 'cc' ? '选择抄送人' : '选择审批人'"
+    :multiple="pickerTarget === 'cc'"
+    @confirm="handlePickerConfirm"
+  />
 
   <!-- 详情弹窗 -->
   <XqModal
@@ -903,24 +911,94 @@ function timelineItems() {
   <XqModal
     :visible="actionModalVisible"
     :title="actionType === 'approve' ? '审批通过' : '审批驳回'"
-    width="480px"
+    width="520px"
     @close="actionModalVisible = false"
   >
-    <div class="flex flex-col gap-3">
-      <label class="text-sm font-medium text-[var(--ink)]">审批意见（可选）</label>
-      <textarea
-        v-model="actionComment"
-        rows="3"
-        class="input resize-y"
-        placeholder="请输入审批意见"
-      />
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-medium text-[var(--ink)]">审批意见（可选）</label>
+        <textarea
+          v-model="actionComment"
+          rows="3"
+          class="input resize-y"
+          placeholder="请输入审批意见"
+        />
+      </div>
+
+      <!-- 驳回目标选择 -->
+      <div v-if="actionType === 'reject'" class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-[var(--ink)]">驳回方式</label>
+        <div class="flex flex-wrap gap-2">
+          <button
+            class="px-3 py-1.5 text-sm rounded-md border"
+            :class="
+              actionRejectTarget === 'end'
+                ? 'bg-[var(--danger-light)] text-[var(--danger)] border-[var(--danger)]'
+                : 'border-[var(--line)] text-[var(--sub)]'
+            "
+            @click="actionRejectTarget = 'end'"
+          >
+            直接结束
+          </button>
+          <button
+            class="px-3 py-1.5 text-sm rounded-md border"
+            :class="
+              actionRejectTarget === 'prev'
+                ? 'bg-[var(--danger-light)] text-[var(--danger)] border-[var(--danger)]'
+                : 'border-[var(--line)] text-[var(--sub)]'
+            "
+            @click="actionRejectTarget = 'prev'"
+          >
+            驳回到上一节点
+          </button>
+          <button
+            class="px-3 py-1.5 text-sm rounded-md border"
+            :class="
+              actionRejectTarget === 'node'
+                ? 'bg-[var(--danger-light)] text-[var(--danger)] border-[var(--danger)]'
+                : 'border-[var(--line)] text-[var(--sub)]'
+            "
+            @click="actionRejectTarget = 'node'"
+          >
+            驳回到指定节点
+          </button>
+        </div>
+
+        <div v-if="actionRejectTarget === 'node'" class="flex flex-col gap-2 mt-1">
+          <span class="text-xs text-[var(--sub)]">选择要驳回到的节点</span>
+          <div class="flex flex-wrap gap-2">
+            <button
+              v-for="opt in buildRejectNodeOptions()"
+              :key="opt.index"
+              class="px-3 py-2 text-sm rounded-md border flex items-center gap-2"
+              :class="
+                actionRejectNodeIndex === opt.index
+                  ? 'bg-[var(--danger-light)] text-[var(--danger)] border-[var(--danger)]'
+                  : 'border-[var(--line)] text-[var(--ink)] hover:border-[var(--danger)]'
+              "
+              @click="actionRejectNodeIndex = opt.index"
+            >
+              <span class="w-5 h-5 rounded-full bg-[var(--gray-bg)] text-xs flex items-center justify-center flex-shrink-0">
+                {{ opt.index + 1 }}
+              </span>
+              <span class="truncate max-w-[120px]">{{ opt.assigneeName }}</span>
+            </button>
+          </div>
+          <p v-if="buildRejectNodeOptions().length === 0" class="text-xs text-[var(--placeholder)]">
+            未获取到审批节点信息
+          </p>
+        </div>
+      </div>
     </div>
     <template #footer>
       <button class="btn btn-ghost flex-1" @click="actionModalVisible = false">取消</button>
       <button
         class="flex-1"
         :class="actionType === 'approve' ? 'btn btn-primary' : 'btn btn-danger'"
-        :disabled="actionLoading"
+        :disabled="
+          actionLoading ||
+          (actionType === 'reject' && actionRejectTarget === 'node' && actionRejectNodeIndex === null)
+        "
         @click="handleActionSubmit"
       >
         {{ actionType === 'approve' ? '确认通过' : '确认驳回' }}
