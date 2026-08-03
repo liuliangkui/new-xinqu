@@ -613,25 +613,28 @@ function timelineItems() {
               <XqIcon name="close" size="12" />
             </button>
           </span>
-          <select
+          <input
             v-model="approverSearch"
+            type="text"
             class="bg-transparent text-sm outline-none min-w-[120px] flex-1"
-            @change="
-              (e: Event) => {
-                const target = e.target as HTMLSelectElement
-                if (target.value) {
-                  toggleApprover(target.value)
-                  target.value = ''
-                  approverSearch = ''
-                }
-              }
+            placeholder="搜索并选择审批人"
+          />
+        </div>
+        <div
+          v-if="filteredApproverOptions.length"
+          class="border border-[var(--line)] rounded-lg bg-[var(--card)] max-h-40 overflow-y-auto"
+        >
+          <div
+            v-for="u in filteredApproverOptions.slice(0, 20)"
+            :key="u.value"
+            class="px-3 py-2 text-sm hover:bg-[var(--primary-light)] cursor-pointer"
+            @click="
+              toggleApprover(u.value)
+              approverSearch = ''
             "
           >
-            <option value="">添加审批人</option>
-            <option v-for="u in filteredApproverOptions" :key="u.value" :value="u.value">
-              {{ u.label }}
-            </option>
-          </select>
+            {{ u.label }}
+          </div>
         </div>
         <p class="text-xs text-[var(--sub)]">
           按选择顺序依次审批；选择多人时可在下方切换为并行审批。
@@ -654,25 +657,28 @@ function timelineItems() {
               <XqIcon name="close" size="12" />
             </button>
           </span>
-          <select
+          <input
             v-model="ccSearch"
+            type="text"
             class="bg-transparent text-sm outline-none min-w-[120px] flex-1"
-            @change="
-              (e: Event) => {
-                const target = e.target as HTMLSelectElement
-                if (target.value) {
-                  toggleCc(target.value)
-                  target.value = ''
-                  ccSearch = ''
-                }
-              }
+            placeholder="搜索并选择抄送人"
+          />
+        </div>
+        <div
+          v-if="filteredCcOptions.length"
+          class="border border-[var(--line)] rounded-lg bg-[var(--card)] max-h-40 overflow-y-auto"
+        >
+          <div
+            v-for="u in filteredCcOptions.slice(0, 20)"
+            :key="u.value"
+            class="px-3 py-2 text-sm hover:bg-[var(--gray-bg)] cursor-pointer"
+            @click="
+              toggleCc(u.value)
+              ccSearch = ''
             "
           >
-            <option value="">添加抄送人</option>
-            <option v-for="u in filteredCcOptions" :key="u.value" :value="u.value">
-              {{ u.label }}
-            </option>
-          </select>
+            {{ u.label }}
+          </div>
         </div>
       </div>
 
