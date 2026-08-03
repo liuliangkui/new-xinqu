@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * 审批流程可视化设计器（轻量图形化版）
- * 垂直时间轴风格：中心主干 + 阶段节点卡片，整体更简洁、现代。
+ * 审批流程可视化设计器（水平箭头流程图版）
+ * 串行阶段横向串联，并行阶段纵向分叉后汇聚，用箭头明确表达流向。
  */
 import { ref, computed } from 'vue'
 import type { ApprovalStage, ApprovalStageApprover, ApprovalMode } from '../types'
@@ -169,116 +169,64 @@ const hasStages = computed(() => ensureStages().length > 0)
       </div>
     </div>
 
-    <!-- 流程图 -->
-    <div v-else class="relative flex flex-col items-center py-4">
-      <!-- 中心主干（虚线） -->
-      <div
-        class="absolute left-1/2 top-0 bottom-0 w-px border-l border-dashed border-[var(--line)] -translate-x-1/2"
-      />
-
-      <!-- 开始节点 -->
-      <div class="relative z-10 flex flex-col items-center mb-1">
-        <div
-          class="w-8 h-8 rounded-full bg-[var(--success)] text-white flex items-center justify-center text-[10px] font-medium shadow-sm"
-        >
-          开始
-        </div>
-      </div>
-
-      <!-- 阶段列表 -->
-      <template v-for="(stage, stageIndex) in stages" :key="stage.id">
-        <div class="w-px h-6 border-l border-dashed border-[var(--line)]" />
-
-        <div
-          class="relative z-10 w-full max-w-[520px] group"
-          :draggable="!readonly"
-          @dragstart="handleStageDragStart(stageIndex)"
-          @dragover="(e) => handleStageDragOver(e, stageIndex)"
-          @dragend="handleStageDragEnd"
-        >
-          <!-- 阶段序号圆点 -->
+    <!-- 水平流程图 -->
+    <div v-else class="relative w-full overflow-x-auto pb-4 pt-2">
+      <div class="flex items-center min-w-max px-2">
+        <!-- 开始节点 -->
+        <div class="flex flex-col items-center gap-1 flex-shrink-0">
           <div
-            class="absolute left-1/2 -top-3 -translate-x-1/2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium border shadow-sm"
-            :class="
-              stage.mode === 'parallel'
-                ? 'bg-[var(--primary)] text-white border-[var(--primary)]'
-                : 'bg-[var(--card)] text-[var(--ink)] border-[var(--line)]'
-            "
+            class="w-9 h-9 rounded-full bg-[var(--success)] text-white flex items-center justify-center text-[10px] font-medium shadow-sm"
           >
-            {{ stageIndex + 1 }}
+            开始
+          </div>
+        </div>
+
+        <!-- 流程项 -->
+        <template v-for="(stage, stageIndex) in stages" :key="stage.id">
+          <!-- 箭头连接 -->
+          <div class="flex items-center px-2 flex-shrink-0">
+            <div class="w-8 h-px bg-[var(--line)] relative">
+              <div
+                class="absolute right-0 top-1/2 -translate-y-1/2 w-0 h-0 border-y-4 border-y-transparent border-l-[6px] border-l-[var(--line)]"
+              />
+            </div>
           </div>
 
-          <!-- 阶段卡片 -->
+          <!-- 阶段节点 -->
           <div
-            class="mt-2 rounded-2xl border bg-[var(--card)] p-4 shadow-sm transition-all"
-            :class="
-              stage.mode === 'parallel'
-                ? 'border-dashed border-[var(--primary)]/40 bg-[var(--primary-light)]/10'
-                : 'border-dashed border-[var(--line)]'
-            "
+            class="flex-shrink-0 group"
+            :draggable="!readonly"
+            @dragstart="handleStageDragStart(stageIndex)"
+            @dragover="(e) => handleStageDragOver(e, stageIndex)"
+            @dragend="handleStageDragEnd"
           >
-            <!-- 头部 -->
-            <div class="flex items-center justify-between mb-3">
-              <div class="flex items-center gap-2">
-                <span class="text-sm font-medium text-[var(--ink)]">{{ stage.name }}</span>
-                <span
-                  class="px-2 py-0.5 text-[10px] rounded-full"
-                  :class="
-                    stage.mode === 'parallel'
-                      ? 'bg-[var(--primary)]/10 text-[var(--primary)]'
-                      : 'bg-[var(--gray-bg)] text-[var(--sub)]'
-                  "
+            <!-- 串行阶段 -->
+            <div
+              v-if="stage.mode === 'serial'"
+              class="relative rounded-2xl border border-dashed border-[var(--line)] bg-[var(--card)] p-3 shadow-sm hover:shadow-md transition-all w-[160px]"
+            >
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-[var(--sub)]">{{ stage.name }}</span>
+                <span class="px-1.5 py-0.5 text-[9px] rounded bg-[var(--gray-bg)] text-[var(--sub)]"
+                  >串行</span
                 >
-                  {{ stage.mode === 'parallel' ? '并行会签' : '串行' }}
-                </span>
               </div>
-              <div
-                v-if="!readonly"
-                class="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                <button
-                  v-if="stageIndex > 0"
-                  class="w-6 h-6 rounded-full flex items-center justify-center text-[var(--sub)] hover:text-[var(--primary)] hover:bg-[var(--gray-bg)]"
-                  title="上移"
-                  @click.stop="moveStage(stageIndex, 'up')"
-                >
-                  <XqIcon name="arrow-up" size="10" />
-                </button>
-                <button
-                  v-if="stageIndex < stages.length - 1"
-                  class="w-6 h-6 rounded-full flex items-center justify-center text-[var(--sub)] hover:text-[var(--primary)] hover:bg-[var(--gray-bg)]"
-                  title="下移"
-                  @click.stop="moveStage(stageIndex, 'down')"
-                >
-                  <XqIcon name="arrow-down" size="10" />
-                </button>
-                <button
-                  class="w-6 h-6 rounded-full flex items-center justify-center text-[var(--sub)] hover:text-[var(--danger)] hover:bg-[var(--gray-bg)]"
-                  title="删除阶段"
-                  @click.stop="removeStage(stageIndex)"
-                >
-                  <XqIcon name="close" size="10" />
-                </button>
-              </div>
-            </div>
 
-            <!-- 串行：单个审批人 -->
-            <div v-if="stage.mode === 'serial'" class="flex items-center gap-3">
               <template v-if="stage.approvers[0]?.id">
                 <div
-                  class="relative group/approver flex items-center gap-3 px-4 py-2.5 rounded-xl bg-[var(--bg)] border border-[var(--line)] cursor-pointer hover:border-[var(--primary)] transition-colors"
+                  class="relative group/approver flex items-center gap-2 p-2 rounded-xl bg-[var(--bg)] cursor-pointer hover:ring-1 hover:ring-[var(--primary)] transition-all"
                   @click="$emit('click-approver', stageIndex, 0)"
                 >
                   <div
-                    class="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] text-white flex items-center justify-center text-sm font-medium shadow-sm"
+                    class="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] text-white flex items-center justify-center text-xs font-medium"
                   >
                     {{ approverInitials(stage.approvers[0]) }}
                   </div>
-                  <div>
-                    <div class="text-sm font-medium text-[var(--ink)]">
+                  <div class="min-w-0 flex-1">
+                    <div class="text-sm font-medium text-[var(--ink)] truncate">
                       {{ stage.approvers[0].name }}
                     </div>
-                    <div class="text-xs text-[var(--sub)]">审批人</div>
+                    <div class="text-[10px] text-[var(--sub)]">审批人</div>
                   </div>
                   <button
                     v-if="!readonly"
@@ -290,131 +238,193 @@ const hasStages = computed(() => ensureStages().length > 0)
                 </div>
               </template>
               <template v-else>
-                <button
-                  v-if="!readonly"
-                  class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-dashed border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
-                  @click="$emit('click-approver', stageIndex, 0)"
-                >
-                  <XqIcon name="plus" size="14" />
-                  <span class="text-sm">选择审批人</span>
-                </button>
-                <button
-                  v-if="!readonly && canAddSelf(stage)"
-                  class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-dashed border-[var(--primary)]/50 text-[var(--primary)] hover:bg-[var(--primary-light)]/20 transition-colors"
-                  @click="addSelf(stageIndex, 0)"
-                >
-                  <XqIcon name="user" size="14" />
-                  <span class="text-sm">添加自己</span>
-                </button>
+                <div v-if="!readonly" class="flex flex-col gap-2">
+                  <button
+                    class="w-full flex items-center justify-center gap-1.5 p-2.5 rounded-xl border border-dashed border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
+                    @click="$emit('click-approver', stageIndex, 0)"
+                  >
+                    <XqIcon name="plus" size="12" />
+                    <span class="text-xs">选择审批人</span>
+                  </button>
+                  <button
+                    v-if="canAddSelf(stage)"
+                    class="w-full flex items-center justify-center gap-1.5 p-2 rounded-xl border border-dashed border-[var(--primary)]/50 text-[var(--primary)] hover:bg-[var(--primary-light)]/20 transition-colors"
+                    @click="addSelf(stageIndex, 0)"
+                  >
+                    <XqIcon name="user" size="12" />
+                    <span class="text-xs">添加自己</span>
+                  </button>
+                </div>
               </template>
+
+              <!-- 操作按钮 -->
+              <div
+                v-if="!readonly"
+                class="absolute -top-2 -right-2 hidden group-hover:flex items-center gap-0.5"
+              >
+                <button
+                  v-if="stageIndex > 0"
+                  class="w-5 h-5 rounded-full bg-[var(--card)] border border-[var(--line)] flex items-center justify-center text-[var(--sub)] hover:text-[var(--primary)]"
+                  title="前移"
+                  @click.stop="moveStage(stageIndex, 'up')"
+                >
+                  <XqIcon name="arrow-left" size="10" />
+                </button>
+                <button
+                  v-if="stageIndex < stages.length - 1"
+                  class="w-5 h-5 rounded-full bg-[var(--card)] border border-[var(--line)] flex items-center justify-center text-[var(--sub)] hover:text-[var(--primary)]"
+                  title="后移"
+                  @click.stop="moveStage(stageIndex, 'down')"
+                >
+                  <XqIcon name="arrow-right" size="10" />
+                </button>
+                <button
+                  class="w-5 h-5 rounded-full bg-[var(--card)] border border-[var(--line)] flex items-center justify-center text-[var(--sub)] hover:text-[var(--danger)]"
+                  title="删除"
+                  @click.stop="removeStage(stageIndex)"
+                >
+                  <XqIcon name="close" size="10" />
+                </button>
+              </div>
             </div>
 
-            <!-- 并行：会签人组 -->
-            <div v-else class="flex flex-col gap-3">
-              <div class="flex flex-wrap items-center gap-2">
-                <template
-                  v-for="(approver, approverIndex) in stage.approvers"
-                  :key="`${stage.id}_${approverIndex}`"
+            <!-- 并行阶段 -->
+            <div
+              v-else
+              class="relative rounded-2xl border border-dashed border-[var(--primary)]/40 bg-[var(--primary-light)]/10 p-3 w-[180px]"
+            >
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-[var(--ink)] font-medium">{{ stage.name }}</span>
+                <span
+                  class="px-1.5 py-0.5 text-[9px] rounded bg-[var(--primary)]/10 text-[var(--primary)]"
+                  >并行</span
                 >
+              </div>
+
+              <!-- 并行分支 -->
+              <div class="relative flex items-stretch">
+                <!-- fork 竖线 -->
+                <div class="relative w-4 flex-shrink-0">
                   <div
-                    class="relative group/approver flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer transition-all"
-                    :class="
-                      approver.id
-                        ? 'bg-[var(--card)] border-[var(--primary)]/40 hover:shadow-sm'
-                        : 'bg-[var(--card)] border-dashed border-[var(--line)] hover:border-[var(--primary)]'
-                    "
-                    @click="$emit('click-approver', stageIndex, approverIndex)"
+                    class="absolute left-1/2 top-0 bottom-0 w-px bg-[var(--primary)]/40 -translate-x-1/2"
+                  />
+                  <div
+                    class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rotate-45 border border-[var(--primary)]/40 bg-[var(--card)]"
+                  />
+                </div>
+
+                <!-- 会签人列表 -->
+                <div class="flex-1 flex flex-col gap-2 py-1">
+                  <template
+                    v-for="(approver, approverIndex) in stage.approvers"
+                    :key="`${stage.id}_${approverIndex}`"
                   >
                     <div
-                      class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium"
-                      :class="
-                        approver.id
-                          ? 'bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] text-white'
-                          : 'bg-[var(--gray-bg)] text-[var(--sub)]'
-                      "
+                      class="relative group/approver flex items-center gap-2 p-2 rounded-xl bg-[var(--card)] border border-dashed border-[var(--line)] cursor-pointer hover:border-[var(--primary)] transition-all"
+                      @click="$emit('click-approver', stageIndex, approverIndex)"
                     >
-                      {{ approverInitials(approver) }}
+                      <div
+                        class="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-medium"
+                        :class="
+                          approver.id
+                            ? 'bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] text-white'
+                            : 'bg-[var(--gray-bg)] text-[var(--sub)]'
+                        "
+                      >
+                        {{ approverInitials(approver) }}
+                      </div>
+                      <div class="min-w-0 flex-1">
+                        <div class="text-xs font-medium text-[var(--ink)] truncate">
+                          {{ approver.name || '选择' }}
+                        </div>
+                        <div class="text-[9px] text-[var(--sub)]">会签 {{ approverIndex + 1 }}</div>
+                      </div>
+                      <button
+                        v-if="!readonly"
+                        class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[var(--card)] border border-[var(--line)] hidden group-hover/approver:flex items-center justify-center text-[var(--sub)] hover:text-[var(--danger)]"
+                        @click.stop="removeApprover(stageIndex, approverIndex)"
+                      >
+                        <XqIcon name="close" size="8" />
+                      </button>
                     </div>
-                    <div class="flex flex-col min-w-[60px]">
-                      <span class="text-sm font-medium text-[var(--ink)] truncate">
-                        {{ approver.name || '选择' }}
-                      </span>
-                      <span class="text-[10px] text-[var(--sub)]">
-                        会签人 {{ approverIndex + 1 }}
-                      </span>
-                    </div>
-                    <button
-                      v-if="!readonly"
-                      class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[var(--card)] border border-[var(--line)] hidden group-hover/approver:flex items-center justify-center text-[var(--sub)] hover:text-[var(--danger)]"
-                      @click.stop="removeApprover(stageIndex, approverIndex)"
-                    >
-                      <XqIcon name="close" size="10" />
-                    </button>
-                  </div>
-                </template>
+                  </template>
 
-                <button
-                  v-if="!readonly"
-                  class="flex items-center gap-1 px-3 py-2 rounded-xl border border-dashed border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
-                  @click="addApprover(stageIndex)"
-                >
-                  <XqIcon name="plus" size="12" />
-                  <span class="text-xs">添加会签人</span>
-                </button>
+                  <button
+                    v-if="!readonly"
+                    class="flex items-center justify-center gap-1 p-2 rounded-xl border border-dashed border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
+                    @click="addApprover(stageIndex)"
+                  >
+                    <XqIcon name="plus" size="10" />
+                    <span class="text-[10px]">添加会签人</span>
+                  </button>
+                </div>
+
+                <!-- join 竖线 -->
+                <div class="relative w-4 flex-shrink-0">
+                  <div
+                    class="absolute left-1/2 top-0 bottom-0 w-px bg-[var(--primary)]/40 -translate-x-1/2"
+                  />
+                  <div
+                    class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rotate-45 border border-[var(--primary)]/40 bg-[var(--card)]"
+                  />
+                </div>
               </div>
 
-              <div class="flex items-center gap-1.5 text-[10px] text-[var(--primary)]">
-                <XqIcon name="check" size="10" />
-                <span>全部通过后才进入下一阶段</span>
-              </div>
+              <div class="mt-2 text-[9px] text-[var(--primary)] text-center">全部通过后才汇聚</div>
+            </div>
+
+            <!-- 阶段间添加按钮 -->
+            <div
+              v-if="!readonly"
+              class="absolute left-1/2 -bottom-3 -translate-x-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <button
+                class="w-5 h-5 rounded-full bg-[var(--primary)] text-white flex items-center justify-center shadow-sm hover:bg-[var(--primary-dark)]"
+                title="后接串行阶段"
+                @click.stop="addStage('serial', stageIndex)"
+              >
+                <XqIcon name="plus" size="10" />
+              </button>
             </div>
           </div>
+        </template>
 
-          <!-- 阶段间添加按钮 -->
-          <div
-            v-if="!readonly"
-            class="absolute left-1/2 -bottom-2 -translate-x-1/2 z-20 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
-          >
-            <button
-              class="w-6 h-6 rounded-full bg-[var(--primary)] text-white flex items-center justify-center shadow-sm hover:bg-[var(--primary-dark)]"
-              title="后接串行阶段"
-              @click.stop="addStage('serial', stageIndex)"
-            >
-              <XqIcon name="plus" size="12" />
-            </button>
+        <!-- 连接到结束 -->
+        <div v-if="hasStages" class="flex items-center px-2 flex-shrink-0">
+          <div class="w-8 h-px bg-[var(--line)] relative">
+            <div
+              class="absolute right-0 top-1/2 -translate-y-1/2 w-0 h-0 border-y-4 border-y-transparent border-l-[6px] border-l-[var(--line)]"
+            />
           </div>
         </div>
-      </template>
 
-      <!-- 结束节点 -->
-      <template v-if="hasStages">
-        <div class="w-px h-6 border-l border-dashed border-[var(--line)]" />
-        <div class="relative z-10 flex flex-col items-center">
+        <!-- 结束节点 -->
+        <div v-if="hasStages" class="flex flex-col items-center gap-1 flex-shrink-0">
           <div
-            class="w-8 h-8 rounded-full border-2 border-[var(--success)] text-[var(--success)] flex items-center justify-center text-[10px] font-medium bg-[var(--card)]"
+            class="w-9 h-9 rounded-full border-2 border-[var(--success)] text-[var(--success)] flex items-center justify-center text-[10px] font-medium bg-[var(--card)]"
           >
             结束
           </div>
         </div>
-      </template>
-
-      <!-- 底部添加阶段 -->
-      <div v-if="!readonly && hasStages" class="flex items-center justify-center gap-2 mt-5">
-        <button
-          class="flex items-center gap-1.5 px-3 py-2 text-sm rounded-full border border-dashed border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
-          @click="addStage('serial')"
-        >
-          <XqIcon name="plus" size="12" />
-          串行阶段
-        </button>
-        <button
-          class="flex items-center gap-1.5 px-3 py-2 text-sm rounded-full border border-dashed border-[var(--primary)]/50 text-[var(--primary)] hover:bg-[var(--primary-light)]/20 transition-colors"
-          @click="addStage('parallel')"
-        >
-          <XqIcon name="plus" size="12" />
-          并行阶段
-        </button>
       </div>
+    </div>
+
+    <!-- 底部添加阶段 -->
+    <div v-if="!readonly && hasStages" class="flex items-center justify-center gap-2">
+      <button
+        class="flex items-center gap-1.5 px-3 py-2 text-sm rounded-full border border-dashed border-[var(--line)] text-[var(--sub)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
+        @click="addStage('serial')"
+      >
+        <XqIcon name="plus" size="12" />
+        串行阶段
+      </button>
+      <button
+        class="flex items-center gap-1.5 px-3 py-2 text-sm rounded-full border border-dashed border-[var(--primary)]/50 text-[var(--primary)] hover:bg-[var(--primary-light)]/20 transition-colors"
+        @click="addStage('parallel')"
+      >
+        <XqIcon name="plus" size="12" />
+        并行阶段
+      </button>
     </div>
 
     <p class="text-xs text-[var(--sub)]">
