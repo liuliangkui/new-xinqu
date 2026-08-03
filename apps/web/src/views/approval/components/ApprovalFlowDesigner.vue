@@ -222,7 +222,7 @@ function addSelf(stageIndex: number, approverIndex: number) {
                       : 'border-[var(--line)] text-[var(--sub)]'
                   "
                 >
-                  {{ stage.mode === 'parallel' ? '并行' : '串行' }}
+                  {{ stage.mode === 'parallel' ? '并行 · 可多选' : '串行' }}
                 </span>
               </div>
 

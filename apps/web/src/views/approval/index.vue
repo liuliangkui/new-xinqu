@@ -264,6 +264,13 @@ const editingStageIndex = ref<number | null>(null)
 const editingApproverIndex = ref<number | null>(null)
 const pickerSelectedIds = ref<string[]>([])
 
+const pickerMultiple = computed(() => {
+  if (pickerTarget.value === 'cc') return true
+  const stages = composeForm.value.stages || []
+  const stage = editingStageIndex.value !== null ? stages[editingStageIndex.value] : undefined
+  return stage?.mode === 'parallel'
+})
+
 function computePickerInitialIds(): string[] {
   if (pickerTarget.value === 'cc') return composeForm.value.ccUserIds || []
   const stages = composeForm.value.stages || []
@@ -338,6 +345,11 @@ function openCcPicker(): void {
   pickerVisible.value = true
 }
 
+function buildUserName(id: string): string {
+  const user = userOptions.value.find((u) => u.value === id)
+  return user?.label.split(' ')[0] || id
+}
+
 function handlePickerConfirm(ids: string[]): void {
   const selected = ids.length > 0 ? ids : pickerSelectedIds.value
   if (pickerTarget.value === 'cc') {
@@ -346,25 +358,41 @@ function handlePickerConfirm(ids: string[]): void {
   }
   const stages = ensureStages()
   if (
-    editingStageIndex.value !== null &&
-    editingApproverIndex.value !== null &&
-    editingStageIndex.value < stages.length &&
-    selected.length > 0
+    editingStageIndex.value === null ||
+    editingApproverIndex.value === null ||
+    editingStageIndex.value >= stages.length ||
+    selected.length === 0
   ) {
+    return
+  }
+
+  const newStages = [...stages]
+  const stage = { ...newStages[editingStageIndex.value]! }
+
+  if (stage.mode === 'parallel') {
+    // 并行阶段：多选填充，从当前 slot 开始覆盖/追加
+    const approvers = [...stage.approvers]
+    const startIdx = editingApproverIndex.value
+    selected.forEach((id, idx) => {
+      const targetIdx = startIdx + idx
+      if (targetIdx < approvers.length) {
+        approvers[targetIdx] = { id, name: buildUserName(id) }
+      } else {
+        approvers.push({ id, name: buildUserName(id) })
+      }
+    })
+    stage.approvers = approvers
+  } else {
+    // 串行阶段：仅取第一个
     const selectedId = selected[0]
     if (!selectedId) return
-    const user = userOptions.value.find((u) => u.value === selectedId)
-    const newStages = [...stages]
-    const stage = { ...newStages[editingStageIndex.value]! }
     const approvers = [...stage.approvers]
-    approvers[editingApproverIndex.value] = {
-      id: selectedId,
-      name: user?.label.split(' ')[0] || selectedId,
-    }
+    approvers[editingApproverIndex.value] = { id: selectedId, name: buildUserName(selectedId) }
     stage.approvers = approvers
-    newStages[editingStageIndex.value] = stage
-    composeForm.value.stages = newStages
   }
+
+  newStages[editingStageIndex.value] = stage
+  composeForm.value.stages = newStages
 }
 
 function validateStages(stages?: ApprovalStage[]): { valid: boolean; message?: string } {
@@ -993,8 +1021,10 @@ function timelineItems() {
   <XqUserPicker
     v-model:visible="pickerVisible"
     :model-value="pickerSelectedIds"
-    :title="pickerTarget === 'cc' ? '选择抄送人' : '选择审批人'"
-    :multiple="pickerTarget === 'cc'"
+    :title="
+      pickerTarget === 'cc' ? '选择抄送人' : pickerMultiple ? '选择审批人（可多选）' : '选择审批人'
+    "
+    :multiple="pickerMultiple"
     @update:model-value="updatePickerSelectedIds"
     @confirm="handlePickerConfirm"
   />
