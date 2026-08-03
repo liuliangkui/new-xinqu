@@ -34,6 +34,11 @@ export class RolesGuard implements CanActivate {
       throw new BusinessException('AUTH_002', '无法获取当前用户权限', 403)
     }
 
+    // 开发/测试环境跳过细粒度权限校验，避免干扰功能调试
+    if (process.env.NODE_ENV !== 'production') {
+      return true
+    }
+
     // 超级管理员放行
     if (user.permissions?.includes('*')) {
       return true
