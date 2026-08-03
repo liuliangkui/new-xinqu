@@ -535,6 +535,11 @@ function buildRejectStageOptions() {
   })
 }
 
+function selectRejectStage(opt: ReturnType<typeof buildRejectStageOptions>[number]) {
+  actionRejectNodeIndex.value = opt.index
+  actionRejectAssigneeId.value = opt.approvers[0]?.id || null
+}
+
 function openAction(type: 'approve' | 'reject'): void {
   actionType.value = type
   actionComment.value = ''
@@ -1277,10 +1282,7 @@ function timelineItems() {
                   ? 'bg-[var(--danger-light)] text-[var(--danger)] border-[var(--danger)]'
                   : 'border-[var(--line)] text-[var(--ink)] hover:border-[var(--danger)]'
               "
-              @click="
-                actionRejectNodeIndex = opt.index
-                actionRejectAssigneeId = opt.approvers[0]?.id || null
-              "
+              @click="selectRejectStage(opt)"
             >
               <span
                 class="w-5 h-5 rounded-full bg-[var(--gray-bg)] text-xs flex items-center justify-center flex-shrink-0"
