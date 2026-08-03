@@ -25,14 +25,24 @@ export class ApprovalService {
   async findAll(user: CurrentUser, query: ApprovalQueryDto) {
     const { page = 1, pageSize = 20, keyword, module, status, tabType = 'all' } = query
 
+    // 基础查询条件（用于统计）：不包含 tabType/status 过滤，避免切换标签时数字变化
+    const baseWhere: Record<string, unknown> = { deletedAt: null }
+    if (keyword) {
+      baseWhere.OR = [{ title: { contains: keyword } }, { businessKey: { contains: keyword } }]
+    }
+    if (module) {
+      baseWhere.template = { module }
+    }
+
+    // 列表查询条件：在基础条件上叠加标签/状态过滤
+    const listWhere = { ...baseWhere }
+
     let workflowInstanceIds: string[] | undefined
     if (tabType === 'pending') {
       workflowInstanceIds = await this.findPendingWorkflowInstanceIds(user.userId)
     } else if (tabType === 'approved') {
       workflowInstanceIds = await this.findApprovedWorkflowInstanceIds(user.userId)
     }
-
-    const where: Record<string, unknown> = { deletedAt: null }
 
     if (workflowInstanceIds !== undefined) {
       if (workflowInstanceIds.length === 0) {
@@ -47,37 +57,31 @@ export class ApprovalService {
             total: 0,
             page,
             pageSize,
-            stats: this.emptyStats(),
+            stats: await this.buildStats(user.userId, baseWhere),
           }
         }
-        where.id = { in: localInstanceIds }
+        listWhere.id = { in: localInstanceIds }
       } else {
-        where.workflowInstanceId = { in: workflowInstanceIds }
+        listWhere.workflowInstanceId = { in: workflowInstanceIds }
       }
     }
 
     if (tabType === 'initiated') {
-      where.applicantId = user.userId
+      listWhere.applicantId = user.userId
     } else if (tabType === 'cc') {
-      where.ccRecords = { some: { userId: user.userId } }
+      listWhere.ccRecords = { some: { userId: user.userId } }
     }
 
-    if (keyword) {
-      where.OR = [{ title: { contains: keyword } }, { businessKey: { contains: keyword } }]
-    }
-    if (module) {
-      where.template = { module }
-    }
     if (status) {
-      where.status = status.toUpperCase()
+      listWhere.status = status.toUpperCase()
     }
     if (tabType === 'pending') {
-      where.status = 'PENDING'
+      listWhere.status = 'PENDING'
     }
 
-    const [list, total, allForStats, initiatedCount, ccCount] = await Promise.all([
+    const [list, total] = await Promise.all([
       this.prisma.approvalInstance.findMany({
-        where,
+        where: listWhere,
         skip: (page - 1) * pageSize,
         take: pageSize,
         orderBy: { createdAt: 'desc' },
@@ -87,31 +91,12 @@ export class ApprovalService {
           ccRecords: true,
         },
       }),
-      this.prisma.approvalInstance.count({ where }),
-      this.prisma.approvalInstance.findMany({
-        where,
-        select: { status: true },
-      }),
-      this.prisma.approvalInstance.count({
-        where: { deletedAt: null, applicantId: user.userId },
-      }),
-      this.prisma.approvalInstance.count({
-        where: { deletedAt: null, ccRecords: { some: { userId: user.userId } } },
-      }),
+      this.prisma.approvalInstance.count({ where: listWhere }),
     ])
 
     const userMap = await this.buildUserMap(list)
     const dtoList = list.map((item) => this.toApprovalDto(item, userMap))
-
-    const stats = {
-      totalCount: total,
-      pendingCount: allForStats.filter((a) => a.status === 'PENDING').length,
-      approvedCount: allForStats.filter((a) => a.status === 'APPROVED').length,
-      rejectedCount: allForStats.filter((a) => a.status === 'REJECTED').length,
-      withdrawnCount: allForStats.filter((a) => a.status === 'WITHDRAWN').length,
-      initiatedCount,
-      ccCount,
-    }
+    const stats = await this.buildStats(user.userId, baseWhere)
 
     return { list: dtoList, total, page, pageSize, stats }
   }
@@ -431,6 +416,53 @@ export class ApprovalService {
       initiatedCount: 0,
       ccCount: 0,
     }
+  }
+
+  private async buildStats(userId: string, baseWhere: Record<string, unknown>) {
+    const [totalCount, rejectedCount, withdrawnCount, initiatedCount, ccCount] = await Promise.all([
+      this.prisma.approvalInstance.count({ where: baseWhere }),
+      this.prisma.approvalInstance.count({ where: { ...baseWhere, status: 'REJECTED' } }),
+      this.prisma.approvalInstance.count({ where: { ...baseWhere, status: 'WITHDRAWN' } }),
+      this.prisma.approvalInstance.count({ where: { ...baseWhere, applicantId: userId } }),
+      this.prisma.approvalInstance.count({
+        where: { ...baseWhere, ccRecords: { some: { userId } } },
+      }),
+    ])
+
+    const [pendingCount, approvedCount] = await Promise.all([
+      this.countUserPending(userId, baseWhere),
+      this.countUserApproved(userId, baseWhere),
+    ])
+
+    return {
+      totalCount,
+      pendingCount,
+      approvedCount,
+      rejectedCount,
+      withdrawnCount,
+      initiatedCount,
+      ccCount,
+    }
+  }
+
+  private async countUserPending(userId: string, baseWhere: Record<string, unknown>): Promise<number> {
+    const [workflowIds, localIds] = await Promise.all([
+      this.findPendingWorkflowInstanceIds(userId).catch(() => [] as string[]),
+      this.findLocalPendingInstanceIds(userId),
+    ])
+    const ids = [...new Set([...workflowIds, ...localIds])]
+    if (ids.length === 0) return 0
+    return this.prisma.approvalInstance.count({ where: { ...baseWhere, id: { in: ids } } })
+  }
+
+  private async countUserApproved(userId: string, baseWhere: Record<string, unknown>): Promise<number> {
+    const [workflowIds, localIds] = await Promise.all([
+      this.findApprovedWorkflowInstanceIds(userId).catch(() => [] as string[]),
+      this.findLocalApprovedInstanceIds(userId),
+    ])
+    const ids = [...new Set([...workflowIds, ...localIds])]
+    if (ids.length === 0) return 0
+    return this.prisma.approvalInstance.count({ where: { ...baseWhere, id: { in: ids } } })
   }
 
   private async findPendingWorkflowInstanceIds(userId: string): Promise<string[]> {
