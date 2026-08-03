@@ -92,6 +92,8 @@ const paths: Record<string, string> = {
   'corner-up-left': 'M19 17.59L17.59 19 7 8.41V15H5V5h10v2H8.41L19 17.59z',
   'map-pin':
     'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
+  'arrow-up': 'M4 12l1.41 1.41L11 7.83V20h2V7.83l5.59 5.58L20 12 12 4z',
+  'arrow-down': 'M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.59-5.58L4 12l8 8z',
 }
 
 const path = computed(() => paths[props.name] || paths.search)
