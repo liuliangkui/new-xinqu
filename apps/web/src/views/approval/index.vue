@@ -26,6 +26,7 @@ import {
 } from './api'
 import { getUserList, type UserItem } from '@/api/user'
 import { useAuthStore } from '@/stores/auth'
+import dayjs from 'dayjs'
 
 const isMobile = ref(false)
 const authStore = useAuthStore()
@@ -556,7 +557,7 @@ async function handleWithdraw(): Promise<void> {
 
 function formatTime(iso?: string): string {
   if (!iso) return '-'
-  return iso.slice(0, 16).replace('T', ' ')
+  return dayjs(iso).format('YYYY-MM-DD HH:mm')
 }
 
 function approvalSnippet(approval: Approval): string {
@@ -695,9 +696,11 @@ function timelineItems() {
         <template #createdAt="{ value, record }">
           <div class="flex items-center justify-between gap-3">
             <div class="flex flex-col text-sm text-right">
-              <span class="text-[var(--sub)]">{{ value ? value.slice(0, 10) : '-' }}</span>
+              <span class="text-[var(--sub)]">{{
+                value ? dayjs(value).format('MM-DD') : '-'
+              }}</span>
               <span class="text-xs text-[var(--placeholder)]">{{
-                value ? value.slice(11, 16) : ''
+                value ? dayjs(value).format('HH:mm') : ''
               }}</span>
             </div>
             <button
@@ -754,7 +757,7 @@ function timelineItems() {
                 <span class="text-[var(--sub)]">{{ record.applicantName || '-' }}</span>
               </div>
               <span class="text-xs text-[var(--placeholder)]">{{
-                record.createdAt.slice(0, 10)
+                dayjs(record.createdAt).format('YYYY-MM-DD')
               }}</span>
             </div>
             <button
