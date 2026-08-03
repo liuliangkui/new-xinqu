@@ -245,6 +245,10 @@ function computePickerInitialIds(): string[] {
   return node?.assigneeId ? [node.assigneeId] : []
 }
 
+function updatePickerSelectedIds(val: string[]): void {
+  pickerSelectedIds.value = val
+}
+
 function openCompose(): void {
   composeForm.value = emptyForm()
   composeVisible.value = true
@@ -811,7 +815,7 @@ function timelineItems() {
     :model-value="pickerSelectedIds"
     :title="pickerTarget === 'cc' ? '选择抄送人' : '选择审批人'"
     :multiple="pickerTarget === 'cc'"
-    @update:model-value="(val: string[]) => (pickerSelectedIds = val)"
+    @update:model-value="updatePickerSelectedIds"
     @confirm="handlePickerConfirm"
   />
 
