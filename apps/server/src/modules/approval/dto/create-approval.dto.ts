@@ -25,6 +25,16 @@ export class CreateApprovalDto {
   @IsEnum(['leave', 'expense', 'contract', 'discount', 'purchase', 'other'])
   module?: string
 
+  @ApiPropertyOptional({ description: '紧急程度', enum: ['normal', 'urgent'] })
+  @IsOptional()
+  @IsEnum(['normal', 'urgent'])
+  priority?: string
+
+  @ApiPropertyOptional({ description: '指定审批人ID（为空则默认系统管理员）' })
+  @IsOptional()
+  @IsString()
+  approverId?: string
+
   @ApiPropertyOptional({ description: '表单数据' })
   @IsOptional()
   @IsObject()

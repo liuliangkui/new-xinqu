@@ -43,6 +43,29 @@ export interface FlowableProcessInstance {
   suspended: boolean
 }
 
+export interface FlowableTask {
+  id: string
+  url?: string
+  name?: string
+  taskDefinitionKey?: string
+  assignee?: string
+  owner?: string
+  created?: string
+  due?: string
+  followUp?: string
+  delegationState?: string
+  description?: string
+  executionId?: string
+  processInstanceId?: string
+  processDefinitionId?: string
+  caseExecutionId?: string
+  caseInstanceId?: string
+  caseDefinitionId?: string
+  suspended?: boolean
+  formKey?: string
+  tenantId?: string
+}
+
 /**
  * 工作流引擎 REST 客户端
  *
@@ -175,6 +198,56 @@ export class FlowableService {
       return data as FlowableProcessInstance
     } catch (error) {
       this.handleError(error, 'getProcessInstance')
+    }
+  }
+
+  async getTasks(params?: {
+    processInstanceId?: string
+    processDefinitionId?: string
+    assignee?: string
+    assigneeLike?: string
+    candidateUser?: string
+    candidateGroup?: string
+    taskDefinitionKey?: string
+    active?: boolean
+  }): Promise<FlowableTask[]> {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.get(`${this.baseUrl}/task`, {
+          auth: this.auth,
+          params: params || {},
+        }),
+      )
+      return (Array.isArray(data) ? data : data.data || []) as FlowableTask[]
+    } catch (error) {
+      this.handleError(error, 'getTasks')
+    }
+  }
+
+  async completeTask(taskId: string, variables?: Record<string, unknown>): Promise<void> {
+    try {
+      await firstValueFrom(
+        this.httpService.post(
+          `${this.baseUrl}/task/${taskId}/complete`,
+          { variables: this.toCamundaVariables(variables) },
+          { auth: this.auth },
+        ),
+      )
+    } catch (error) {
+      this.handleError(error, 'completeTask')
+    }
+  }
+
+  async deleteProcessInstance(instanceId: string, reason = 'withdrawn'): Promise<void> {
+    try {
+      await firstValueFrom(
+        this.httpService.delete(`${this.baseUrl}/process-instance/${instanceId}`, {
+          auth: this.auth,
+          params: { deleteReason: reason },
+        }),
+      )
+    } catch (error) {
+      this.handleError(error, 'deleteProcessInstance')
     }
   }
 }

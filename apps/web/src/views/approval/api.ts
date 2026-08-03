@@ -11,7 +11,7 @@ const BASE = '/approvals'
 export function getApprovalList(params: ApprovalListParams): Promise<ApprovalListResult> {
   return get<ApprovalListResult>(BASE, {
     page: params.pageNum,
-    size: params.pageSize,
+    pageSize: params.pageSize,
     keyword: params.keyword,
     module: params.module,
     status: params.status,
@@ -37,4 +37,19 @@ export function updateApproval(approvalId: string, data: Partial<ApprovalForm>):
 /** 删除审批 */
 export function deleteApproval(approvalId: string): Promise<unknown> {
   return del<unknown>(`${BASE}/${approvalId}`)
+}
+
+/** 审批通过 */
+export function approveApproval(approvalId: string, comment?: string): Promise<Approval> {
+  return post<Approval>(`${BASE}/${approvalId}/approve`, { comment })
+}
+
+/** 审批驳回 */
+export function rejectApproval(approvalId: string, comment?: string): Promise<Approval> {
+  return post<Approval>(`${BASE}/${approvalId}/reject`, { comment })
+}
+
+/** 撤回审批 */
+export function withdrawApproval(approvalId: string): Promise<unknown> {
+  return post<unknown>(`${BASE}/${approvalId}/withdraw`, {})
 }

@@ -693,38 +693,42 @@ model CalendarEvent {
 // 审批中心
 // ======================
 model ApprovalTemplate {
-  id         String    @id @default(cuid())
-  name       String
-  code       String    @unique
-  module     String // LEAVE / EXPENSE / CONTRACT / DISCOUNT ...
-  formSchema Json // 表单字段定义
-  flowNodes  Json // 审批节点 [{ nodeId, name, approverType, approvers, conditions }]
-  status     String    @default("ACTIVE")
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  deletedAt  DateTime?
+  id                  String    @id @default(cuid())
+  name                String
+  code                String    @unique
+  module              String // LEAVE / EXPENSE / CONTRACT / DISCOUNT ...
+  formSchema          Json // 表单字段定义
+  flowNodes           Json // 审批节点 [{ nodeId, name, approverType, approvers, conditions }]
+  workflowDefinitionId String?  @map("workflow_definition_id")
+  status              String    @default("ACTIVE")
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime?
 
-  instances ApprovalInstance[]
+  instances          ApprovalInstance[]
+  workflowDefinition WorkflowDefinition? @relation(fields: [workflowDefinitionId], references: [id])
 
   @@index([module])
   @@index([status])
   @@index([deletedAt])
+  @@index([workflowDefinitionId])
   @@map("approval_templates")
 }
 
 model ApprovalInstance {
-  id            String    @id @default(cuid())
-  templateId    String
-  applicantId   String
-  title         String
-  businessKey   String?
-  payload       Json
-  status        String    @default("PENDING") // PENDING / APPROVED / REJECTED / WITHDRAWN
-  currentNodeId String?
-  createdAt     DateTime  @default(now())
-  completedAt   DateTime?
-  updatedAt     DateTime  @updatedAt
-  deletedAt     DateTime?
+  id                 String    @id @default(cuid())
+  templateId         String
+  applicantId        String
+  title              String
+  businessKey        String?
+  payload            Json
+  status             String    @default("PENDING") // PENDING / APPROVED / REJECTED / WITHDRAWN
+  currentNodeId      String?
+  workflowInstanceId String?   @map("workflow_instance_id")
+  createdAt          DateTime  @default(now())
+  completedAt        DateTime?
+  updatedAt          DateTime  @updatedAt
+  deletedAt          DateTime?
 
   template ApprovalTemplate @relation(fields: [templateId], references: [id])
   tasks    ApprovalTask[]
@@ -734,6 +738,7 @@ model ApprovalInstance {
   @@index([status])
   @@index([templateId])
   @@index([deletedAt])
+  @@index([workflowInstanceId])
   @@map("approval_instances")
 }
 
@@ -946,6 +951,7 @@ model WorkflowDefinition {
   deletedAt            DateTime?
 
   instances WorkflowInstance[]
+  approvalTemplates ApprovalTemplate[]
 
   @@index([module])
   @@index([status])

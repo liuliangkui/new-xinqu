@@ -6,18 +6,48 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import type { NavTabItem, StatusMap } from '@/types/common'
 import type { Approval, ApprovalForm, ApprovalListParams, ApprovalStats } from './types'
 import { ApprovalModule, ApprovalStatus, ApprovalPriority } from './types'
-import { getApprovalList, createApproval, updateApproval, deleteApproval } from './api'
+import {
+  getApprovalList,
+  createApproval,
+  updateApproval,
+  deleteApproval,
+  approveApproval,
+  rejectApproval,
+  withdrawApproval,
+} from './api'
+import { getUserList, type UserItem } from '@/api/user'
+import { useAuthStore } from '@/stores/auth'
 
 const isMobile = ref(false)
+const authStore = useAuthStore()
+const userOptions = ref<{ value: string; label: string }[]>([])
 
 function checkMobile(): void {
   isMobile.value = window.innerWidth < 768
+}
+
+async function fetchUsers() {
+  try {
+    const res = await getUserList({ page: 1, size: 100 })
+    userOptions.value = (res.list || []).map((u: UserItem) => ({
+      value: u.id,
+      label: `${u.name} (${u.username})`,
+    }))
+  } catch {
+    userOptions.value = [
+      { value: 'user_admin', label: '系统管理员' },
+      { value: 'user_sales_01', label: '张销售' },
+      { value: 'user_region_01', label: '王经理' },
+      { value: 'user_readonly_01', label: '李只读' },
+    ]
+  }
 }
 
 onMounted(() => {
   checkMobile()
   window.addEventListener('resize', checkMobile)
   fetchList()
+  fetchUsers()
 })
 
 onUnmounted(() => {
@@ -117,7 +147,7 @@ const tableColumns = [
   { title: '操作', dataIndex: 'actions', width: '120px', fixed: 'right' as const },
 ]
 
-const formFields = [
+const formFields = computed(() => [
   { key: 'title', label: '审批标题', required: true, placeholder: '请输入审批标题' },
   {
     key: 'module',
@@ -143,11 +173,22 @@ const formFields = [
       { value: 'urgent', label: '紧急' },
     ],
   },
+  {
+    key: 'approverId',
+    label: '审批人',
+    type: 'select' as const,
+    required: true,
+    options: userOptions.value.length
+      ? userOptions.value
+      : [
+          { value: 'user_admin', label: '系统管理员' },
+          { value: 'user_sales_01', label: '张销售' },
+        ],
+  },
   { key: 'businessKey', label: '业务编号', placeholder: '请输入业务编号' },
   {
     key: 'payload.amount',
     label: '金额',
-    type: 'number' as const,
     placeholder: '请输入金额',
   },
   {
@@ -156,13 +197,14 @@ const formFields = [
     type: 'textarea' as const,
     placeholder: '请输入申请理由',
   },
-]
+])
 
 function emptyForm(): ApprovalForm {
   return {
     title: '',
     module: ApprovalModule.OTHER,
     priority: ApprovalPriority.NORMAL,
+    approverId: 'user_admin',
     businessKey: '',
     payload: { amount: 0, reason: '' },
   }
@@ -237,6 +279,7 @@ function openEdit(approval: Approval): void {
     title: approval.title,
     module: approval.module,
     priority: approval.priority,
+    approverId: (approval.payload?.approverId as string) || 'user_admin',
     businessKey: approval.businessKey,
     payload: approval.payload || {},
   }
@@ -251,6 +294,7 @@ async function handleFormSubmit(values: Record<string, unknown>): Promise<void> 
       title: String(values.title || ''),
       module: String(values.module || ApprovalModule.OTHER) as ApprovalModule,
       priority: String(values.priority || ApprovalPriority.NORMAL) as ApprovalPriority,
+      approverId: String(values.approverId || 'user_admin'),
       businessKey: values.businessKey ? String(values.businessKey) : undefined,
       payload: {
         amount: Number(values['payload.amount'] || 0),
@@ -281,12 +325,63 @@ async function handleDelete(approval: Approval): Promise<void> {
   }
 }
 
-function handleApprove(): void {
-  window.alert('审批通过功能将在下一批次实现')
+const actionLoading = ref(false)
+
+function canApprove(record: Approval | null): boolean {
+  if (!record || record.status !== ApprovalStatus.PENDING) return false
+  const currentTask = record.tasks?.find((t) => !t.action)
+  if (!currentTask) return false
+  return currentTask.assigneeId === authStore.user?.id || authStore.hasRole('super_admin')
 }
 
-function handleReject(): void {
-  window.alert('审批驳回功能将在下一批次实现')
+function canWithdraw(record: Approval | null): boolean {
+  if (!record || record.status !== ApprovalStatus.PENDING) return false
+  return record.applicantId === authStore.user?.id || authStore.hasRole('super_admin')
+}
+
+async function handleApprove(): Promise<void> {
+  if (!detailApproval.value) return
+  const comment = window.prompt('请输入审批意见（可选）') || undefined
+  actionLoading.value = true
+  try {
+    await approveApproval(detailApproval.value.approvalId, comment)
+    detailVisible.value = false
+    await fetchList()
+  } catch (e) {
+    window.alert(e instanceof Error ? e.message : '审批通过失败')
+  } finally {
+    actionLoading.value = false
+  }
+}
+
+async function handleReject(): Promise<void> {
+  if (!detailApproval.value) return
+  const comment = window.prompt('请输入驳回意见（可选）') || undefined
+  actionLoading.value = true
+  try {
+    await rejectApproval(detailApproval.value.approvalId, comment)
+    detailVisible.value = false
+    await fetchList()
+  } catch (e) {
+    window.alert(e instanceof Error ? e.message : '审批驳回失败')
+  } finally {
+    actionLoading.value = false
+  }
+}
+
+async function handleWithdraw(): Promise<void> {
+  if (!detailApproval.value) return
+  if (!window.confirm('确定撤回该审批吗？')) return
+  actionLoading.value = true
+  try {
+    await withdrawApproval(detailApproval.value.approvalId)
+    detailVisible.value = false
+    await fetchList()
+  } catch (e) {
+    window.alert(e instanceof Error ? e.message : '撤回失败')
+  } finally {
+    actionLoading.value = false
+  }
 }
 </script>
 
@@ -531,13 +626,36 @@ function handleReject(): void {
       </div>
     </div>
     <template #footer>
-      <button class="btn btn-ghost flex-1" @click="openEdit(detailApproval!)">
+      <button
+        v-if="detailApproval?.status === ApprovalStatus.PENDING"
+        class="btn btn-ghost flex-1"
+        :disabled="actionLoading"
+        @click="openEdit(detailApproval!)"
+      >
         <XqIcon name="edit" size="14" />编辑
       </button>
-      <button class="btn btn-danger flex-1" @click="handleReject">
+      <button
+        v-if="canWithdraw(detailApproval)"
+        class="btn btn-ghost flex-1"
+        :disabled="actionLoading"
+        @click="handleWithdraw"
+      >
+        <XqIcon name="arrow-left" size="14" />撤回
+      </button>
+      <button
+        v-if="canApprove(detailApproval)"
+        class="btn btn-danger flex-1"
+        :disabled="actionLoading"
+        @click="handleReject"
+      >
         <XqIcon name="close" size="14" />驳回
       </button>
-      <button class="btn btn-primary flex-1" @click="handleApprove">
+      <button
+        v-if="canApprove(detailApproval)"
+        class="btn btn-primary flex-1"
+        :disabled="actionLoading"
+        @click="handleApprove"
+      >
         <XqIcon name="check" size="14" />通过
       </button>
     </template>

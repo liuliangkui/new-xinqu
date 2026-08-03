@@ -65,6 +65,7 @@ export interface ApprovalForm {
   businessKey?: string
   module?: ApprovalModule
   priority?: ApprovalPriority
+  approverId?: string
   payload?: Record<string, unknown>
   ccUserNames?: string[]
 }

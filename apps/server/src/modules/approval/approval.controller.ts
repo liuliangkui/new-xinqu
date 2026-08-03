@@ -5,6 +5,7 @@ import { ApprovalService } from './approval.service'
 import { CreateApprovalDto } from './dto/create-approval.dto'
 import { UpdateApprovalDto } from './dto/update-approval.dto'
 import { ApprovalQueryDto } from './dto/approval-query.dto'
+import { ApprovalActionDto } from './dto/approval-action.dto'
 import type { Request } from 'express'
 
 @ApiTags('审批中心')
@@ -46,10 +47,36 @@ export class ApprovalController {
 
   @Put(':id')
   @Permissions('approval:update')
-  @ApiOperation({ summary: '更新审批/审批操作' })
+  @ApiOperation({ summary: '更新审批' })
   @ApiResponse({ status: 200, description: '更新成功' })
   update(@Param('id') id: string, @Body() dto: UpdateApprovalDto) {
     return this.approvalService.update(id, dto)
+  }
+
+  @Post(':id/approve')
+  @Permissions('approval:update')
+  @ApiOperation({ summary: '审批通过' })
+  @ApiResponse({ status: 200, description: '审批通过成功' })
+  approve(@Req() req: Request, @Param('id') id: string, @Body() dto: ApprovalActionDto) {
+    const user = this.getCurrentUser(req)
+    return this.approvalService.action(id, user.userId, 'APPROVE', dto.comment)
+  }
+
+  @Post(':id/reject')
+  @Permissions('approval:update')
+  @ApiOperation({ summary: '审批驳回' })
+  @ApiResponse({ status: 200, description: '审批驳回成功' })
+  reject(@Req() req: Request, @Param('id') id: string, @Body() dto: ApprovalActionDto) {
+    const user = this.getCurrentUser(req)
+    return this.approvalService.action(id, user.userId, 'REJECT', dto.comment)
+  }
+
+  @Post(':id/withdraw')
+  @Permissions('approval:update')
+  @ApiOperation({ summary: '撤回审批' })
+  @ApiResponse({ status: 200, description: '撤回成功' })
+  withdraw(@Param('id') id: string) {
+    return this.approvalService.withdraw(id)
   }
 
   @Delete(':id')
