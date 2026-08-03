@@ -14,6 +14,7 @@ import type {
 } from './types'
 import { ApprovalModule, ApprovalStatus, ApprovalPriority } from './types'
 import ApprovalFlowDesigner from './components/ApprovalFlowDesigner.vue'
+import XqUserPicker from '@/components/xq/XqUserPicker/index.vue'
 import {
   getApprovalList,
   createApproval,
