@@ -63,6 +63,8 @@ export class WorkbenchService {
       : []
     const appMap = new Map(apps.map((a) => [a.id, a]))
 
+    const todos = await this.buildTodos(user, baseWhere)
+
     return {
       stats: {
         pendingTaskCount: pendingTasks,
@@ -81,6 +83,81 @@ export class WorkbenchService {
           icon: app?.icon,
         }
       }),
+      todos,
     }
+  }
+
+  private async buildTodos(user: CurrentUser, baseWhere: { deletedAt: null }) {
+    const [taskTodos, approvalTodos, messageTodos] = await Promise.all([
+      this.prisma.task.findMany({
+        where: await this.dataScope.apply(user, 'task', {
+          ...baseWhere,
+          status: 'PENDING',
+          OR: [{ ownerId: user.userId }, { assigneeIds: { has: user.userId } }],
+        }),
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+        select: { id: true, title: true, createdAt: true, priority: true },
+      }),
+      this.prisma.approvalInstance.findMany({
+        where: await this.dataScope.apply(user, 'approval', {
+          ...baseWhere,
+          status: 'pending',
+          tasks: { some: { assigneeId: user.userId, action: null } },
+        }),
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+        select: { id: true, title: true, createdAt: true },
+      }),
+      this.prisma.message.findMany({
+        where: {
+          receiverId: user.userId,
+          readAt: null,
+          deletedAt: null,
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+        select: { id: true, title: true, createdAt: true },
+      }),
+    ])
+
+    const list: Array<{
+      todoId: string
+      title: string
+      type: 'task' | 'approval' | 'message'
+      description?: string
+      time: string
+      status?: string
+    }> = []
+
+    taskTodos.forEach((t) =>
+      list.push({
+        todoId: `task_${t.id}`,
+        title: t.title,
+        type: 'task',
+        description: String(t.priority || ''),
+        time: t.createdAt.toISOString(),
+      }),
+    )
+    approvalTodos.forEach((t) =>
+      list.push({
+        todoId: `approval_${t.id}`,
+        title: t.title,
+        type: 'approval',
+        description: '待审批',
+        time: t.createdAt.toISOString(),
+      }),
+    )
+    messageTodos.forEach((t) =>
+      list.push({
+        todoId: `message_${t.id}`,
+        title: t.title,
+        type: 'message',
+        description: '未读消息',
+        time: t.createdAt.toISOString(),
+      }),
+    )
+
+    return list.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()).slice(0, 10)
   }
 }
