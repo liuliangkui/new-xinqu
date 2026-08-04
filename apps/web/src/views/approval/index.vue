@@ -100,10 +100,10 @@ const statusMap: StatusMap = {
 }
 
 const statusColorMap: Record<string, string> = {
-  pending: '#f59e0b',
-  approved: '#10b981',
-  rejected: '#ef4444',
-  withdrawn: '#9ca3af',
+  PENDING: '#f59e0b',
+  APPROVED: '#10b981',
+  REJECTED: '#ef4444',
+  WITHDRAWN: '#9ca3af',
 }
 
 function statusColor(status?: string): string {

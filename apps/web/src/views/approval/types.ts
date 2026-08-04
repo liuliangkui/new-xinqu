@@ -12,10 +12,10 @@ export enum ApprovalModule {
 }
 
 export enum ApprovalStatus {
-  PENDING = 'pending',
-  APPROVED = 'approved',
-  REJECTED = 'rejected',
-  WITHDRAWN = 'withdrawn',
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  WITHDRAWN = 'WITHDRAWN',
 }
 
 export enum ApprovalPriority {
