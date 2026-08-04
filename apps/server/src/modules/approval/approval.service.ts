@@ -358,6 +358,23 @@ export class ApprovalService {
       await this.flowable.deleteProcessInstance(instance.workflowInstanceId, 'withdrawn')
     }
 
+    // 清理本地未完成任务，避免撤回后仍出现在待审清单
+    await this.prisma.approvalTask.deleteMany({
+      where: { instanceId: id, action: null },
+    })
+
+    // 记录撤回节点，方便时间轴展示
+    await this.prisma.approvalTask.create({
+      data: {
+        instanceId: id,
+        nodeId: 'withdraw',
+        assigneeId: instance.applicantId,
+        action: 'withdraw',
+        comment: '发起人撤回',
+        completedAt: new Date(),
+      },
+    })
+
     await this.prisma.approvalInstance.update({
       where: { id },
       data: { status: 'WITHDRAWN', completedAt: new Date() },
@@ -404,7 +421,7 @@ export class ApprovalService {
       const approved = variableMap.get(approvalVar)
       const cmt = variableMap.get(commentVar)
       const isFinished = !!a.endTime
-      let action: 'approve' | 'reject' | undefined
+      let action: 'approve' | 'reject' | 'withdraw' | undefined
       if (isFinished) {
         action = approved === true || approved === 'true' ? 'approve' : 'reject'
       }
@@ -419,6 +436,20 @@ export class ApprovalService {
         endTime: a.endTime,
       }
     })
+
+    // 已撤回的流程，追加撤回节点
+    if (instance.status === 'WITHDRAWN') {
+      timeline.push({
+        nodeId: 'withdraw',
+        nodeName: '发起人撤回',
+        assigneeId: instance.applicantId,
+        assigneeName: userMap.get(instance.applicantId) || instance.applicantId,
+        action: 'withdraw',
+        comment: '发起人撤回',
+        startTime: instance.completedAt?.toISOString(),
+        endTime: instance.completedAt?.toISOString(),
+      })
+    }
 
     return { instanceId: id, timeline }
   }

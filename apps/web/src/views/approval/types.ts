@@ -46,7 +46,7 @@ export interface ApprovalTask {
   nodeId?: string
   assigneeId?: string
   assigneeName?: string
-  action?: 'approve' | 'reject' | 'transfer'
+  action?: 'approve' | 'reject' | 'transfer' | 'withdraw'
   comment?: string
   createdAt?: string
   completedAt?: string

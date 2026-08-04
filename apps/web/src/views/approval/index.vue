@@ -614,7 +614,13 @@ function timelineItems() {
   return timeline.value.map((node) => ({
     time: node.endTime ? formatTime(node.endTime) : formatTime(node.startTime),
     title: `${node.nodeName || node.nodeId} · ${
-      node.action === 'approve' ? '已通过' : node.action === 'reject' ? '已驳回' : '待审批'
+      node.action === 'approve'
+        ? '已通过'
+        : node.action === 'reject'
+          ? '已驳回'
+          : node.action === 'withdraw'
+            ? '已撤回'
+            : '待审批'
     }`,
     content: node.comment || undefined,
     operator: node.assigneeName || node.assigneeId || '-',
@@ -624,7 +630,9 @@ function timelineItems() {
         ? 'var(--success)'
         : node.action === 'reject'
           ? 'var(--danger)'
-          : 'var(--warning)',
+          : node.action === 'withdraw'
+            ? 'var(--sub)'
+            : 'var(--warning)',
   }))
 }
 </script>
