@@ -73,3 +73,8 @@ export function rejectApproval(
 export function withdrawApproval(approvalId: string): Promise<unknown> {
   return post<unknown>(`${BASE}/${approvalId}/withdraw`, {})
 }
+
+/** 撤销本人审批操作 */
+export function undoApproval(approvalId: string): Promise<Approval> {
+  return post<Approval>(`${BASE}/${approvalId}/undo`, {})
+}

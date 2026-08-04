@@ -382,6 +382,67 @@ export class ApprovalService {
     return { success: true }
   }
 
+  async undo(id: string, userId: string) {
+    const instance = await this.prisma.approvalInstance.findUnique({
+      where: { id },
+      include: { tasks: true },
+    })
+    if (!instance) throw new NotFoundException('审批不存在')
+    if (instance.status !== 'PENDING') throw new ConflictException('只有进行中的审批可撤销')
+    if (instance.workflowInstanceId) {
+      throw new ConflictException('当前仅支持本地审批模式撤销本人操作')
+    }
+
+    const completedTasks = instance.tasks.filter((t) => t.assigneeId === userId && t.action)
+    if (completedTasks.length === 0) {
+      throw new ConflictException('您没有已完成的审批操作可撤销')
+    }
+
+    // 取用户最近一次完成的审批任务
+    const userLatest = completedTasks.sort(
+      (a, b) => new Date(b.completedAt!).getTime() - new Date(a.completedAt!).getTime(),
+    )[0]
+    if (!userLatest?.completedAt) {
+      throw new ConflictException('无法确定可撤销的操作')
+    }
+
+    // 必须没有后续人员完成审批
+    const laterCompleted = instance.tasks.filter(
+      (t) =>
+        t.action && t.completedAt && new Date(t.completedAt).getTime() > new Date(userLatest.completedAt).getTime(),
+    )
+    if (laterCompleted.length > 0) {
+      throw new ConflictException('后续已有审批操作，无法撤销')
+    }
+
+    // 必须还存在待审任务（否则说明已到最后一级，流程即将结束）
+    const pendingTasks = instance.tasks.filter((t) => !t.action)
+    if (pendingTasks.length === 0) {
+      throw new ConflictException('流程已结束或无待审任务，无法撤销')
+    }
+
+    const userStageIndex = this.parseStageIndex(userLatest.nodeId)
+
+    // 删除下一级已经生成的待审任务，回退到用户这一级
+    const tasksToDelete = pendingTasks.filter((t) => this.parseStageIndex(t.nodeId) > userStageIndex)
+    if (tasksToDelete.length > 0) {
+      await this.prisma.approvalTask.deleteMany({
+        where: { id: { in: tasksToDelete.map((t) => t.id) } },
+      })
+    }
+
+    // 给用户重新生成一条待审任务，保留原有完成记录作为历史
+    await this.prisma.approvalTask.create({
+      data: {
+        instanceId: id,
+        nodeId: userLatest.nodeId,
+        assigneeId: userId,
+      },
+    })
+
+    return this.findOne(id)
+  }
+
   async getTimeline(id: string) {
     const instance = await this.prisma.approvalInstance.findUnique({
       where: { id },

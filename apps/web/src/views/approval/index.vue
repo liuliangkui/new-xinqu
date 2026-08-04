@@ -22,6 +22,7 @@ import {
   approveApproval,
   rejectApproval,
   withdrawApproval,
+  undoApproval,
   getApprovalTimeline,
 } from './api'
 import { getUserList, type UserItem } from '@/api/user'
@@ -506,6 +507,34 @@ function canWithdraw(record: Approval | null): boolean {
   return record.applicantId === authStore.user?.id || authStore.hasRole('super_admin')
 }
 
+function canUndo(record: Approval | null): boolean {
+  if (!record || record.status !== ApprovalStatus.PENDING) return false
+  const userId = authStore.user?.id
+  if (!userId) return false
+
+  const completedTasks =
+    record.tasks?.filter((t) => t.assigneeId === userId && t.action && t.completedAt) ?? []
+  if (completedTasks.length === 0) return false
+
+  const latestCompleted = completedTasks.sort(
+    (a, b) => new Date(b.completedAt!).getTime() - new Date(a.completedAt!).getTime(),
+  )[0]
+  if (!latestCompleted?.completedAt) return false
+
+  const latestCompletedTime = new Date(latestCompleted.completedAt).getTime()
+  const hasLaterCompleted = record.tasks?.some(
+    (t) =>
+      t.action &&
+      t.completedAt &&
+      t.assigneeId !== userId &&
+      new Date(t.completedAt).getTime() > latestCompletedTime,
+  )
+  if (hasLaterCompleted) return false
+
+  // 必须还有未完成的待审任务（即下一级尚未处理完）
+  return (record.tasks?.filter((t) => !t.action).length ?? 0) > 0
+}
+
 function buildRejectStageOptions() {
   const approval = detailApproval.value
   if (!approval) return []
@@ -592,6 +621,21 @@ async function handleWithdraw(): Promise<void> {
     await fetchList()
   } catch (e) {
     window.alert(e instanceof Error ? e.message : '撤回失败')
+  } finally {
+    actionLoading.value = false
+  }
+}
+
+async function handleUndo(): Promise<void> {
+  if (!detailApproval.value) return
+  if (!window.confirm('撤销后下一级已生成的待审任务将被收回，您需要重新审批。确定撤销吗？')) return
+  actionLoading.value = true
+  try {
+    await undoApproval(detailApproval.value.approvalId)
+    await openDetail(detailApproval.value)
+    await fetchList()
+  } catch (e) {
+    window.alert(e instanceof Error ? e.message : '撤销失败')
   } finally {
     actionLoading.value = false
   }
@@ -1168,6 +1212,14 @@ function timelineItems() {
         @click="handleWithdraw"
       >
         <XqIcon name="arrow-left" size="14" />撤回
+      </button>
+      <button
+        v-if="canUndo(detailApproval)"
+        class="btn btn-warning"
+        :disabled="actionLoading"
+        @click="handleUndo"
+      >
+        <XqIcon name="rotate-ccw" size="14" />撤销本人审批
       </button>
       <button
         v-if="canApprove(detailApproval)"

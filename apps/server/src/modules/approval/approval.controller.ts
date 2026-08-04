@@ -94,6 +94,15 @@ export class ApprovalController {
     return this.approvalService.withdraw(id)
   }
 
+  @Post(':id/undo')
+  @Permissions('approval:update')
+  @ApiOperation({ summary: '撤销本人审批操作' })
+  @ApiResponse({ status: 200, description: '撤销成功' })
+  undo(@Req() req: Request, @Param('id') id: string) {
+    const user = this.getCurrentUser(req)
+    return this.approvalService.undo(id, user.userId)
+  }
+
   @Delete(':id')
   @Permissions('approval:delete')
   @ApiOperation({ summary: '删除审批（软删除）' })
