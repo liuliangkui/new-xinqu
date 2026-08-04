@@ -49,6 +49,12 @@
   --sidebar-collapsed-width: 64px;
   --topbar-height: 56px;
 
+  /* 侧边栏 */
+  --sidebar-bg: #ffffff;
+  --sidebar-ink: #1a1d21;
+  --sidebar-active-bg: #e9efff;
+  --sidebar-active-ink: #3370ff;
+
   /* 阴影 */
   --shadow-card: 0 1px 2px rgba(31, 35, 41, 0.04), 0 4px 16px rgba(31, 35, 41, 0.06);
   --shadow-panel: 0 1px 2px rgba(31, 35, 41, 0.03), 0 4px 16px rgba(31, 35, 41, 0.05);
@@ -80,6 +86,11 @@
     --danger-bg: #4d1a18;
     --info-bg: #1e3a66;
 
+    --sidebar-bg: #23272f;
+    --sidebar-ink: #f5f6f7;
+    --sidebar-active-bg: #1e3a66;
+    --sidebar-active-ink: #4c88ff;
+
     --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.3);
     --shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
   }
@@ -107,6 +118,11 @@ html[data-theme='dark'] {
   --warning-bg: #4d2e00;
   --danger-bg: #4d1a18;
   --info-bg: #1e3a66;
+
+  --sidebar-bg: #23272f;
+  --sidebar-ink: #f5f6f7;
+  --sidebar-active-bg: #1e3a66;
+  --sidebar-active-ink: #4c88ff;
 
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.3);
   --shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
